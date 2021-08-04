@@ -565,13 +565,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					constexpr float margin = 5;
 
 					static std::string name = "Packet Client";
-#ifdef _DEBUG
-					static std::string version = "Debug";
-#elif defined _BETA
-					static std::string version = "Beta";
-#else
-					static std::string version = " ";
-#endif
+					static std::string version = "";
 
 					float nameLength = DrawUtils::getTextWidth(&name, nameTextSize);
 					float fullTextLength = nameLength + DrawUtils::getTextWidth(&version, versionTextSize);

@@ -73,7 +73,6 @@
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"
-//#include "Modules/Logger.h"
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
 // Broken

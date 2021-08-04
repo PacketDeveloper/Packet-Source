@@ -90,7 +90,6 @@ void ModuleManager::initModules() {
 
 #ifdef _DEBUG
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new Logger()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		// Broken

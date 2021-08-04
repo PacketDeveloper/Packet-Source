@@ -103,6 +103,9 @@ void Speed::onMove(C_MoveInputHandler* input) {
 				player->lerpMotion(moveVec);
 		}*/
 		auto player = g_Data.getLocalPlayer();
+		if (player->onGround) {
+			player->velocity.y = 0.01f;
+		}
 		vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;
 		float calcYaw = (player->yaw + 90) * (PI / 180);

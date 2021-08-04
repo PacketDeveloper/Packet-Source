@@ -31,7 +31,6 @@ struct TextForPrintBig {
 };
 
 class Logger {
-
 public:
 	static bool isActive();
 	static std::wstring GetRoamingFolderPath();
