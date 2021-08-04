@@ -12,4 +12,6 @@ Packet Client is a fork of the Horion Client
 
 The original Horion developers
 
+Turakan - TargetHUD & LowHop
+
 12brendon34 - Injector
