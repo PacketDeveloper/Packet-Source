@@ -55,26 +55,19 @@ void HiveFly::onTick(C_GameMode* gm) {
 			}
 			if (boostCounter == 2) {
 				speedA = 1.f;
-			}
-			if (boostCounter == 4) {
+			} else if (boostCounter == 4) {
 				speedA = 0.75f;
-			}
-			if (boostCounter == 7) {
+			} else if (boostCounter == 7) {
 				speedA = 0.60f;
-			}
-			if (boostCounter == 10) {
+			} else if (boostCounter == 10) {
 				speedA = 0.55f;
-			}
-			if (boostCounter == 13) {
+			} else if (boostCounter == 13) {
 				speedA = 0.50f;
-			}
-			if (boostCounter == 16) {
+			} else if (boostCounter == 16) {
 				speedA = 0.48f;
-			}
-			if (boostCounter == 20) {
+			} else if (boostCounter == 20) {
 				speedA = 0.45f;
-			}
-			if (boostCounter == 35) {
+			} else if (boostCounter == 35) {
 				speedA = 0.32f;
 			}
 		}
