@@ -14,4 +14,8 @@ The original Horion developers
 
 Turakan - TargetHUD & LowHop
 
+<<<<<<< HEAD
 12brendon34 - Injector
+=======
+12brendon34 - Injector
+>>>>>>> 1dd2fe6cdc2e9e2916526fdf36a0d9b5a833beb8
