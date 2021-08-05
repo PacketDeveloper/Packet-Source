@@ -241,6 +241,7 @@
     <ClCompile Include="Packet\Command\Commands\CommandBlockExploitCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\ConfigCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\CoordsCommand.cpp" />
+    <ClCompile Include="Packet\Command\Commands\CreditCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\DamageCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\DupeCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\EjectCommand.cpp" />
@@ -408,6 +409,7 @@
     <ClInclude Include="Packet\Command\Commands\CommandBlockExploitCommand.h" />
     <ClInclude Include="Packet\Command\Commands\ConfigCommand.h" />
     <ClInclude Include="Packet\Command\Commands\CoordsCommand.h" />
+    <ClInclude Include="Packet\Command\Commands\CreditCommand.h" />
     <ClInclude Include="Packet\Command\Commands\DamageCommand.h" />
     <ClInclude Include="Packet\Command\Commands\DupeCommand.h" />
     <ClInclude Include="Packet\Command\Commands\EjectCommand.h" />

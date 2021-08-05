@@ -2,14 +2,12 @@
 
 Aimbot::Aimbot() : IModule(0, Category::COMBAT, "Automatically aims at the nearest entity") {
 	this->registerBoolSetting("Vertical", &this->vertical, this->vertical);
+	//this->registerBoolSetting("Lock", &this->lock, this->lock); // autism
 	this->registerBoolSetting("Hold", &this->click, this->click);
 	this->registerFloatSetting("range", &this->range, this->range, 3.f, 8.f);
-	//this->registerBoolSetting("only swords/axes", &this->sword, this->sword);
+	//this->registerBoolSetting("Weaponsssssz", &this->sword, this->sword);
 	this->registerFloatSetting("Speed", &this->speedAm, this->speedAm, 10.f, 90.f);
-	//this->registerFloatSetting("vertical speed", &this->verticalspeed, this->verticalspeed, 10.f, 90.f);
 	this->registerFloatSetting("Angle", &this->rangeAm, this->rangeAm, 20.f, 180.f);
-	//this->registerFloatSetting("vertical range", &this->verticalrange, this->verticalrange, 20.f, 180.f);
-	//this->registerBoolSetting("aimlock", &this->lock, this->lock);
 }
 
 Aimbot::~Aimbot() {

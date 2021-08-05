@@ -15,7 +15,7 @@ void FastStop::onMove(C_MoveInputHandler* input) {
 	vec2_t move = {input->forwardMovement, -input->sideMovement};
 	bool pressed = move.magnitude() > 0.f;
 	if (~player->onGround)
-		if (!pressed) {
+		if (!pressed && player->damageTime == 0) {
 			player->velocity.x = 0;
 			player->velocity.z = 0;
 		}

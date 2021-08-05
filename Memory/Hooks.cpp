@@ -546,7 +546,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 			{
 				// Display ArrayList on the Right?
-				static constexpr bool isOnLeftSide = true;
+				static constexpr bool isOnSomeFuckingSide = true;
 
 				float yOffset = 0;  // Offset of next Text
 				vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
@@ -736,7 +736,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						vec4_t rectPos = vec4_t(
 							xOffset - 1.5,
 							yOffset,
-							isOnLeftSide ? windowSize.x : textWidth + (textPadding * 2),
+							isOnSomeFuckingSide ? windowSize.x : textWidth + (textPadding * 2),
 							yOffset + textPadding * 2 + textHeight);
 						vec4_t leftRect = vec4_t(
 							xOffset - 2,
@@ -749,7 +749,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						vec4_t barBG = vec4_t(
 							xOffset - 3.5,
 							yOffset,
-							isOnLeftSide ? windowSize.x : textWidth + (textPadding * 2),
+							isOnSomeFuckingSide ? windowSize.x : textWidth + (textPadding * 2),
 							yOffset + textPadding * 2 + textHeight);
 						vec2_t barTextShadow = vec2_t(
 							xOffset + textPadding - 1,
@@ -814,6 +814,13 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						}
 
 						// ArrayList Modes
+
+						// i will add else if later
+						// i will add else if later
+						// i will add else if later
+						// i will add else if later
+						// i will add else if later
+
 						if (arraylistMod->mode.getSelectedValue() == 0) {  // Outline
 							if (hudMod->color.getSelectedValue() != 1) {   // Rainbow
 								DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);

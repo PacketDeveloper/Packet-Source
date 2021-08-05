@@ -174,9 +174,8 @@ void Killaura::onEnable() {
 }
 
 void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
-	if (g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr) {
-		if (targetList.size() == 1) {
-			//if (targethud > 1) {
+	if (targetList.size() == 1) {
+		if (targethud > 1 && g_Data.canUseMoveKeys()) {
 			for (auto& i : targetList) {
 				C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 				vec2_t windowSize = dat->windowSize;
@@ -230,7 +229,6 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 					}
 				}
 			}
-			//}
 		}
 	}
 }
@@ -262,6 +260,7 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 				// Body
 				rotation->bodyYaw = angle.y;
 				rotation->yawUnused2 = prevyaw2;
+				rotation->oldBodyYaw = angle.x;
 			}
 		}
 	}

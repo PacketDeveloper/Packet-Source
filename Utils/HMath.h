@@ -244,7 +244,7 @@ struct vec3_t {
 	vec2_t CalcAngle(vec3_t dst) {
 		vec3_t diff = dst.sub(*this);
 
-		diff.x = diff.y / diff.magnitude();
+		diff.y = diff.y / diff.magnitude();
 		vec2_t angles;
 		angles.x = asinf(diff.y) * -DEG_RAD;
 		angles.y = (float)-atan2f(diff.x, diff.z) * DEG_RAD;

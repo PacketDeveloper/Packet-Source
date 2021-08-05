@@ -15,6 +15,7 @@ void CommandMgr::initCommands() {
 	logF("Initializing commands");
 
 	commandList.push_back(new EjectCommand());
+	commandList.push_back(new CreditCommand());
 	commandList.push_back(new OutlineCommand());
 	commandList.push_back(new PartyCommand());
 	commandList.push_back(new TeleportCommand());

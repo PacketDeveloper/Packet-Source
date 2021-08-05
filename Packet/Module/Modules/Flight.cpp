@@ -10,6 +10,7 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "yes") {
 	mode.addEntry("BlockFly", 2);
 	mode.addEntry("Teleport", 3);
 	mode.addEntry("Jetpack", 4);
+	mode.addEntry("AirJump", 5);
 	//this->registerIntSetting("PlaceDelay", &this->placeDelay, this->placeDelay, 2, 20);
 	registerFloatSetting("Speed", &this->speed, this->speed, 0.3f, 4.f);
 	this->registerFloatSetting("value", &this->glideMod, this->glideMod, -0.15f, 0.00);
@@ -49,6 +50,7 @@ bool Flight::isFlashMode() {
 
 void Flight::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	auto scaffoldMod = moduleMgr->getModule<Scaffold>();
 	auto speedMod = moduleMgr->getModule<Speed>();
 	auto player = g_Data.getLocalPlayer();
@@ -202,6 +204,18 @@ void Flight::onTick(C_GameMode* gm) {
 			}
 		}
 	}
+	if (mode.getSelectedValue() == 5) {  // AirJump
+		if (input == nullptr)
+			return;
+
+			int hasJumped = 0;
+		if (GameData::isKeyDown(*input->spaceBarKey) && hasJumped == 0) {
+			gm->player->onGround = true;
+			hasJumped = 1;
+		} else if (!GameData::isKeyDown(*input->spaceBarKey)) {
+			hasJumped = 0;
+		}
+	}
 }
 
 void Flight::onMove(C_MoveInputHandler* input) {
@@ -313,7 +327,9 @@ bool Flight::selectBlock() {
 
 void Flight::onDisable() {
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
-	g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
+	if (mode.getSelectedValue() != 5) {
+		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
+	}
 	if (mode.getSelectedValue() == 2) {  // BlockFly
 		if (g_Data.getLocalPlayer() == nullptr)
 			return;

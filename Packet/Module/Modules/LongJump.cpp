@@ -3,9 +3,6 @@
 #include "../../Module/ModuleManager.h"
 
 LongJump::LongJump() : IModule(0, Category::MOVEMENT, "ye very cool - packet") {
-	registerEnumSetting("Mode", &this->mode, 0);
-	mode.addEntry("Normal", 0);
-	mode.addEntry("V2", 1);
 	registerBoolSetting("SlowDown", &this->slowDown, this->slowDown);
 	registerBoolSetting("Damage", &this->damage, this->damage);
 	registerFloatSetting("Height", &this->height, this->height, 0.2f, 5.f);

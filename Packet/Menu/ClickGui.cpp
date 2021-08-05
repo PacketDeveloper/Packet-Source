@@ -145,9 +145,11 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 		case Category::MISC:
 			ourWindow->pos.x = yot / 7.f * 4.1f;
 			break;
+#ifdef _DEBUG
 		case Category::CONFIG:
 			ourWindow->pos.x = yot / 7.f * 5.2f;
 			break;
+#endif
 		case Category::CUSTOM:
 			ourWindow->pos.x = yot / 7.f * 6.f;
 			break;
@@ -848,7 +850,9 @@ void ClickGui::render() {
 	renderCategory(Category::MOVEMENT, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);
 	renderCategory(Category::PLAYER, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);
 	renderCategory(Category::MISC, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);
+#ifdef _DEBUG
 	renderCategory(Category::CONFIG, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);
+#endif
 
 	if (scriptMgr.getNumEnabledScripts() > 0)
 		renderCategory(Category::CUSTOM, guimod->rainbowColor, guimod->opacity ? guimod->opacity : 1.f);

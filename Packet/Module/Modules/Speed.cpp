@@ -3,7 +3,9 @@ Speed::Speed() : IModule(0, Category::MOVEMENT, "sped") {
 	registerEnumSetting("Mode", &this->mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
+#ifdef _DEBUG
 	mode.addEntry("HiveGround", 2);
+#endif
 	registerIntSetting("TimerBoost", &this->timer, this->timer, 20, 35);
 	registerFloatSetting("Height", &this->height, this->height, 0.000001f, 0.40f);
 	registerFloatSetting("Speed", &this->speed, this->speed, 0.2f, 2.f);
@@ -34,16 +36,20 @@ void Speed::onMove(C_MoveInputHandler* input) {
 	bool pressed = moveVec2d.magnitude() > 0.f;
 	auto player = g_Data.getLocalPlayer();
 	if (mode.getSelectedValue() == 0) {  // Vanilla
-		if (!lowMode) {
-			if (player->onGround && pressed)
-				player->jumpFromGround();
+		static bool velocity = false;
+		if (height >= 0.385) { // very stupid code
+			if (player->onGround && pressed) player->jumpFromGround();
+			velocity = false;
+		} else {
+			velocity = true;
+		}
+		if (player->onGround && pressed && !input->isJumping && (velocity == true)) {
 			player->velocity.y = height;
-			player->velocity.y -= height / 3;
-		} else if (player->onGround && pressed)
-			player->velocity.y = height;
-		if (!pressed)
+		}
+		if (!pressed && player->damageTime == 0) {
 			player->velocity.x *= 0;
-		player->velocity.z *= 0;
+			player->velocity.z *= 0;
+		}
 		float calcYaw = (player->yaw + 90) * (PI / 180);
 		vec3_t moveVec;
 		float c = cos(calcYaw);
@@ -103,9 +109,6 @@ void Speed::onMove(C_MoveInputHandler* input) {
 				player->lerpMotion(moveVec);
 		}*/
 		auto player = g_Data.getLocalPlayer();
-		if (player->onGround) {
-			player->velocity.y = 0.01f;
-		}
 		vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;
 		float calcYaw = (player->yaw + 90) * (PI / 180);
@@ -114,6 +117,10 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		float s = sin(calcYaw);
 		movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
 		if (player->onGround && pressed) player->jumpFromGround();
+		if (!pressed && player->damageTime == 0) {
+			player->velocity.x = 0;
+			player->velocity.z = 0;
+		}
 		moveVec.x = movement.x *= 0.315;
 		moveVec.y = player->velocity.y;
 		moveVec.z = movement.y *= 0.315;
