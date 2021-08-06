@@ -5,17 +5,7 @@
 
 class TPAura : public IModule {
 public:
-	int targethud = 0;
-	bool targethudEnabled = false;
-	bool rot = false;
-	bool silent = false;
-	bool cock = false;
-	bool isMulti = true;
-	int delay = 0;
-	int Odelay = 0;
-	bool push = false;
-	bool enabled = true;
-	float range = 250;
+
 
 	TPAura();
 	~TPAura();

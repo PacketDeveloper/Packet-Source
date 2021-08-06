@@ -87,7 +87,6 @@ void ModuleManager::initModules() {
 		//this->moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
 		//this->moduleList.push_back(std::shared_ptr<IModule>(new ChestStealer()));
 		//this->moduleList.push_back(std::shared_ptr<IModule>(new PacketLogger()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new EditionFaker()));
 
 #ifdef _DEBUG
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
