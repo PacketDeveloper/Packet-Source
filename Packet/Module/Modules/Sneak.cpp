@@ -1,7 +1,7 @@
 #include "Sneak.h"
 
 Sneak::Sneak() : IModule(0, Category::MOVEMENT, "Automatically sneak without holding the key") {
-	//registerBoolSetting("silent", &doSilent, doSilent);
+	//this->registerBoolSetting("silent", &this->doSilent, doSilent);
 	doSilent = false;
 }
 

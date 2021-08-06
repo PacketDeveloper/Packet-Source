@@ -2,12 +2,12 @@
 
 #include "../../Module/ModuleManager.h"
 
-HiveFly::HiveFly() : IModule(0, Category::MOVEMENT, "Fly Bypass!") {
-	registerBoolSetting("Strafe", &strafeMode, strafeMode);
-	registerBoolSetting("Boost", &boostMode, boostMode);
-	registerBoolSetting("V2", &V2, V2);
-	registerFloatSetting("Value", &speed2, speed2, -0.02f, 0.f);
-	registerFloatSetting("Speed", &speedA, speedA, 0.10f, 1.f);
+HiveFly::HiveFly() : IModule(0, Category::MOVEMENT, "Turkey go falling off cliff wee!1!1!!") {
+	registerBoolSetting("Strafe", &this->strafeMode, this->strafeMode);
+	registerBoolSetting("Boost", &this->boostMode, this->boostMode);
+	registerBoolSetting("V2", &this->V2, this->V2);
+	registerFloatSetting("Value", &this->speed2, this->speed2, -0.02f, 0.f);
+	registerFloatSetting("Speed", &this->speedA, this->speedA, 0.10f, 1.f);
 }
 
 HiveFly::~HiveFly() {

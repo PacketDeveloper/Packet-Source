@@ -2,8 +2,8 @@
 #include "../ModuleManager.h"
 
 ChestStealer::ChestStealer() : IModule(0, Category::MISC, "Automatically takes all items out of a chest") {
-	registerIntSetting("Close Delay", &setDelay, setDelay, 0, 20);
-	registerBoolSetting("enhanced", &enhanced, enhanced);
+	registerIntSetting("Close Delay", &this->setDelay, this->setDelay, 0, 20);
+	registerBoolSetting("enhanced", &this->enhanced, this->enhanced);
 }
 
 ChestStealer::~ChestStealer() {

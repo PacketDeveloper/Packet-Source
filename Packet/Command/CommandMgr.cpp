@@ -18,7 +18,6 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new CreditCommand());
 	commandList.push_back(new SpammerCommand());
 	commandList.push_back(new OutlineCommand());
-	commandList.push_back(new PartyCommand());
 	commandList.push_back(new TeleportCommand());
 	commandList.push_back(new BindCommand());
 	//commandList.push_back(new RelativeTeleportCommand());

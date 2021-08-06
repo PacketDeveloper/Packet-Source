@@ -1,8 +1,8 @@
 #include "Zoom.h"
 
 Zoom::Zoom() : IModule('C', Category::VISUAL, "Zoom in.") {
-	registerFloatSetting("Strength", &strength, strength, 50.f, 100.f);
-	//registerBoolSetting("Smooth", &smooth, smooth);
+	registerFloatSetting("Strength", &this->strength, this->strength, 50.f, 100.f);
+	//registerBoolSetting("Smooth", &this->smooth, this->smooth);
 }
 
 Zoom::~Zoom() {

@@ -4,8 +4,8 @@
 #include "../../../Utils/Logger.h"
 #include "../../../Utils/Utils.h"
 
-Reach::Reach() : IModule(0, Category::COMBAT, "Increases arm leangth!") {
-	registerFloatSetting("Amount", &reachValue, reachValue, 3.f, 8.f);
+Reach::Reach() : IModule(0, Category::COMBAT, "Increases your reach") {
+	this->registerFloatSetting("Amount", &this->reachValue, this->reachValue, 3.f, 8.f);
 }
 
 Reach::~Reach() {

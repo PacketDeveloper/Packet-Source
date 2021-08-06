@@ -3,8 +3,8 @@
 #include "../../Module/ModuleManager.h"
 
 Velocity::Velocity() : IModule(0, Category::MOVEMENT, "AntiKB Module") {
-	registerFloatSetting("Linear", &xModifier, xModifier, 0.f, 1.f);
-	registerFloatSetting("Height", &yModifier, yModifier, 0.f, 1.f);
+	this->registerFloatSetting("Linear", &this->xModifier, this->xModifier, 0.f, 1.f);
+	this->registerFloatSetting("Height", &this->yModifier, this->yModifier, 0.f, 1.f);
 }
 
 Velocity::~Velocity() {

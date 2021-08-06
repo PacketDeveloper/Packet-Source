@@ -1,10 +1,10 @@
 #include "TPAura.h"
 
 TPAura::TPAura() : IModule(0, Category::COMBAT, "TPS to the closest entity") {
-	registerBoolSetting("Silent", &silent, silent);
-	registerBoolSetting("Push", &push, push);
-	registerIntSetting("TP Delay", &delay, delay, 0, 10);
-	registerFloatSetting("Range", &range, range, 1.f, 250.f);
+	this->registerBoolSetting("Silent", &this->silent, this->silent);
+	this->registerBoolSetting("Push", &this->push, this->push);
+	this->registerIntSetting("TP Delay", &this->delay, this->delay, 0, 10);
+	this->registerFloatSetting("Range", &this->range, this->range, 1.f, 250.f);
 }
 
 const char* TPAura::getModuleName() {
@@ -17,8 +17,7 @@ TPAura::~TPAura() {
 }
 
 void TPAura::onEnable() {
-	if (g_Data.getLocalPlayer() == nullptr)
-		setEnabled(false);
+
 }
 
 void TPAura::onTick(C_GameMode* gm) {

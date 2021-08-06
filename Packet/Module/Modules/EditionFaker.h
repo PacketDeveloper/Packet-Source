@@ -5,7 +5,6 @@ public:
 	EditionFaker();
 	~EditionFaker();
 
-	int vers = 2;
 	int getFakedEditon();
 
 	// Inherited via IModule

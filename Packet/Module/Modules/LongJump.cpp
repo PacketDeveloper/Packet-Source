@@ -3,10 +3,10 @@
 #include "../../Module/ModuleManager.h"
 
 LongJump::LongJump() : IModule(0, Category::MOVEMENT, "ye very cool - packet") {
-	registerBoolSetting("SlowDown", &slowDown, slowDown);
-	registerBoolSetting("Damage", &damage, damage);
-	registerFloatSetting("Height", &height, height, 0.2f, 5.f);
-	registerFloatSetting("Speed", &speed, speed, 0.3f, 5.f);
+	registerBoolSetting("SlowDown", &this->slowDown, this->slowDown);
+	registerBoolSetting("Damage", &this->damage, this->damage);
+	registerFloatSetting("Height", &this->height, this->height, 0.2f, 5.f);
+	registerFloatSetting("Speed", &this->speed, this->speed, 0.3f, 5.f);
 }
 
 const char* LongJump::getModuleName() {
@@ -67,7 +67,7 @@ void LongJump::onTick(C_GameMode* gm) {
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {  // Only on The Hive
 			auto player = g_Data.getLocalPlayer();
 			if (!player->onGround) {
-				setEnabled(false);
+				this->setEnabled(false);
 			}
 		}
 	}

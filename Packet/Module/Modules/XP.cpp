@@ -1,8 +1,8 @@
 #include "XP.h"
 
 XP::XP() : IModule(0, Category::MISC, "Gives you experience levels") {
-	registerBoolSetting("Levels", &levels, levels);
-	registerIntSetting("Amount", &amount, amount, 1, 250);
+	this->registerBoolSetting("Levels", &this->levels, this->levels);
+	this->registerIntSetting("Amount", &this->amount, this->amount, 1, 250);
 }
 
 const char* XP::getModuleName() {

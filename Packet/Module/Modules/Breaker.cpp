@@ -1,17 +1,17 @@
 #include "Breaker.h"
 
 Breaker::Breaker() : IModule(0, Category::MISC, "Destroys Beds, Eggs, Treasures Etc.") {
-	registerBoolSetting("Treasures", &treasures, treasures);
-	registerBoolSetting("Redstone", &rOre, rOre);
-	registerBoolSetting("Diamond", &dOre, dOre);
-	registerBoolSetting("Emerald", &eOre, eOre);
-	//registerBoolSetting("Carrots", &carrots, carrots);//? - kow
-	registerBoolSetting("Chests", &chests, chests);
-	registerBoolSetting("Cakes", &cakes, cakes);
-	registerBoolSetting("Beds", &beds, beds);
-	registerBoolSetting("Eggs", &eggs, eggs);
-	registerIntSetting("Range", &range, range, 1, 10);
-	registerIntSetting("delay", &delay, delay, 0, 5);
+	registerBoolSetting("Treasures", &this->treasures, this->treasures);
+	registerBoolSetting("Redstone", &this->rOre, this->rOre);
+	registerBoolSetting("Diamond", &this->dOre, this->dOre);
+	registerBoolSetting("Emerald", &this->eOre, this->eOre);
+	//registerBoolSetting("Carrots", &this->carrots, this->carrots);
+	registerBoolSetting("Chests", &this->chests, this->chests);
+	registerBoolSetting("Cakes", &this->cakes, this->cakes);
+	registerBoolSetting("Beds", &this->beds, this->beds);
+	registerBoolSetting("Eggs", &this->eggs, this->eggs);
+	registerIntSetting("Range", &this->range, this->range, 1, 10);
+	this->registerIntSetting("delay", &this->delay, this->delay, 0, 5);
 }
 
 Breaker::~Breaker() {

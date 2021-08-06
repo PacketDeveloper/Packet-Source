@@ -3,13 +3,13 @@
 #include "Survival.h"
 
 Survival::Survival() : IModule(0, Category::MISC, "Automates Survival") {
-	//registerBoolSetting("AntiHunger", &antiHunger, antiHunger);
-	registerBoolSetting("LiquidNuker", &liquidNuker, liquidNuker);
-	registerBoolSetting("TreeNuker", &treeNuker, treeNuker);
-	registerBoolSetting("OreNuker", &oreNuker, oreNuker);
-	registerBoolSetting("NoFall", &nofall, nofall);
-	registerBoolSetting("Fly", &fly, fly);
-	registerIntSetting("Timer", &timer, timer, 20, 500);
+	//this->registerBoolSetting("AntiHunger", &this->antiHunger, this->antiHunger);
+	this->registerBoolSetting("LiquidNuker", &this->liquidNuker, this->liquidNuker);
+	this->registerBoolSetting("TreeNuker", &this->treeNuker, this->treeNuker);
+	this->registerBoolSetting("OreNuker", &this->oreNuker, this->oreNuker);
+	this->registerBoolSetting("NoFall", &this->nofall, this->nofall);
+	this->registerBoolSetting("Fly", &this->fly, this->fly);
+	this->registerIntSetting("Timer", &this->timer, this->timer, 20, 500);
 }
 
 const char* Survival::getModuleName() {

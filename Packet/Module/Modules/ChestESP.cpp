@@ -2,7 +2,7 @@
 #include "../../DrawUtils.h"
 #include "../ModuleManager.h"
 
-ChestESP::ChestESP() : IModule('0', Category::VISUAL, "ESP For Chests!") {
+ChestESP::ChestESP() : IModule('0', Category::VISUAL, "ESP") {
 }
 
 ChestESP::~ChestESP() {
@@ -14,7 +14,7 @@ const char* ChestESP::getModuleName() {
 
 void ChestESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr) {
-		auto ourListLock = std::scoped_lock(listLock);
+		auto ourListLock = std::scoped_lock(this->listLock);
 
 		for (auto iter = bufferedChestList.begin(); iter != bufferedChestList.end(); ++iter) {
 			auto storageID = g_Data.getLocalPlayer()->region->getBlock((*iter)->upper)->blockLegacy->blockId;

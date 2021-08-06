@@ -1,6 +1,6 @@
 #include "Sprint.h"
 
-Sprint::Sprint() : IModule(0, Category::MOVEMENT, "Auto Sprint Ofc") {
+Sprint::Sprint() : IModule(0, Category::MOVEMENT, "Sprints automatically.") {
 }
 
 Sprint::~Sprint() {

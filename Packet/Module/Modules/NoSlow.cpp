@@ -6,7 +6,7 @@
 #include "../../../Utils/Utils.h"
 
 NoSlow::NoSlow() : IModule(0, Category::MOVEMENT, "Don't get slowed down when blocking or eating") {
-	registerBoolSetting("NoWeb", &noweb, noweb);
+	registerBoolSetting("NoWeb", &this->noweb, this->noweb);
 }
 
 NoSlow::~NoSlow() {

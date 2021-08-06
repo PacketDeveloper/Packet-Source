@@ -4,7 +4,7 @@
 #include "../../Scripting/ScriptManager.h"
 
 HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
-	registerEnumSetting("Color", &color, 1);  // get the value using color.getSelectedValue()
+	registerEnumSetting("Color", &color, 0);  // get the value using color.getSelectedValue()
 	color.addEntry("Rainbow", 0);
 	color.addEntry("Dynamic", 1);
 	color.addEntry("Horion", 2);

@@ -1,6 +1,6 @@
 #include "BlockReach.h"
 
-BlockReach::BlockReach() : IModule(0, Category::PLAYER, "Longer reach, but for blocks!") {
+BlockReach::BlockReach() : IModule(0, Category::PLAYER, "Gach.") {
 }
 
 BlockReach::~BlockReach() {

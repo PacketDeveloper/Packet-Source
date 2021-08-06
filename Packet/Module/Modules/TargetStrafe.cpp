@@ -3,13 +3,13 @@
 #include "../../Module/ModuleManager.h"
 
 TargetStrafe::TargetStrafe() : IModule(0, Category::MOVEMENT, "TargetStrafe - Made by Little Kow") {
-	//registerFloatSetting("ChaseRange", &range, range, 2.f, 500.f);
-	//registerBoolSetting("RequireSpeed", &speedCheck, speedCheck);
-	registerBoolSetting("EdgeCheck", &avoidvoid, avoidvoid);
-	//registerBoolSetting("AutoPlay", &autoplayMode, autoplayMode);
-	registerBoolSetting("OnKey", &spacekeyMode, spacekeyMode);
-	registerFloatSetting("Speed", &speedMod, speedMod, 0.3f, 2.f);
-	registerFloatSetting("Radius", &StrafeDistance, StrafeDistance, 1.f, 5.f);
+	//this->registerFloatSetting("ChaseRange", &this->range, this->range, 2.f, 500.f);
+	//this->registerBoolSetting("RequireSpeed", &this->speedCheck, this->speedCheck);
+	this->registerBoolSetting("EdgeCheck", &this->avoidvoid, this->avoidvoid);
+	//this->registerBoolSetting("AutoPlay", &this->autoplayMode, this->autoplayMode);
+	this->registerBoolSetting("OnKey", &this->spacekeyMode, this->spacekeyMode);
+	this->registerFloatSetting("Speed", &this->speedMod, this->speedMod, 0.3f, 2.f);
+	this->registerFloatSetting("Radius", &this->StrafeDistance, this->StrafeDistance, 1.f, 5.f);
 }
 
 TargetStrafe::~TargetStrafe() {

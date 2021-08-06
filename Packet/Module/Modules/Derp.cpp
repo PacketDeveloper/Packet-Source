@@ -1,8 +1,8 @@
 #include "Derp.h"
 
-Derp::Derp() : IModule(0, Category::MISC, "spin go brrr") {
-	registerBoolSetting("MegaBrrr", &epicStroke, epicStroke);
-	registerBoolSetting("packet", &packetMode, packetMode);
+Derp::Derp() : IModule(0, Category::MISC, "lol you stupid") {
+	this->registerBoolSetting("Helicopter", &this->epicStroke, this->epicStroke);
+	this->registerBoolSetting("packet", &this->packetMode, this->packetMode);
 }
 
 Derp::~Derp() {
