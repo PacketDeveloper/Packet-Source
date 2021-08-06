@@ -1,6 +1,6 @@
 #include "FullBright.h"
 
-FullBright::FullBright() : IModule(0, Category::VISUAL, "Puts yDeiDeeDeiDerrtDord to maximum ye") {
+FullBright::FullBright() : IModule(0, Category::VISUAL, "Cave vision go brr") {
 }
 
 FullBright::~FullBright() {

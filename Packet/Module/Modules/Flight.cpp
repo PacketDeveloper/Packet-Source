@@ -2,18 +2,18 @@
 
 #include "../../Module/ModuleManager.h"
 
-Flight::Flight() : IModule(0, Category::MOVEMENT, "yes") {
-	this->registerBoolSetting("Damage", &this->damage, this->damage);
-	registerEnumSetting("Mode", &this->mode, 0);
+Flight::Flight() : IModule(0, Category::MOVEMENT, "You're dumb for not knowing lol") {
+	registerBoolSetting("Damage", &damage, damage);
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Boost", 1);
 	mode.addEntry("BlockFly", 2);
 	mode.addEntry("Teleport", 3);
 	mode.addEntry("Jetpack", 4);
 	mode.addEntry("AirJump", 5);
-	//this->registerIntSetting("PlaceDelay", &this->placeDelay, this->placeDelay, 2, 20);
-	registerFloatSetting("Speed", &this->speed, this->speed, 0.3f, 4.f);
-	this->registerFloatSetting("value", &this->glideMod, this->glideMod, -0.15f, 0.00);
+	//registerIntSetting("PlaceDelay", &placeDelay, placeDelay, 2, 20);
+	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
+	registerFloatSetting("value", &glideMod, glideMod, -0.15f, 0.00);
 }
 
 Flight::~Flight() {
