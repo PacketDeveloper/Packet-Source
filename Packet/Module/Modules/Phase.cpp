@@ -2,7 +2,7 @@
 #include "Phase.h"
 
 Phase::Phase() : IModule(0, Category::MOVEMENT, "Walk through walls") {
-	this->registerBoolSetting("Vertical", &this->vertMode, this->vertMode);
+	registerBoolSetting("Vertical", &vertMode, vertMode);
 }
 
 Phase::~Phase() {

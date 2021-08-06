@@ -1,9 +1,9 @@
 #include "Nuker.h"
 
 Nuker::Nuker() : IModule(0, Category::MISC, "Break multiple blocks at once") {
-	this->registerBoolSetting("auto destroy", &this->autodestroy, this->autodestroy);
-	this->registerBoolSetting("veinminer", &this->veinMiner, this->veinMiner);
-	this->registerIntSetting("radius", &this->nukerRadius, this->nukerRadius, 1, 15);
+	registerBoolSetting("auto destroy", &autodestroy, autodestroy);
+	registerBoolSetting("veinminer", &veinMiner, veinMiner);
+	registerIntSetting("radius", &nukerRadius, nukerRadius, 1, 15);
 }
 
 Nuker::~Nuker() {
