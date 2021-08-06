@@ -1,7 +1,7 @@
 #include "ChestAura.h"
 
-ChestAura::ChestAura() : IModule(0, Category::MISC, "Aura for chests") {
-	registerIntSetting("Range", &this->range, this->range, 1, 10);
+ChestAura::ChestAura() : IModule(0, Category::MISC, "Automatically open nearby chests.") {
+	registerIntSetting("Range", &range, range, 1, 10);
 }
 
 ChestAura::~ChestAura() {
@@ -36,5 +36,5 @@ void ChestAura::onTick(C_GameMode* gm) {
 }
 
 void ChestAura::onDisable() {
-	this->chestlist.clear();  // this code should be changed later, the chestlist has to be cleared when loading into a new world
+	chestlist.clear();  // this code should be changed later, the chestlist has to be cleared when loading into a new world
 }

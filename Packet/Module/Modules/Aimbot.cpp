@@ -1,13 +1,13 @@
 #include "Aimbot.h"
 
 Aimbot::Aimbot() : IModule(0, Category::COMBAT, "Automatically aims at the nearest entity") {
-	this->registerBoolSetting("Vertical", &this->vertical, this->vertical);
-	//this->registerBoolSetting("Lock", &this->lock, this->lock); // autism
-	this->registerBoolSetting("Hold", &this->click, this->click);
-	this->registerFloatSetting("range", &this->range, this->range, 3.f, 8.f);
-	//this->registerBoolSetting("Weaponsssssz", &this->sword, this->sword);
-	this->registerFloatSetting("Speed", &this->speedAm, this->speedAm, 10.f, 90.f);
-	this->registerFloatSetting("Angle", &this->rangeAm, this->rangeAm, 20.f, 180.f);
+	registerBoolSetting("Vertical", &vertical, vertical);
+	//registerBoolSetting("Lock", &this->lock, this->lock); // autism
+	registerBoolSetting("Hold", &click, click);
+	registerFloatSetting("range", &range, range, 3.f, 8.f);
+	//registerBoolSetting("Weaponsssssz", &this->sword, this->sword);
+	registerFloatSetting("Speed", &speedAm, speedAm, 10.f, 90.f);
+	registerFloatSetting("Angle", &rangeAm, rangeAm, 20.f, 180.f);
 }
 
 Aimbot::~Aimbot() {
@@ -67,7 +67,7 @@ void Aimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			if (click && !g_Data.isLeftClickDown())
 				return;
 
-			if (!this->lock) {
+			if (!lock) {
 				appl.x /= (100.f - speedAm);
 				appl.y /= (100.f - speedAm);
 				if (appl.x >= 1 || appl.x <= -1) appl.div(abs(appl.x));

@@ -1,9 +1,9 @@
 #include "InfiniteReach.h"
 
-InfiniteReach::InfiniteReach() : IModule(0, Category::COMBAT, "Killaura with infinite reach") {
-	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
-	this->registerFloatSetting("range", &this->range, this->range, 1, 250);
-	this->registerIntSetting("delay", &this->delay, this->delay, -50, 15);
+InfiniteReach::InfiniteReach() : IModule(0, Category::COMBAT, "Killaura with infinite reach pog") {
+	registerBoolSetting("multiaura", &isMulti, isMulti);
+	registerFloatSetting("range", &range, range, 1, 250);
+	registerIntSetting("delay", &delay, delay, -50, 15);
 }
 
 InfiniteReach::~InfiniteReach() {

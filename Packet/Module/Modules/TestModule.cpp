@@ -2,15 +2,15 @@
 #include "TestModule.h"
 
 TestModule::TestModule() : IModule(0, Category::MISC, "Description") {
-	this->registerBoolSetting("AlertHiveStaff", &this->banUMode, this->banUMode);
-	this->registerBoolSetting("AlertBox", &this->alertBox, this->alertBox);
-	this->registerBoolSetting("Teleport", &this->istpMode, this->istpMode);
-	//this->registerBoolSetting("Teleport2", &this->istpModeTwo, this->istpModeTwo);
-	this->registerBoolSetting("Damage", &this->dmgMode, this->dmgMode);
-	this->registerBoolSetting("Blink", &this->blink, this->blink);
-	this->registerBoolSetting("Test", &this->test, this->test);
-	this->registerBoolSetting("AutoDisable", &this->autoDisable, this->autoDisable);
-	//this->registerBoolSetting("HiveDmgFly", &this->dmgflyMode, this->dmgflyMode);
+	registerBoolSetting("AlertHiveStaff", &banUMode, banUMode);
+	registerBoolSetting("AlertBox", &alertBox, alertBox);
+	registerBoolSetting("Teleport", &istpMode, istpMode);
+	//registerBoolSetting("Teleport2", &istpModeTwo, istpModeTwo);
+	registerBoolSetting("Damage", &dmgMode, dmgMode);
+	registerBoolSetting("Blink", &blink, blink);
+	registerBoolSetting("Test", &test, test);
+	registerBoolSetting("AutoDisable", &autoDisable, autoDisable);
+	//registerBoolSetting("HiveDmgFly", &dmgflyMode, dmgflyMode);
 }
 
 const char* TestModule::getModuleName() {

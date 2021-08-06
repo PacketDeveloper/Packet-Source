@@ -2,8 +2,8 @@
 
 #include "../../Module/ModuleManager.h"
 
-Freecam::Freecam() : IModule(0, Category::MISC, "burn") {
-	registerFloatSetting("Speed", &this->speed, this->speed, 0.5f, 3.f);
+Freecam::Freecam() : IModule(0, Category::MISC, "Move your camera anywhere.") {
+	registerFloatSetting("Speed", &speed, speed, 0.5f, 3.f);
 }
 
 Freecam::~Freecam() {

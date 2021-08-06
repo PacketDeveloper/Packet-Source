@@ -2,6 +2,7 @@
 #include "../../Menu/ClickGui.h"
 
 ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui - toggle everything by just clicking on it!") {
+<<<<<<< HEAD
 	registerEnumSetting("Theme", &theme, 1);
 	theme.addEntry("Packet", 0);
 	theme.addEntry("Fadeaway", 1);
@@ -9,6 +10,12 @@ ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui 
 	registerBoolSetting("Rainbow", &this->rainbowColor, this->rainbowColor);
 	registerFloatSetting("Opacity", &this->opacity, this->opacity, 0.05f, 1.f);
 	//registerBoolSetting("Show Tooltips", &this->showTooltips, this->showTooltips);
+=======
+	registerBoolSetting("Animations", &animations, animations);
+	registerBoolSetting("Rainbow", &rainbowColor, rainbowColor);
+	registerFloatSetting("Opacity", &opacity, opacity, 0.05f, 1.f);
+	//registerBoolSetting("Show Tooltips", &showTooltips, showTooltips);
+>>>>>>> 7119e2bcd80250db344e1387446f4c8bf1c9f6b9
 }
 
 ClickGuiMod::~ClickGuiMod() {

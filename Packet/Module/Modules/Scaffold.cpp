@@ -4,15 +4,15 @@
 #include "../../DrawUtils.h"
 #include "../../Module/ModuleManager.h"
 
-Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
-	registerBoolSetting("SpeedLockY", &this->speedLockY, this->speedLockY);
-	registerBoolSetting("Downwards", &this->staircase, this->staircase);
-	registerBoolSetting("Rotations", &this->rotations, this->rotations);
-	registerBoolSetting("AirPlace", &this->airplace, this->airplace);
-	registerBoolSetting("Tower", &this->towerMode, this->towerMode);
-	//registerFloatSetting("Tower Speed", &this->motion, this->motion, 0.3f, 1.f);
-	this->registerIntSetting("TimerBoost", &this->timer, this->timer, 20, 80);
-	this->registerIntSetting("Extend", &this->expand, this->expand, 0, 7);
+Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "U bridge gud") {
+	registerBoolSetting("SpeedLockY", &speedLockY, speedLockY);
+	registerBoolSetting("Downwards", &staircase, staircase);
+	registerBoolSetting("Rotations", &rotations, rotations);
+	registerBoolSetting("AirPlace", &airplace, airplace);
+	registerBoolSetting("Tower", &towerMode, towerMode);
+	//registerFloatSetting("Tower Speed", &motion, motion, 0.3f, 1.f);
+	registerIntSetting("TimerBoost", &timer, timer, 20, 80);
+	registerIntSetting("Extend", &expand, expand, 0, 7);
 }
 
 Scaffold::~Scaffold() {
@@ -69,8 +69,8 @@ void Scaffold::onTick(C_GameMode* gm) {
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
 	vel = vel.normalize();  // Only use values from 0 - 1
 
-	if (this->extendMode) {
-		if (this->staircase && !GameData::isKeyDown(*input->sneakKey)) {
+	if (extendMode) {
+		if (staircase && !GameData::isKeyDown(*input->sneakKey)) {
 			float cal = (gm->player->yaw + 90) * (PI / 180);
 
 			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
@@ -78,7 +78,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 			blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block 1 ahead the player X
 			blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block 1 ahead the player Z
 			if (!tryScaffold(blockBelow)) {
-				if (speed > 0.05f) {  // Are we actually walking?
+				if (speed > 0.05f) {
 					blockBelow.z -= vel.z * 0.4f;
 					if (!tryScaffold(blockBelow)) {
 						blockBelow.x -= vel.x * 0.4f;
@@ -97,12 +97,12 @@ void Scaffold::onTick(C_GameMode* gm) {
 		if (this->towerMode && !GameData::isKeyDown(*input->sneakKey) && !GameData::isKeyDown(*input->spaceBarKey)) {
 			float cal = (gm->player->yaw + 90) * (PI / 180);
 
-			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
+			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
 			blockBelow.y -= g_Data.getLocalPlayer()->height;
-			blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block 1 ahead the player X
-			blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block 1 ahead the player Z
+			blockBelow.x = blockBelow.x += cos(cal) * expand;
+			blockBelow.z = blockBelow.z += sin(cal) * expand;
 			if (!tryScaffold(blockBelow)) {
-				if (speed > 0.05f) {  // Are we actually walking?
+				if (speed > 0.05f) {
 					blockBelow.z -= vel.z * 0.4f;
 					if (!tryScaffold(blockBelow)) {
 						blockBelow.x -= vel.x * 0.4f;
@@ -117,16 +117,16 @@ void Scaffold::onTick(C_GameMode* gm) {
 			}
 		}
 	}
-	if (this->extendMode) {
+	if (extendMode) {
 		if (!staircase) {  // Prevent Downwards from breaking
 			float cal = (gm->player->yaw + 90) * (PI / 180);
 
-			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
+			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
 			blockBelow.y -= g_Data.getLocalPlayer()->height;
-			blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block 1 ahead the player X
-			blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block 1 ahead the player Z
+			blockBelow.x = blockBelow.x += cos(cal) * expand;
+			blockBelow.z = blockBelow.z += sin(cal) * expand;
 			if (!tryScaffold(blockBelow)) {
-				if (speed > 0.05f) {  // Are we actually walking?
+				if (speed > 0.05f) {
 					blockBelow.z -= vel.z * 0.4f;
 					if (!tryScaffold(blockBelow)) {
 						blockBelow.x -= vel.x * 0.4f;
@@ -142,18 +142,18 @@ void Scaffold::onTick(C_GameMode* gm) {
 		}
 	}
 
-	if (this->staircase && GameData::isKeyDown(*input->sneakKey)) {
+	if (staircase && GameData::isKeyDown(*input->sneakKey)) {
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
+		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
 		blockBelow.y -= g_Data.getLocalPlayer()->height;
-		blockBelow.y -= 1.5f;
+		blockBelow.y -= 1.5f;// Block 1 block below the player
 
-		vec3_t blockBelowBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 2 blocks below the player
+		vec3_t blockBelowBelow = g_Data.getLocalPlayer()->eyePos0;
 		blockBelowBelow.y -= g_Data.getLocalPlayer()->height;
-		blockBelowBelow.y -= 2.0f;
+		blockBelowBelow.y -= 2.0f;// Block 2 blocks below the player
 
 		if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
-			if (speed > 0.05f) {  // Are we actually walking?
+			if (speed > 0.05f) {
 				blockBelow.z -= vel.z * 0.4f;
 				blockBelowBelow.z -= vel.z * 0.4f;
 				if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
@@ -171,9 +171,9 @@ void Scaffold::onTick(C_GameMode* gm) {
 			}
 		}
 	} else {
-		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
+		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
 		blockBelow.y -= g_Data.getLocalPlayer()->height;
-		blockBelow.y -= 0.5f;
+		blockBelow.y -= 0.5f;// Block below the player
 
 		if (!tryScaffold(blockBelow)) {
 			blockBelow.z -= vel.z * 0.4f;
@@ -281,7 +281,6 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 			for (auto current : checklist) {
 				vec3_ti calc = blok.sub(*current);
 				if (!((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
-					// Found a solid block to click
 					foundCandidate = true;
 					blok = calc;
 					break;
@@ -327,7 +326,7 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {  // Tower
 	if (!selectedItem->isValid() || !(*selectedItem->item)->isBlock())  // Block in hand?
 		return;
 
-	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
+	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
 	blockBelow.y -= g_Data.getLocalPlayer()->height;
 	blockBelow.y -= 0.5f;
 

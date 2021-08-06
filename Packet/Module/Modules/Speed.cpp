@@ -1,14 +1,14 @@
 #include "Speed.h"
 Speed::Speed() : IModule(0, Category::MOVEMENT, "sped") {
-	registerEnumSetting("Mode", &this->mode, 0);
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
 #ifdef _DEBUG
 	mode.addEntry("HiveGround", 2);
 #endif
-	registerIntSetting("TimerBoost", &this->timer, this->timer, 20, 35);
-	registerFloatSetting("Height", &this->height, this->height, 0.000001f, 0.40f);
-	registerFloatSetting("Speed", &this->speed, this->speed, 0.2f, 2.f);
+	registerIntSetting("TimerBoost", &timer, timer, 20, 35);
+	registerFloatSetting("Height", &height, height, 0.000001f, 0.40f);
+	registerFloatSetting("Speed", &speed, speed, 0.2f, 2.f);
 }
 
 Speed::~Speed() {
@@ -61,6 +61,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		if (pressed) player->lerpMotion(moveVec);
 	}
 	if (mode.getSelectedValue() == 1) {  // Hive
+		//wtf
+
 		/*auto player = g_Data.getLocalPlayer();
 		vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;

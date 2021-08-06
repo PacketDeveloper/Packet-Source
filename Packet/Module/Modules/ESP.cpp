@@ -4,9 +4,9 @@
 #include "../../../Utils/Target.h"
 #include "../../DrawUtils.h"
 
-ESP::ESP() : IModule(0, Category::VISUAL, "Outlines a players hitbox") {
-	this->registerBoolSetting("Tracers", &this->tracerMode, this->tracerMode);
-	//this->registerBoolSetting("2d", &this->is2d, this->is2d);
+ESP::ESP() : IModule(0, Category::VISUAL, "Outline Players Through Walls!") {
+	registerBoolSetting("Tracers", &this->tracerMode, this->tracerMode);
+	//registerBoolSetting("2d", &is2d, is2d);
 }
 
 ESP::~ESP() {
