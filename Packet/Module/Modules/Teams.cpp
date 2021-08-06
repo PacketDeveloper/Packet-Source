@@ -1,8 +1,8 @@
 #include "Teams.h"
 
 Teams::Teams() : IModule(0, Category::COMBAT, "Don't attack team members!") {
-	registerBoolSetting("Server", &this->alliedCheck, this->alliedCheck);
-	registerBoolSetting("Color", &this->colorCheck, this->colorCheck);
+	registerBoolSetting("Server", &alliedCheck, alliedCheck);
+	registerBoolSetting("Color", &colorCheck, colorCheck);
 }
 
 Teams::~Teams() {

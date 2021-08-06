@@ -1,7 +1,7 @@
 #include "Timer.h"
 
 Timer::Timer() : IModule(0, Category::MISC, "Modifies game speed") {
-	this->registerIntSetting("TPS", &this->timer, this->timer, 5, 700);
+	registerIntSetting("TPS", &timer, timer, 5, 700);
 }
 
 Timer::~Timer() {
@@ -13,7 +13,7 @@ const char* Timer::getModuleName() {
 
 void Timer::onTick(C_GameMode* gm) {
 	if (timer) {
-		*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
+		*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
 	}
 }
 

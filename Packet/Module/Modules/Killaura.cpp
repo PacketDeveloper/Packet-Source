@@ -151,7 +151,7 @@ void Killaura::onTick(C_GameMode* gm) {
 void Killaura::onEnable() {
 	targethud = 0;
 	if (g_Data.getLocalPlayer() == nullptr)
-		this->setEnabled(false);
+		setEnabled(false);
 	//Minecraft.Windows.exe + 1D4C043;
 	//Minecraft.Windows.exe + BFADDA;
 
