@@ -266,6 +266,7 @@
     <ClCompile Include="Packet\Command\Commands\ServerCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\setoffhandCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\SetprefixCommand.cpp" />
+    <ClCompile Include="Packet\Command\Commands\SpammerCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\TeleportCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\TestCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\ToggleCommand.cpp" />
@@ -292,6 +293,7 @@
     <ClCompile Include="Packet\Module\Modules\CustomSky.cpp" />
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
     <ClCompile Include="Packet\Module\Modules\Sneak.cpp" />
+    <ClCompile Include="Packet\Module\Modules\Spammer.cpp" />
     <ClCompile Include="Packet\Module\Modules\Sprint.cpp" />
     <ClCompile Include="Packet\Module\Modules\Speed.cpp" />
     <ClCompile Include="Packet\Module\Modules\Blink.cpp" />
@@ -434,6 +436,7 @@
     <ClInclude Include="Packet\Command\Commands\ServerCommand.h" />
     <ClInclude Include="Packet\Command\Commands\setoffhandCommand.h" />
     <ClInclude Include="Packet\Command\Commands\SetprefixCommand.h" />
+    <ClInclude Include="Packet\Command\Commands\SpammerCommand.h" />
     <ClInclude Include="Packet\Command\Commands\TeleportCommand.h" />
     <ClInclude Include="Packet\Command\Commands\TestCommand.h" />
     <ClInclude Include="Packet\Command\Commands\ToggleCommand.h" />
@@ -460,6 +463,7 @@
     <ClInclude Include="Packet\Module\Modules\CustomSky.h" />
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />
     <ClInclude Include="Packet\Module\Modules\Sneak.h" />
+    <ClInclude Include="Packet\Module\Modules\Spammer.h" />
     <ClInclude Include="Packet\Module\Modules\Sprint.h" />
     <ClInclude Include="Packet\Module\Modules\Speed.h" />
     <ClInclude Include="Packet\Module\Modules\Blink.h" />

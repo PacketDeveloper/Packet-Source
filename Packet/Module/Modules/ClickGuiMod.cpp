@@ -2,6 +2,9 @@
 #include "../../Menu/ClickGui.h"
 
 ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui - toggle everything by just clicking on it!") {
+	registerEnumSetting("Theme", &theme, 1);
+	theme.addEntry("Packet", 0);
+	theme.addEntry("Fadeaway", 1);
 	registerBoolSetting("Animations", &this->animations, this->animations);
 	registerBoolSetting("Rainbow", &this->rainbowColor, this->rainbowColor);
 	registerFloatSetting("Opacity", &this->opacity, this->opacity, 0.05f, 1.f);
@@ -17,8 +20,6 @@ const char* ClickGuiMod::getModuleName() {
 
 void ClickGuiMod::onEnable() {
 	g_Data.getClientInstance()->releaseMouse();
-	auto clickGUI = moduleMgr->getModule<ClickGui>();
-	//clickGUI->ourWindow->animation = 0.2f;
 	makeOnixMadCounter = 1;
 }
 

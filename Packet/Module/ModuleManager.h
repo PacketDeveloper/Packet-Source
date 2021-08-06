@@ -60,7 +60,7 @@
 #include "Modules/CustomSky.h"
 #include "Modules/XP.h"
 #include "Modules/FastStop.h"
-#include "Modules/NoSlow.h"
+#include "Modules/Spammer.h"
 #include "Modules/Module.h"
 
 // Unused
@@ -75,6 +75,7 @@
 #include "Modules/TestModule.h"
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
+#include "Modules/NoSlow.h"
 // Broken
 #include "Modules/TriggerBot.h"
 #include "Modules/CrystalAura.h"

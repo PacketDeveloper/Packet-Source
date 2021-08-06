@@ -12,9 +12,6 @@ public:
 
 	SettingEnum color = this;
 
-
-	float bpsX = 100.f;
-	float bpsY = 100.f;
 	float speed = 0.f;
 	float scale = 1.f;
 	bool tabgui = false;
@@ -25,7 +22,6 @@ public:
 	bool arraylistOutline = true;
 	bool arraylistBackground = true;
 	bool clickToggle = false;
-	bool bps = false;
 	bool watermark = true;
 	bool coordinates = false;
 	bool keybinds = true;

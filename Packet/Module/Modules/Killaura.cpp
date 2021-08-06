@@ -260,7 +260,6 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 				// Body
 				rotation->bodyYaw = angle.y;
 				rotation->yawUnused2 = prevyaw2;
-				rotation->oldBodyYaw = angle.x;
 			}
 		}
 	}

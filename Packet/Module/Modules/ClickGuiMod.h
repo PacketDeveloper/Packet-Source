@@ -6,6 +6,8 @@ public:
 	ClickGuiMod();
 	~ClickGuiMod();
 
+		SettingEnum theme = this;
+
 	bool headerAnimation = false;
 	int makeOnixMadCounter = 1;
 	bool openAnimation = false;

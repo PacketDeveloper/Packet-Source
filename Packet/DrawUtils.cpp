@@ -101,7 +101,8 @@ void DrawUtils::setColor(float r, float g, float b, float a) {
 }
 
 C_Font* DrawUtils::getFont(Fonts font) {
-	return (C_Font*)(*(uintptr_t*)((uintptr_t)g_Data.getClientInstance()->minecraftGame + 0x110));
+	auto hudModule = moduleMgr->getModule<HudModule>();
+		return (C_Font*)(*(uintptr_t*)((uintptr_t)g_Data.getClientInstance()->minecraftGame + 0x110));
 }
 
 Tessellator* DrawUtils::get3dTessellator() {

@@ -4,6 +4,7 @@
 
 class NoFall : public IModule {
 public:
+	int dist = 3;
 	C_MoveInputHandler* inputHandler = nullptr;
 	
 				SettingEnum mode = this;

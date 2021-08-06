@@ -70,6 +70,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new CustomSky()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new XP()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FastStop()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
 
 		// Unused modules
 		//this->moduleList.push_back(std::shared_ptr<IModule>(new Derp()));
