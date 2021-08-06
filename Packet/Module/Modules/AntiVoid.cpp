@@ -1,8 +1,8 @@
 #include "AntiVoid.h"
 
 AntiVoid::AntiVoid() : IModule(0, Category::MOVEMENT, "Automatically teleports you back up if you fall down more than X blocks") {
-	//this->registerBoolSetting("Hive", &this->hiveMode, this->hiveMode);
-	//registerIntSetting("distance", &this->distance, this->distance, 1, 10);
+	//registerBoolSetting("Hive", &hiveMode, hiveMode);
+	//registerIntSetting("distance", &distance, distance, 1, 10);
 }
 
 AntiVoid::~AntiVoid() {
