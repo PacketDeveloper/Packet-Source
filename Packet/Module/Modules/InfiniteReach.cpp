@@ -13,35 +13,8 @@ const char* InfiniteReach::getModuleName() {
 	return ("InfiniteAura");
 }
 
-static std::vector<C_Entity*> targetList0;
-
-void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
-	static auto tpaura = moduleMgr->getModule<TPAura>();
-	
-	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
-		return;
-
-	if (currentEntity == 0)
-		return;
-
-	if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
-		return;
-
-	if (FriendList::findPlayer(currentEntity->getNameTag()->getText()))  // Skip Friend
-		return;
-
-	if (!Target::isValidTarget(currentEntity))
-		return;
-
-	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
-
-	if (dist < tpaura->range) {
-		targetList0.push_back(currentEntity);
-	}
-}
-
 void InfiniteReach::onTick(C_GameMode* gm) {
-	//Loop through all our players and retrieve their information
+	/*//Loop through all our players and retrieve their information
 	targetList0.clear();
 
 	g_Data.forEachEntity(findEntities);
@@ -77,5 +50,5 @@ void InfiniteReach::onTick(C_GameMode* gm) {
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&teleportPacket);
 		}
 		Odelay = 0;
-	}
+	}*/
 }

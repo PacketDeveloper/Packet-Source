@@ -2,11 +2,12 @@
 
 #include "../../Module/ModuleManager.h"
 
-LongJump::LongJump() : IModule(0, Category::MOVEMENT, "ye very cool - packet") {
-	registerBoolSetting("SlowDown", &this->slowDown, this->slowDown);
-	registerBoolSetting("Damage", &this->damage, this->damage);
-	registerFloatSetting("Height", &this->height, this->height, 0.2f, 5.f);
-	registerFloatSetting("Speed", &this->speed, this->speed, 0.3f, 5.f);
+LongJump::LongJump() : IModule(0, Category::MOVEMENT, "JUMP YES") {
+	registerBoolSetting("SlowDown", &slowDown, slowDown);
+	registerBoolSetting("Damage", &damage, damage);
+	registerBoolSetting("Hive", &hive, hive);
+	registerFloatSetting("Height", &height, height, 0.2f, 5.f);
+	registerFloatSetting("Speed", &speed, speed, 0.5f, 5.f);
 }
 
 const char* LongJump::getModuleName() {
@@ -15,102 +16,88 @@ const char* LongJump::getModuleName() {
 
 void LongJump::onEnable() {
 	auto player = g_Data.getLocalPlayer();
+	counter2 = 0;
 	if (damage) {
 		player->animateHurt();
 	}
 	if (slowDown) {
-		counter = 1;
 		if (g_Data.canUseMoveKeys()) {
-			*g_Data.getClientInstance()->minecraft->timer = 3.f;
+			*g_Data.getClientInstance()->minecraft->timer = 2.f;
+			counter = 1;
 		}
-	}
-	if (!slowDown) {
+	} else {
 		if (g_Data.canUseMoveKeys()) {
 			*g_Data.getClientInstance()->minecraft->timer = 35.f;
-		}
-	}
-	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {  // Only on The Hive
-		auto player = g_Data.getLocalPlayer();
-		if (player->onGround) {
-			vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
-
-			vec3_t pos;
-			pos.x = 0.f + pPos.x;
-			pos.y = 0.5f + pPos.y;
-			pos.z = 0.f + pPos.z;
-
-			g_Data.getLocalPlayer()->setPos(pos);
 		}
 	}
 }
 
 void LongJump::onTick(C_GameMode* gm) {
-	if (mode.getSelectedValue() == 1) {
-
-	}
-		if (slowDown) {
-			if (counter == 20) {
-				counter = 1;
-			} else {
-				counter++;
-			}
-		}
-		if (slowDown) {
-			if (counter == 20) {
-				*g_Data.getClientInstance()->minecraft->timer = 20.f;
-			}
-			}
-		auto timerMod = moduleMgr->getModule<Timer>();
-		if (timerMod->isEnabled()) {
-			timerMod->setEnabled(false);
-		}
-		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {  // Only on The Hive
-			auto player = g_Data.getLocalPlayer();
-			if (!player->onGround) {
-				this->setEnabled(false);
-			}
+	auto flight = moduleMgr->getModule<Flight>();
+	auto timer = moduleMgr->getModule<Timer>();
+	auto speed = moduleMgr->getModule<Speed>();
+	auto player = g_Data.getLocalPlayer();
+	flight->setEnabled(false);
+	speed->setEnabled(false);
+	timer->setEnabled(false);
+	if (slowDown) {
+		if (counter == 20) {
+			*g_Data.getClientInstance()->minecraft->timer = 20.f;  // prevent bug where you would stay frozen when in menu
+			counter = 1;
+		} else {
+			counter++;
 		}
 	}
+	if (hive) {
+		if (!player->onGround) {
+			setEnabled(false);
+		}
+	} else {
+		if (!gm->player->onGround)
+			counter2++;
+	}
+}
 
 void LongJump::onMove(C_MoveInputHandler* input) {
 	auto player = g_Data.getLocalPlayer();
 	if (player == nullptr) return;
+	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+	bool pressed = moveVec2d.magnitude() > 0.01f;
 
-	if (mode.getSelectedValue() == 1) {
-
-	} else {
-		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
-		bool pressed = moveVec2d.magnitude() > 0.01f;
-
+	float calcYaw = (player->yaw + 90) * (PI / 180);
+	vec3_t moveVec;
+	float c = cos(calcYaw);
+	float s = sin(calcYaw);
+	moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+	if (hive) {
 		if (player->onGround && pressed)
 			player->jumpFromGround();
-
-		float calcYaw = (player->yaw + 90) * (PI / 180);
-		vec3_t moveVec;
-		float c = cos(calcYaw);
-		float s = sin(calcYaw);
-		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
 		moveVec.x = moveVec2d.x * speed;
-		moveVec.y = height;
+		moveVec.y = 0.50;
 		player->velocity.y;
 		moveVec.z = moveVec2d.y * speed;
 		if (pressed) player->lerpMotion(moveVec);
-		auto longjumpMod = moduleMgr->getModule<LongJump>();
-		if (longjumpMod->isEnabled()) {
-			longjumpMod->setEnabled(false);
+		setEnabled(false);
+	} else {
+		*g_Data.getClientInstance()->minecraft->timer = 20.f;
+		if (player->onGround && pressed) {
+			player->jumpFromGround();
+			player->velocity.y = height;
 		}
-		auto glideMod = moduleMgr->getModule<Flight>();
-		if (glideMod->isEnabled()) {
-			glideMod->setEnabled(false);
-		}
-		auto speedMod = moduleMgr->getModule<Speed>();
-		if (speedMod->isEnabled()) {
-			speedMod->setEnabled(false);
+		moveVec.x = moveVec2d.x * speed;
+		moveVec.y = player->velocity.y;
+		moveVec.z = moveVec2d.y * speed;
+		if (pressed) player->lerpMotion(moveVec);
+
+		if (counter2 >= 3 && player->onGround) {
+			counter2 = 0;
+			setEnabled(false);
+			player->velocity = vec3_t(0, 0, 0);
 		}
 	}
 }
 
 void LongJump::onDisable() {
-	auto player = g_Data.getLocalPlayer();
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
+	counter2 = 0;
 }

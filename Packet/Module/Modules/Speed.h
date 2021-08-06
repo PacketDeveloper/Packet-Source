@@ -5,14 +5,11 @@
 class Speed : public IModule {
 private:
 	bool jumpMode = true;
-	bool onGround = false;
 	float height = 0.40f;
 	int counter = 1;
 
 public:
 	int timer = 20;
-	bool lowMode = true;
-	bool hive = false;
 	float speed = 0.325f;
 	Speed();
 	~Speed();

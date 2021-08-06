@@ -61,6 +61,7 @@
 #include "Modules/XP.h"
 #include "Modules/FastStop.h"
 #include "Modules/Spammer.h"
+#include "Modules/BehindAura.h"
 #include "Modules/Module.h"
 
 // Unused

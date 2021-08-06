@@ -8,7 +8,6 @@ private:
 	bool damage = false;
 
 public:
-	C_MovePlayerPacket* jetpack = nullptr;
 	int counter = 1;
 	int counter2 = 1;
 	int counter3 = 1;
@@ -22,6 +21,7 @@ public:
 	bool selectBlock();
 	int prevSlot = 0;
 
+		C_MovePlayerPacket* jetpack = nullptr;
 		SettingEnum mode = this;
 
 	Flight();

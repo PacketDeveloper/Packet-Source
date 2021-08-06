@@ -71,6 +71,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new XP()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FastStop()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 
 		// Unused modules
 		//this->moduleList.push_back(std::shared_ptr<IModule>(new Derp()));

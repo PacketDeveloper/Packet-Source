@@ -10,7 +10,7 @@ private:
 	bool useLerp = true;
 	bool usePos = false;
 	bool useAttack = false;
-	bool useTick = false;
+	bool useTick = true;
 
 	bool basicCheck = true;
 	bool calcYawCheck = false;

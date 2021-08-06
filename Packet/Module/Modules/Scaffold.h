@@ -6,7 +6,7 @@ private:
 	bool switchMode = true;
 	bool extendMode = true;
 	bool staircase = true;
-	bool airplace = true;
+	bool airplace = false;
 	bool rotations = true;
 	bool spoof = false;
 	float towerSpeed = 0.45f;

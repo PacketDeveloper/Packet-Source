@@ -2,16 +2,15 @@
 
 BehindAura::BehindAura() : IModule(0, Category::COMBAT, "A combat aura used for PvP or HvH, you will always stay behind the enemy.") {
 	//registerBoolSetting("Mobs", &isMobAura, isMobAura);
-	registerFloatSetting("LerpSpeed", &lerpSpeed, lerpSpeed, 1, 50);
-	registerFloatSetting("Distance", &behindDist, behindDist, 0.5f, 5.f);
-	registerFloatSetting("Range", &range, range, 0.5f, 9.f);
+	registerBoolSetting("BasicYawCheck", &basicCheck, basicCheck);
+	registerBoolSetting("CalcYawCheck", &calcYawCheck, calcYawCheck);
 	registerBoolSetting("UseLerpTo", &useLerp, useLerp);
 	registerBoolSetting("UseSetPos", &usePos, usePos);
 	registerBoolSetting("OnAttack", &useAttack, useAttack);
-	registerBoolSetting("OnTick", &useTick, useTick);
-
-	registerBoolSetting("BasicYawCheck", &basicCheck, basicCheck);
-	registerBoolSetting("CalcYawCheck", &calcYawCheck, calcYawCheck);
+	//registerBoolSetting("OnTick", &useTick, useTick);
+	registerFloatSetting("LerpSpeed", &lerpSpeed, lerpSpeed, 1, 50);
+	registerFloatSetting("Distance", &behindDist, behindDist, 0.5f, 5.f);
+	registerFloatSetting("Range", &range, range, 0.5f, 8.f);
 }
 
 BehindAura::~BehindAura() {

@@ -258,7 +258,6 @@
     <ClCompile Include="Packet\Command\Commands\NbtCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\OutlineCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\PanicCommand.cpp" />
-    <ClCompile Include="Packet\Command\Commands\PartyCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\PlayerTeleportCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\RelativeTeleportCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\SayCommand.cpp" />
@@ -290,6 +289,7 @@
     <ClCompile Include="Packet\Module\Modules\AntiVoid.cpp" />
     <ClCompile Include="Packet\Module\Modules\AutoArmor.cpp" />
     <ClCompile Include="Packet\Module\Modules\AutoClicker.cpp" />
+    <ClCompile Include="Packet\Module\Modules\BehindAura.cpp" />
     <ClCompile Include="Packet\Module\Modules\CustomSky.cpp" />
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
     <ClCompile Include="Packet\Module\Modules\Sneak.cpp" />
@@ -307,7 +307,6 @@
     <ClCompile Include="Packet\Module\Modules\CrystalAura.cpp" />
     <ClCompile Include="Packet\Module\Modules\Derp.cpp" />
     <ClCompile Include="Packet\Module\Modules\Disabler.cpp" />
-    <ClCompile Include="Packet\Module\Modules\EditionFaker.cpp" />
     <ClCompile Include="Packet\Module\Modules\ESP.cpp" />
     <ClCompile Include="Packet\Module\Modules\Freecam.cpp" />
     <ClCompile Include="Packet\Module\Modules\Freelook.cpp" />
@@ -325,7 +324,6 @@
     <ClCompile Include="Packet\Module\Modules\InventoryCleaner.cpp" />
     <ClCompile Include="Packet\Module\Modules\InventoryMove.cpp" />
     <ClCompile Include="Packet\Module\Modules\JavascriptModule.cpp" />
-    <ClCompile Include="Packet\Module\Modules\Jetpack.cpp" />
     <ClCompile Include="Packet\Module\Modules\Killaura.cpp" />
     <ClCompile Include="Packet\Module\Modules\LongJump.cpp" />
     <ClCompile Include="Packet\Module\Modules\MidClick.cpp" />
@@ -341,7 +339,6 @@
     <ClCompile Include="Packet\Module\Modules\PacketLogger.cpp" />
     <ClCompile Include="Packet\Module\Modules\Phase.cpp" />
     <ClCompile Include="Packet\Module\Modules\Radar.cpp" />
-    <ClCompile Include="Packet\Module\Modules\RainbowSky.cpp" />
     <ClCompile Include="Packet\Module\Modules\Reach.cpp" />
     <ClCompile Include="Packet\Module\Modules\Safewalk.cpp" />
     <ClCompile Include="Packet\Module\Modules\Scaffold.cpp" />
@@ -428,7 +425,6 @@
     <ClInclude Include="Packet\Command\Commands\NbtCommand.h" />
     <ClInclude Include="Packet\Command\Commands\OutlineCommand.h" />
     <ClInclude Include="Packet\Command\Commands\PanicCommand.h" />
-    <ClInclude Include="Packet\Command\Commands\PartyCommand.h" />
     <ClInclude Include="Packet\Command\Commands\PlayerTeleportCommand.h" />
     <ClInclude Include="Packet\Command\Commands\RelativeTeleportCommand.h" />
     <ClInclude Include="Packet\Command\Commands\SayCommand.h" />
@@ -460,6 +456,7 @@
     <ClInclude Include="Packet\Module\Modules\AntiVoid.h" />
     <ClInclude Include="Packet\Module\Modules\AutoArmor.h" />
     <ClInclude Include="Packet\Module\Modules\AutoClicker.h" />
+    <ClInclude Include="Packet\Module\Modules\BehindAura.h" />
     <ClInclude Include="Packet\Module\Modules\CustomSky.h" />
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />
     <ClInclude Include="Packet\Module\Modules\Sneak.h" />
@@ -477,7 +474,6 @@
     <ClInclude Include="Packet\Module\Modules\CrystalAura.h" />
     <ClInclude Include="Packet\Module\Modules\Derp.h" />
     <ClInclude Include="Packet\Module\Modules\Disabler.h" />
-    <ClInclude Include="Packet\Module\Modules\EditionFaker.h" />
     <ClInclude Include="Packet\Module\Modules\ESP.h" />
     <ClInclude Include="Packet\Module\Modules\Freecam.h" />
     <ClInclude Include="Packet\Module\Modules\Freelook.h" />
@@ -495,7 +491,6 @@
     <ClInclude Include="Packet\Module\Modules\InventoryCleaner.h" />
     <ClInclude Include="Packet\Module\Modules\InventoryMove.h" />
     <ClInclude Include="Packet\Module\Modules\JavascriptModule.h" />
-    <ClInclude Include="Packet\Module\Modules\Jetpack.h" />
     <ClInclude Include="Packet\Module\Modules\Killaura.h" />
     <ClInclude Include="Packet\Module\Modules\LongJump.h" />
     <ClInclude Include="Packet\Module\Modules\MidClick.h" />
@@ -511,7 +506,6 @@
     <ClInclude Include="Packet\Module\Modules\PacketLogger.h" />
     <ClInclude Include="Packet\Module\Modules\Phase.h" />
     <ClInclude Include="Packet\Module\Modules\Radar.h" />
-    <ClInclude Include="Packet\Module\Modules\RainbowSky.h" />
     <ClInclude Include="Packet\Module\Modules\Reach.h" />
     <ClInclude Include="Packet\Module\Modules\Safewalk.h" />
     <ClInclude Include="Packet\Module\Modules\Scaffold.h" />

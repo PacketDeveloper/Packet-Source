@@ -6,17 +6,12 @@ class LongJump : public IModule {
 private:
 	float glideMod = -0.16f;
 	int counter = 1;
-	bool dmgMode = true;
-	bool newMode = false;
-	float tpDis = 0.f;
+	int counter2 = 0;
 	bool damage = false;
 	bool slowDown = true;
-	bool floatMode = false;
+	bool hive = false;
 	float height = 1.f;
-	int testTimer = 0;
 	float speed = 2.f;
-	bool lowMode = true;
-	bool disable;
 
 		SettingEnum mode = this;
 
