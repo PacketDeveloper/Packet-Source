@@ -4,9 +4,9 @@ TPAura::TPAura() : IModule(0x0, Category::COMBAT, "TP Around The Closest Enemy."
 	registerFloatSetting("Range", &range, range, 3, 10);
 	registerIntSetting("Distance", &entDistance, entDistance, 1, 4); //DistanceFromEnemy
 	registerFloatSetting("Height", &entHeight, entHeight, -3, 4);
+	registerIntSetting("Delay", &delay, delay, 0, 40);
 	registerBoolSetting("Use LerpTo", &push, push);
 	registerFloatSetting("LerpSpeed", &rangeSpeed, rangeSpeed, 1, 100);
-	registerIntSetting("Delay", &delay, delay, 0, 40);
 }
 
 TPAura::~TPAura() {
