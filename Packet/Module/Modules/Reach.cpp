@@ -5,7 +5,7 @@
 #include "../../../Utils/Utils.h"
 
 Reach::Reach() : IModule(0, Category::COMBAT, "Increases your reach") {
-	this->registerFloatSetting("Amount", &this->reachValue, this->reachValue, 3.f, 8.f);
+	registerFloatSetting("Amount", &reachValue, reachValue, 3.f, 9.f);
 }
 
 Reach::~Reach() {

@@ -1,14 +1,15 @@
 #include "Speed.h"
-Speed::Speed() : IModule(0, Category::MOVEMENT, "sped") {
-	registerEnumSetting("Mode", &this->mode, 0);
+Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
 #ifdef _DEBUG
 	mode.addEntry("HiveGround", 2);
+	mode.addEntry("KowSpecial", 3);
 #endif
-	registerIntSetting("TimerBoost", &this->timer, this->timer, 20, 35);
-	registerFloatSetting("Height", &this->height, this->height, 0.000001f, 0.40f);
-	registerFloatSetting("Speed", &this->speed, this->speed, 0.2f, 2.f);
+	registerIntSetting("TimerBoost", &timer, timer, 20, 35);
+	registerFloatSetting("Height", &height, height, 0.000001f, 0.40f);
+	registerFloatSetting("Speed", &speed, speed, 0.2f, 2.f);
 }
 
 Speed::~Speed() {
@@ -19,10 +20,14 @@ const char* Speed::getModuleName() {
 }
 
 void Speed::onEnable() {
+	if (mode.getSelectedValue() == 3) {
+		auto box = g_Data.addInfoBox("Speed", "Gamer Mode Enabled!");
+		box->closeTimer = 5.f;
+	}
 }
 
 void Speed::onTick(C_GameMode* gm) {
-	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
+	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
 	auto scaffold = moduleMgr->getModule<Scaffold>();
 	if (scaffold->speedLockY) {
 		scaffold->lockY = true;
@@ -43,9 +48,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		} else {
 			velocity = true;
 		}
-		if (player->onGround && pressed && !input->isJumping && (velocity == true)) {
+		if (player->onGround && pressed && !input->isJumping && velocity)
 			player->velocity.y = height;
-		}
 		if (!pressed && player->damageTime == 0) {
 			player->velocity.x *= 0;
 			player->velocity.z *= 0;
@@ -147,12 +151,42 @@ void Speed::onMove(C_MoveInputHandler* input) {
 				player->velocity.x *= 0;
 				player->velocity.z *= 0;
 			}
-			if (input->right) {
+			if (input->right || input->left) {
 				*g_Data.getClientInstance()->minecraft->timer = 19.f;
 			}
-			if (input->left) {
-				*g_Data.getClientInstance()->minecraft->timer = 19.f;
-			}
+		}
+	}
+	if (mode.getSelectedValue() == 3 && g_Data.isInGame()) {
+		if (player == nullptr) return;
+
+		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+		bool pressed = moveVec2d.magnitude() > 0.01f;
+
+		if (player->onGround && pressed) {
+			player->jumpFromGround();
+			player->velocity.y = -0.1f;
+			player->velocity.y = 0.23;
+		}
+			
+
+		float calcYaw = (player->yaw + 90) * (PI / 180);
+		vec3_t moveVec;
+		float c = cos(calcYaw);
+		float s = sin(calcYaw);
+		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+		moveVec.x = moveVec2d.x * speed;
+		moveVec.y = player->velocity.y;
+		moveVec.z = moveVec2d.y * speed;
+		if (pressed) player->lerpMotion(moveVec);
+		if (input->right || input->left) {
+			*g_Data.getClientInstance()->minecraft->timer = 19.f;
+		}
+
+		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
+			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 1.3f, 0.f, moveVec.z / 1.3f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
+			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
 		}
 	}
 }
@@ -165,7 +199,17 @@ void Speed::onDisable() {
 		player->velocity.x = 0.f;
 		player->velocity.z = 0.f;
 	}
-	if (scaffold->speedLockY) {
-		scaffold->lockY = false;
+	if (scaffold->speedLockY)scaffold->lockY = false;
+}
+
+void Speed::onSendPacket(C_Packet* packet) {
+	auto player = g_Data.getLocalPlayer();
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3 && g_Data.isInGame()) {
+		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+		float myPitchq = player->pitch;
+		float myYawq = player->yaw;
+		float bodyYawq = player->bodyYaw;
+		movePacket->pitch = myPitchq;
+		movePacket->headYaw = myYawq;
 	}
 }

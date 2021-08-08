@@ -1,19 +1,18 @@
 #include "Killaura.h"
 
 Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entites") {
-	registerEnumSetting("Mode", &this->mode, 0);
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Multi", 0);
 	mode.addEntry("Switch", 1);
-	this->registerBoolSetting("Rotations", &this->rot, this->rot);
-	//this->registerBoolSetting("MultiAura", &this->isMulti, this->isMulti);
-	this->registerBoolSetting("Distance", &this->distanceCheck, this->distanceCheck);
-	this->registerBoolSetting("MobAura", &this->isMobAura, this->isMobAura);
-	this->registerBoolSetting("Hurttime", &this->hurttime, this->hurttime);
-	this->registerBoolSetting("Strafe", &this->strafe, this->strafe);
-	this->registerBoolSetting("Silent", &this->silent, this->silent);
-	this->registerBoolSetting("Click", &this->click, this->click);
-	this->registerFloatSetting("range", &this->range, this->range, 3.f, 8.f);
-	this->registerIntSetting("delay", &this->delay, this->delay, 0, 10);
+	registerBoolSetting("Rotations", &rot, rot);
+	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
+	registerBoolSetting("MobAura", &isMobAura, isMobAura);
+	registerBoolSetting("Hurttime", &hurttime, hurttime);
+	registerBoolSetting("Strafe", &strafe, strafe);
+	registerBoolSetting("Silent", &silent, silent);
+	registerBoolSetting("Click", &click, click);
+	registerFloatSetting("range", &range, range, 3.f, 8.f);
+	registerIntSetting("delay", &delay, delay, 0, 10);
 }
 
 Killaura::~Killaura() {
@@ -88,64 +87,62 @@ struct CompareTargetEnArray {
 };
 
 void Killaura::onTick(C_GameMode* gm) {
-	//Loop through all our players and retrieve their information
-	targetList.clear();
+		//Loop through all our players and retrieve their information
+		targetList.clear();
 
-	g_Data.forEachEntity(findEntity);
+		g_Data.forEachEntity(findEntity);
 
-	Odelay++;
-	if (distanceCheck)
-		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-	if (!targetList.empty() && Odelay >= delay) {
-		if (autoweapon) findWeapon();
-		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() < 0.01) {
-			C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);  // make sure to update rotation if player is standing still
-		}
+		Odelay++;
+		if (distanceCheck)
+			std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+		if (!targetList.empty() && Odelay >= delay) {
+			if (autoweapon) findWeapon();
+			if (g_Data.getLocalPlayer()->velocity.squaredxzlen() < 0.01) {
+				C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);  // make sure to update rotation if player is standing still
+			}
 
-		// Attack all entitys in targetList
-		if (mode.getSelectedValue() == 0) {  // Multi
-			for (auto& i : targetList) {
-				if (!(i->damageTime > 1 && hurttime)) {
+			// Attack all entitys in targetList
+			if (mode.getSelectedValue() == 0) {  // Multi
+				for (auto& i : targetList) {
+					if (!(i->damageTime > 1 && hurttime)) {
+						g_Data.getLocalPlayer()->swing();
+						g_Data.getCGameMode()->attack(i);
+						targethud++;
+					} else
+						targethud = 0;
+				}
+			} else {  // Switch
+				if (!(targetList[0]->damageTime > 1 && hurttime)) {
 					g_Data.getLocalPlayer()->swing();
-					g_Data.getCGameMode()->attack(i);
+					g_Data.getCGameMode()->attack(targetList[0]);
 					targethud++;
 				} else
 					targethud = 0;
 			}
-		} else {  // Switch
-			if (!(targetList[0]->damageTime > 1 && hurttime)) {
-				g_Data.getLocalPlayer()->swing();
-				g_Data.getCGameMode()->attack(targetList[0]);
-				targethud++;
-			} else
-				targethud = 0;
+			Odelay = 0;
 		}
-		Odelay = 0;
-	}
-	if (targetList.empty()) {
-		targethud = 0;
-	}
+		if (targetList.empty())
+			targethud = 0;
 
-	for (auto& i : targetList) {
-		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-		PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
-		Odelay++;
+		for (auto& i : targetList) {
+			C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+			PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
+			Odelay++;
 
-		if (click && !targetList.empty()) {
-			if (Odelay >= delay) {
-				g_Data.leftclickCount++;
-				if (pointing->hasEntity())
-					gm->attack(pointing->getEntity());
+			if (click && !targetList.empty()) {
+				if (Odelay >= delay) {
+					g_Data.leftclickCount++;
+					if (pointing->hasEntity())
+						gm->attack(pointing->getEntity());
+				}
+			}
+			if (strafe && !targetList.empty()) {
+				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+				auto weewee = g_Data.getLocalPlayer();
+				weewee->setRot(angle);
 			}
 		}
-		if (strafe && !targetList.empty()) {
-			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-			auto weewee = g_Data.getLocalPlayer();
-			weewee->setRot(angle);
-		}
-
-	}
 }
 
 #include <Windows.h>
