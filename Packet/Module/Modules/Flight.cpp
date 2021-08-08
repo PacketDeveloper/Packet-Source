@@ -11,7 +11,7 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "yes") {
 	mode.addEntry("Teleport", 3);
 	mode.addEntry("Jetpack", 4);
 	mode.addEntry("AirJump", 5);
-	//this->registerIntSetting("PlaceDelay", &placeDelay, placeDelay, 2, 20);
+	//registerIntSetting("PlaceDelay", &placeDelay, placeDelay, 2, 20);
 	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
 	registerFloatSetting("value", &glideMod, glideMod, -0.15f, 0.00);
 }

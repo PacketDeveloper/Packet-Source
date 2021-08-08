@@ -180,6 +180,13 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		if (input->left) {
 			*g_Data.getClientInstance()->minecraft->timer = 19.f;
 		}
+
+		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
+			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 1.3f, 0.f, moveVec.z / 1.3f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
+			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
+		}
 	}
 }
 
