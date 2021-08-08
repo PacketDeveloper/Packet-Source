@@ -152,10 +152,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 				player->velocity.x *= 0;
 				player->velocity.z *= 0;
 			}
-			if (input->right) {
-				*g_Data.getClientInstance()->minecraft->timer = 19.f;
-			}
-			if (input->left) {
+			if (input->right || input->left) {
 				*g_Data.getClientInstance()->minecraft->timer = 19.f;
 			}
 		}
@@ -182,10 +179,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		moveVec.y = player->velocity.y;
 		moveVec.z = moveVec2d.y * speed;
 		if (pressed) player->lerpMotion(moveVec);
-		if (input->right) {
-			*g_Data.getClientInstance()->minecraft->timer = 19.f;
-		}
-		if (input->left) {
+		if (input->right || input->left) {
 			*g_Data.getClientInstance()->minecraft->timer = 19.f;
 		}
 
