@@ -64,32 +64,29 @@ void Flight::onTick(C_GameMode* gm) {
 		float z = 0.f;
 
 		if (g_Data.canUseMoveKeys()) {
-			if (GameData::isKeyDown(*input->spaceBarKey)) {
+			if (GameData::isKeyDown(*input->spaceBarKey))
 				player->setPos(pos.add(vec3_t(x, speed, z)));
-			}
-			if (GameData::isKeyDown(*input->sneakKey)) {
+			if (GameData::isKeyDown(*input->sneakKey))
 				player->setPos(pos.add(vec3_t(x, -speed, z)));
-			}
 		}
 	}
-	if (mode.getSelectedValue() == 0 && GameData::isKeyDown(*input->sneakKey)) {  // Vanilla
+	if (mode.getSelectedValue() == 0 && GameData::isKeyDown(*input->sneakKey))  // Vanilla
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-	}
-	if (mode.getSelectedValue() == 1 && GameData::isKeyDown(*input->sneakKey)) {  // Boost
+	
+	if (mode.getSelectedValue() == 1 && GameData::isKeyDown(*input->sneakKey))  // Boost
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-	}
-	if (mode.getSelectedValue() == 2 && GameData::isKeyDown(*input->sneakKey)) {  // BlockFly
+	
+	if (mode.getSelectedValue() == 2 && GameData::isKeyDown(*input->sneakKey))  // BlockFly
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-	}
-	if (mode.getSelectedValue() == 3 && GameData::isKeyDown(*input->sneakKey)) {  // Teleport
+	
+	if (mode.getSelectedValue() == 3 && GameData::isKeyDown(*input->sneakKey))  // Teleport
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-	}
+	
 
 	if (mode.getSelectedValue() == 1) {  // Boost
 		float yaw = player->yaw;
-		if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
+		if (input->forwardKey && input->backKey && input->rightKey && input->leftKey)
 			gm->player->velocity = vec3_t(0, 0, 0);
-		}
 		gm->player->velocity.y = glideModEffective;
 		if (GameData::isKeyDown(*input->spaceBarKey))
 			glideModEffective += 0.0f;
@@ -108,9 +105,8 @@ void Flight::onTick(C_GameMode* gm) {
 	}
 	if (mode.getSelectedValue() == 0) {  // Vanilla
 		float yaw = player->yaw;
-		if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
+		if (input->forwardKey && input->backKey && input->rightKey && input->leftKey)
 			gm->player->velocity = vec3_t(0, 0, 0);
-		}
 		gm->player->velocity.y = glideModEffective;
 	}
 	if (mode.getSelectedValue() == 4) {  // Jetpack
@@ -130,38 +126,35 @@ void Flight::onTick(C_GameMode* gm) {
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
 			if (!player->onGround) {
 				clientMessageF("%sYou must be on the ground", GRAY);
-				this->glideMod = -0.00034065544605255127;
-				this->setEnabled(false);
+				glideMod = -0.00034065544605255127;
+				setEnabled(false);
 			}
 		}
 		if (clickGUI->isEnabled()) {
 			clientMessageF("%sDisabled to prevent flags/errors", GRAY);
-			this->setEnabled(false);
+			setEnabled(false);
 		}
-		if (placeCounter == placeDelay /*8*/) {
+		if (placeCounter == placeDelay /*8*/) 
 			placeCounter = 1;
-		} else {
+		 else 
 			placeCounter++;
-		}
-		if (placeCounter == 3) {
+		
+		if (placeCounter == 3)
 			*g_Data.getClientInstance()->minecraft->timer = 20.f;
-		}
-		if (selectBlock() == false) {
+		if (!selectBlock()) {
 			if (!restored) {
 				restored = true;
 				g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
-				if (restored == true) {
-					this->setEnabled(false);
-				}
+				if (restored)
+					setEnabled(false);
 			}
 			return;
 		}
 		restored = false;
 		auto player = g_Data.getLocalPlayer();
 		float yaw = player->yaw;
-		if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
+		if (input->forwardKey && input->backKey && input->rightKey && input->leftKey)
 			gm->player->velocity = vec3_t(0, 0, 0);
-		}
 		if (placeCounter == 2) {
 			*g_Data.getClientInstance()->minecraft->timer = 16.f;
 			g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);

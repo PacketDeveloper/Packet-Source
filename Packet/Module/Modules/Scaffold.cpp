@@ -42,23 +42,22 @@ void Scaffold::onTick(C_GameMode* gm) {
 
 	if (switchMode) {
 		static bool restored = false;
-		if (selectBlock() == false) {
+		if (!selectBlock()) {
 			if (!restored) {
 				restored = true;
 				g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
-				if (restored == true) {
-					this->setEnabled(false);
-				}
+				if (restored == true)
+					setEnabled(false);
 			}
 			return;
 		}
 		restored = false;
 	}
-	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
+	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0)
 		towerSpeed = 0.36;
-	} else {
+	 else 
 		towerSpeed = 0.45;
-	}
+	
 
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
@@ -69,8 +68,8 @@ void Scaffold::onTick(C_GameMode* gm) {
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
 	vel = vel.normalize();  // Only use values from 0 - 1
 
-	if (this->extendMode) {
-		if (this->staircase && !GameData::isKeyDown(*input->sneakKey)) {
+	if (extendMode) {
+		if (staircase && !GameData::isKeyDown(*input->sneakKey)) {
 			float cal = (gm->player->yaw + 90) * (PI / 180);
 
 			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
@@ -93,8 +92,8 @@ void Scaffold::onTick(C_GameMode* gm) {
 			}
 		}
 	}
-	if (this->extendMode) {
-		if (this->towerMode && !GameData::isKeyDown(*input->sneakKey) && !GameData::isKeyDown(*input->spaceBarKey)) {
+	if (extendMode) {
+		if (towerMode && !GameData::isKeyDown(*input->sneakKey) && !GameData::isKeyDown(*input->spaceBarKey)) {
 			float cal = (gm->player->yaw + 90) * (PI / 180);
 
 			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
@@ -117,7 +116,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 			}
 		}
 	}
-	if (this->extendMode) {
+	if (extendMode) {
 		if (!staircase) {  // Prevent Downwards from breaking
 			float cal = (gm->player->yaw + 90) * (PI / 180);
 
@@ -142,7 +141,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 		}
 	}
 
-	if (this->staircase && GameData::isKeyDown(*input->sneakKey)) {
+	if (staircase && GameData::isKeyDown(*input->sneakKey)) {
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
 		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
 		blockBelow.y -= g_Data.getLocalPlayer()->height;
@@ -293,7 +292,7 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 				moveVec.x = g_Data.getLocalPlayer()->velocity.x;
 				if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
 					if (player->onGround) {
-						*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
+						*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
 						moveVec.y = towerSpeed;
 					} else { // !player->onGround
 						moveVec.y = towerSpeed;
@@ -327,7 +326,7 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {  // Tower
 	if (!selectedItem->isValid() || !(*selectedItem->item)->isBlock())  // Block in hand?
 		return;
 
-	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
+	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
 	blockBelow.y -= g_Data.getLocalPlayer()->height;
 	blockBelow.y -= 0.5f;
 
@@ -408,7 +407,6 @@ void Scaffold::onDisable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
-	if (!player->onGround && towerMode) {
+	if (!player->onGround && towerMode)
 		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
-	}
 }

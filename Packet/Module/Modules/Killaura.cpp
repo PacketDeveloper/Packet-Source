@@ -122,9 +122,8 @@ void Killaura::onTick(C_GameMode* gm) {
 			}
 			Odelay = 0;
 		}
-		if (targetList.empty()) {
+		if (targetList.empty())
 			targethud = 0;
-		}
 
 		for (auto& i : targetList) {
 			C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();

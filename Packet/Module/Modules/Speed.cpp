@@ -48,9 +48,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		} else {
 			velocity = true;
 		}
-		if (player->onGround && pressed && !input->isJumping && velocity) {
+		if (player->onGround && pressed && !input->isJumping && velocity)
 			player->velocity.y = height;
-		}
 		if (!pressed && player->damageTime == 0) {
 			player->velocity.x *= 0;
 			player->velocity.z *= 0;
@@ -200,9 +199,7 @@ void Speed::onDisable() {
 		player->velocity.x = 0.f;
 		player->velocity.z = 0.f;
 	}
-	if (scaffold->speedLockY) {
-		scaffold->lockY = false;
-	}
+	if (scaffold->speedLockY)scaffold->lockY = false;
 }
 
 void Speed::onSendPacket(C_Packet* packet) {
