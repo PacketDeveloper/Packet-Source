@@ -20,6 +20,7 @@ const char* Speed::getModuleName() {
 }
 
 void Speed::onEnable() {
+	if (mode.getSelectedValue() == 3) g_Data.addInfoBox("Speed","Gamer Mode Enabled!");
 }
 
 void Speed::onTick(C_GameMode* gm) {
