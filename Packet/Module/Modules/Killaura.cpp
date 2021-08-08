@@ -211,21 +211,19 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 				float y = windowSize.y / 2 - windowSize.y / 6.4f + windowSize.y / 4;
 				float scale = 3 * 0.26f;
 				float spacing = scale + 15.f + 2;
-				if (i->getEntityTypeId() == 63) {
-					// armor
-					for (int i = 0; i < 4; i++) {
-						C_ItemStack* stack = player->getArmor(i);
-						if (stack->item != nullptr) {
-							DrawUtils::drawItem(stack, vec2_t(x, y), 1.f, scale, stack->isEnchanted());
-							x += scale * spacing;
-						}
+				// armor
+				for (int i = 0; i < 4; i++) {
+					C_ItemStack* stack = player->getArmor(i);
+					if (stack->item != nullptr) {
+						DrawUtils::drawItem(stack, vec2_t(x, y), 1.f, scale, stack->isEnchanted());
+						x += scale * spacing;
 					}
-					// item
-					{
-						C_ItemStack* stack = player->getSelectedItem();
-						if (stack->item != nullptr) {
-							DrawUtils::drawItem(stack, vec2_t(x, y), 1.f, scale, stack->isEnchanted());
-						}
+				}
+				// item
+				{
+					C_ItemStack* stack = player->getSelectedItem();
+					if (stack->item != nullptr) {
+						DrawUtils::drawItem(stack, vec2_t(rectPos.z - 1.f - 15.f * scale, y), 1.f, scale, stack->isEnchanted());
 					}
 				}
 			}
@@ -274,6 +272,28 @@ void Killaura::onSendPacket(C_Packet* packet) {
 			movePacket->pitch = angle.x;
 			movePacket->headYaw = angle.y;
 			movePacket->yaw = angle.y;
+		}
+	}
+	for (auto& i : targetList) {
+		vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+		if (rot && !targetList.empty()) {
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+			auto rotation = g_Data.getLocalPlayer();
+			float prevyaw = rotation->yawUnused1;
+			float prevyaw2 = rotation->yaw;
+			float prevyaw3 = rotation->yaw2;
+			rotation->setRot(angle);
+
+			// Head
+			rotation->yawUnused1 = angle.y;
+			rotation->pitch = angle.x;
+			rotation->yaw2 = angle.y;
+			rotation->yaw = prevyaw2;
+			rotation->pitch2 = angle.x;
+
+			// Body
+			rotation->bodyYaw = angle.y;
+			rotation->yawUnused2 = prevyaw2;
 		}
 	}
 }

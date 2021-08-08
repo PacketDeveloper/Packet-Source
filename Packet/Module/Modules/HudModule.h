@@ -22,7 +22,6 @@ public:
 	bool arraylistOutline = true;
 	bool arraylistBackground = true;
 	bool clickToggle = false;
-	bool watermark = true;
 	bool coordinates = false;
 	bool keybinds = true;
 	bool displayArmor = false;

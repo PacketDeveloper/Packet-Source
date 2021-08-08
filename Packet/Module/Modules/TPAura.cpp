@@ -1,13 +1,13 @@
 #include "TPAura.h"
 
 TPAura::TPAura() : IModule(0x0, Category::COMBAT, "TP Into The Closest Entity") {
-	registerEnumSetting("Mode", &this->mode, 0);
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Multi", 0);
 	mode.addEntry("Switch", 1);
-	this->registerBoolSetting("Silent", &this->silent, this->silent);
-	this->registerBoolSetting("Push", &this->push, this->push);
-	this->registerIntSetting("TP Delay", &this->delay, this->delay, 0, 10);
-	this->registerFloatSetting("Range", &this->range, this->range, 5, 250);
+	registerBoolSetting("Silent", &silent, silent);
+	registerBoolSetting("Push", &push, push);
+	registerIntSetting("TP Delay", &delay, delay, 0, 10);
+	registerFloatSetting("Range", &range, range, 5, 250);
 }
 
 TPAura::~TPAura() {
@@ -22,7 +22,10 @@ static std::vector<C_Entity*> targetList;
 
 void TPAura::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
-		this->setEnabled(false);
+		setEnabled(false);
+	if (mode.getSelectedValue() == 1) {  // Switch
+		cCounter = 1;
+	}
 }
 
 void findEntity1(C_Entity* currentEntity, bool isRegularEntity) {
@@ -133,7 +136,7 @@ void TPAura::onTick(C_GameMode* gm) {
 			}
 		} else {  // Switch
 			if (silent) {
-				if (targetList0.size() > 0 && Odelay >= delay && (g_Data.getLocalPlayer() != nullptr)) {
+				if (targetList0.size() > 0 && Odelay >= delay) {
 					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 						g_Data.getLocalPlayer()->swingArm();
 					teleportPacket = C_MovePlayerPacket(g_Data.getLocalPlayer(), vec3_t(pos.x - teleportX, pos.y, pos.z - teleportZ));
@@ -156,7 +159,7 @@ void TPAura::onTick(C_GameMode* gm) {
 }
 
 void TPAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
-	if (targetList.size() == 1) {
+	if (targetList.size() == 1 && mode.getSelectedValue() != 1) {
 		if (targethud > 1 && g_Data.canUseMoveKeys()) {
 			for (auto& i : targetList) {
 				C_GuiData* dat = g_Data.getClientInstance()->getGuiData();

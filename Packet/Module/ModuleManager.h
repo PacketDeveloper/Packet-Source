@@ -11,6 +11,7 @@
 
 #include "Modules/HudModule.h"
 #include "Modules/ArrayList.h"
+#include "Modules/Watermark.h"
 #include "Modules/FreeTP.h"
 #include "Modules/CameraMod.h"
 #include "Modules/Animations.h"
@@ -69,7 +70,6 @@
 #include "Modules/ChestStealer.h"
 //#include "Modules/Derp.h"
 //#include "Modules/Waypoints.h" // Crashes
-//#include "Modules/EditionFaker.h"
 //#include "Modules/Criticals.h"
 
 #ifdef _DEBUG

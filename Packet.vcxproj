@@ -319,7 +319,6 @@
     <ClCompile Include="Packet\Module\Modules\ArrayList.cpp" />
     <ClCompile Include="Packet\Module\Modules\ExtendedBlockReach.cpp" />
     <ClCompile Include="Packet\Module\Modules\HudModule.cpp" />
-    <ClCompile Include="Packet\Module\Modules\InfiniteReach.cpp" />
     <ClCompile Include="Packet\Module\Modules\InstaBreak.cpp" />
     <ClCompile Include="Packet\Module\Modules\InventoryCleaner.cpp" />
     <ClCompile Include="Packet\Module\Modules\InventoryMove.cpp" />
@@ -355,6 +354,7 @@
     <ClCompile Include="Packet\Module\Modules\TriggerBot.cpp" />
     <ClCompile Include="Packet\Module\Modules\VanillaPlus.cpp" />
     <ClCompile Include="Packet\Module\Modules\Velocity.cpp" />
+    <ClCompile Include="Packet\Module\Modules\Watermark.cpp" />
     <ClCompile Include="Packet\Module\Modules\Waypoints.cpp" />
     <ClCompile Include="Packet\Module\Modules\XP.cpp" />
     <ClCompile Include="Packet\Module\Modules\Xray.cpp" />
@@ -486,7 +486,6 @@
     <ClInclude Include="Packet\Module\Modules\ArrayList.h" />
     <ClInclude Include="Packet\Module\Modules\ExtendedBlockReach.h" />
     <ClInclude Include="Packet\Module\Modules\HudModule.h" />
-    <ClInclude Include="Packet\Module\Modules\InfiniteReach.h" />
     <ClInclude Include="Packet\Module\Modules\InstaBreak.h" />
     <ClInclude Include="Packet\Module\Modules\InventoryCleaner.h" />
     <ClInclude Include="Packet\Module\Modules\InventoryMove.h" />
@@ -522,6 +521,7 @@
     <ClInclude Include="Packet\Module\Modules\TriggerBot.h" />
     <ClInclude Include="Packet\Module\Modules\VanillaPlus.h" />
     <ClInclude Include="Packet\Module\Modules\Velocity.h" />
+    <ClInclude Include="Packet\Module\Modules\Watermark.h" />
     <ClInclude Include="Packet\Module\Modules\Waypoints.h" />
     <ClInclude Include="Packet\Module\Modules\XP.h" />
     <ClInclude Include="Packet\Module\Modules\Xray.h" />

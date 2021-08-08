@@ -776,8 +776,8 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 		{
 			// Draw Text
 			vec2_t windowSize2 = g_Data.getClientInstance()->getGuiData()->windowSize;
-			float x = windowSize2.x / 28.5f + -16.f;
-			float y = windowSize2.y - 11.1f;
+			float x = windowSize2.x / 114;
+			float y = windowSize2.y - 11;
 			std::string text = "Packet Client";
 			std::string textStr = categoryName;
 			DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255), textSize);

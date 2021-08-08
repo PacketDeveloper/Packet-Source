@@ -33,11 +33,9 @@ void LongJump::onEnable() {
 }
 
 void LongJump::onTick(C_GameMode* gm) {
-	auto flight = moduleMgr->getModule<Flight>();
 	auto timer = moduleMgr->getModule<Timer>();
 	auto speed = moduleMgr->getModule<Speed>();
 	auto player = g_Data.getLocalPlayer();
-	flight->setEnabled(false);
 	speed->setEnabled(false);
 	timer->setEnabled(false);
 	if (slowDown) {

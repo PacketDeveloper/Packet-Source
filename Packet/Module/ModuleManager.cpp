@@ -21,6 +21,7 @@ void ModuleManager::initModules() {
 
 		this->moduleList.push_back(std::shared_ptr<IModule>(new HudModule()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ArrayList()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Watermark()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FreeTP()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new CameraMod()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Animations()));
@@ -109,12 +110,13 @@ void ModuleManager::initModules() {
 		initialized = true;
 	}
 	
-	this->getModule<ArrayList>()->setEnabled(true);
-	this->getModule<ClickGuiMod>()->setEnabled(false);
-	this->getModule<AntiBot>()->setEnabled(true);
-	this->getModule<Sprint>()->setEnabled(true);
-	this->getModule<HudModule>()->setEnabled(true);
-	this->getModule<AntiBot>()->setEnabled(true);
+	getModule<HudModule>()->setEnabled(true);
+	getModule<ArrayList>()->setEnabled(true);
+	getModule<Watermark>()->setEnabled(true);
+	getModule<ClickGuiMod>()->setEnabled(false);
+	getModule<AntiBot>()->setEnabled(true);
+	getModule<Sprint>()->setEnabled(true);
+	getModule<AntiBot>()->setEnabled(true);
 	//this->getModule<Disabler>()->setEnabled(false);
 }
 

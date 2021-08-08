@@ -8,6 +8,7 @@ public:
 	bool hurttime = false;
 	bool silent = false;
 	float range = 250;
+	float cCounter = 1;
 	bool push = false;
 	int targethud = 0;
 	int Odelay = 0;

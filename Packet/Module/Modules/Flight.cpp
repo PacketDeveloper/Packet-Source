@@ -3,17 +3,17 @@
 #include "../../Module/ModuleManager.h"
 
 Flight::Flight() : IModule(0, Category::MOVEMENT, "yes") {
-	this->registerBoolSetting("Damage", &this->damage, this->damage);
-	registerEnumSetting("Mode", &this->mode, 0);
+	registerBoolSetting("Damage", &damage, damage);
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Boost", 1);
 	mode.addEntry("BlockFly", 2);
 	mode.addEntry("Teleport", 3);
 	mode.addEntry("Jetpack", 4);
 	mode.addEntry("AirJump", 5);
-	//this->registerIntSetting("PlaceDelay", &this->placeDelay, this->placeDelay, 2, 20);
-	registerFloatSetting("Speed", &this->speed, this->speed, 0.3f, 4.f);
-	this->registerFloatSetting("value", &this->glideMod, this->glideMod, -0.15f, 0.00);
+	//registerIntSetting("PlaceDelay", &placeDelay, placeDelay, 2, 20);
+	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
+	registerFloatSetting("value", &glideMod, glideMod, -0.15f, 0.00);
 }
 
 Flight::~Flight() {
@@ -52,9 +52,11 @@ void Flight::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	auto scaffoldMod = moduleMgr->getModule<Scaffold>();
+	auto longjump = moduleMgr->getModule<LongJump>();
 	auto speedMod = moduleMgr->getModule<Speed>();
 	auto player = g_Data.getLocalPlayer();
 	scaffoldMod->setEnabled(false);
+	longjump->setEnabled(false);
 	speedMod->setEnabled(false);
 	if (mode.getSelectedValue() == 3) {  // Teleport
 		vec3_t pos = *g_Data.getLocalPlayer()->getPos();
@@ -130,13 +132,13 @@ void Flight::onTick(C_GameMode* gm) {
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
 			if (!player->onGround) {
 				clientMessageF("%sYou must be on the ground", GRAY);
-				this->glideMod = -0.00034065544605255127;
-				this->setEnabled(false);
+				glideMod = -0.00034065544605255127;
+				setEnabled(false);
 			}
 		}
 		if (clickGUI->isEnabled()) {
 			clientMessageF("%sDisabled to prevent flags/errors", GRAY);
-			this->setEnabled(false);
+			setEnabled(false);
 		}
 		if (placeCounter == placeDelay /*8*/) {
 			placeCounter = 1;
@@ -151,7 +153,7 @@ void Flight::onTick(C_GameMode* gm) {
 				restored = true;
 				g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
 				if (restored == true) {
-					this->setEnabled(false);
+					setEnabled(false);
 				}
 			}
 			return;
