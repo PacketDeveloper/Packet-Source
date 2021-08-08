@@ -1,13 +1,13 @@
 #include "TPAura.h"
 
 TPAura::TPAura() : IModule(0x0, Category::COMBAT, "TP Into The Closest Entity") {
-	registerEnumSetting("Mode", &this->mode, 0);
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Multi", 0);
 	mode.addEntry("Switch", 1);
-	this->registerBoolSetting("Silent", &this->silent, this->silent);
-	this->registerBoolSetting("Push", &this->push, this->push);
-	this->registerIntSetting("TP Delay", &this->delay, this->delay, 0, 10);
-	this->registerFloatSetting("Range", &this->range, this->range, 5, 250);
+	registerBoolSetting("Silent", &silent, silent);
+	registerBoolSetting("Push", &push, push);
+	registerIntSetting("TP Delay", &delay, delay, 0, 10);
+	registerFloatSetting("Range", &range, range, 5, 250);
 }
 
 TPAura::~TPAura() {
