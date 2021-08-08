@@ -3,7 +3,7 @@
 </p>
 
 # Info
-Packet Client is an MCBE Utility mod made by: Packet and Gramp
+Packet Client is an MCBE Utility mod made by: Packet and Deq
 
 Packet Client is a fork of the Horion Client
 
