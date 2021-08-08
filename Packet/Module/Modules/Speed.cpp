@@ -27,7 +27,7 @@ void Speed::onEnable() {
 }
 
 void Speed::onTick(C_GameMode* gm) {
-	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
+	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
 	auto scaffold = moduleMgr->getModule<Scaffold>();
 	if (scaffold->speedLockY) {
 		scaffold->lockY = true;
