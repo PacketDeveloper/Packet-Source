@@ -45,7 +45,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		} else {
 			velocity = true;
 		}
-		if (player->onGround && pressed && !input->isJumping && (velocity == true)) {
+		if (player->onGround && pressed && !input->isJumping && velocity) {
 			player->velocity.y = height;
 		}
 		if (!pressed && player->damageTime == 0) {
