@@ -5,15 +5,11 @@
 
 class TPAura : public IModule {
 public:
-	bool hurttime = false;
-	bool silent = false;
-	float range = 250;
-	bool push = false;
-	int targethud = 0;
-	int Odelay = 0;
+	float range = 9.f;
+	bool push = true;
 	int delay = 0;
-
-		SettingEnum mode = this;
+	int delay0 = 0;
+	float rangeSpeed = 1.f;
 
 	TPAura();
 	~TPAura();
@@ -22,7 +18,4 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onEnable() override;
-	virtual void onSendPacket(C_Packet* packet) override;
-	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx) override;
-	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };
