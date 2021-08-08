@@ -5,14 +5,14 @@
 #include "../../Module/ModuleManager.h"
 
 Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
-	registerBoolSetting("SpeedLockY", &this->speedLockY, this->speedLockY);
-	registerBoolSetting("Downwards", &this->staircase, this->staircase);
-	registerBoolSetting("Rotations", &this->rotations, this->rotations);
-	registerBoolSetting("AirPlace", &this->airplace, this->airplace);
-	registerBoolSetting("Tower", &this->towerMode, this->towerMode);
+	registerBoolSetting("SpeedLockY", &speedLockY, speedLockY);
+	registerBoolSetting("Downwards", &staircase, staircase);
+	registerBoolSetting("Rotations", &rotations, rotations);
+	registerBoolSetting("AirPlace", &airplace, airplace);
+	registerBoolSetting("Tower", &towerMode, towerMode);
 	//registerFloatSetting("Tower Speed", &this->motion, this->motion, 0.3f, 1.f);
-	this->registerIntSetting("TimerBoost", &this->timer, this->timer, 20, 80);
-	this->registerIntSetting("Extend", &this->expand, this->expand, 0, 7);
+	registerIntSetting("TimerBoost", &timer, timer, 20, 80);
+	registerIntSetting("Extend", &expand, expand, 0, 7);
 }
 
 Scaffold::~Scaffold() {

@@ -1,14 +1,15 @@
 #include "Speed.h"
-Speed::Speed() : IModule(0, Category::MOVEMENT, "sped") {
-	registerEnumSetting("Mode", &this->mode, 0);
+Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
 #ifdef _DEBUG
 	mode.addEntry("HiveGround", 2);
+	mode.addEntry("KowSpecial", 3);
 #endif
-	registerIntSetting("TimerBoost", &this->timer, this->timer, 20, 35);
-	registerFloatSetting("Height", &this->height, this->height, 0.000001f, 0.40f);
-	registerFloatSetting("Speed", &this->speed, this->speed, 0.2f, 2.f);
+	registerIntSetting("TimerBoost", &timer, timer, 20, 35);
+	registerFloatSetting("Height", &height, height, 0.000001f, 0.40f);
+	registerFloatSetting("Speed", &speed, speed, 0.2f, 2.f);
 }
 
 Speed::~Speed() {
@@ -155,6 +156,31 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			}
 		}
 	}
+	if (mode.getSelectedValue() == 3) {
+		if (player == nullptr) return;
+
+		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+		bool pressed = moveVec2d.magnitude() > 0.01f;
+
+		if (player->onGround && pressed)
+			player->velocity.y = 0.23;
+
+		float calcYaw = (player->yaw + 90) * (PI / 180);
+		vec3_t moveVec;
+		float c = cos(calcYaw);
+		float s = sin(calcYaw);
+		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+		moveVec.x = moveVec2d.x * speed;
+		moveVec.y = player->velocity.y;
+		moveVec.z = moveVec2d.y * speed;
+		if (pressed) player->lerpMotion(moveVec);
+		if (input->right) {
+			*g_Data.getClientInstance()->minecraft->timer = 19.f;
+		}
+		if (input->left) {
+			*g_Data.getClientInstance()->minecraft->timer = 19.f;
+		}
+	}
 }
 
 void Speed::onDisable() {
@@ -167,5 +193,17 @@ void Speed::onDisable() {
 	}
 	if (scaffold->speedLockY) {
 		scaffold->lockY = false;
+	}
+}
+
+void Speed::onSendPacket(C_Packet* packet) {
+	auto player = g_Data.getLocalPlayer();
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3) {
+		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+		float myPitchq = player->pitch;
+		float myYawq = player->yaw;
+		float bodyYawq = player->bodyYaw;
+		movePacket->pitch = myPitchq;
+		movePacket->headYaw = myYawq;
 	}
 }

@@ -87,63 +87,64 @@ struct CompareTargetEnArray {
 };
 
 void Killaura::onTick(C_GameMode* gm) {
-	//Loop through all our players and retrieve their information
-	targetList.clear();
+	if (g_Data.isInGame()) {//prevent crash?
+		//Loop through all our players and retrieve their information
+		targetList.clear();
 
-	g_Data.forEachEntity(findEntity);
+		g_Data.forEachEntity(findEntity);
 
-	Odelay++;
-	if (distanceCheck)
-		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-	if (!targetList.empty() && Odelay >= delay) {
-		if (autoweapon) findWeapon();
-		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() < 0.01) {
-			C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);  // make sure to update rotation if player is standing still
-		}
+		Odelay++;
+		if (distanceCheck)
+			std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+		if (!targetList.empty() && Odelay >= delay) {
+			if (autoweapon) findWeapon();
+			if (g_Data.getLocalPlayer()->velocity.squaredxzlen() < 0.01) {
+				C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);  // make sure to update rotation if player is standing still
+			}
 
-		// Attack all entitys in targetList
-		if (mode.getSelectedValue() == 0) {  // Multi
-			for (auto& i : targetList) {
-				if (!(i->damageTime > 1 && hurttime)) {
+			// Attack all entitys in targetList
+			if (mode.getSelectedValue() == 0) {  // Multi
+				for (auto& i : targetList) {
+					if (!(i->damageTime > 1 && hurttime)) {
+						g_Data.getLocalPlayer()->swing();
+						g_Data.getCGameMode()->attack(i);
+						targethud++;
+					} else
+						targethud = 0;
+				}
+			} else {  // Switch
+				if (!(targetList[0]->damageTime > 1 && hurttime)) {
 					g_Data.getLocalPlayer()->swing();
-					g_Data.getCGameMode()->attack(i);
+					g_Data.getCGameMode()->attack(targetList[0]);
 					targethud++;
 				} else
 					targethud = 0;
 			}
-		} else {  // Switch
-			if (!(targetList[0]->damageTime > 1 && hurttime)) {
-				g_Data.getLocalPlayer()->swing();
-				g_Data.getCGameMode()->attack(targetList[0]);
-				targethud++;
-			} else
-				targethud = 0;
+			Odelay = 0;
 		}
-		Odelay = 0;
-	}
-	if (targetList.empty()) {
-		targethud = 0;
-	}
+		if (targetList.empty()) {
+			targethud = 0;
+		}
 
-	for (auto& i : targetList) {
-		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-		PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
-		Odelay++;
+		for (auto& i : targetList) {
+			C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+			PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
+			Odelay++;
 
-		if (click && !targetList.empty()) {
-			if (Odelay >= delay) {
-				g_Data.leftclickCount++;
-				if (pointing->hasEntity())
-					gm->attack(pointing->getEntity());
+			if (click && !targetList.empty()) {
+				if (Odelay >= delay) {
+					g_Data.leftclickCount++;
+					if (pointing->hasEntity())
+						gm->attack(pointing->getEntity());
+				}
+			}
+			if (strafe && !targetList.empty()) {
+				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+				auto weewee = g_Data.getLocalPlayer();
+				weewee->setRot(angle);
 			}
 		}
-		if (strafe && !targetList.empty()) {
-			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-			auto weewee = g_Data.getLocalPlayer();
-			weewee->setRot(angle);
-		}
-
 	}
 }
 
