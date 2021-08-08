@@ -10,6 +10,8 @@ public:
 	int delay = 0;
 	int delay0 = 0;
 	float rangeSpeed = 1.f;
+	int entDistance = 2;
+	float entHeight = 1.62f;
 
 	TPAura();
 	~TPAura();

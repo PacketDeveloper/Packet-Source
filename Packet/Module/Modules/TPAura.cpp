@@ -1,10 +1,12 @@
 #include "TPAura.h"
 
-TPAura::TPAura() : IModule(0x0, Category::COMBAT, "TP Into The Closest Entity") {
+TPAura::TPAura() : IModule(0x0, Category::COMBAT, "TP Around The Closest Enemy.") {
 	registerFloatSetting("Range", &range, range, 3, 10);
-	registerFloatSetting("LerpSpeed", &rangeSpeed, rangeSpeed, 1, 50);
-	registerBoolSetting("LerpTo", &push, push);
-	registerIntSetting("TP Delay", &delay, delay, 0, 20);
+	registerIntSetting("Distance", &entDistance, entDistance, 1, 4); //DistanceFromEnemy
+	registerFloatSetting("Height", &entHeight, entHeight, -3, 4);
+	registerBoolSetting("Use LerpTo", &push, push);
+	registerFloatSetting("LerpSpeed", &rangeSpeed, rangeSpeed, 1, 100);
+	registerIntSetting("TP Delay", &delay, delay, 0, 40);
 }
 
 TPAura::~TPAura() {
@@ -65,13 +67,13 @@ void TPAura::onTick(C_GameMode* gm) {
 	vec3_t enemyPos = *targetListTA[0]->getPos();
 
 	delay0++;
-	if (delay0 >= delay && !targetListTA.empty()) {
+	if (!targetListTA.empty() && delay0 >= delay) {
 	if (push) {
 		player->velocity = vec3_t(0, 0, 0);
-		player->lerpTo(vec3_t(enemyPos.x + (float)(rand() % 2), enemyPos.y + 1.62f, enemyPos.z - (float)(rand() % 2)), vec2_t(1, 1), (int)fmax((int)rangeSpeed * 0.1, 2.f));
+		player->lerpTo(vec3_t(enemyPos.x + (float)(rand() % entDistance), enemyPos.y + entHeight, enemyPos.z - (float)(rand() % entDistance)), vec2_t(1, 1), (int)fmax((int)rangeSpeed * 0.1, 2.f));
 	} else {
 		player->velocity = vec3_t(0, 0, 0);
-		player->setPos(vec3_t(enemyPos.x + (float)(rand() % 2), enemyPos.y + 1.62f, enemyPos.z + (float)(rand() % 2)));
+		player->setPos(vec3_t(enemyPos.x + (float)(rand() % entDistance), enemyPos.y + entHeight, enemyPos.z + (float)(rand() % entDistance)));
 	}
 }
 }
