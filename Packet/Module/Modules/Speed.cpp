@@ -20,7 +20,10 @@ const char* Speed::getModuleName() {
 }
 
 void Speed::onEnable() {
-	if (mode.getSelectedValue() == 3) g_Data.addInfoBox("Speed","Gamer Mode Enabled!");
+	if (mode.getSelectedValue() == 3) {
+		auto box = g_Data.addInfoBox("Speed", "Gamer Mode Enabled!");
+		box->closeTimer = 5.f;
+	}
 }
 
 void Speed::onTick(C_GameMode* gm) {
@@ -163,8 +166,12 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
 		bool pressed = moveVec2d.magnitude() > 0.01f;
 
-		if (player->onGround && pressed)
+		if (player->onGround && pressed) {
+			player->jumpFromGround();
+			player->velocity.y = -0.1f;
 			player->velocity.y = 0.23;
+		}
+			
 
 		float calcYaw = (player->yaw + 90) * (PI / 180);
 		vec3_t moveVec;
