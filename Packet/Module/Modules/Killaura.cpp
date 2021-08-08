@@ -87,7 +87,6 @@ struct CompareTargetEnArray {
 };
 
 void Killaura::onTick(C_GameMode* gm) {
-	if (g_Data.isInGame()) {//prevent crash?
 		//Loop through all our players and retrieve their information
 		targetList.clear();
 
@@ -145,7 +144,6 @@ void Killaura::onTick(C_GameMode* gm) {
 				weewee->setRot(angle);
 			}
 		}
-	}
 }
 
 #include <Windows.h>
