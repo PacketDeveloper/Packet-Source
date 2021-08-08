@@ -156,7 +156,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			}
 		}
 	}
-	if (mode.getSelectedValue() == 3) {
+	if (mode.getSelectedValue() == 3 && g_Data.isInGame()) {
 		if (player == nullptr) return;
 
 		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
@@ -205,7 +205,7 @@ void Speed::onDisable() {
 
 void Speed::onSendPacket(C_Packet* packet) {
 	auto player = g_Data.getLocalPlayer();
-	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3) {
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3 && g_Data.isInGame()) {
 		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 		float myPitchq = player->pitch;
 		float myYawq = player->yaw;
