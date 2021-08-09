@@ -6,7 +6,8 @@ private:
 	int Odelay = 0;
 	bool bypass = true;
 	int delay = 2;
-	std::string message = "Packet Client - The best client to hack on the hive with! | discord.gg/packet";
+	int length = 8;
+	std::string message = "Packet Client - The best client for MCBE | discord.gg/packet";
 
 public:
 	Spammer();

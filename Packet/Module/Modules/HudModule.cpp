@@ -22,7 +22,7 @@ HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
 	registerBoolSetting("Keystrokes", &this->keystrokes, this->keystrokes);
 	registerBoolSetting("ArmorHUD", &this->displayArmor, this->displayArmor);
 	registerBoolSetting("FPS", &this->fps, this->fps);
-	//registerBoolSetting("CPS", &this->cps, this->cps);
+	registerBoolSetting("CPS", &this->cps, this->cps);
 	//registerBoolSetting("coords", &this->coordinates, this->coordinates);
 	//registerBoolSetting("BPS", &this->bps, this->bps);
 	//registerBoolSetting("Always show", &this->alwaysShow, this->alwaysShow);

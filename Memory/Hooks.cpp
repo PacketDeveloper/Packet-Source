@@ -402,20 +402,323 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 
+{
+		// Draw Watermark
+		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+		static auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
+		static auto watermark = moduleMgr->getModule<Watermark>();
+		static auto hudMod = moduleMgr->getModule<HudModule>();
+
+		if (g_Data.isInGame() && watermark->isEnabled() && !clickGUI->isEnabled()) {
+			if (watermark->mode.getSelectedValue() == 0) {
+				if (watermark->firstLetter && watermark->mode.getSelectedValue() == 0) {  // packet first letter
+					std::string textShadow2 = "Packet Client";
+					std::string color2 = "P";
+					std::string white2 = "acket Client";
+					float startY = hudMod->tabgui ? 6 * 10 : 0.f;
+					float l = DrawUtils::getTextWidth(&textShadow2, 1.064) + 6.f;
+					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
+					vec2_t textPos = vec2_t(rectPos.x + 14, rectPos.y + 5.f);
+					vec2_t textShadow = vec2_t(rectPos.x + 10, rectPos.y + 5.f);
+					vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), 1.3);
+					}
+					DrawUtils::drawText(textPos, &white2, MC_Color(255, 255, 255), 1.3);
+					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+						DrawUtils::drawText(pPos, &color2, MC_Color(currColor), 1.3);
+					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+						DrawUtils::drawText(pPos, &color2, MC_Color(dynamic, dynamic, dynamic), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 4) {  // White
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 255, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 0, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 127, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+						DrawUtils::drawText(pPos, &color2, MC_Color(0, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+						DrawUtils::drawText(pPos, &color2, MC_Color(0, 170, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+						DrawUtils::drawText(pPos, &color2, MC_Color(148, 0, 211), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 192, 203), 1.3f);
+					}
+
+				} else {  // packet
+					std::string tempStr("Packet Client");
+					std::string textShadow2 = "Packet Client";
+					float startY = hudMod->tabgui ? 6 * 10 : 0.f;
+					float l = DrawUtils::getTextWidth(&textShadow2, 1.064) + 6.f;
+					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
+					vec2_t textPos = vec2_t(rectPos.x + 12, rectPos.y + 4.f);
+					vec2_t textShadow = vec2_t(rectPos.x + 7, rectPos.y + 5.f);
+					vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), 1.3);
+					}
+					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(currColor), 1.3);
+					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(dynamic, dynamic, dynamic), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 4) {  // White
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 255, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 0, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 127, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(0, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(0, 170, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(148, 0, 211), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 192, 203), 1.3f);
+					}
+				}
+			}
+
+			// REtarD
+			if (watermark->firstLetter && watermark->mode.getSelectedValue() == 2) {
+				auto player = g_Data.getLocalPlayer();
+				std::string name = player->getNameTag()->getText();
+				name = Utils::sanitize(name);
+				std::string textShadow2 = "Packet : " + name;
+				std::string color2 = "P";
+				std::string white2 = "acket : " + name;
+				float startY = hudMod->tabgui ? 6 * 10 : 0.f;
+				float l = DrawUtils::getTextWidth(&textShadow2, 1.067) + 6.f;
+				vec4_t linePos = vec4_t(3.f, startY + 2.f * 2, l, startY + 3.f * 1);
+				vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
+				vec2_t textPos = vec2_t(rectPos.x + 12, rectPos.y + 4.f);
+				vec2_t textShadow = vec2_t(rectPos.x + 7, rectPos.y + 5.f);
+				vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
+				if (watermark->mode.getSelectedValue() == 2) {
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), 1);
+					}
+					DrawUtils::drawText(textPos, &white2, MC_Color(255, 255, 255), 1);
+
+					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+						DrawUtils::drawText(pPos, &color2, MC_Color(currColor), 1);
+					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+						DrawUtils::drawText(pPos, &color2, MC_Color(dynamic, dynamic, dynamic), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 4) {  // White
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 255, 255), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 0, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 127, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 255, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+						DrawUtils::drawText(pPos, &color2, MC_Color(0, 255, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+						DrawUtils::drawText(pPos, &color2, MC_Color(0, 170, 255), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+						DrawUtils::drawText(pPos, &color2, MC_Color(148, 0, 211), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 192, 203), 1.f);
+					}
+
+					//DrawUtils::drawText(vec2_t(r2x, r2y), &textShadow2, MC_Color(255, 255, 255), 1.f);
+					DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), watermark->opacity);
+					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+						DrawUtils::drawRectangle(linePos, MC_Color(currColor), 1.f);
+					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+						DrawUtils::drawRectangle(linePos, MC_Color(dynamic, dynamic, dynamic), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 4) {  // White
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 255, 255), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 0, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 127, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 255, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+						DrawUtils::drawRectangle(linePos, MC_Color(0, 255, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+						DrawUtils::drawRectangle(linePos, MC_Color(0, 170, 255), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+						DrawUtils::drawRectangle(linePos, MC_Color(148, 0, 211), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 192, 203), 1.f);
+					}
+				}
+			} else if (watermark->mode.getSelectedValue() == 2) {
+				auto player = g_Data.getLocalPlayer();
+				std::string name = player->getNameTag()->getText();
+				name = Utils::sanitize(name);
+				std::string textStr = "Packet : " + name;
+				std::string textShadow2 = "Packet : " + name;
+				float startY = hudMod->tabgui ? 6 * 10 : 0.f;
+				float l = DrawUtils::getTextWidth(&textStr, 1.067) + 6.f;
+				vec4_t linePos = vec4_t(3.f, startY + 2.f * 2, l, startY + 3.f * 1);
+				vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
+				vec2_t textPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
+				vec2_t textShadow = vec2_t(rectPos.x + 7, rectPos.y + 5.f);
+				vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
+				if (watermark->mode.getSelectedValue() == 2) {
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), 1);
+					}
+					DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255), 1);
+					DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), watermark->opacity);
+					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+						DrawUtils::drawRectangle(linePos, MC_Color(currColor), 1.f);
+					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+						DrawUtils::drawRectangle(linePos, MC_Color(dynamic, dynamic, dynamic), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 4) {  // White
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 255, 255), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 0, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 127, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 255, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+						DrawUtils::drawRectangle(linePos, MC_Color(0, 255, 0), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+						DrawUtils::drawRectangle(linePos, MC_Color(0, 170, 255), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+						DrawUtils::drawRectangle(linePos, MC_Color(148, 0, 211), 1.f);
+					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+						DrawUtils::drawRectangle(linePos, MC_Color(255, 192, 203), 1.f);
+					}
+				}
+			}
+
+			// Fadeaway
+			if (watermark->mode.getSelectedValue() == 1) {
+				if (watermark->firstLetter && watermark->mode.getSelectedValue() == 1) {
+					std::string textShadow2 = "Fadeaway";
+					std::string color2 = "F";
+					std::string white2 = "adeaway";
+					float startY = hudMod->tabgui ? 6 * 10 : 0.f;
+					float l = DrawUtils::getTextWidth(&textShadow2, 1.4) + 6.f;
+					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
+					vec2_t textPos = vec2_t(rectPos.x + 12, rectPos.y + 4.f);
+					vec2_t textShadow = vec2_t(rectPos.x + 7, rectPos.y + 5.f);
+					vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), 1.3);
+					}
+					DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), watermark->opacity);
+
+					DrawUtils::drawText(textPos, &white2, MC_Color(255, 255, 255), 1.3);
+					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+						DrawUtils::drawRectangle(rectPos, MC_Color(currColor), 1.3);
+					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+						DrawUtils::drawRectangle(rectPos, MC_Color(dynamic, dynamic, dynamic), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 4) {  // White
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 255, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 0, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 127, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+						DrawUtils::drawRectangle(rectPos, MC_Color(0, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+						DrawUtils::drawRectangle(rectPos, MC_Color(0, 170, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+						DrawUtils::drawRectangle(rectPos, MC_Color(148, 0, 211), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 192, 203), 1.3f);
+					}
+					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+						DrawUtils::drawText(pPos, &color2, MC_Color(currColor), 1.3);
+					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+						DrawUtils::drawText(pPos, &color2, MC_Color(dynamic, dynamic, dynamic), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 4) {  // White
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 255, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 0, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 127, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+						DrawUtils::drawText(pPos, &color2, MC_Color(0, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+						DrawUtils::drawText(pPos, &color2, MC_Color(0, 170, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+						DrawUtils::drawText(pPos, &color2, MC_Color(148, 0, 211), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 192, 203), 1.3f);
+					}
+
+				} else {  // Fadeaway
+					std::string tempStr("Fadeaway");
+					std::string textShadow2 = "Fadeaway";
+					float startY = hudMod->tabgui ? 6 * 10 : 0.f;
+					float l = DrawUtils::getTextWidth(&textShadow2, 1.4) + 6.f;
+					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
+					vec2_t textPos = vec2_t(rectPos.x + 12, rectPos.y + 4.f);
+					vec2_t textShadow = vec2_t(rectPos.x + 7, rectPos.y + 5.f);
+					vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), 1.3);
+					}
+					DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), watermark->opacity);
+
+					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+						DrawUtils::drawRectangle(rectPos, MC_Color(currColor), 1.3);
+					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+						DrawUtils::drawRectangle(rectPos, MC_Color(dynamic, dynamic, dynamic), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 4) {  // White
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 255, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 0, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 127, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+						DrawUtils::drawRectangle(rectPos, MC_Color(0, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+						DrawUtils::drawRectangle(rectPos, MC_Color(0, 170, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+						DrawUtils::drawRectangle(rectPos, MC_Color(148, 0, 211), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+						DrawUtils::drawRectangle(rectPos, MC_Color(255, 192, 203), 1.3f);
+					}
+					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(currColor), 1.3);
+					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(dynamic, dynamic, dynamic), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 4) {  // White
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 255, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 0, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 127, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(0, 255, 0), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(0, 170, 255), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(148, 0, 211), 1.3f);
+					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 192, 203), 1.3f);
+					}
+				}
+			}
+		}
+	}
+
 	{
 		// Main Menu
 		std::string screenName(g_Hooks.currentScreenName);
 		if (strcmp(screenName.c_str(), "start_screen") == 0) {
-			// Draw BIG epic fucku watermark
-			/*{
-				std::string text = "BOT";
-				vec2_t textPos = vec2_t(wid.x / 2.f - DrawUtils::getTextWidth(&text, 8.f) / 2.f, wid.y / 9.5f);
-				vec4_t rectPos = vec4_t(textPos.x - 55.f, textPos.y - 15.f, textPos.x + DrawUtils::getTextWidth(&text, 8.f) + 55.f, textPos.y + 75.f);
-				DrawUtils::fillRectangle(rectPos, MC_Color(13, 29, 48, 1), 1.f);
-				DrawUtils::drawRectangle(rectPos, rcolors, 1.f, 2.f);
-				DrawUtils::drawText(textPos, &text, MC_Color(255, 255, 255, 1), 8.f);
-			}*/
-
 			// Draw Custom Geo Button
 			if (g_Data.allowWIPFeatures() && g_Data.isInjectorConnectionActive()) {
 				if (HImGui.Button("Load Script Folder", vec2_t(wid.x * (0.765f - 0.5f), wid.y * 0.92f), true)) {
@@ -556,183 +859,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
 				mousePos.div(windowSizeReal);
 				mousePos.mul(windowSize);
-
-					// Draw Watermark
-					if (shouldRenderWatermark) {
-					static auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
-						float x = windowSize.x / 110.f;
-						float y = windowSize.y / 70.f;
-						float tx = windowSize.x / 95.f;
-						float ty = windowSize.y / 60.f;
-
-						float rx = windowSize.x / 51.f;
-						float ry = windowSize.y / 70.f;
-
-						float r2x = windowSize.x / 95.f;
-						float r2y = windowSize.y / 70.f;
-						float textPadding = 1 * 1;
-
-						vec2_t textShadow = vec2_t(
-							x + textPadding + 1,
-							y + textPadding + 0.2);
-
-						if (hudMod->textShadow) {
-							//DrawUtils::drawText(textShadow, &textStr, MC_Color(0, 0, 0), 1.3);
-						}
-
-						// Packet
-						if (watermark->mode.getSelectedValue() == 0) {
-							std::string text = "Packet Client";
-							DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(currColor), 1.3);
-							if (hudMod->color.getSelectedValue() != 1)  // currColor
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(currColor), 1.3);
-							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(dynamic, dynamic, dynamic), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 4) {  // White
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(255, 255, 255), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(255, 0, 0), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(255, 127, 0), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(255, 255, 0), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(0, 255, 0), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(0, 170, 255), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(148, 0, 211), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-								DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(255, 192, 203), 1.3);
-							}
-						}
-
-						if (watermark->firstLetter) {  // FirstLetter
-							std::string white = "acket Client";
-							DrawUtils::drawText(vec2_t(rx, ry), &white, MC_Color(255, 255, 255), 1.3);
-							std::string color = "P";  // lmfao
-							DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(currColor), 1.3);
-							if (hudMod->color.getSelectedValue() != 1)  // currColor
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(currColor), 1.3);
-							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(dynamic, dynamic, dynamic), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 4) {  // White
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(255, 255, 255), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(255, 0, 0), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(255, 127, 0), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(255, 255, 0), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(0, 255, 0), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(0, 170, 255), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(148, 0, 211), 1.3);
-							} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-								DrawUtils::drawText(vec2_t(r2x, r2y), &color, MC_Color(255, 192, 203), 1.3);
-							}
-						}
-
-						// Retard
-						auto player = g_Data.getLocalPlayer();
-						std::string name = player->getNameTag()->getText();
-						std::string textStr = "Packet : " + name;
-						float f = 10.f * 1;
-						float startY = hudMod->tabgui ? 6 * f : 0.f;
-						float l = DrawUtils::getTextWidth(&textStr, 1.1) + 6.f;
-						vec4_t linePos = vec4_t(3.f, startY + 2.f * 2, l, startY + 3.f * 1);
-						vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
-						if (watermark->mode.getSelectedValue() == 2) {
-							DrawUtils::drawText(vec2_t(r2x, r2y), &textStr, MC_Color(255, 255, 255), 1.f);
-							DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), watermark->opacity);
-							if (hudMod->color.getSelectedValue() != 1)  // Rainbow
-								DrawUtils::drawRectangle(linePos, MC_Color(currColor), 1.f);
-							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-								DrawUtils::drawRectangle(linePos, MC_Color(dynamic, dynamic, dynamic), 1.f);
-							} else if (hudMod->color.getSelectedValue() == 4) {  // White
-								DrawUtils::drawRectangle(linePos, MC_Color(255, 255, 255), 1.f);
-							} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-								DrawUtils::drawRectangle(linePos, MC_Color(255, 0, 0), 1.f);
-							} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-								DrawUtils::drawRectangle(linePos, MC_Color(255, 127, 0), 1.f);
-							} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-								DrawUtils::drawRectangle(linePos, MC_Color(255, 255, 0), 1.f);
-							} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-								DrawUtils::drawRectangle(linePos, MC_Color(0, 255, 0), 1.f);
-							} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-								DrawUtils::drawRectangle(linePos, MC_Color(0, 170, 255), 1.f);
-							} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-								DrawUtils::drawRectangle(linePos, MC_Color(148, 0, 211), 1.f);
-							} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-								DrawUtils::drawRectangle(linePos, MC_Color(255, 192, 203), 1.f);
-							}
-						}
-
-						// Fadeaway
-						if (watermark->mode.getSelectedValue() == 1) {
-							constexpr float nameTextSize = 1.5f;
-							constexpr float versionTextSize = 0.7f;
-							static const float textHeight = (nameTextSize + versionTextSize * 0.7f) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
-							constexpr float borderPadding = 1;
-							constexpr float margin = 5;
-
-							static std::string name = "Fadeaway";
-							static std::string version = "";
-
-							float nameLength = DrawUtils::getTextWidth(&name, nameTextSize);
-							float fullTextLength = nameLength + DrawUtils::getTextWidth(&version, versionTextSize);
-							vec4_t rect = vec4_t(
-								margin - borderPadding,
-								margin,
-								margin + fullTextLength + borderPadding * 2,
-								margin + textHeight);
-
-							DrawUtils::fillRectangle(rect, MC_Color(0, 0, 0), watermark->opacity);
-							if (hudMod->color.getSelectedValue() != 1)  // Rainbow
-								DrawUtils::drawRectangle(rect, MC_Color(currColor), 1.f, 2.f);
-							DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(currColor), nameTextSize);
-							DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(currColor), versionTextSize);
-							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-								DrawUtils::drawRectangle(rect, MC_Color(dynamic, dynamic, dynamic), 1.f, 2.f);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(dynamic, dynamic, dynamic), nameTextSize);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(dynamic, dynamic, dynamic), versionTextSize);
-							} else if (hudMod->color.getSelectedValue() == 4) {  // White
-								DrawUtils::drawRectangle(rect, MC_Color(255, 255, 255), 1.f, 2.f);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(255, 255, 255), nameTextSize);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(255, 255, 255), versionTextSize);
-							} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-								DrawUtils::drawRectangle(rect, MC_Color(255, 0, 0), 1.f, 2.f);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(255, 0, 0), nameTextSize);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(255, 0, 0), versionTextSize);
-							} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-								DrawUtils::drawRectangle(rect, MC_Color(255, 127, 0), 1.f, 2.f);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(255, 127, 0), nameTextSize);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(255, 127, 0), versionTextSize);
-							} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-								DrawUtils::drawRectangle(rect, MC_Color(255, 255, 0), 1.f, 2.f);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(255, 255, 0), nameTextSize);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(255, 255, 0), versionTextSize);
-							} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-								DrawUtils::drawRectangle(rect, MC_Color(0, 255, 0), 1.f, 2.f);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(0, 255, 0), nameTextSize);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(0, 255, 0), versionTextSize);
-							} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-								DrawUtils::drawRectangle(rect, MC_Color(0, 170, 255), 1.f, 2.f);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(0, 170, 255), nameTextSize);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(0, 170, 255), versionTextSize);
-							} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-								DrawUtils::drawRectangle(rect, MC_Color(148, 0, 211), 1.f, 2.f);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(148, 0, 211), nameTextSize);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(148, 0, 211), versionTextSize);
-							} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-								DrawUtils::drawRectangle(rect, MC_Color(255, 192, 203), 1.f, 2.f);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding, rect.y), &name, MC_Color(255, 192, 203), nameTextSize);
-								DrawUtils::drawText(vec2_t(rect.x + borderPadding + nameLength, rect.w - 7), &version, MC_Color(255, 192, 203), versionTextSize);
-							}
-						}
-					}
 
 				// Draw ArrayList
 				if (moduleMgr->isInitialized() && shouldRenderArrayList) {

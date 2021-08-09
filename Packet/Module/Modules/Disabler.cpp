@@ -25,26 +25,28 @@ void Disabler::onEnable() {
 
 void Disabler::onTick(C_GameMode* gm) {
 	auto speed = moduleMgr->getModule<Speed>();
-		//if (g_Data.canUseMoveKeys()) {
-		if (mode.getSelectedValue() == 0 && !gm->player->onGround) {
-			C_MovePlayerPacket pNether(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&pNether);
-		}
-		if (mode.getSelectedValue() == 1 && !gm->player->onGround) {
-			C_MovePlayerPacket Mineville(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&Mineville);
-		}
+	//if (g_Data.canUseMoveKeys()) {
+	if (mode.getSelectedValue() == 0 && !gm->player->onGround) {
+		C_MovePlayerPacket pNether(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&pNether);
+	}
+	if (mode.getSelectedValue() == 1 && !gm->player->onGround) {
+		C_MovePlayerPacket Mineville(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&Mineville);
+	}
 	//}
-		if (mode.getSelectedValue() == 2) {
-			if (counter == 31) {
-				if (speed->isEnabled() && g_Data.canUseMoveKeys()) {
-					clientMessageF("%sPacket sent", GRAY);  // shhh no packet is being sent but whatever lol
-					counter = 1;
-				}
-			} else {
-				counter++;
-			}
+	if (mode.getSelectedValue() == 2) { // Hive
+		if (counter == 4) {
+			counter = 1;
+		} else {
+			counter++;
 		}
+		if (gm->player->damageTime >= 1 && counter == 4) { // how to use the disabler: 1. enable disabler 2. have someone hit you OR take damage from TNT
+			speed->setEnabled(true);
+		} else {
+			speed->setEnabled(false);
+		}
+	}
 }
 
 void Disabler::onSendPacket(C_Packet* packet) {

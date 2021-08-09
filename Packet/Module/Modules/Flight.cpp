@@ -28,6 +28,14 @@ const char* Flight::getRawModuleName() {
 }
 
 void Flight::onEnable() {
+	auto scaffold = moduleMgr->getModule<Scaffold>();
+	auto speed = moduleMgr->getModule<Speed>();
+	if (speed->isEnabled()) {
+		speedWasEnabled = true;
+	}
+	if (scaffold->isEnabled()) {
+		scfWasEnabled = true;
+	}
 	if (damage) {
 		auto player = g_Data.getLocalPlayer();
 		player->animateHurt();
@@ -328,6 +336,17 @@ bool Flight::selectBlock() {
 
 
 void Flight::onDisable() {
+	// re-enable modules
+	auto scaffold = moduleMgr->getModule<Scaffold>();
+	auto speed = moduleMgr->getModule<Speed>();
+	if (speedWasEnabled == true) {
+		speed->setEnabled(true);
+		speedWasEnabled = false;
+	}
+	if (scfWasEnabled == true) {
+		scaffold->setEnabled(true);
+		scfWasEnabled = false;
+	}
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	if (mode.getSelectedValue() != 5) {
 		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
