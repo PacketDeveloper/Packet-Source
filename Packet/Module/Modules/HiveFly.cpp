@@ -19,6 +19,14 @@ const char* HiveFly::getModuleName() {
 }
 
 void HiveFly::onEnable() {
+	auto scaffold = moduleMgr->getModule<Scaffold>();
+	auto speed = moduleMgr->getModule<Speed>();
+	if (speed->isEnabled()) {
+		speedWasEnabled = true;
+	}
+	if (scaffold->isEnabled()) {
+		scfWasEnabled = true;
+	}
 	if (boost) {
 		counter2 = 1;
 	}
@@ -170,15 +178,24 @@ void HiveFly::onMove(C_MoveInputHandler* input) {
 
 void HiveFly::onDisable() {
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
-	{
-		auto player = g_Data.getLocalPlayer();
-		if (!player->onGround) {
-			player->velocity.x = 0.f;
-			player->velocity.z = 0.f;
-		}
-		if (strafeMode) {
-			auto killauraMod = moduleMgr->getModule<Killaura>();
-			killauraMod->strafe = false;
-		}
+	auto player = g_Data.getLocalPlayer();
+	// re-enable modules
+	auto scaffold = moduleMgr->getModule<Scaffold>();
+	auto speed = moduleMgr->getModule<Speed>();
+	if (speedWasEnabled == true) {
+		speed->setEnabled(true);
+		speedWasEnabled = false;
+	}
+	if (scfWasEnabled == true) {
+		scaffold->setEnabled(true);
+		scfWasEnabled = false;
+	}
+	if (!player->onGround) {
+		player->velocity.x = 0.f;
+		player->velocity.z = 0.f;
+	}
+	if (strafeMode) {
+		auto killauraMod = moduleMgr->getModule<Killaura>();
+		killauraMod->strafe = false;
 	}
 }

@@ -4,7 +4,6 @@ Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
 #ifdef _DEBUG
-	mode.addEntry("HiveGround", 2);
 	mode.addEntry("KowSpecial", 3);
 #endif
 	registerIntSetting("TimerBoost", &timer, timer, 20, 35);
@@ -38,6 +37,7 @@ void Speed::onTick(C_GameMode* gm) {
 
 void Speed::onMove(C_MoveInputHandler* input) {
 	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+	auto targetstrafe = moduleMgr->getModule<TargetStrafe>();
 	bool pressed = moveVec2d.magnitude() > 0.f;
 	auto player = g_Data.getLocalPlayer();
 	if (mode.getSelectedValue() == 0) {  // Vanilla
@@ -130,7 +130,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		moveVec.z = movement.y *= 0.315;
 		if (pressed) player->lerpMotion(moveVec);
 	}
-	if (mode.getSelectedValue() == 2) {  // HiveGround
+	if (mode.getSelectedValue() == 2) {  // HiveGround - unused
 		auto scaffold = moduleMgr->getModule<Scaffold>();
 		float calcYaw = (player->yaw + 90) * (PI / 180);
 		vec3_t moveVec;

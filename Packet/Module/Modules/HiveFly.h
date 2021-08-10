@@ -6,6 +6,8 @@ public:
 	bool strafeMode = false;
 	bool Blink = false;
 	bool dmgBoost = false;
+	bool speedWasEnabled = false;
+	bool scfWasEnabled = false;
 	bool timerBoost = false;
 	int counter = 1;
 	int testTimer = 1;

@@ -261,35 +261,13 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {
-	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && silent) {
-		if (rot && !targetList.empty()) {
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && silent && !rot) {
+		if (!targetList.empty()) {
 			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
 			movePacket->pitch = angle.x;
 			movePacket->headYaw = angle.y;
 			movePacket->yaw = angle.y;
-		}
-	}
-	for (auto& i : targetList) {
-		vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-		if (rot && !targetList.empty()) {
-			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-			auto rotation = g_Data.getLocalPlayer();
-			float prevyaw = rotation->yawUnused1;
-			float prevyaw2 = rotation->yaw;
-			float prevyaw3 = rotation->yaw2;
-			rotation->setRot(angle);
-
-			// Head
-			rotation->yawUnused1 = angle.y;
-			rotation->pitch = angle.x;
-			rotation->yaw2 = angle.y;
-			rotation->yaw = prevyaw2;
-			rotation->pitch2 = angle.x;
-
-			// Body
-			rotation->bodyYaw = angle.y;
-			rotation->yawUnused2 = prevyaw2;
 		}
 	}
 }
