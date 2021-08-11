@@ -12,7 +12,7 @@ Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entit
 	registerBoolSetting("Silent", &silent, silent);
 	registerBoolSetting("Click", &click, click);
 	registerFloatSetting("range", &range, range, 3.f, 8.f);
-	registerIntSetting("delay", &delay, delay, 0, 10);
+	registerIntSetting("delay", &delay, delay, 0, 5);
 }
 
 Killaura::~Killaura() {
@@ -87,6 +87,12 @@ struct CompareTargetEnArray {
 };
 
 void Killaura::onTick(C_GameMode* gm) {
+	if (silent && rot) {
+		auto box = g_Data.addInfoBox("Killaura: Disabled to prevent crash");
+		box->closeTimer = 15;
+		silent = false;
+	}
+
 	//Loop through all our players and retrieve their information
 	targetList.clear();
 

@@ -5,7 +5,7 @@
 LongJump::LongJump() : IModule(0, Category::MOVEMENT, "JUMP YES") {
 	registerBoolSetting("SlowDown", &slowDown, slowDown);
 	registerBoolSetting("Damage", &damage, damage);
-	registerBoolSetting("Hive", &hive, hive);
+	registerBoolSetting("Old", &old, old);
 	registerFloatSetting("Height", &height, height, 0.2f, 5.f);
 	registerFloatSetting("Speed", &speed, speed, 0.5f, 5.f);
 }
@@ -46,9 +46,11 @@ void LongJump::onTick(C_GameMode* gm) {
 			counter++;
 		}
 	}
-	if (hive) {
-		if (!player->onGround) {
-			setEnabled(false);
+	if (old) {
+		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
+			if (!player->onGround) {
+				setEnabled(false);
+			}
 		}
 	} else {
 		if (!gm->player->onGround)
@@ -67,11 +69,11 @@ void LongJump::onMove(C_MoveInputHandler* input) {
 	float c = cos(calcYaw);
 	float s = sin(calcYaw);
 	moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
-	if (hive) {
+	if (old) {
 		if (player->onGround && pressed)
 			player->jumpFromGround();
 		moveVec.x = moveVec2d.x * speed;
-		moveVec.y = 0.50;
+		moveVec.y = height;
 		player->velocity.y;
 		moveVec.z = moveVec2d.y * speed;
 		if (pressed) player->lerpMotion(moveVec);
