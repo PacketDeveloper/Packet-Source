@@ -19,86 +19,86 @@ void ModuleManager::initModules() {
 	{
 		auto lock = this->lockModuleListExclusive();
 
-		this->moduleList.push_back(std::shared_ptr<IModule>(new HudModule()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new ArrayList()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Watermark()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Notifications()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new FreeTP()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new CameraMod()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Animations()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Blink()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new LongJump()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new TPAura()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Disabler()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Speed()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new TargetStrafe()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Reach()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new ESP()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Aimbot()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new ChestESP()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Velocity()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Step()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Flight()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Phase()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Freecam()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Sprint()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Scaffold()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new NoFall()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Nuker()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new InstaBreak()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new NoPacket()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Xray()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Breaker()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new ClickGuiMod()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Hitbox()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new InventoryMove()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new AutoClicker()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new NameTags()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Killaura()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new MidClick()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new BlockReach()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new NoFriends()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new AntiBot()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Timer()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new NoSwing()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Zoom()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Teams()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Freelook()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Sneak()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new AntiImmobile()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new TimeChanger()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Radar()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new CustomSky()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new XP()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new FastStop()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
+		moduleList.push_back(std::shared_ptr<IModule>(new HudModule()));
+		moduleList.push_back(std::shared_ptr<IModule>(new ArrayList()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Watermark()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Notifications()));
+		moduleList.push_back(std::shared_ptr<IModule>(new FreeTP()));
+		moduleList.push_back(std::shared_ptr<IModule>(new CameraMod()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Animations()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Blink()));
+		moduleList.push_back(std::shared_ptr<IModule>(new LongJump()));
+		moduleList.push_back(std::shared_ptr<IModule>(new TPAura()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Disabler()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Speed()));
+		moduleList.push_back(std::shared_ptr<IModule>(new TargetStrafe()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Reach()));
+		moduleList.push_back(std::shared_ptr<IModule>(new ESP()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Aimbot()));
+		moduleList.push_back(std::shared_ptr<IModule>(new ChestESP()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Velocity()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Step()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Flight()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Phase()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Freecam()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Sprint()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Scaffold()));
+		moduleList.push_back(std::shared_ptr<IModule>(new NoFall()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Nuker()));
+		moduleList.push_back(std::shared_ptr<IModule>(new InstaBreak()));
+		moduleList.push_back(std::shared_ptr<IModule>(new NoPacket()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Xray()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Breaker()));
+		moduleList.push_back(std::shared_ptr<IModule>(new ClickGuiMod()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Hitbox()));
+		moduleList.push_back(std::shared_ptr<IModule>(new InventoryMove()));
+		moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
+		moduleList.push_back(std::shared_ptr<IModule>(new AutoClicker()));
+		moduleList.push_back(std::shared_ptr<IModule>(new NameTags()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Killaura()));
+		moduleList.push_back(std::shared_ptr<IModule>(new MidClick()));
+		moduleList.push_back(std::shared_ptr<IModule>(new BlockReach()));
+		moduleList.push_back(std::shared_ptr<IModule>(new NoFriends()));
+		moduleList.push_back(std::shared_ptr<IModule>(new AntiBot()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Timer()));
+		moduleList.push_back(std::shared_ptr<IModule>(new NoSwing()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Zoom()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Teams()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Freelook()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Sneak()));
+		moduleList.push_back(std::shared_ptr<IModule>(new AntiImmobile()));
+		moduleList.push_back(std::shared_ptr<IModule>(new TimeChanger()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Radar()));
+		moduleList.push_back(std::shared_ptr<IModule>(new CustomSky()));
+		moduleList.push_back(std::shared_ptr<IModule>(new XP()));
+		moduleList.push_back(std::shared_ptr<IModule>(new FastStop()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
 
 		// Unused modules
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new Derp()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new Waypoints())); // Crashes
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new Safewalk()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new Blink()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new Criticals()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new Tower()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new AntiVoid()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new ChestAura()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new InventoryCleaner()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new AirStuck()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new ChestStealer()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new PacketLogger()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new Derp()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new Waypoints())); // Crashes
+		//moduleList.push_back(std::shared_ptr<IModule>(new Safewalk()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new Blink()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new Criticals()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new Tower()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new AntiVoid()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new ChestAura()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new InventoryCleaner()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new AirStuck()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new ChestStealer()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new PacketLogger()));
 
 #ifdef _DEBUG
-		this->moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
+		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
+		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		// Broken
-		this->moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
-		//this->moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
+		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
+		moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
+		moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
 #endif
 
 		// Sort modules alphabetically
@@ -118,7 +118,7 @@ void ModuleManager::initModules() {
 	getModule<AntiBot>()->setEnabled(true);
 	getModule<Sprint>()->setEnabled(true);
 	getModule<AntiBot>()->setEnabled(true);
-	//this->getModule<Disabler>()->setEnabled(false);
+	//getModule<Disabler>()->setEnabled(false);
 }
 
 void ModuleManager::disable() {
