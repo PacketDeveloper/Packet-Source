@@ -88,7 +88,7 @@ struct CompareTargetEnArray {
 
 void Killaura::onTick(C_GameMode* gm) {
 	if (silent && rot) {
-		auto box = g_Data.addInfoBox("Killaura: Disabled to prevent crash");
+		auto box = g_Data.addInfoBox("Killaura: Disabled to prevent crash","");
 		box->closeTimer = 15;
 		silent = false;
 	}
