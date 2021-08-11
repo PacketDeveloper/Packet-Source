@@ -26,9 +26,8 @@ void LongJump::onEnable() {
 			counter = 1;
 		}
 	} else {
-		if (g_Data.canUseMoveKeys()) {
+		if (g_Data.canUseMoveKeys())
 			*g_Data.getClientInstance()->minecraft->timer = 35.f;
-		}
 	}
 }
 
@@ -47,11 +46,9 @@ void LongJump::onTick(C_GameMode* gm) {
 		}
 	}
 	if (old) {
-		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
-			if (!player->onGround) {
+		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0)
+			if (!player->onGround)
 				setEnabled(false);
-			}
-		}
 	} else {
 		if (!gm->player->onGround)
 			counter2++;
