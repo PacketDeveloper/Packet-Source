@@ -2,10 +2,12 @@
 #include "../../Menu/ClickGui.h"
 
 ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui - toggle everything by just clicking on it!") {
+#ifdef _DEBUG
 	registerEnumSetting("Theme", &theme, 1);
 	theme.addEntry("Packet", 0);
 	theme.addEntry("Fadeaway", 1);
 	registerBoolSetting("Animations", &this->animations, this->animations);
+#endif
 	registerBoolSetting("Rainbow", &this->rainbowColor, this->rainbowColor);
 	registerFloatSetting("Opacity", &this->opacity, this->opacity, 0.05f, 1.f);
 	//registerBoolSetting("Show Tooltips", &this->showTooltips, this->showTooltips);
@@ -35,7 +37,7 @@ void ClickGuiMod::onTick(C_GameMode* gm) {
 	if (makeOnixMadCounter == 3) {
 		openAnimation = false;
 	}
-	if (makeOnixMadCounter == 10) {
+	if (makeOnixMadCounter == 5) {
 		headerAnimation = false;
 	}
 }
