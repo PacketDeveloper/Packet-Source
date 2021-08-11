@@ -137,10 +137,10 @@ void ModuleManager::onLoadConfig(void* confVoid) {
 	for (auto& mod : this->moduleList) {
 		mod->onLoadConfig(conf);
 	}
-	this->getModule<ClickGuiMod>()->setEnabled(false);
-	//this->getModule<NameTags>()->setEnabled(false);
-	//this->getModule<Disabler>()->setEnabled(false);
-	this->getModule<AutoArmor>()->setEnabled(false);
+	getModule<ClickGuiMod>()->setEnabled(false);
+	//getModule<NameTags>()->setEnabled(false);
+	//getModule<Disabler>()->setEnabled(false);
+	getModule<AutoArmor>()->setEnabled(false);
 }
 
 void ModuleManager::onSaveConfig(void* confVoid) {
