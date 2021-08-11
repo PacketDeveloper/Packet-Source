@@ -15,6 +15,9 @@ private:
 	bool basicCheck = true;
 	bool calcYawCheck = false;
 
+	int delay = 0;
+	int delay1 = 0;
+
 public:
 	bool isMobAura = false;
 	bool hurttime = false;
