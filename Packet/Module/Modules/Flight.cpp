@@ -139,13 +139,15 @@ void Flight::onTick(C_GameMode* gm) {
 		static bool restored = false;
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
 			if (!player->onGround) {
-				clientMessageF("%sYou must be on the ground", GRAY);
+				auto box = g_Data.addInfoBox("Flight: You must be on the ground");
+				box->closeTimer = 15;
 				glideMod = -0.00034065544605255127;
 				setEnabled(false);
 			}
 		}
 		if (clickGUI->isEnabled()) {
-			clientMessageF("%sDisabled to prevent flags/errors", GRAY);
+			auto box = g_Data.addInfoBox("Flight: Disabled to prevent flags/errors");
+			box->closeTimer = 15;
 			setEnabled(false);
 		}
 		if (placeCounter == placeDelay /*8*/) {

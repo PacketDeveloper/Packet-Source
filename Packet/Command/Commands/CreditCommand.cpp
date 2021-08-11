@@ -11,7 +11,8 @@ CreditCommand::~CreditCommand() {
 bool CreditCommand::execute(std::vector<std::string>* args) {
 	clientMessageF("==========");
 	clientMessageF("%sPacket Client Credits:", GRAY);
-	clientMessageF("%sTurakan: TargetHUD & Original LowHop", WHITE);
+	clientMessageF("%sTurakan: Original TargetHUD & LowHop", WHITE);
+	//clientMessageF("%sLittle Kow: TargetStrafe and other stuff", WHITE);
 	clientMessageF("==========");
 	return true;
 }

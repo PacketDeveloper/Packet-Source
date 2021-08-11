@@ -22,6 +22,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new HudModule()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new ArrayList()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Watermark()));
+		this->moduleList.push_back(std::shared_ptr<IModule>(new Notifications()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FreeTP()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new CameraMod()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Animations()));
@@ -72,7 +73,6 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new XP()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new FastStop()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 
 		// Unused modules
 		//this->moduleList.push_back(std::shared_ptr<IModule>(new Derp()));
@@ -95,6 +95,7 @@ void ModuleManager::initModules() {
 		this->moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		// Broken
+		this->moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
 		//this->moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));

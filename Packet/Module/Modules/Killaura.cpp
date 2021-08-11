@@ -208,23 +208,8 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 				float y = windowSize.y / 2 - windowSize.y / 6.4f + windowSize.y / 4;
 				float scale = 3 * 0.26f;
 				float spacing = scale + 15.f + 2;
-				// armor
-				for (int i = 0; i < 4; i++) {
-					C_ItemStack* stack = player->getArmor(i);
-					if (stack->item != nullptr) {
-						DrawUtils::drawItem(stack, vec2_t(x, y), 1.f, scale, stack->isEnchanted());
-						x += scale * spacing;
-					}
-				}
-				// item
-				{
-					C_ItemStack* stack = player->getSelectedItem();
-					if (stack->item != nullptr) {
-						DrawUtils::drawItem(stack, vec2_t(rectPos.z - 1.f - 15.f * scale, y), 1.f, scale, stack->isEnchanted());
-					}
 				}
 			}
-		}
 	}
 }
 
@@ -261,7 +246,7 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {
-	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && silent && !rot) {
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && !rot && silent) {
 		if (!targetList.empty()) {
 			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());

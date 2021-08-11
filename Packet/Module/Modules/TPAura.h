@@ -10,20 +10,21 @@ public:
 	float range = 250;
 	float cCounter = 1;
 	bool push = false;
+	bool multi = true;
 	int targethud = 0;
 	int Odelay = 0;
 	int delay = 0;
-
-		SettingEnum mode = this;
+	float rangeSpeed = 1.f;
+	int entDistance = 2;
+	float entHeight = 1.62f;
 
 	TPAura();
 	~TPAura();
 
 	// Inherited via IModule
+	virtual void onEnable() override;
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
-	virtual void onEnable() override;
-	virtual void onSendPacket(C_Packet* packet) override;
 	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx) override;
 	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

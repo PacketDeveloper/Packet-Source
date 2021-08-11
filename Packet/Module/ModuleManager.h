@@ -12,6 +12,7 @@
 #include "Modules/HudModule.h"
 #include "Modules/ArrayList.h"
 #include "Modules/Watermark.h"
+#include "Modules/Notifications.h"
 #include "Modules/FreeTP.h"
 #include "Modules/CameraMod.h"
 #include "Modules/Animations.h"
@@ -62,7 +63,6 @@
 #include "Modules/XP.h"
 #include "Modules/FastStop.h"
 #include "Modules/Spammer.h"
-#include "Modules/BehindAura.h"
 #include "Modules/Module.h"
 
 // Unused
@@ -78,6 +78,7 @@
 #include "Modules/Survival.h"
 #include "Modules/NoSlow.h"
 // Broken
+#include "Modules/BehindAura.h"
 #include "Modules/TriggerBot.h"
 #include "Modules/CrystalAura.h"
 #endif

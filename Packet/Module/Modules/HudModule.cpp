@@ -4,7 +4,7 @@
 #include "../../Scripting/ScriptManager.h"
 
 HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
-	registerEnumSetting("Color", &color, 0);  // get the value using color.getSelectedValue()
+	registerEnumSetting("Color", &color, 0);
 	color.addEntry("Rainbow", 0);
 	color.addEntry("Dynamic", 1);
 	color.addEntry("Horion", 2);
@@ -15,14 +15,12 @@ HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
 	color.addEntry("Yellow", 7);
 	color.addEntry("Green", 8);
 	color.addEntry("Blue", 9);
-	//color.addEntry("Cyan", 10);
 	color.addEntry("Purple", 11);
 	color.addEntry("Pink", 12);
 	registerBoolSetting("TextShadow", &this->textShadow, this->textShadow);
 	registerBoolSetting("Keystrokes", &this->keystrokes, this->keystrokes);
 	registerBoolSetting("ArmorHUD", &this->displayArmor, this->displayArmor);
 	registerBoolSetting("FPS", &this->fps, this->fps);
-	registerBoolSetting("CPS", &this->cps, this->cps);
 	//registerBoolSetting("coords", &this->coordinates, this->coordinates);
 	//registerBoolSetting("BPS", &this->bps, this->bps);
 	//registerBoolSetting("Always show", &this->alwaysShow, this->alwaysShow);

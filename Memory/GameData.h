@@ -56,10 +56,9 @@ struct InfoBoxData {
 	float fadeTarget = 1;
 	float fadeVal = 0;
 	float closeTimer = -1;
-	std::string title;
 	std::string message;
 
-	InfoBoxData(std::string title, std::string message) : title(title), message(message){};
+	InfoBoxData(std::string message) : message(message){};
 
 	void fade() {
 		fadeVal = fadeTarget - ((fadeTarget - fadeVal) * 0.65f);
@@ -137,6 +136,7 @@ public:
 		std::lock_guard<std::mutex> listGuard(chestListMutex);
 		this->chestList.clear();
 	}
+
 	inline std::shared_ptr<InfoBoxData> getFreshInfoBox() {
 		while (!this->infoBoxQueue.empty()) {
 			auto box = this->infoBoxQueue.front();
@@ -148,8 +148,9 @@ public:
 		}
 		return std::shared_ptr<InfoBoxData>();
 	}
-	inline std::shared_ptr<InfoBoxData> addInfoBox(std::string title, std::string message) {
-		auto box = std::make_shared<InfoBoxData>(title, message);
+
+	inline std::shared_ptr<InfoBoxData> addInfoBox(std::string message) {
+		auto box = std::make_shared<InfoBoxData>(message);
 		this->infoBoxQueue.push(box);
 		return box;
 	}

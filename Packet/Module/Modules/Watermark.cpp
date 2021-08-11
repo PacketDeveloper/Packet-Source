@@ -1,11 +1,11 @@
 #include "Watermark.h"
 
 Watermark::Watermark() : IModule(0, Category::VISUAL, "goa frea thiom dsisti - deq") {
-	registerEnumSetting("Mode", &mode, 0);
-	mode.addEntry("Packet", 0);
-	mode.addEntry("Fadeaway", 1);
-	mode.addEntry("Retard", 2);
 	registerBoolSetting("FirstLetter", &firstLetter, &firstLetter);
+	registerEnumSetting("Theme", &mode, 0);
+	mode.addEntry("Packet", 0);
+	mode.addEntry("New", 1);
+	mode.addEntry("Fadeaway", 2);
 	//registerBoolSetting("UsedLater", &test, &test);
 	this->registerFloatSetting("Opacity", &this->opacity, this->opacity, 0.f, 1.f);
 }

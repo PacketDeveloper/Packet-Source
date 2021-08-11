@@ -1,12 +1,8 @@
 #include "TPAura.h"
 
-TPAura::TPAura() : IModule(0x0, Category::COMBAT, "TP Into The Closest Entity") {
-	registerEnumSetting("Mode", &mode, 0);
-	mode.addEntry("Multi", 0);
-	mode.addEntry("Switch", 1);
+TPAura::TPAura() : IModule(0, Category::COMBAT, "TP Into The Closest Entity") {
 	registerBoolSetting("Silent", &silent, silent);
-	registerBoolSetting("Push", &push, push);
-	registerIntSetting("TP Delay", &delay, delay, 0, 10);
+	registerIntSetting("Delay", &delay, delay, 0, 10);
 	registerFloatSetting("Range", &range, range, 5, 250);
 }
 
@@ -23,9 +19,6 @@ static std::vector<C_Entity*> targetList;
 void TPAura::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		setEnabled(false);
-	if (mode.getSelectedValue() == 1) {  // Switch
-		cCounter = 1;
-	}
 }
 
 void findEntity1(C_Entity* currentEntity, bool isRegularEntity) {
@@ -99,18 +92,13 @@ void TPAura::onTick(C_GameMode* gm) {
 	if (!targetList.empty() && Odelay >= delay) {
 		vec3_t pos = *targetList[0]->getPos();
 		if (!silent) {
-			if (!push) {
 				C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 				C_LocalPlayer* player = g_Data.getLocalPlayer();
 				player->setPos(pos);
-			} else {
-				float dist2 = gm->player->getPos()->dist(pos);
-				g_Data.getLocalPlayer()->lerpTo(pos, vec2_t(1, 1), (int)fmax((int)dist2 * 0.1, 1));
-			}
 		}
 		// Attack all entitys in targetList
-		if (mode.getSelectedValue() == 0) {  // Multi
+		if (multi) {
 			if (silent) {
 				if (targetList0.size() > 0 && Odelay >= delay) {
 					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
@@ -124,7 +112,7 @@ void TPAura::onTick(C_GameMode* gm) {
 						g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&teleportPacket);
 					}
 				}
-			} else {
+			} else { // !Silent
 				for (auto& i : targetList) {
 					if (!(i->damageTime > 1 && hurttime)) {
 						g_Data.getLocalPlayer()->swing();
@@ -134,7 +122,7 @@ void TPAura::onTick(C_GameMode* gm) {
 						targethud = 0;
 				}
 			}
-		} else {  // Switch
+		} else {  // Switch -- unused
 			if (silent) {
 				if (targetList0.size() > 0 && Odelay >= delay) {
 					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
@@ -159,7 +147,7 @@ void TPAura::onTick(C_GameMode* gm) {
 }
 
 void TPAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
-	if (targetList.size() == 1 && mode.getSelectedValue() != 1) {
+	if (targetList.size() == 1) {
 		if (targethud > 1 && g_Data.canUseMoveKeys()) {
 			for (auto& i : targetList) {
 				C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
@@ -219,30 +207,6 @@ void TPAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
 void TPAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
-	for (auto& i : targetList) {
-		if (!targetList.empty()) {
-			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-			auto rotation = g_Data.getLocalPlayer();
-			float prevyaw = rotation->yawUnused1;
-			float prevyaw2 = rotation->yaw;
-			float prevyaw3 = rotation->yaw2;
-			rotation->setRot(angle);
-
-			// Head
-			rotation->yawUnused1 = angle.y;
-			rotation->pitch = angle.x;
-			rotation->yaw2 = angle.y;
-			rotation->yaw = prevyaw2;
-			rotation->pitch2 = angle.x;
-
-			// Body
-			rotation->bodyYaw = angle.y;
-			rotation->yawUnused2 = prevyaw2;
-		}
-	}
-}
-
-void TPAura::onSendPacket(C_Packet* packet) {
 	for (auto& i : targetList) {
 		if (!targetList.empty()) {
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());

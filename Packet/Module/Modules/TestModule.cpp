@@ -40,7 +40,7 @@ void TestModule::onEnable() {
 	}
 
 	if (alertBox) {
-		auto box = g_Data.addInfoBox("Test", "Notification");
+		auto box = g_Data.addInfoBox("Notification");
 		box->closeTimer = 30;
 	}
 	if (dmgMode) {

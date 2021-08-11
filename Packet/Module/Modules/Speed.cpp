@@ -20,8 +20,8 @@ const char* Speed::getModuleName() {
 
 void Speed::onEnable() {
 	if (mode.getSelectedValue() == 3) {
-		auto box = g_Data.addInfoBox("Speed", "Gamer Mode Enabled!");
-		box->closeTimer = 5.f;
+		auto box = g_Data.addInfoBox("Speed: Gamer Mode Enabled!");
+		box->closeTimer = 5;
 	}
 }
 
@@ -199,7 +199,7 @@ void Speed::onDisable() {
 		player->velocity.x = 0.f;
 		player->velocity.z = 0.f;
 	}
-	if (scaffold->speedLockY)scaffold->lockY = false;
+	if (scaffold->speedLockY) scaffold->lockY = false;
 }
 
 void Speed::onSendPacket(C_Packet* packet) {
