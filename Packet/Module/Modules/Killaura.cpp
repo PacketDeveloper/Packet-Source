@@ -88,8 +88,8 @@ struct CompareTargetEnArray {
 
 void Killaura::onTick(C_GameMode* gm) {
 	if (silent && rot) {
-		auto box = g_Data.addInfoBox("Killaura: Disabled to prevent crash","");
-		box->closeTimer = 15;
+		auto KAbox = g_Data.addInfoBox("Killaura: Disabled to prevent crash");
+		KAbox->closeTimer = 15;
 		silent = false;
 	}
 
@@ -155,7 +155,7 @@ void Killaura::onTick(C_GameMode* gm) {
 void Killaura::onEnable() {
 	targethud = 0;
 	if (g_Data.getLocalPlayer() == nullptr)
-		this->setEnabled(false);
+		setEnabled(false);
 	//Minecraft.Windows.exe + 1D4C043;
 	//Minecraft.Windows.exe + BFADDA;
 
