@@ -3,7 +3,7 @@
 Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entites") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Multi", 0);
-	mode.addEntry("Single", 1);
+	mode.addEntry("Switch", 1); // it switches between players it isnt single lol
 	registerBoolSetting("Rotations", &rot, rot);
 	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
 	registerBoolSetting("MobAura", &isMobAura, isMobAura);
