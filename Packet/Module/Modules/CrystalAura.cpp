@@ -1,15 +1,12 @@
 #include "CrystalAura.h"
 
-CrystalAura::CrystalAura() : IModule(0, Category::COMBAT, "Destroys nearby Crystals") {
+CrystalAura::CrystalAura() : IModule(VK_NUMPAD0, Category::COMBAT, "Destroys nearby Crystals") {
+	registerBoolSetting("Auto select", &this->AutoSelect, this->AutoSelect);
 	registerBoolSetting("Autoplace", &this->autoplace, this->autoplace);
-	registerBoolSetting("Switch", &this->AutoSelect, this->AutoSelect);
+	registerIntSetting("CrystalRange", &this->cRange, this->cRange, 1, 15);
+	registerIntSetting("PlayerRange", &this->pRange, this->pRange, 1, 10);
+	registerIntSetting("PlaceRange", &this->eRange, this->eRange, 1, 5);
 	registerIntSetting("Range", &this->range, this->range, 1, 10);
-	registerIntSetting("Crystal range", &this->cRange, this->cRange, 1, 15);
-	registerIntSetting("Place range", &this->eRange, this->eRange, 1, 5);
-	registerIntSetting("Player range", &this->pRange, this->pRange, 1, 10);
-	//registerBoolSetting("Enhance place", &this->pEnhanced, this->pEnhanced);
-	//registerBoolSetting("Enhance destroy", &this->dEnhanced, this->dEnhanced);
-	//registerBoolSetting("preview", &this->Preview, this->Preview);
 	delay = 0;
 }
 CrystalAura::~CrystalAura() {
@@ -137,9 +134,9 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		for (int n = 0; n < 9; n++) {
 			C_ItemStack* stack = inv->getItemStack(n);
 			if (stack->item != nullptr) {
-				if (stack->getItem()->itemId == 615) {
+				if (stack->getItem()->itemId == 629) {
 					if (prevSlot != n)
-					supplies->selectedHotbarSlot = n;
+						supplies->selectedHotbarSlot = n;
 					return;
 				}
 			}
@@ -147,13 +144,14 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		return;
 	}
 	if (this->delay == 2) {
-		if (autoplace && g_Data.getLocalPlayer()->getSelectedItemId() == 615) {  //endcrystal
+		int selectedItemId = g_Data.getLocalPlayer()->getSelectedItemId();
+		if (autoplace && selectedItemId == 629) {  //endcrystal
 			if (pEnhanced)
 				for (auto& i : targetList)
 					CPlace(gm, i->getPos());
 			else {
 				auto ptr = g_Data.getClientInstance()->getPointerStruct();
-				if (!ptr->hasEntity() && ptr->rayHitType == 0)
+				if (ptr->rayHitType == 0)
 					CPlace(gm, &ptr->block.toFloatVector());
 			}
 		}
@@ -166,7 +164,8 @@ void CrystalAura::onTick(C_GameMode* gm) {
 	}
 	if (this->delay == 4) {
 		g_Data.forEachEntity([](C_Entity* ent, bool b) {
-			if (ent->getEntityTypeId() != 71)
+			int entityType = ent->getEntityTypeId();
+			if (entityType != 0x47)
 				return;
 			int range;
 			if (moduleMgr->getModule<CrystalAura>()->dEnhanced)
@@ -189,10 +188,10 @@ void CrystalAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 		g_Data.getPtrLocalPlayer() == nullptr ||
 		g_Data.getLocalPlayer() == nullptr)
 		return;
-	
-	auto ptr = g_Data.getClientInstance()->getPointerStruct();
+
+	auto* ptr = g_Data.getClientInstance()->getPointerStruct();
 	if (ptr != nullptr)
-		if (!ptr->hasEntity() && ptr->rayHitType == 0)
+		if (ptr->rayHitType == 0)
 			if (g_Data.getLocalPlayer()->region->getBlock(ptr->block)->toLegacy()->blockId == 49 ||
 				g_Data.getLocalPlayer()->region->getBlock(ptr->block)->toLegacy()->blockId == 7) {
 				DrawUtils::setColor(.75f, .25f, .5f, 1.f);

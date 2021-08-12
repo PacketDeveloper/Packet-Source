@@ -37,16 +37,20 @@ void Disabler::onTick(C_GameMode* gm) {
 	}
 	//}
 #ifdef _DEBUG
-	if (mode.getSelectedValue() == 2) { // Hive
-		if (counter == 4) {
+	if (mode.getSelectedValue() == 2) {
+		auto player = g_Data.getLocalPlayer();
+		if (counter == 5) {
 			counter = 1;
 		} else {
 			counter++;
 		}
-		if (gm->player->damageTime >= 1 && counter == 4) { // how to use the disabler: 1. enable disabler 2. have someone hit you OR take damage from TNT
+		if (gm->player->damageTime >= 1 && counter == 4) {
 			speed->setEnabled(true);
 		} else {
 			speed->setEnabled(false);
+			if (player->damageTime >= 1 && counter == 5) {
+				setEnabled(false);
+			}
 		}
 	}
 #endif

@@ -156,7 +156,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 		}
 	}
 
-	if (clickGUI->isEnabled()) {  // animation when opening clickgui
+	/*if (clickGUI->isEnabled()) {  // animation when opening clickgui
 		if (clickGUI->animations) {
 			if (ourWindow->isExtended) {
 				if (clickGUI->openAnimation == true) {
@@ -172,7 +172,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 		}
 	} else {
 		ourWindow->isInAnimation = true;
-	}
+	}*/
 
 
 	float currColor[4];  // ArrayList colors

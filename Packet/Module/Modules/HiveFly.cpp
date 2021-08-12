@@ -1,6 +1,7 @@
 #include "HiveFly.h"
 
 #include "../../Module/ModuleManager.h"
+#include "TestModule.h"
 
 HiveFly::HiveFly() : IModule(0, Category::MOVEMENT, "FlightModule") {
 	registerBoolSetting("TimerBoost", &timerBoost, timerBoost);

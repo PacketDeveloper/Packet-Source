@@ -4,7 +4,6 @@
 #include "Commands/BindCommand.h"
 #include "Commands/CreditCommand.h"
 #include "Commands/SpammerCommand.h"
-#include "Commands/OutlineCommand.h"
 //nclude "Commands/BruhCommand.h"
 #include "Commands/CoordsCommand.h"
 #include "Commands/DamageCommand.h"
@@ -41,6 +40,7 @@
 //#include "Commands/PathCommand.h"
 
 #ifdef _DEBUG
+#include "Commands/OutlineCommand.h"
 #include "Commands/TestCommand.h"
 #endif
 

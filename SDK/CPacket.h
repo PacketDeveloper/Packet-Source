@@ -47,7 +47,7 @@ public:
 	vec3_t pos;               //0x0030
 	float yawUnused;          //0x003C
 private:
-	char pad_0x0040[0x58];  //0x0040
+	char pad_0x0040[0x60];  //0x0040
 public:
 	PlayerAuthInputPacket();
 	PlayerAuthInputPacket(__int64 entityRuntimeId, vec3_t pos, float pitch, float yaw, float yawUnused);

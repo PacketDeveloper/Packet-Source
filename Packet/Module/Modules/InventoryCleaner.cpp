@@ -172,7 +172,7 @@ std::vector<int> InventoryCleaner::findUselessItems() {
 				C_ArmorItem* armor = reinterpret_cast<C_ArmorItem*>(*item);
 				
 				float testArmorValue = 0;
-				switch (armor->ArmorSlot) {
+				switch (armor->getArmorSlot()) {
 				case 0:
 					if (helmets.size() > 0)
 						testArmorValue = helmets.at(0)->getArmorValueWithEnchants();
@@ -191,7 +191,7 @@ std::vector<int> InventoryCleaner::findUselessItems() {
 					break;
 				}
 				if (itemsteck->getArmorValueWithEnchants() >= testArmorValue)
-					hadBest[armor->ArmorSlot] = true;
+					hadBest[armor->getArmorSlot()] = true;
 			}
 		}
 
