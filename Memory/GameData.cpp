@@ -17,7 +17,7 @@ void GameData::retrieveClientInstance() {
 			logF("clinet: %llX", clientInstanceOffset);
 		}
 	}*/
-	clientInstanceOffset = 0x04000998;  // pointer scanned, can't find good signatures so it'll stay
+	clientInstanceOffset = 0x41215C8;  // pointer scanned, can't find good signatures so it'll stay
 	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x0, 0x50}));
 
 #ifdef _DEBUG
@@ -27,7 +27,7 @@ void GameData::retrieveClientInstance() {
 }
 
 void GameData::checkGameVersion() {
-	static uintptr_t sigOffset = 0;
+	/*static uintptr_t sigOffset = 0;
 	// near string MinimumCompatibleClientVersion
 	if (sigOffset == 0)
 		sigOffset = FindSignature("48 8D 15 ?? ?? ?? ?? 48 3B CA 74 ?? 48 83 3D ?? ?? ?? ?? 10 48 0F 43 15 ?? ?? ?? ?? 4C 8B 05 ?? ?? ?? ?? E8 ?? ?? ?? ?? 49 8B C7");
@@ -40,7 +40,7 @@ void GameData::checkGameVersion() {
 	}
 
 	int num = std::stoi(ver.substr(lastDot + 1));
-	this->version = static_cast<GAMEVERSION>(num);
+	this->version = static_cast<GAMEVERSION>(num);*/
 }
 
 bool GameData::canUseMoveKeys() {

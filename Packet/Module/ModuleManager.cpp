@@ -97,9 +97,9 @@ void ModuleManager::initModules() {
 		// Broken
 		this->moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 		this->moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
-		this->moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
 		//this->moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
 #endif
+		this->moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
 
 		// Sort modules alphabetically
 		std::sort(moduleList.begin(), moduleList.end(), [](auto lhs, auto rhs) {

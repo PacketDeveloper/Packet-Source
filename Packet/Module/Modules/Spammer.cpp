@@ -21,6 +21,7 @@ void Spammer::onTick(C_GameMode* gm) {
 		C_TextPacket textPacket;
 		textPacket.message.setText(bypass ? (message + " | " + Utils::randomString(length)) : message);
 		textPacket.sourceName.setText(g_Data.getLocalPlayer()->getNameTag()->getText());
+		textPacket.messageType = 69;
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&textPacket);
 		Odelay = 0;
 	}

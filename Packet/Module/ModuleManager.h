@@ -80,8 +80,8 @@
 // Broken
 #include "Modules/BehindAura.h"
 #include "Modules/TriggerBot.h"
-#include "Modules/CrystalAura.h"
 #endif
+#include "Modules/CrystalAura.h"
 
 
 class ModuleManager {

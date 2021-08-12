@@ -4,6 +4,7 @@
 
 HelpCommand::HelpCommand() : IMCCommand("commands", "Lists all commands", "") {
 	registerAlias("command");
+	registerAlias("help"); //who tf would call this commands what
 }
 
 HelpCommand::~HelpCommand() {

@@ -45,7 +45,7 @@ void Hooks::Init() {
 			if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
 				logF("C_BlockLegacy signature not working!!!");
 			else {
-				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[179], Hooks::BlockLegacy_getRenderLayer);
+				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[180], Hooks::BlockLegacy_getRenderLayer);
 			}
 		}
 
@@ -1566,6 +1566,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		}
 		if (blinkMod->getPlayerAuthInputPacketHolder()->size() > 0) {
 			for (PlayerAuthInputPacket* it : *blinkMod->getPlayerAuthInputPacketHolder()) {
+				memset((int*)&it->yawUnused + 2, 0, 0x5C);
 				oFunc(a, (it));
 				delete it;
 				it = nullptr;
@@ -1817,6 +1818,7 @@ float Hooks::GetGamma(uintptr_t* a1) {
 	uintptr_t** list = (uintptr_t**)a1;
 
 	char obtainedSettings = 0;
+	bool hadIt = false;
 	for (uint16_t i = 3; i < 450; i++) {
 		if (list[i] == nullptr) continue;
 		uintptr_t* info = *(uintptr_t**)((uintptr_t)list[i] + 8);
@@ -1826,16 +1828,18 @@ float Hooks::GetGamma(uintptr_t* a1) {
 		TextHolder* settingname = (TextHolder*)((uintptr_t)info + 0x188);
 
 		if (!strcmp(translateName->getText(), "options.smoothlighting")) {
+			if (hadIt) continue;
 			bool* smoothlightning = (bool*)((uintptr_t)list[i] + 16);
 			xrayMod->smoothLightningSetting = smoothlightning;
 			obtainedSettings++;
+			hadIt = true;
 		} else if (!strcmp(settingname->getText(), "gfx_ingame_player_names")) {
 			bool* ingamePlayerName = (bool*)((uintptr_t)list[i] + 16);
 			nametagmod->ingameNametagSetting = ingamePlayerName;
 			obtainedSettings++;
 		}
 
-		if (obtainedSettings == 3) break;
+		if (obtainedSettings == 2) break;
 	}
 
 	if (xrayMod->isEnabled())

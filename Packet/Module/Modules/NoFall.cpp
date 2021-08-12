@@ -17,7 +17,7 @@ void NoFall::onTick(C_GameMode* gm) {
 	vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 	vec3_t blockBelow = player->eyePos0;
 	blockBelow.y -= player->height;
-	blockBelow.y -= 1.5f;
+	blockBelow.y -= 2.62f;
 	vec3_t pos;
 	if (mode.getSelectedValue() == 0) {  // Packet
 		C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
@@ -30,7 +30,8 @@ void NoFall::onTick(C_GameMode* gm) {
 	}
 	if (mode.getSelectedValue() == 2) {  // Hive
 		if (player->fallDistance >= dist) {
-			if (((player->region->getBlock(blockBelow)->blockLegacy))->blockId != 0 && ((player->region->getBlock(blockBelow)->blockLegacy))->material->isSolid) {
+			C_BlockLegacy* blockLegacy = (player->region->getBlock(blockBelow)->blockLegacy);
+			if (blockLegacy->blockId != 0 && blockLegacy->material->isSolid) {
 				gm->player->velocity = vec3_t(0, 0, 0);
 				gm->player->fallDistance = 0;
 				pos.x = 0.f + pPos.x;
