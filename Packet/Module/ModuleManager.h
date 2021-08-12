@@ -65,6 +65,7 @@
 #include "Modules/Spammer.h"
 #include "Modules/CrystalAura.h"
 #include "Modules/BehindAura.h"
+#include "Modules/Spider.h"
 #include "Modules/Module.h"
 
 // Unused
@@ -79,6 +80,7 @@
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
 #include "Modules/NoSlow.h"
+#include "Modules/Emote.h"
 // Broken
 #include "Modules/TriggerBot.h"
 #endif

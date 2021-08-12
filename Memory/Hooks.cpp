@@ -1540,6 +1540,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static auto freetpMod = moduleMgr->getModule<FreeTP>();
 	static auto blinkMod = moduleMgr->getModule<Blink>();
 	static auto noPacketMod = moduleMgr->getModule<NoPacket>();
+	static auto emoteMod = moduleMgr->getModule<Emote>();
 
 	if (noPacketMod->isEnabled() && g_Data.isInGame())
 		return;
@@ -1640,7 +1641,18 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 
 	moduleMgr->onSendPacket(packet);
 
-	oFunc(a, packet);
+	if (!emoteMod->isEnabled()) {
+		oFunc(a, packet);
+	} else {
+		if (emoteMod->isEnabled()) {
+			oFunc(a, packet);
+			oFunc(a, packet);
+		}
+		if (emoteMod->fourx && emoteMod->isEnabled()) {
+			oFunc(a, packet);
+			oFunc(a, packet);
+		}
+	}
 }
 
 float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
