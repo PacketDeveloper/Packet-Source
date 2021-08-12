@@ -86,9 +86,8 @@ void Flight::onTick(C_GameMode* gm) {
 
 	if (mode.getSelectedValue() == 1) {  // Boost
 		float yaw = player->yaw;
-		if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
+		if (input->forwardKey && input->backKey && input->rightKey && input->leftKey)
 			gm->player->velocity = vec3_t(0, 0, 0);
-		}
 		gm->player->velocity.y = glideModEffective;
 		if (GameData::isKeyDown(*input->spaceBarKey))
 			glideModEffective += 0.0f;
@@ -129,14 +128,14 @@ void Flight::onTick(C_GameMode* gm) {
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
 			if (!player->onGround) {
 				auto box = g_Data.addInfoBox("Flight: You must be on the ground");
-				box->closeTimer = 15;
+				box->closeTimer = 12;
 				glideMod = -0.00034065544605255127;
 				setEnabled(false);
 			}
 		}
 		if (clickGUI->isEnabled()) {
 			auto box = g_Data.addInfoBox("Flight: Disabled to prevent flags/errors");
-			box->closeTimer = 15;
+			box->closeTimer = 12;
 			setEnabled(false);
 		}
 		if (placeCounter == placeDelay /*8*/) {
@@ -144,16 +143,14 @@ void Flight::onTick(C_GameMode* gm) {
 		} else {
 			placeCounter++;
 		}
-		if (placeCounter == 3) {
+		if (placeCounter == 3)
 			*g_Data.getClientInstance()->minecraft->timer = 20.f;
-		}
 		if (selectBlock() == false) {
 			if (!restored) {
 				restored = true;
 				g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
-				if (restored == true) {
+				if (restored == true)
 					setEnabled(false);
-				}
 			}
 			return;
 		}
