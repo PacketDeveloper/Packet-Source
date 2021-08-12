@@ -30,12 +30,10 @@ const char* Flight::getRawModuleName() {
 void Flight::onEnable() {
 	auto scaffold = moduleMgr->getModule<Scaffold>();
 	auto speed = moduleMgr->getModule<Speed>();
-	if (speed->isEnabled()) {
+	if (speed->isEnabled())
 		speedWasEnabled = true;
-	}
-	if (scaffold->isEnabled()) {
+	if (scaffold->isEnabled())
 		scfWasEnabled = true;
-	}
 	if (damage) {
 		auto player = g_Data.getLocalPlayer();
 		player->animateHurt();
@@ -82,18 +80,9 @@ void Flight::onTick(C_GameMode* gm) {
 			}
 		}
 	}
-	if (mode.getSelectedValue() == 0 && GameData::isKeyDown(*input->sneakKey)) {  // Vanilla
+
+	if (GameData::isKeyDown(*input->sneakKey) && (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 || mode.getSelectedValue() == 2 || mode.getSelectedValue() == 3))
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-	}
-	if (mode.getSelectedValue() == 1 && GameData::isKeyDown(*input->sneakKey)) {  // Boost
-		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-	}
-	if (mode.getSelectedValue() == 2 && GameData::isKeyDown(*input->sneakKey)) {  // BlockFly
-		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-	}
-	if (mode.getSelectedValue() == 3 && GameData::isKeyDown(*input->sneakKey)) {  // Teleport
-		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-	}
 
 	if (mode.getSelectedValue() == 1) {  // Boost
 		float yaw = player->yaw;
