@@ -63,6 +63,8 @@
 #include "Modules/XP.h"
 #include "Modules/FastStop.h"
 #include "Modules/Spammer.h"
+#include "Modules/CrystalAura.h"
+#include "Modules/BehindAura.h"
 #include "Modules/Module.h"
 
 // Unused
@@ -78,9 +80,7 @@
 #include "Modules/Survival.h"
 #include "Modules/NoSlow.h"
 // Broken
-#include "Modules/BehindAura.h"
 #include "Modules/TriggerBot.h"
-#include "Modules/CrystalAura.h"
 #endif
 
 
