@@ -167,6 +167,11 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			player->velocity.y = -0.1f;
 			player->velocity.y = 0.23;
 		}
+
+		if (player->onGround) {
+			player->fallDistance = 0;
+			preventKick = false;
+		}
 			
 
 		float calcYaw = (player->yaw + 90) * (PI / 180);
@@ -188,6 +193,12 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
 		}
+
+		if (player->fallDistance >= 3 && !preventKick) {
+			player->velocity = vec3_t(0, -1, 0);
+			player->fallDistance = 0;
+			preventKick = true;
+		}
 	}
 }
 
@@ -200,6 +211,7 @@ void Speed::onDisable() {
 		player->velocity.z = 0.f;
 	}
 	if (scaffold->speedLockY) scaffold->lockY = false;
+	preventKick = false;
 }
 
 void Speed::onSendPacket(C_Packet* packet) {

@@ -9,7 +9,7 @@ private:
 	int counter2 = 0;
 	bool damage = false;
 	bool slowDown = true;
-	bool hive = false;
+	bool old = false;
 	float height = 1.f;
 	float speed = 2.f;
 

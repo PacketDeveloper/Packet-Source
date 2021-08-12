@@ -3,7 +3,7 @@
 Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entites") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Multi", 0);
-	mode.addEntry("Switch", 1);
+	mode.addEntry("Switch", 1); // it switches between players it isnt single lol
 	registerBoolSetting("Rotations", &rot, rot);
 	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
 	registerBoolSetting("MobAura", &isMobAura, isMobAura);
@@ -12,7 +12,7 @@ Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entit
 	registerBoolSetting("Silent", &silent, silent);
 	registerBoolSetting("Click", &click, click);
 	registerFloatSetting("range", &range, range, 3.f, 8.f);
-	registerIntSetting("delay", &delay, delay, 0, 10);
+	registerIntSetting("delay", &delay, delay, 0, 5);
 }
 
 Killaura::~Killaura() {
@@ -87,6 +87,12 @@ struct CompareTargetEnArray {
 };
 
 void Killaura::onTick(C_GameMode* gm) {
+	if (silent && rot) {
+		auto KAbox = g_Data.addInfoBox("Killaura: Disabled to prevent crash");
+		KAbox->closeTimer = 12;
+		silent = false;
+	}
+
 	//Loop through all our players and retrieve their information
 	targetList.clear();
 
@@ -149,7 +155,7 @@ void Killaura::onTick(C_GameMode* gm) {
 void Killaura::onEnable() {
 	targethud = 0;
 	if (g_Data.getLocalPlayer() == nullptr)
-		this->setEnabled(false);
+		setEnabled(false);
 	//Minecraft.Windows.exe + 1D4C043;
 	//Minecraft.Windows.exe + BFADDA;
 

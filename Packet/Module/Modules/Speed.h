@@ -8,6 +8,8 @@ private:
 	float height = 0.40f;
 	int counter = 1;
 
+	bool preventKick = false;
+
 public:
 	int timer = 20;
 	float speed = 0.325f;

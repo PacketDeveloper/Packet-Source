@@ -20,9 +20,8 @@ const char* Disabler::getModuleName() {
 }
 
 void Disabler::onEnable() {
-	if (mode.getSelectedValue() == 2) {
+	if (mode.getSelectedValue() == 2)
 		counter = 1;
-	}
 }
 
 void Disabler::onTick(C_GameMode* gm) {

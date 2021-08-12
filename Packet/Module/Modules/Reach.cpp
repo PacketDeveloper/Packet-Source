@@ -5,7 +5,7 @@
 #include "../../../Utils/Utils.h"
 
 Reach::Reach() : IModule(0, Category::COMBAT, "Increases your reach") {
-	registerFloatSetting("Amount", &reachValue, reachValue, 3.f, 9.f);
+	registerFloatSetting("Amount", &reachValue, reachValue, 3.f, 8.f); // keep it at 8 bruh
 }
 
 Reach::~Reach() {
@@ -35,7 +35,7 @@ void Reach::onEnable() {
 	}
 	if (!VirtualProtect(reachPtr, sizeof(float), PAGE_EXECUTE_READWRITE, &oldProtect)) {
 #ifdef _DEBUG
-		logF("couldnt unprotect memory send help");
+		logF("couldnt unprotect memory send help pls");
 		__debugbreak();
 #endif
 	}
