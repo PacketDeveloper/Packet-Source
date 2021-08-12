@@ -211,9 +211,9 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 		colorr[2] = color.b / 3.f;
 		colorr[3] = color.a / 3.f;
 		float posF2[4];
-		posF2[0] = posF[0] + 1.f;
+		posF2[0] = posF[0] + 1.0f * textSize;
 		posF2[1] = posF[1];
-		posF2[2] = posF[2] + 1.0f;
+		posF2[2] = posF[2] + 1.0f * textSize;
 		posF2[3] = posF[3];
 		renderCtx->drawText(fontPtr, posF2, &text, colorr, alpha, 0, &textMeasure, &caretMeasureData);
 	}
