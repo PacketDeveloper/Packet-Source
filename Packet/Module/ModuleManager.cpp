@@ -73,6 +73,8 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new XP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new FastStop()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
+		moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
+		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 
 		// Unused modules
 		//moduleList.push_back(std::shared_ptr<IModule>(new Derp()));
@@ -95,9 +97,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		// Broken
-		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
-		moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
 		//moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
 #endif
 
