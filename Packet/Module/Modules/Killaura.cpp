@@ -3,7 +3,7 @@
 Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entites") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Multi", 0);
-	mode.addEntry("Switch", 1);
+	mode.addEntry("Single", 1);
 	registerBoolSetting("Rotations", &rot, rot);
 	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
 	registerBoolSetting("MobAura", &isMobAura, isMobAura);
@@ -89,7 +89,7 @@ struct CompareTargetEnArray {
 void Killaura::onTick(C_GameMode* gm) {
 	if (silent && rot) {
 		auto KAbox = g_Data.addInfoBox("Killaura: Disabled to prevent crash");
-		KAbox->closeTimer = 15;
+		KAbox->closeTimer = 12;
 		silent = false;
 	}
 
