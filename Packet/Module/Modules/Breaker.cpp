@@ -11,7 +11,7 @@ Breaker::Breaker() : IModule(0, Category::MISC, "Destroys Beds, Eggs, Treasures 
 	registerBoolSetting("Beds", &this->beds, this->beds);
 	registerBoolSetting("Eggs", &this->eggs, this->eggs);
 	registerIntSetting("Range", &this->range, this->range, 1, 10);
-	this->registerIntSetting("delay", &this->delay, this->delay, 0, 5);
+	//this->registerIntSetting("delay", &this->delay, this->delay, 0, 5);
 }
 
 Breaker::~Breaker() {

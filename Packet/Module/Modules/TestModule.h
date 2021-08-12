@@ -22,6 +22,10 @@ private:
 	int testTimer = 0;
 
 public:
+	// testing
+	float sliderX = 0.f;
+	float sliderY = 0.f;
+
 	TestModule();
 	virtual const char* getModuleName();
 	virtual void onDisable() override;

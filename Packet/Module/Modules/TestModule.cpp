@@ -11,6 +11,8 @@ TestModule::TestModule() : IModule(0, Category::MISC, "Description") {
 	this->registerBoolSetting("Test", &this->test, this->test);
 	this->registerBoolSetting("AutoDisable", &this->autoDisable, this->autoDisable);
 	//this->registerBoolSetting("HiveDmgFly", &this->dmgflyMode, this->dmgflyMode);
+	registerFloatSetting("SliderX", &sliderX, sliderX, 0.f, 800.f);
+	registerFloatSetting("SliderY", &sliderY, sliderY, 0.f, 800.f);
 }
 
 const char* TestModule::getModuleName() {

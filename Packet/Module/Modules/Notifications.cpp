@@ -1,8 +1,8 @@
 #include "Notifications.h"
 
 Notifications::Notifications() : IModule(0, Category::VISUAL, "Notifications") {
-	registerBoolSetting("Disable", &disable, &disable);
-	registerBoolSetting("Enable", &enable, &enable);
+	//registerBoolSetting("Disable", &disable, &disable);
+	//registerBoolSetting("Enable", &enable, &enable);
 	registerFloatSetting("Opacity", &opacity, opacity, 0.f, 1.f);
 }
 
