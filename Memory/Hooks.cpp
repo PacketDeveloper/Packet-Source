@@ -1223,7 +1223,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	if (shouldPostRender) moduleMgr->onPostRender(renderCtx);
 	HImGui.endFrame();
 	DrawUtils::flush();
-
+	std::string whyDoYouDoItLikeThat = "gamering a lot unlike packet";
+	DrawUtils::drawText(vec2_t(100.f, 100.f), &whyDoYouDoItLikeThat, MC_Color(255, 10, 10), 1.f, 1.f, true);
 		// Draw FPS
 		if (hudMod->isEnabled() && hudMod->fps && g_Data.canUseMoveKeys()) {
 			vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
