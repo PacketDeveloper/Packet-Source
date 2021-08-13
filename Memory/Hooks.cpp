@@ -402,8 +402,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 
-{
-		// Draw Watermark
+	{
+	// Draw Watermark
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 		static auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
 		static auto watermark = moduleMgr->getModule<Watermark>();
@@ -421,29 +421,32 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
 					vec2_t textPos = vec2_t(rectPos.x + 14, rectPos.y + 4.f);
 					vec2_t pPos = vec2_t(rectPos.x + 5, rectPos.y + 4.f);
-
-					DrawUtils::drawText(vec2_t(textPos), &white2, MC_Color(255, 255, 255), 1.5, 1, true);
+					vec2_t textShadow = vec2_t(pPos.x + 1.5, pPos.y + 2);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), nameTextSize);
+					}
+					DrawUtils::drawText(textPos, &white2, MC_Color(255, 255, 255), nameTextSize);
 
 					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(currColor), 1.5, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(currColor), nameTextSize);
 					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(dynamic, dynamic, dynamic), nameTextSize, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(dynamic, dynamic, dynamic), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 4) {  // White
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(255, 255, 255), nameTextSize, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 255, 255), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(255, 0, 0), nameTextSize, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 0, 0), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(255, 127, 0), nameTextSize, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 127, 0), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(255, 255, 0), nameTextSize, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 255, 0), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(0, 255, 0), nameTextSize, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(0, 255, 0), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(0, 170, 255), nameTextSize, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(0, 170, 255), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(148, 0, 211), nameTextSize, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(148, 0, 211), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(255, 192, 203), nameTextSize, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(255, 192, 203), nameTextSize);
 					}
 				} else {  // Packet
 					constexpr float nameTextSize = 1.5f;
@@ -451,12 +454,16 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					float startY = hudMod->tabgui ? 6 * 10 : 0.f;
 					float l = DrawUtils::getTextWidth(&tempStr, 1.064) + 6.f;
 					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
+					//vec2_t textPos = vec2_t(rectPos.x + 14, rectPos.y + 4.f);
 					vec2_t pPos = vec2_t(rectPos.x + 5, rectPos.y + 4.f);
-
+					vec2_t textShadow = vec2_t(rectPos.x + 7, rectPos.y + 5);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &tempStr, MC_Color(0, 0, 0), nameTextSize);
+					}
 					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
-						DrawUtils::drawText(vec2_t(pPos), &tempStr, MC_Color(currColor), 1.3, 1, true);
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(currColor), nameTextSize);
 					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-						DrawUtils::drawText(vec2_t(pPos), &tempStr, MC_Color(dynamic, dynamic, dynamic), 1.5, 1, true);
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(dynamic, dynamic, dynamic), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 4) {  // White
 						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 255, 255), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
@@ -491,13 +498,16 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					float l2 = DrawUtils::getTextWidth(&textShadow2, 1.064) + 9.5f;
 					vec4_t linePos = vec4_t(3.f, startY + 2.f * 2, l2, startY + 3.f * 1);
 					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
-					vec2_t textPos = vec2_t(rectPos.x + 13, rectPos.y + 4.f);
+					vec2_t textPos = vec2_t(rectPos.x + 12, rectPos.y + 4.f);
+					vec2_t textShadow = vec2_t(rectPos.x + 7, rectPos.y + 5.f);
 					vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
-
-					DrawUtils::drawText(vec2_t(textPos), &white2, MC_Color(255, 255, 255), 1, 1, true);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), 1);
+					}
+					DrawUtils::drawText(textPos, &white2, MC_Color(255, 255, 255), 1);
 
 					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(currColor), 1, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(currColor), 1);
 					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
 						DrawUtils::drawText(pPos, &color2, MC_Color(dynamic, dynamic, dynamic), 1.f);
 					} else if (hudMod->color.getSelectedValue() == 4) {  // White
@@ -552,9 +562,12 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					vec4_t linePos = vec4_t(3.f, startY + 2.f * 2, l, startY + 3.f * 1);
 					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
 					vec2_t textPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
-
-					DrawUtils::drawText(vec2_t(textPos), &textStr, MC_Color(255, 255, 255), 1, 1, true);
-
+					vec2_t textShadow = vec2_t(textPos.x + 1, textPos.y + 1);
+					vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), 1);
+					}
+					DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255), 1);
 					DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), watermark->opacity);
 					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
 						DrawUtils::drawRectangle(linePos, MC_Color(currColor), 1.f);
@@ -584,18 +597,21 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			if (watermark->mode.getSelectedValue() == 2) {
 				if (watermark->firstLetter) {
 					constexpr float nameTextSize = 1.35f;
+					std::string textShadow2 = "Fadeaway";
 					std::string color2 = "F";
 					std::string white2 = "adeaway";
-					std::string length = "Fadeaway";
-					float startY = hudMod->tabgui ? 6 * 10 : 0;
-					float l = DrawUtils::getTextWidth(&length, 1.4) + 16;
-					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 23);
+					float startY = hudMod->tabgui ? 6 * 10 : 0.f;
+					float l = DrawUtils::getTextWidth(&textShadow2, 1.4) + 10;
+					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 22);
 					vec2_t textPos = vec2_t(rectPos.x + 14, rectPos.y + 4.f);
 					vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
-
+					vec2_t textShadow = vec2_t(pPos.x + 1, pPos.y + 1);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), nameTextSize);
+					}
 					DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), watermark->opacity);
-					DrawUtils::drawText(vec2_t(textPos), &white2, MC_Color(255, 255, 255), 1.5, 1, true);
 
+					DrawUtils::drawText(textPos, &white2, MC_Color(255, 255, 255), nameTextSize);
 					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
 						DrawUtils::drawRectangle(rectPos, MC_Color(currColor), 1);
 					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
@@ -618,7 +634,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						DrawUtils::drawRectangle(rectPos, MC_Color(255, 192, 203), 1);
 					}
 					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
-						DrawUtils::drawText(vec2_t(pPos), &color2, MC_Color(currColor), 1.5, 1, true);
+						DrawUtils::drawText(pPos, &color2, MC_Color(currColor), nameTextSize);
 					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
 						DrawUtils::drawText(pPos, &color2, MC_Color(dynamic, dynamic, dynamic), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 4) {  // White
@@ -641,11 +657,16 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				} else {  // fadeaway
 					constexpr float nameTextSize = 1.35f;
 					std::string tempStr("Fadeaway");
+					std::string textShadow2 = "Fadeaway";
 					float startY = hudMod->tabgui ? 6 * 10 : 0.f;
-					float l = DrawUtils::getTextWidth(&tempStr, 1.4) + 10;
+					float l = DrawUtils::getTextWidth(&textShadow2, 1.4) + 10;
 					vec4_t rectPos = vec4_t(2.5f, startY + 4.f * 1, l, startY + 20.f * 1);
+					//vec2_t textPos = vec2_t(rectPos.x + 12, rectPos.y + 4.f);
 					vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
-
+					vec2_t textShadow = vec2_t(pPos.x + 1, pPos.y + 1);
+					if (hudMod->textShadow) {
+						DrawUtils::drawText(textShadow, &textShadow2, MC_Color(0, 0, 0), nameTextSize);
+					}
 					DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), watermark->opacity);
 
 					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
@@ -670,9 +691,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						DrawUtils::drawRectangle(rectPos, MC_Color(255, 192, 203), 1);
 					}
 					if (hudMod->color.getSelectedValue() != 1)  // Rainbow
-						DrawUtils::drawText(vec2_t(pPos), &tempStr, MC_Color(currColor), 1.5, 1, true);
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(currColor), nameTextSize);
 					if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-						DrawUtils::drawText(vec2_t(pPos), &tempStr, MC_Color(dynamic, dynamic, dynamic), 1.5, 1, true);
+						DrawUtils::drawText(pPos, &tempStr, MC_Color(dynamic, dynamic, dynamic), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 4) {  // White
 						DrawUtils::drawText(pPos, &tempStr, MC_Color(255, 255, 255), nameTextSize);
 					} else if (hudMod->color.getSelectedValue() == 5) {  // Red
@@ -1231,6 +1252,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	if (shouldPostRender) moduleMgr->onPostRender(renderCtx);
 	HImGui.endFrame();
 	DrawUtils::flush();
+	std::string whyDoYouDoItLikeThat = "gamering a lot unlike packet";
+	DrawUtils::drawText(vec2_t(100.f, 100.f), &whyDoYouDoItLikeThat, MC_Color(255, 10, 10), 1.f, 1.f, true);
 		// Draw FPS
 		if (hudMod->isEnabled() && hudMod->fps && g_Data.canUseMoveKeys()) {
 			vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
@@ -1518,7 +1541,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static auto freetpMod = moduleMgr->getModule<FreeTP>();
 	static auto blinkMod = moduleMgr->getModule<Blink>();
 	static auto noPacketMod = moduleMgr->getModule<NoPacket>();
-	static auto pMultiplier = moduleMgr->getModule<Emote>();
+	static auto emoteMod = moduleMgr->getModule<Emote>();
 
 	if (noPacketMod->isEnabled() && g_Data.isInGame())
 		return;
@@ -1619,14 +1642,14 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 
 	moduleMgr->onSendPacket(packet);
 
-	if (!pMultiplier->isEnabled()) {
+	if (!emoteMod->isEnabled()) {
 		oFunc(a, packet);
 	} else {
-		if (pMultiplier->isEnabled()) {
+		if (emoteMod->isEnabled()) {
 			oFunc(a, packet);
 			oFunc(a, packet);
 		}
-		if (pMultiplier->fourx && pMultiplier->isEnabled()) {
+		if (emoteMod->fourx && emoteMod->isEnabled()) {
 			oFunc(a, packet);
 			oFunc(a, packet);
 		}

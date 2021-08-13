@@ -206,10 +206,10 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 
 	if (hasShadow) {
 		float colorr[4];
-		colorr[0] = color.r / 5.f;
-		colorr[1] = color.g / 5.f;
-		colorr[2] = color.b / 5.f;
-		colorr[3] = color.a / 5.f;
+		colorr[0] = color.r / 3.f;
+		colorr[1] = color.g / 3.f;
+		colorr[2] = color.b / 3.f;
+		colorr[3] = color.a / 3.f;
 		float posF2[4];
 		posF2[0] = posF[0] + 1.0f * textSize;
 		posF2[1] = posF[1];
