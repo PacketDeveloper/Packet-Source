@@ -254,6 +254,7 @@
     <ClCompile Include="Packet\Command\Commands\HideCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\ICommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\ModulesCommand.cpp" />
+    <ClCompile Include="Packet\Command\Commands\NameCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\NameSpoofCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\NbtCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\OutlineCommand.cpp" />
@@ -424,6 +425,7 @@
     <ClInclude Include="Packet\Command\Commands\HideCommand.h" />
     <ClInclude Include="Packet\Command\Commands\ICommand.h" />
     <ClInclude Include="Packet\Command\Commands\ModulesCommand.h" />
+    <ClInclude Include="Packet\Command\Commands\NameCommand.h" />
     <ClInclude Include="Packet\Command\Commands\NameSpoofCommand.h" />
     <ClInclude Include="Packet\Command\Commands\NbtCommand.h" />
     <ClInclude Include="Packet\Command\Commands\OutlineCommand.h" />
