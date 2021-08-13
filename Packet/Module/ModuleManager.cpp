@@ -75,6 +75,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
 		moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Emote()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Spider()));
 
 		// Unused modules
@@ -97,7 +98,6 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
 		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
-		moduleList.push_back(std::shared_ptr<IModule>(new Emote()));
 		// Broken
 		moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		//moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));

@@ -3,7 +3,7 @@
 class Spider : public IModule {
 private:
 	float speed = 0.6f;
-	bool dontOvershoot = true;
+	bool stop = true;
 
 public:
 	Spider();

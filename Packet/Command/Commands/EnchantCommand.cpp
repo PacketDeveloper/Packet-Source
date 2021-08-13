@@ -129,7 +129,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			}
 			free(EnchantData);
 		}
-		clientMessageF("%sEnchant successful!", GREEN);
+		clientMessageF("%sEnchant failed %ssuccessfully!", RED, GREEN);
 	} else {
 		void* EnchantData = malloc(0x60);
 		if (EnchantData != nullptr)
@@ -149,7 +149,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 					item);  // Player::selectItem
 
 			//g_Data.getLocalPlayer()->sendInventory();
-			clientMessageF("%sEnchant successful!", GREEN);
+			clientMessageF("%sEnchant failed %ssuccessfully!", RED, GREEN);
 		} else
 			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
 

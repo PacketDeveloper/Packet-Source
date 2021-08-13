@@ -1,12 +1,12 @@
 #include "CrystalAura.h"
 
-CrystalAura::CrystalAura() : IModule(VK_NUMPAD0, Category::COMBAT, "Destroys nearby Crystals") {
-	registerBoolSetting("Auto select", &this->AutoSelect, this->AutoSelect);
-	registerBoolSetting("Autoplace", &this->autoplace, this->autoplace);
-	registerIntSetting("CrystalRange", &this->cRange, this->cRange, 1, 15);
-	registerIntSetting("PlayerRange", &this->pRange, this->pRange, 1, 10);
-	registerIntSetting("PlaceRange", &this->eRange, this->eRange, 1, 5);
+CrystalAura::CrystalAura() : IModule(0, Category::COMBAT, "Destroys nearby Crystals") {
+	registerBoolSetting("AutoPlace", &this->autoplace, this->autoplace);
+	registerBoolSetting("Switch", &this->AutoSelect, this->AutoSelect);
 	registerIntSetting("Range", &this->range, this->range, 1, 10);
+	registerIntSetting("CrystalRange", &this->cRange, this->cRange, 1, 15);
+	registerIntSetting("PlaceRange", &this->eRange, this->eRange, 1, 5);
+	registerIntSetting("PlayerRange", &this->pRange, this->pRange, 1, 10);
 	delay = 0;
 }
 CrystalAura::~CrystalAura() {
