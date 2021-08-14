@@ -1,7 +1,7 @@
 #include "../../DrawUtils.h"
 #include "BlockESP.h"
 
-BlockESP::BlockESP() : IModule(0, Category::VISUAL, "Destroys Beds, Eggs, Treasures Etc.") {
+BlockESP::BlockESP() : IModule(0, Category::VISUAL, "Outlines Blocks") {
 	registerBoolSetting("Diamond", &this->dOre, this->dOre);
 	registerBoolSetting("Emerald", &this->eOre, this->eOre);
 	registerBoolSetting("Redstone", &this->rOre, this->rOre);
