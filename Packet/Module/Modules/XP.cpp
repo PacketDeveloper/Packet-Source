@@ -1,6 +1,6 @@
 #include "XP.h"
 
-XP::XP() : IModule(0, Category::MISC, "Gives you experience levels") {
+XP::XP() : IModule(0, Category::PLAYER, "Gives you experience levels") {
 	this->registerBoolSetting("Levels", &this->levels, this->levels);
 	this->registerIntSetting("Amount", &this->amount, this->amount, 1, 250);
 }

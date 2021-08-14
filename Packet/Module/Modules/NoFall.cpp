@@ -1,6 +1,6 @@
 #include "NoFall.h"
 
-NoFall::NoFall() : IModule(0, Category::MOVEMENT, "NoFuK") {
+NoFall::NoFall() : IModule(0, Category::EXPLOIT, "NoFuK") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Packet", 0);
 	mode.addEntry("Motion", 1);

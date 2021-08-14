@@ -3,7 +3,7 @@
 #include "../../../Utils/Target.h"
 #include "../ModuleManager.h"
 
-Disabler::Disabler() : IModule(0, Category::MISC, "Disables AntiCheats") {
+Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
 	registerEnumSetting("Mode", &this->mode, 0);
 	mode.addEntry("Nethergames", 0);
 	mode.addEntry("Mineville", 1);

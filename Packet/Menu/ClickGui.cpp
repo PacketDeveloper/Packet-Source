@@ -30,17 +30,17 @@ vec2_t dragStart = vec2_t();
 unsigned int focusedElement = -1;
 bool isFocused = false;
 
-static constexpr float textPadding = 1.0f;
-static constexpr float textSize = 1.0f;
+static constexpr float textPadding = 1.f;
+static constexpr float textSize = 1.f;
 static constexpr float textHeight = textSize * 9.5f;
 static constexpr float categoryMargin = 0.5f;
 static constexpr float paddingRight = 13.5f;
 static constexpr float crossSize = textHeight / 2.f;
 static constexpr float crossWidth = 0.3f;
-static const MC_Color selectedModuleColor = MC_Color(80, 80, 80);
+static const MC_Color selectedModuleColor = MC_Color(32, 32, 32);
 static const MC_Color selectedSettingColor1 = MC_Color(64, 64, 64);
 static const MC_Color selectedSettingColor2 = MC_Color(64, 64, 64);
-static const MC_Color moduleColor = MC_Color(16, 16, 16);
+static const MC_Color moduleColor = MC_Color(0, 0, 0);
 static const MC_Color SettingColor1 = MC_Color(64, 64, 64);
 static const MC_Color SettingColor2 = MC_Color(64, 64, 64);
 
@@ -142,8 +142,11 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 		case Category::PLAYER:
 			ourWindow->pos.x = yot / 7.f * 3.f;
 			break;
-		case Category::MISC:
+		case Category::EXPLOIT:
 			ourWindow->pos.x = yot / 7.f * 4.1f;
+			break;
+		case Category::MISC:
+			ourWindow->pos.x = yot / 7.f * 5.f;
 			break;
 #ifdef _DEBUG
 		case Category::CONFIG:
@@ -173,7 +176,6 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 	} else {
 		ourWindow->isInAnimation = true;
 	}*/
-
 
 	float currColor[4];  // ArrayList colors
 	currColor[3] = rcolors[3];
@@ -273,9 +275,9 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 				continue;
 			float probableYOffset = (moduleIndex - ourWindow->yOffset) * (textHeight + (textPadding * 2));
 
-			Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[1], rcolors[2], currColor[0], currColor[1], currColor[2]);
+			Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[2], rcolors[1], currColor[0], currColor[1], currColor[2]);
 			currColor[0] += 1.f / moduleList.size() * moduleIndex;
-			Utils::ColorConvertHSVtoRGB(currColor[0], currColor[1], currColor[2], currColor[0], currColor[1], currColor[2]);
+			Utils::ColorConvertHSVtoRGB(currColor[0], currColor[2], currColor[3], currColor[0], currColor[1], currColor[2]);
 
 			if (ourWindow->isInAnimation) {  // Estimate, we don't know about module settings yet
 				if (probableYOffset > cutoffHeight) {
@@ -320,9 +322,13 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 			// Text
 			if (allowRender)
 				if (Rainbow)
-					DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? MC_Color(rcolors) : MC_Color(MC_Color(100, 100, 100)), textSize);  // MC_Color(currColor[0] / 4.f, currColor[1] / 4.f, currColor[2] / 4.f), textSize);
+					DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? MC_Color(currColor) : MC_Color(MC_Color(64, 64, 64)), textSize);  // MC_Color(currColor[0] / 4.f, currColor[1] / 4.f, currColor[2] / 4.f), textSize);
 				else
-					DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? MC_Color(255, 255, 255) : MC_Color(100, 100, 100), textSize);
+					DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? MC_Color(ClickGuiMod::textR, ClickGuiMod::textG, ClickGuiMod::textB) : MC_Color(ClickGuiMod::dtextR, ClickGuiMod::dtextG, ClickGuiMod::dtextB), textSize);
+			if (clickGUI->theme.getSelectedValue() == 1) {  // fadeaway
+				DrawUtils::fillRectangle(rectPos, mod->isEnabled() ? MC_Color(215, 84, 229) : MC_Color(0, 0, 0), textSize);
+			}
+			//DrawUtils::drawText(textPos, &textStr, mod->isEnabled() ? MC_Color(255, 255, 255) : MC_Color(100, 100, 100), textSize);
 
 			// Settings
 			{
@@ -337,7 +343,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 						GuiUtils::drawCrossLine(vec2_t(
 													currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,
 													currentYOffset + textPadding + (textHeight / 2)),
-												MC_Color(rcolors), crossWidth, crossSize, !clickMod->isExtended);
+												MC_Color(currColor), crossWidth, crossSize, !clickMod->isExtended);
 					}
 					if (!Rainbow) {
 						GuiUtils::drawCrossLine(vec2_t(
@@ -783,12 +789,12 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 			DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255), textSize);
 			DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(255, 255, 255), 1.f);
 			if (Rainbow)
-				DrawUtils::drawText(textPos, &textStr, MC_Color(rcolors), textSize);
+				DrawUtils::drawText(textPos, &textStr, MC_Color(currColor), textSize);
 			DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
 
 			DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), MC_Color(255, 255, 255), 1 - ourWindow->animation);
 			if (Rainbow)
-				DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), MC_Color(rcolors), 1 - ourWindow->animation);
+				DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), MC_Color(currColor), 1 - ourWindow->animation);
 			// Draw Dash
 			GuiUtils::drawCrossLine(vec2_t(
 										currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,
@@ -798,10 +804,9 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 				GuiUtils::drawCrossLine(vec2_t(
 											currentXOffset + windowSize->x + paddingRight - (crossSize / 2) - 1.f,
 											categoryHeaderYOffset + textPadding + (textHeight / 2)),
-										MC_Color(rcolors), crossWidth, crossSize, !ourWindow->isExtended);
+										MC_Color(currColor), crossWidth, crossSize, !ourWindow->isExtended);
 			}
 		}
-
 	}
 
 	// anti idiot
@@ -837,7 +842,7 @@ void ClickGui::render() {
 									 0,
 									 g_Data.getClientInstance()->getGuiData()->widthGame,
 									 g_Data.getClientInstance()->getGuiData()->heightGame),
-								 MC_Color(33, 34, 48), 0.2f);
+								 MC_Color(33, 34, 48), 0.f);
 	}
 
 	// Render all categorys
@@ -849,6 +854,7 @@ void ClickGui::render() {
 	renderCategory(Category::VISUAL, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);
 	renderCategory(Category::MOVEMENT, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);
 	renderCategory(Category::PLAYER, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);
+	renderCategory(Category::EXPLOIT, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);
 	renderCategory(Category::MISC, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);
 #ifdef _DEBUG
 	renderCategory(Category::CONFIG, guimod->rainbowColor, guimod->enabled ? guimod->opacity : 1.f);

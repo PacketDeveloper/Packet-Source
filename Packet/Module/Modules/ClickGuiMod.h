@@ -3,10 +3,26 @@
 
 class ClickGuiMod : public IModule {
 public:
+	static float textR;
+	static float textG;
+	static float textB;
+
+	static float dtextR;
+	static float dtextG;
+	static float dtextB;
+
+	static float sliderR;
+	static float sliderG;
+	static float sliderB;
+
+	static float backroundR;
+	static float backroundG;
+	static float backroundB;
+
 	ClickGuiMod();
 	~ClickGuiMod();
 
-		SettingEnum theme = this;
+	SettingEnum theme = this;
 
 	bool headerAnimation = false;
 	int makeOnixMadCounter = 1;

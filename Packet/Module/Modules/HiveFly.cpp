@@ -99,66 +99,65 @@ void HiveFly::onMove(C_MoveInputHandler* input) {
 		return;
 	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
 	bool pressed = moveVec2d.magnitude() > 0.01f;
-	if (input->isJumping && counter == 3) {
+	if (input->isJumping) {
 		player->velocity.y -= 0.000000000001f;
-		player->fallDistance = -0.1f;
+		player->fallDistance = 0;
 		vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 
 		vec3_t pos;
 		pos.x = 0.f + pPos.x;
-		pos.y = 2.f + pPos.y;
+		pos.y = 1.f + pPos.y;
 		pos.z = 0.f + pPos.z;
-
+		*g_Data.getClientInstance()->minecraft->timer = 19.f;
 		g_Data.getLocalPlayer()->setPos(pos);
 	}
-	if (input->isSneakDown && counter == 3) {
+	if (input->isSneakDown) {
 		player->velocity.y -= 0.000000000001f;
 		player->fallDistance = -0.1f;
 		vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 
 		vec3_t pos;
 		pos.x = 0.f + pPos.x;
-		pos.y = -4.f + pPos.y;
+		pos.y = -1.f + pPos.y;
 		pos.z = 0.f + pPos.z;
-
+		*g_Data.getClientInstance()->minecraft->timer = 19.f;
 		g_Data.getLocalPlayer()->setPos(pos);
-		*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	}
 	if (input->right) {
 		yaw += 90.f;
 		if (!input->isJumping) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->isJumping && counter == 3) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->isSneakDown && counter == 3) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->forward)
 			yaw -= 45.f;
 		else if (input->backward)
 			yaw += 45.f;
 		if (!input->isJumping) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->isJumping && counter == 3) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->isSneakDown && counter == 3) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 	}
 	if (input->left) {
 		yaw -= 90.f;
 		if (!input->isJumping) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->isJumping && counter == 3) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->isSneakDown && counter == 3) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->forward)
 			yaw += 45.f;

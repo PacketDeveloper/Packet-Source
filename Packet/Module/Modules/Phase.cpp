@@ -1,7 +1,7 @@
 #include "../../Module/ModuleManager.h"
 #include "Phase.h"
 
-Phase::Phase() : IModule(0, Category::MOVEMENT, "Walk through walls") {
+Phase::Phase() : IModule(0, Category::EXPLOIT, "Walk through walls") {
 	this->registerBoolSetting("Vertical", &this->vertMode, this->vertMode);
 }
 
@@ -9,7 +9,7 @@ Phase::~Phase() {
 }
 
 const char* Phase::getModuleName() {
-	return ("NoClip");
+	return ("Phase");
 }
 
 void Phase::onTick(C_GameMode* gm) {

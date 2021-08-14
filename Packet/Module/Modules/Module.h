@@ -11,9 +11,10 @@ enum class Category {
 	VISUAL = 1,
 	MOVEMENT = 2,
 	PLAYER = 3,
-	MISC = 4,
-	CONFIG = 5,
-	CUSTOM = 6
+	EXPLOIT = 4,
+	MISC = 5,
+	CONFIG = 6,
+	CUSTOM = 7
 };
 
 struct EnumEntry {

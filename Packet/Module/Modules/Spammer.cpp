@@ -5,7 +5,7 @@
 Spammer::Spammer() : IModule(0, Category::MISC, "Spams a message in a specified delay") {
 	registerBoolSetting("bypass", &this->bypass, this->bypass);
 	registerIntSetting("delay", &this->delay, this->delay, 0, 30);
-	registerIntSetting("Length", &this->length, this->length, 1, 30);
+	registerIntSetting("Length", &this->length, this->length, 1, 40);
 }
 
 Spammer::~Spammer() {

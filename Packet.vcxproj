@@ -291,6 +291,7 @@
     <ClCompile Include="Packet\Module\Modules\AutoArmor.cpp" />
     <ClCompile Include="Packet\Module\Modules\AutoClicker.cpp" />
     <ClCompile Include="Packet\Module\Modules\BehindAura.cpp" />
+    <ClCompile Include="Packet\Module\Modules\BlockESP.cpp" />
     <ClCompile Include="Packet\Module\Modules\CustomSky.cpp" />
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
     <ClCompile Include="Packet\Module\Modules\Notifications.cpp" />
@@ -333,7 +334,6 @@
     <ClCompile Include="Packet\Module\Modules\Nbt.cpp" />
     <ClCompile Include="Packet\Module\Modules\NoFall.cpp" />
     <ClCompile Include="Packet\Module\Modules\NoFriends.cpp" />
-    <ClCompile Include="Packet\Module\Modules\NoPacket.cpp" />
     <ClCompile Include="Packet\Module\Modules\NoSlow.cpp" />
     <ClCompile Include="Packet\Module\Modules\NoSwing.cpp" />
     <ClCompile Include="Packet\Module\Modules\Nuker.cpp" />
@@ -362,7 +362,7 @@
     <ClCompile Include="Packet\Module\Modules\Xray.cpp" />
     <ClCompile Include="Packet\Module\Modules\Zoom.cpp" />
     <ClCompile Include="Packet\Module\Modules\Spider.cpp" />
-    <ClCompile Include="Packet\Module\Modules\Emote.cpp" />
+    <ClCompile Include="Packet\Module\Modules\Packet.cpp" />
     <ClCompile Include="Packet\Scripting\Functions\CommandManagerFunctions.cpp" />
     <ClCompile Include="Packet\Scripting\Functions\DrawFunctions.cpp" />
     <ClCompile Include="Packet\Scripting\Functions\EntityFunctions.cpp" />
@@ -462,6 +462,7 @@
     <ClInclude Include="Packet\Module\Modules\AutoArmor.h" />
     <ClInclude Include="Packet\Module\Modules\AutoClicker.h" />
     <ClInclude Include="Packet\Module\Modules\BehindAura.h" />
+    <ClInclude Include="Packet\Module\Modules\BlockESP.h" />
     <ClInclude Include="Packet\Module\Modules\CustomSky.h" />
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />
     <ClInclude Include="Packet\Module\Modules\Notifications.h" />
@@ -504,7 +505,6 @@
     <ClInclude Include="Packet\Module\Modules\Nbt.h" />
     <ClInclude Include="Packet\Module\Modules\NoFall.h" />
     <ClInclude Include="Packet\Module\Modules\NoFriends.h" />
-    <ClInclude Include="Packet\Module\Modules\NoPacket.h" />
     <ClInclude Include="Packet\Module\Modules\NoSlow.h" />
     <ClInclude Include="Packet\Module\Modules\NoSwing.h" />
     <ClInclude Include="Packet\Module\Modules\Nuker.h" />
@@ -533,7 +533,7 @@
     <ClInclude Include="Packet\Module\Modules\Xray.h" />
     <ClInclude Include="Packet\Module\Modules\Zoom.h" />
     <ClInclude Include="Packet\Module\Modules\Spider.h" />
-    <ClInclude Include="Packet\Module\Modules\Emote.h" />
+    <ClInclude Include="Packet\Module\Modules\Packet.h" />
     <ClInclude Include="Packet\Scripting\Functions\CommandManagerFunctions.h" />
     <ClInclude Include="Packet\Scripting\Functions\DrawFunctions.h" />
     <ClInclude Include="Packet\Scripting\Functions\EntityFunctions.h" />

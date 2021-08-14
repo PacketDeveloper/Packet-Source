@@ -60,6 +60,9 @@ private:
 			case Category::PLAYER:
 				categoryName = "Player";
 				break;
+			case Category::EXPLOIT:
+				categoryName = "Exploit";
+				break;
 			case Category::MISC:
 				categoryName = "Misc";
 				break;

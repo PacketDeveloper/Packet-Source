@@ -1,6 +1,6 @@
 #include "Timer.h"
 
-Timer::Timer() : IModule(0, Category::MISC, "Modifies game speed") {
+Timer::Timer() : IModule(0, Category::PLAYER, "Modifies game speed") {
 	this->registerIntSetting("TPS", &this->timer, this->timer, 5, 700);
 }
 

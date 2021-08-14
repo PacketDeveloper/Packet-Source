@@ -195,7 +195,7 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 					}
 				}
 				if (g_Data.canUseMoveKeys()) {
-					if (onKey) {
+					/*if (onKey) {
 						if (GameData::isKeyDown(*input->spaceBarKey)) {
 							vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
 							player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
@@ -206,6 +206,38 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 							vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
 							player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
 						//}
+					}*/
+					if (!speedCheck) {
+						if (spacekeyMode)
+							if (GameData::isKeyDown(*input->spaceBarKey)) {
+								vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+								player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+							}
+					}
+					if (!speedCheck) {
+						if (!spacekeyMode) {
+							vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+							player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+						}
+					}
+					if (spacekeyMode) {
+						auto bhopMod = moduleMgr->getModule<Speed>();
+						if (speedCheck)
+							if (bhopMod->isEnabled()) {
+								if (GameData::isKeyDown(*input->spaceBarKey)) {
+									vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+									player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+								}
+							}
+					}
+
+					if (!spacekeyMode) {
+						auto bhopMod = moduleMgr->getModule<Speed>();
+						if (speedCheck)
+							if (bhopMod->isEnabled()) {
+								vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+								player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+							}
 					}
 				}
 			}

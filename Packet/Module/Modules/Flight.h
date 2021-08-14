@@ -23,6 +23,9 @@ public:
 	bool selectBlock();
 	int prevSlot = 0;
 
+	// Hive
+	int hiveC = 1;
+
 		C_MovePlayerPacket* jetpack = nullptr;
 		SettingEnum mode = this;
 
@@ -36,5 +39,13 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 	virtual const char* getRawModuleName() override;
+	virtual void onSendPacket(C_Packet* packet) override;
 	virtual void onMove(C_MoveInputHandler* input) override;
+
+	std::vector<C_MovePlayerPacket> movePacket1;
+	std::vector<PlayerAuthInputPacket> authPacket1;
+	std::vector<C_MovePlayerPacket*> MovePlayerPacketHolder;
+	std::vector<PlayerAuthInputPacket*> PlayerAuthInputPacketHolder;
+	inline std::vector<C_MovePlayerPacket*>* getMovePlayerPacketHolder() { return &MovePlayerPacketHolder; };
+	inline std::vector<PlayerAuthInputPacket*>* getPlayerAuthInputPacketHolder() { return &PlayerAuthInputPacketHolder; };
 };

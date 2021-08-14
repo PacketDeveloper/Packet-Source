@@ -3,6 +3,7 @@
 #include "../../Memory/GameData.h"
 #include "Commands/BindCommand.h"
 #include "Commands/CreditCommand.h"
+#include "Commands/NameCommand.h"
 #include "Commands/SpammerCommand.h"
 //nclude "Commands/BruhCommand.h"
 #include "Commands/CoordsCommand.h"

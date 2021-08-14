@@ -11,12 +11,17 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "yes") {
 	mode.addEntry("Teleport", 3);
 	mode.addEntry("Jetpack", 4);
 	mode.addEntry("AirJump", 5);
+	mode.addEntry("Hive", 6);
 	//registerIntSetting("PlaceDelay", &placeDelay, placeDelay, 2, 20);
 	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
 	registerFloatSetting("value", &glideMod, glideMod, -0.15f, 0.00);
 }
 
 Flight::~Flight() {
+	if (mode.getSelectedValue() == 6) {
+		getMovePlayerPacketHolder()->clear();
+		getPlayerAuthInputPacketHolder()->clear();
+	}
 }
 
 const char* Flight::getModuleName() {
@@ -56,6 +61,11 @@ bool Flight::isFlashMode() {
 
 void Flight::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+	if (input == nullptr) return;
+	auto blinkMod = moduleMgr->getModule<Blink>();
+	float trueStop = __STDCPP_DEFAULT_NEW_ALIGNMENT__ + _ENABLE_ATOMIC_REF_ALIGNMENT_CHECK + INFINITY - 1 + NULL;
+	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
+	float calcYawInvert = (gm->player->yaw - 90) * (PI / 180);
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 	auto scaffoldMod = moduleMgr->getModule<Scaffold>();
 	auto longjump = moduleMgr->getModule<LongJump>();
@@ -89,12 +99,8 @@ void Flight::onTick(C_GameMode* gm) {
 		if (input->forwardKey && input->backKey && input->rightKey && input->leftKey)
 			gm->player->velocity = vec3_t(0, 0, 0);
 		gm->player->velocity.y = glideModEffective;
-		if (GameData::isKeyDown(*input->spaceBarKey))
-			glideModEffective += 0.0f;
-		if (GameData::isKeyDown(*input->sneakKey))
-			glideModEffective -= 0.0f;
+		glideModEffective = glideMod;
 	}
-	glideModEffective = glideMod;
 
 	if (mode.getSelectedValue() == 0) {  // Vanilla
 		if (g_Data.canUseMoveKeys()) {
@@ -110,8 +116,8 @@ void Flight::onTick(C_GameMode* gm) {
 			gm->player->velocity = vec3_t(0, 0, 0);
 		}
 		gm->player->velocity.y = glideModEffective;
-	}
-	if (mode.getSelectedValue() == 4) {  // Jetpack
+		glideModEffective = glideMod;
+	} else if (mode.getSelectedValue() == 4) {  // Jetpack
 		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 		float calcPitch = (gm->player->pitch) * -(PI / 180);
 		vec3_t moveVec;
@@ -120,18 +126,15 @@ void Flight::onTick(C_GameMode* gm) {
 		moveVec.z = sin(calcYaw) * cos(calcPitch) * speed;
 
 		gm->player->lerpMotion(moveVec);
-	}
-	if (mode.getSelectedValue() == 2) {  // BlockFly
+	} else if (mode.getSelectedValue() == 2) {  // BlockFly
 		static auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
 		gm->player->velocity.y = glideModEffective;
 		static bool restored = false;
-		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
-			if (!player->onGround) {
-				auto box = g_Data.addInfoBox("Flight: You must be on the ground");
-				box->closeTimer = 12;
-				glideMod = -0.00034065544605255127;
-				setEnabled(false);
-			}
+		if (!player->onGround) {
+			auto box = g_Data.addInfoBox("Flight: You must be on the ground");
+			box->closeTimer = 12;
+			glideMod = -0.00034065544605255127;
+			setEnabled(false);
 		}
 		if (clickGUI->isEnabled()) {
 			auto box = g_Data.addInfoBox("Flight: Disabled to prevent flags/errors");
@@ -201,8 +204,7 @@ void Flight::onTick(C_GameMode* gm) {
 				}
 			}
 		}
-	}
-	if (mode.getSelectedValue() == 5) {  // AirJump
+	} else if (mode.getSelectedValue() == 5) {  // AirJump
 		if (input == nullptr)
 			return;
 
@@ -214,10 +216,31 @@ void Flight::onTick(C_GameMode* gm) {
 			hasJumped = 0;
 		}
 	}
+	if (mode.getSelectedValue() == 6) {  // Hive
+		if (hiveC == 7) {
+			hiveC = 1;
+		} else {
+			hiveC++;
+		}
+		if (hiveC == 3) {
+			player->velocity.y = -0.64565547658657876585663567537607653 * 453;
+			*g_Data.getClientInstance()->minecraft->timer = 110.f;
+		}
+		if (hiveC == 4) {
+			player->velocity.y = 0;
+			*g_Data.getClientInstance()->minecraft->timer = 40.f;
+		}
+		if (hiveC == 6) {
+			player->velocity.y = 0;
+			*g_Data.getClientInstance()->minecraft->timer = 15.f;
+		}
+	}
 }
 
 void Flight::onMove(C_MoveInputHandler* input) {
 	auto player = g_Data.getLocalPlayer();
+	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+	bool pressed = moveVec2d.magnitude() > 0.01f;
 	if (mode.getSelectedValue() == 3) { // Teleport
 		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
 		bool pressed = moveVec2d.magnitude() > 0.01f;
@@ -293,6 +316,23 @@ void Flight::onMove(C_MoveInputHandler* input) {
 			if (pressed) player->lerpMotion(moveVec);
 		}
 	}
+	if (mode.getSelectedValue() == 6) {
+		auto player = g_Data.getLocalPlayer();
+		if (player == nullptr) return;
+
+		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+		bool pressed = moveVec2d.magnitude() > 0.01f;
+
+		float calcYaw = (player->yaw + 90) * (PI / 180);
+		vec3_t moveVec;
+		float c = cos(calcYaw);
+		float s = sin(calcYaw);
+		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+		moveVec.x = moveVec2d.x * 0.1;
+		moveVec.y = player->velocity.y;
+		moveVec.z = moveVec2d.y * 0.1;
+		if (pressed) player->lerpMotion(moveVec);
+	}
 }
 
 bool Flight::buildBlock(vec3_t blockBelow) {
@@ -322,6 +362,22 @@ bool Flight::selectBlock() {
 	return false;
 }
 
+void Flight::onSendPacket(C_Packet* packet) {
+	auto player = g_Data.getLocalPlayer();
+	if (mode.getSelectedValue() == 6) {  // Hive
+		/* if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr) {
+			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*g_Data.getLocalPlayer()->getPos());
+			float myPitchq = player->pitch;
+			float myYawq = player->yaw;
+			float bodyYawq = player->bodyYaw;
+			movePacket->pitch = myPitchq;
+			movePacket->headYaw = myYawq;
+			//movePacket->yaw = bodyYawq;
+		}*/
+	}
+}
+
 
 void Flight::onDisable() {
 	// re-enable modules
@@ -346,5 +402,8 @@ void Flight::onDisable() {
 		C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 		C_MobEquipmentPacket a(id, *g_Data.getLocalPlayer()->getSelectedItem(), supplies->selectedHotbarSlot, supplies->selectedHotbarSlot);
 		g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
+	}
+	if (mode.getSelectedValue() == 6) { // Hive
+		*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	}
 }

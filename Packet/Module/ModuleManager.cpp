@@ -36,6 +36,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new ESP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Aimbot()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ChestESP()));
+		moduleList.push_back(std::shared_ptr<IModule>(new BlockESP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Velocity()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Step()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Flight()));
@@ -46,7 +47,6 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new NoFall()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Nuker()));
 		moduleList.push_back(std::shared_ptr<IModule>(new InstaBreak()));
-		moduleList.push_back(std::shared_ptr<IModule>(new NoPacket()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Xray()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Breaker()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ClickGuiMod()));
@@ -75,7 +75,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
 		moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
-		moduleList.push_back(std::shared_ptr<IModule>(new Emote()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Packet()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Spider()));
 
 		// Unused modules

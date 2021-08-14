@@ -11,7 +11,10 @@ NbtCommand::~NbtCommand() {
 }
 
 bool NbtCommand::execute(std::vector<std::string>* args) {
-	assertTrue(args->size() > 1);
+	clientMessageF("%sNBT tags died in a fire successfully!!!!", RED);
+	clientMessageF("%s(NBTS DONT WORK RETARD)", RED);
+	return true;
+	/*assertTrue(args->size() > 1);
 	bool isRaw = args->at(0) == "nbtraw";
 	if(isRaw){
 		assertTrue(args->at(1) == "write");
@@ -106,5 +109,5 @@ const char* NbtCommand::getUsage(const char* alias) {
 		return "write <nbt>";
 	}
 
-	return IMCCommand::getUsage(alias);
+	return IMCCommand::getUsage(alias);*/
 }
