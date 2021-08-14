@@ -4,7 +4,7 @@
 #include "../ModuleManager.h"
 
 Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
-	registerEnumSetting("Mode", &this->mode, 0);
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Nethergames", 0);
 	mode.addEntry("Mineville", 1);
 #ifdef _DEBUG
@@ -39,18 +39,17 @@ void Disabler::onTick(C_GameMode* gm) {
 #ifdef _DEBUG
 	if (mode.getSelectedValue() == 2) {
 		auto player = g_Data.getLocalPlayer();
-		if (counter == 5) {
+		if (counter == 5) 
 			counter = 1;
-		} else {
+		 else 
 			counter++;
-		}
+		
 		if (gm->player->damageTime >= 1 && counter == 4) {
 			speed->setEnabled(true);
 		} else {
 			speed->setEnabled(false);
-			if (player->damageTime >= 1 && counter == 5) {
+			if (player->damageTime >= 1 && counter == 5)
 				setEnabled(false);
-			}
 		}
 	}
 #endif
