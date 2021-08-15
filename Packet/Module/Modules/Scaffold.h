@@ -23,6 +23,7 @@ private:
 public:
 	bool towerMode = true;
 	int timer = 20;
+	int tCounter = 1;
 	bool lockY = false;
 	bool speedLockY = false;
 

@@ -985,7 +985,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 							xOffset + textPadding - 2,
 							yOffset + textPadding);
 						vec4_t bar = vec4_t(
-							barSize - 1.3,
+							barSize - 1,
 							yOffset,
 							barOffset,
 							yOffset + textPadding * 2 + textHeight);
@@ -1139,56 +1139,49 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 								DrawUtils::fillRectangle(selectedRect, MC_Color(0.8f, 0.8f, 0.8f, 0.8f), 0.3f);
 						}
 
-						// Text			// worst code ever:
 						if (arraylistMod->mode.getSelectedValue() == 2) {  // Bar
-							if (hudMod->textShadow) {
-								DrawUtils::drawText(barTextShadow, &textStr, MC_Color(10, 10, 10), textSize);
-							}
 							if (hudMod->color.getSelectedValue() != 1)   // currColor
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(currColor), textSize);
+								DrawUtils::drawText(vec2_t(barTextPos), &textStr, MC_Color(currColor), textSize, 1, true);
 							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(dynamic, dynamic, dynamic), textSize);
+								DrawUtils::drawText(barTextPos, &textStr, MC_Color(dynamic, dynamic, dynamic), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 4) {  // White
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 255, 255), textSize);
+								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 255, 255), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 0, 0), textSize);
+								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 0, 0), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 127, 0), textSize);
+								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 127, 0), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 255, 0), textSize);
+								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 255, 0), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(0, 255, 0), textSize);
+								DrawUtils::drawText(barTextPos, &textStr, MC_Color(0, 255, 0), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(0, 170, 255), textSize);
+								DrawUtils::drawText(barTextPos, &textStr, MC_Color(0, 170, 255), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(148, 0, 211), textSize);
+								DrawUtils::drawText(barTextPos, &textStr, MC_Color(148, 0, 211), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 192, 203), textSize);
+								DrawUtils::drawText(barTextPos, &textStr, MC_Color(255, 192, 203), textSize, 1, true);
 							}
 						} else {
-							if (hudMod->textShadow) {
-								DrawUtils::drawText(textShadow, &textStr, MC_Color(10, 10, 10), textSize);
-							}
-							if (hudMod->color.getSelectedValue() != 1)   // Rainbow
-								DrawUtils::drawText(textPos, &textStr, MC_Color(currColor), textSize);
+							if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+								DrawUtils::drawText(vec2_t(textPos), &textStr, MC_Color(currColor), textSize, 1, true);
 							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-								DrawUtils::drawText(textPos, &textStr, MC_Color(dynamic, dynamic, dynamic), textSize);
+								DrawUtils::drawText(textPos, &textStr, MC_Color(dynamic, dynamic, dynamic), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 4) {  // White
-								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255), textSize);
+								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 0, 0), textSize);
+								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 0, 0), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 127, 0), textSize);
+								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 127, 0), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 0), textSize);
+								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 0), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-								DrawUtils::drawText(textPos, &textStr, MC_Color(0, 255, 0), textSize);
+								DrawUtils::drawText(textPos, &textStr, MC_Color(0, 255, 0), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-								DrawUtils::drawText(textPos, &textStr, MC_Color(0, 170, 255), textSize);
+								DrawUtils::drawText(textPos, &textStr, MC_Color(0, 170, 255), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-								DrawUtils::drawText(textPos, &textStr, MC_Color(148, 0, 211), textSize);
+								DrawUtils::drawText(textPos, &textStr, MC_Color(148, 0, 211), textSize, 1, true);
 							} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 192, 203), textSize);
+								DrawUtils::drawText(textPos, &textStr, MC_Color(255, 192, 203), textSize, 1, true);
 							}
 						}
 
@@ -1238,6 +1231,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	if (shouldPostRender) moduleMgr->onPostRender(renderCtx);
 	HImGui.endFrame();
 	DrawUtils::flush();
+
 	// Draw FPS
 	if (hudMod->isEnabled() && hudMod->fps && g_Data.canUseMoveKeys()) {
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
@@ -1536,7 +1530,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 
 	if (packet->getId() == 9) {
 		C_TextPacket* tp = (C_TextPacket*)packet;
-		if (tp->messageType == 69) {  //this for .say and stuff
+		if (tp->messageType == 69) {
 			tp->messageType = 1;
 			return oFunc(a, packet);
 		}

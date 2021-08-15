@@ -53,11 +53,6 @@ void Scaffold::onTick(C_GameMode* gm) {
 		}
 		restored = false;
 	}
-	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0)
-		towerSpeed = 0.36;
-	 else 
-		towerSpeed = 0.45;
-	
 
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
@@ -291,14 +286,22 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 				vec3_t moveVec;
 				moveVec.x = g_Data.getLocalPlayer()->velocity.x;
 				if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
-					if (player->onGround) {
-						*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
-						moveVec.y = towerSpeed;
-					} else { // !player->onGround
-						moveVec.y = towerSpeed;
-						*g_Data.getClientInstance()->minecraft->timer = 30.f;
+					if (tCounter == 3) {
+						tCounter = 1;
+					} else {
+						tCounter++;
 					}
-				} else { // not on the hive 
+					if (tCounter == 2) {
+						player->fallDistance = 0;
+						vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
+						vec3_t pos;
+						pos.x = 0.f + pPos.x;
+						pos.y = 1.f + pPos.y;
+						pos.z = 0.f + pPos.z;
+						//moveVec.y = -1;
+						g_Data.getLocalPlayer()->setPos(pos);
+					}
+				} else { // not on the hoe :((((
 					moveVec.y = towerSpeed;
 				}
 				moveVec.z = g_Data.getLocalPlayer()->velocity.z;

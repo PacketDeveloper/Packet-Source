@@ -6,25 +6,9 @@ ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui 
 	registerEnumSetting("Theme", &theme, 1);
 	theme.addEntry("Packet", 0);
 	theme.addEntry("Fadeaway", 1);
-	registerBoolSetting("Rainbow", &this->rainbowColor, this->rainbowColor);
+	//registerBoolSetting("Rainbow", &this->rainbowColor, this->rainbowColor);
 	registerFloatSetting("Opacity", &this->opacity, this->opacity, 0.05f, 1.f);
 }
-
-float ClickGuiMod::textR = 0.f;
-float ClickGuiMod::textG = 0.f;
-float ClickGuiMod::textB = 0.f;
-
-float ClickGuiMod::dtextR = 0.f;
-float ClickGuiMod::dtextG = 0.f;
-float ClickGuiMod::dtextB = 0.f;
-
-float ClickGuiMod::sliderR = 0.f;
-float ClickGuiMod::sliderG = 0.f;
-float ClickGuiMod::sliderB = 0.f;
-
-float ClickGuiMod::backroundR = 0.f;
-float ClickGuiMod::backroundG = 0.f;
-float ClickGuiMod::backroundB = 0.f;
 
 ClickGuiMod::~ClickGuiMod() {
 }
@@ -35,25 +19,36 @@ const char* ClickGuiMod::getModuleName() {
 
 void ClickGuiMod::onEnable() {
 	g_Data.getClientInstance()->releaseMouse();
-	makeOnixMadCounter = 1;
+	bgOpacity = 0.1f;
+	bgCounter = 1;
 }
 
 void ClickGuiMod::onTick(C_GameMode* gm) {
-	//wtf
-	if (makeOnixMadCounter == INFINITY) {
-		makeOnixMadCounter = 1;
+	// worst code but idc
+	if (bgCounter == INFINITY) {
+		bgCounter = 1;
 	} else {
-		makeOnixMadCounter++;
+		bgCounter++;
 	}
-	if (makeOnixMadCounter == 2) {
-		openAnimation = true;
+	if (bgCounter == 2) {
+		bgOpacity = 0.1f;
+	} else if (bgCounter == 3) {
+		bgOpacity = 0.115f;
+	} else if (bgCounter == 4) {
+		bgOpacity = 0.12f;
+	} else if (bgCounter == 5) {
+		bgOpacity = 0.13f;
+	} else if (bgCounter == 6) {
+		bgOpacity = 0.14f;
+	} else if (bgCounter == 7) {
+		bgOpacity = 0.15f;
+	} else if (bgCounter == 8) {
+		bgOpacity = 0.16f;
+	} else if (bgCounter == 9) {
+		bgOpacity = 0.17f;
 	}
-	if (makeOnixMadCounter == 3) {
-		openAnimation = false;
-	}
-	if (makeOnixMadCounter == 5) {
-		headerAnimation = false;
-	}
+
+
 	// alot of color code yes
 	if (theme.getSelectedValue() == 0) {  // packet
 		backroundR = 0;
@@ -92,6 +87,22 @@ void ClickGuiMod::onTick(C_GameMode* gm) {
 		sliderB = 0.32;
 	}
 }
+
+float ClickGuiMod::textR = 0.f;
+float ClickGuiMod::textG = 0.f;
+float ClickGuiMod::textB = 0.f;
+
+float ClickGuiMod::dtextR = 0.f;
+float ClickGuiMod::dtextG = 0.f;
+float ClickGuiMod::dtextB = 0.f;
+
+float ClickGuiMod::sliderR = 0.f;
+float ClickGuiMod::sliderG = 0.f;
+float ClickGuiMod::sliderB = 0.f;
+
+float ClickGuiMod::backroundR = 0.f;
+float ClickGuiMod::backroundG = 0.f;
+float ClickGuiMod::backroundB = 0.f;
 
 bool ClickGuiMod::allowAutoStart() {
 	return false;

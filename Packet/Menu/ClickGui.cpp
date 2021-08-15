@@ -50,6 +50,7 @@ float currentYOffset = 0;
 float currentXOffset = 0;
 
 int timesRendered = 0;
+int opacityC = 1;
 
 void ClickGui::getModuleListByCategory(Category category, std::vector<std::shared_ptr<IModule>>* modList) {
 	auto lock = moduleMgr->lockModuleList();
@@ -829,6 +830,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 }
 
 void ClickGui::render() {
+	static auto clickGUIMod = moduleMgr->getModule<ClickGuiMod>();
 	if (!moduleMgr->isInitialized())
 		return;
 
@@ -842,7 +844,7 @@ void ClickGui::render() {
 									 0,
 									 g_Data.getClientInstance()->getGuiData()->widthGame,
 									 g_Data.getClientInstance()->getGuiData()->heightGame),
-								 MC_Color(33, 34, 48), 0.f);
+								 MC_Color(0, 0, 0), clickGUIMod->bgOpacity);
 	}
 
 	// Render all categorys

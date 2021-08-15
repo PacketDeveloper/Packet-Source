@@ -25,12 +25,13 @@ public:
 	SettingEnum theme = this;
 
 	bool headerAnimation = false;
-	int makeOnixMadCounter = 1;
 	bool openAnimation = false;
 	bool showTooltips = false;
 	bool rainbowColor = false;
 	bool animations = true;
 	float opacity = 0.3f;
+	int bgCounter = 1;
+	float bgOpacity = 0.f;
 	bool enabled = true;
 
 	// Inherited via IModule

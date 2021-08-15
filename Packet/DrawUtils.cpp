@@ -101,7 +101,6 @@ void DrawUtils::setColor(float r, float g, float b, float a) {
 }
 
 C_Font* DrawUtils::getFont(Fonts font) {
-	auto hudModule = moduleMgr->getModule<HudModule>();
 		return (C_Font*)(*(uintptr_t*)((uintptr_t)g_Data.getClientInstance()->minecraftGame + 0x110));
 }
 

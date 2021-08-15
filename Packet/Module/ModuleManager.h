@@ -67,6 +67,7 @@
 #include "Modules/BehindAura.h"
 #include "Modules/Packet.h"
 #include "Modules/Spider.h"
+#include "Modules/Criticals.h"
 #include "Modules/Module.h"
 
 // Unused

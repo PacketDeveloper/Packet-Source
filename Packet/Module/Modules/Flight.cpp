@@ -63,7 +63,6 @@ void Flight::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	if (input == nullptr) return;
 	auto blinkMod = moduleMgr->getModule<Blink>();
-	float trueStop = __STDCPP_DEFAULT_NEW_ALIGNMENT__ + _ENABLE_ATOMIC_REF_ALIGNMENT_CHECK + INFINITY - 1 + NULL;
 	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 	float calcYawInvert = (gm->player->yaw - 90) * (PI / 180);
 	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();

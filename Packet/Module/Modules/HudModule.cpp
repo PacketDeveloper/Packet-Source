@@ -17,7 +17,6 @@ HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
 	color.addEntry("Blue", 9);
 	color.addEntry("Purple", 11);
 	color.addEntry("Pink", 12);
-	registerBoolSetting("TextShadow", &this->textShadow, this->textShadow);
 	registerBoolSetting("Keystrokes", &this->keystrokes, this->keystrokes);
 	registerBoolSetting("ArmorHUD", &this->displayArmor, this->displayArmor);
 	registerBoolSetting("FPS", &this->fps, this->fps);

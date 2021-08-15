@@ -3,21 +3,11 @@
 
 class HudModule : public IModule {
 public:
-	// Colors
-	//bool rainbow = true;
-	////bool r2 = false;
-	//bool horion = false;
-	//bool dynamic = false;
-	//bool weather = false;
-
 	SettingEnum color = this;
 
 	float speed = 0.f;
 	float scale = 1.f;
 	bool tabgui = false;
-	bool shadowMode = true;
-	bool textShadow = true;
-	bool versionMode = false;
 	bool arraylist = true;
 	bool arraylistOutline = true;
 	bool arraylistBackground = true;

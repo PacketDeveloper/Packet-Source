@@ -18,7 +18,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new CreditCommand());
 	commandList.push_back(new NameCommand());
 	commandList.push_back(new SpammerCommand());
-	commandList.push_back(new TeleportCommand());
+	//commandList.push_back(new TeleportCommand());
 	commandList.push_back(new BindCommand());
 	//commandList.push_back(new RelativeTeleportCommand());
 	commandList.push_back(new ToggleCommand());
@@ -26,7 +26,7 @@ void CommandMgr::initCommands() {
 	//commandList.push_back(new GameModeCommand());
 	commandList.push_back(new FriendListCommand());
 	commandList.push_back(new UnbindCommand());
-	commandList.push_back(new EnchantCommand());
+	//commandList.push_back(new EnchantCommand());
 	commandList.push_back(new HelpCommand());
 	commandList.push_back(new ModulesCommand());
 	commandList.push_back(new PanicCommand());
@@ -38,11 +38,11 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new CoordsCommand());
 	commandList.push_back(new SayCommand());
 	//mmandList.push_back(new SpammerCommand());
-	commandList.push_back(new DupeCommand());
+	//commandList.push_back(new DupeCommand());
 	//commandList.push_back(new DamageCommand());
 	commandList.push_back(new ConfigCommand());
 	commandList.push_back(new SetprefixCommand());
-	commandList.push_back(new NbtCommand());
+	//commandList.push_back(new NbtCommand());
 	//mmandList.push_back(new WaypointCommand());
 	commandList.push_back(new TopCommand());
 
