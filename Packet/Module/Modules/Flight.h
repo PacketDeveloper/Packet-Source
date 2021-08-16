@@ -6,6 +6,7 @@ private:
 	float glideMod = 0.00f;
 	bool hiveMode = false;
 	bool damage = false;
+	bool endzone = false;
 	bool speedWasEnabled = false;
 	bool scfWasEnabled = false;
 

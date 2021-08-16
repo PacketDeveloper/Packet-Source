@@ -319,21 +319,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			float elapsedFlot = (float)elapsed.QuadPart / frequency.QuadPart;
 			if (elapsedFlot > 1.5f && !hasSentWarning) {
 				hasSentWarning = true;
-				//auto box = g_Data.addInfoBox("Loading", "Please Wait");
-				//box->closeTimer = 5;
-				/*vec2_t windowSize = dat->windowSize;
-
-				DrawUtils::fillRectangle(vec4_t(0, 0, windowSize.x, windowSize.y), MC_Color(0.2f, 0.2f, 0.2f), 0.8f);
-
-				std::string text = "We encountered an error. Please restart your game.";
-				if (!wasConnectedBefore)
-					DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, 1.5f) / 2, windowSize.y * 0.4f), &text, MC_Color(), 1.5f);
-				text = "Remember to keep the injector open while playing";
-				DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, wasConnectedBefore ? 1.5f : 0.7f) / 2, windowSize.y * (wasConnectedBefore ? 0.5f : 0.7f)), &text, MC_Color(), wasConnectedBefore ? 1.5f : 0.7f);
-				text = "Uninject by holding down CTRL + L";
-				DrawUtils::drawText(vec2_t(windowSize.x / 2 - DrawUtils::getTextWidth(&text, 0.7f) / 2, windowSize.y * 0.8f), &text, MC_Color(), 0.7f);
-
-				DrawUtils::flush();*/
+				auto box = g_Data.addInfoBox("Packet Client is now injected!");
+				box->closeTimer = 12;
 			}
 
 			if (!hasSentWarning)  // Wait for injector, it might connect in time
@@ -1263,7 +1250,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 
-	// Draw Notifications
+        // Draw Notifications
 	{
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 		auto notifications = moduleMgr->getModule<Notifications>();
@@ -1305,17 +1292,20 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 			vec4_t rect = vec4_t(
 				windowSize.x - margin - fullTextLength - borderPadding * 2,
-				windowSize.y - margin - textHeight,
+				windowSize.y - margin - textHeight + 4,
 				windowSize.x - margin + borderPadding,
 				windowSize.y - margin);
 
 			vec4_t line = vec4_t(
-				windowSize.x - margin - fullTextLength - borderPadding * 2,
-				windowSize.y - margin - textHeight - 1,
-				windowSize.x - margin + borderPadding,
-				windowSize.y - margin - 17.5);
+				windowSize.x - margin - fullTextLength - borderPadding - 0.5,
+				windowSize.y - margin - textHeight + 3,
+				windowSize.x - margin + borderPadding - 0.5,
+				windowSize.y - margin - 13.5);
 
-			vec2_t textPos = vec2_t(rect.x + 2, rect.y + 4);
+			if (box->isOpen) {
+			}
+
+			vec2_t textPos = vec2_t(rect.x + 1.5, rect.y + 3);
 
 			DrawUtils::drawRectangle(line, MC_Color(), 1.f, box->fadeVal);
 			DrawUtils::fillRectangle(rect, MC_Color(0, 0, 0), notifications->opacity);

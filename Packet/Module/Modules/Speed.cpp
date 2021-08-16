@@ -23,6 +23,7 @@ void Speed::onEnable() {
 		auto box = g_Data.addInfoBox("Speed: Gamer Mode Enabled!");
 		box->closeTimer = 5;
 	}
+
 }
 
 void Speed::onTick(C_GameMode* gm) {

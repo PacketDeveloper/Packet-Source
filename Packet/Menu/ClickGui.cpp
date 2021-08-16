@@ -295,6 +295,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 			vec2_t textPos = vec2_t(
 				currentXOffset + textPadding + 1.18f,
 				currentYOffset + textPadding + 1.20f);
+
 			vec4_t rectPos = vec4_t(
 				currentXOffset,
 				currentYOffset,
@@ -742,6 +743,15 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 			categoryHeaderYOffset - categoryMargin,
 			currentXOffset + windowSize->x + paddingRight + categoryMargin,
 			categoryHeaderYOffset + textHeight + (textPadding * 2));
+		vec4_t rect = vec4_t(
+			currentXOffset + textPadding + 5,
+			currentYOffset + textPadding,
+			xEnd - textPadding,
+			currentYOffset - textPadding + textHeight + 3.f);
+
+		vec2_t mid = vec2_t(
+			rect.x + ((rect.z - rect.x) / 2),
+			categoryHeaderYOffset + 1);
 
 		// Extend Logic
 		{
@@ -787,7 +797,10 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 			float y = windowSize2.y - 11;
 			std::string text = "Packet Client";
 			std::string textStr = categoryName;
-			DrawUtils::drawText(textPos, &textStr, MC_Color(255, 255, 255), textSize);
+			mid.x -= DrawUtils::getTextWidth(&textStr, textSize) / 1.5;
+			//mid.y += 0.f;
+			DrawUtils::drawText(mid, &textStr, MC_Color(255, 255, 255), textSize);
+
 			DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(255, 255, 255), 1.f);
 			if (Rainbow)
 				DrawUtils::drawText(textPos, &textStr, MC_Color(currColor), textSize);

@@ -2,6 +2,7 @@
 #include "Module.h"
 class Step : public IModule {
 public:
+	bool reverse = false;
 	float height = 1.5f;
 
 	Step();

@@ -11,7 +11,7 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "yes") {
 	mode.addEntry("Teleport", 3);
 	mode.addEntry("Jetpack", 4);
 	mode.addEntry("AirJump", 5);
-	mode.addEntry("Hive", 6);
+	//mode.addEntry("Hive", 6);
 	//registerIntSetting("PlaceDelay", &placeDelay, placeDelay, 2, 20);
 	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
 	registerFloatSetting("value", &glideMod, glideMod, -0.15f, 0.00);
@@ -48,6 +48,12 @@ void Flight::onEnable() {
 		if (g_Data.getLocalPlayer() == nullptr)
 			return;
 		prevSlot = g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot;
+		vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
+		vec3_t pos;
+		pos.x = 0.f + pPos.x;
+		pos.y = 0.1f + pPos.y;
+		pos.z = 0.f + pPos.z;
+		g_Data.getLocalPlayer()->setPos(pos);
 	}
 }
 
@@ -73,6 +79,10 @@ void Flight::onTick(C_GameMode* gm) {
 	scaffoldMod->setEnabled(false);
 	longjump->setEnabled(false);
 	speedMod->setEnabled(false);
+	if (endzone) {
+		int bCnter = 1;
+		bCnter++;
+	}
 	if (mode.getSelectedValue() == 3) {  // Teleport
 		vec3_t pos = *g_Data.getLocalPlayer()->getPos();
 		gm->player->velocity = vec3_t(0, 0, 0);
@@ -127,14 +137,14 @@ void Flight::onTick(C_GameMode* gm) {
 		gm->player->lerpMotion(moveVec);
 	} else if (mode.getSelectedValue() == 2) {  // BlockFly
 		static auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
-		gm->player->velocity.y = glideModEffective;
-		static bool restored = false;
+		glideMod = -0.00034065544605255127;
 		if (!player->onGround) {
 			auto box = g_Data.addInfoBox("Flight: You must be on the ground");
-			box->closeTimer = 12;
-			glideMod = -0.00034065544605255127;
-			setEnabled(false);
+			box->closeTimer = 8;
+			this->setEnabled(false);
 		}
+		gm->player->velocity.y = glideModEffective;
+		static bool restored = false;
 		if (clickGUI->isEnabled()) {
 			auto box = g_Data.addInfoBox("Flight: Disabled to prevent flags/errors");
 			box->closeTimer = 12;
@@ -391,7 +401,7 @@ void Flight::onDisable() {
 		scfWasEnabled = false;
 	}
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
-	if (mode.getSelectedValue() != 5) {
+	if (mode.getSelectedValue() != 2 || mode.getSelectedValue() != 5) {
 		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 	}
 	if (mode.getSelectedValue() == 2) {  // BlockFly

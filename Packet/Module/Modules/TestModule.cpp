@@ -70,6 +70,7 @@ bool TestModule::isFlashMode() {
 }
 
 void TestModule::onTick(C_GameMode* gm) {
+	auto player = g_Data.getLocalPlayer();
 	auto blinkMod = moduleMgr->getModule<Blink>();
 	if (autoDisable) {
 		auto testmoduleMod = moduleMgr->getModule<TestModule>();
@@ -91,12 +92,17 @@ void TestModule::onTick(C_GameMode* gm) {
 	}
 	if (test) {
 		//g_Data.getLocalPlayer()->setGameModeType(3);
-		auto player = g_Data.getLocalPlayer();
-				player->velocity.x = 6.f;
-				player->velocity.y = 7.f;
-		*g_Data.getClientInstance()->minecraft->timer = 20.f;
-				player->velocity.z = 5.f;
+		//auto player = g_Data.getLocalPlayer();
+				//player->velocity.x = 6.f;
+				//player->velocity.y = 7.f;
+		//*g_Data.getClientInstance()->minecraft->timer = 20.f;
+				//player->velocity.z = 5.f;
 		//player->animateHurt();
+		//player->setSleeping(true);
+		//player->setSleeping(true);
+		//player->updateWalkAnim();
+		//player->getAttackAnim(1);
+		player->setSize(300, 0);
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();

@@ -4,11 +4,12 @@
 #include "../ModuleManager.h"
 
 Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
-	registerEnumSetting("Mode", &mode, 0);
+	registerEnumSetting("Mode", &this->mode, 0);
 	mode.addEntry("Nethergames", 0);
 	mode.addEntry("Mineville", 1);
+	mode.addEntry("Endzone", 2);
 #ifdef _DEBUG
-	mode.addEntry("Hive", 2);
+	mode.addEntry("Hive", 3);
 #endif
 	}
 
@@ -20,8 +21,12 @@ const char* Disabler::getModuleName() {
 }
 
 void Disabler::onEnable() {
-	if (mode.getSelectedValue() == 2)
+	if (mode.getSelectedValue() == 3)
 		counter = 1;
+	else if (mode.getSelectedValue() == 2) {
+		auto box = g_Data.addInfoBox("Make sure you have an Elytra");
+		box->closeTimer = 15;
+	}
 }
 
 void Disabler::onTick(C_GameMode* gm) {
@@ -37,19 +42,20 @@ void Disabler::onTick(C_GameMode* gm) {
 	}
 	//}
 #ifdef _DEBUG
-	if (mode.getSelectedValue() == 2) {
+	if (mode.getSelectedValue() == 3) {
 		auto player = g_Data.getLocalPlayer();
-		if (counter == 5) 
+		if (counter == 5) {
 			counter = 1;
-		 else 
+		} else {
 			counter++;
-		
+		}
 		if (gm->player->damageTime >= 1 && counter == 4) {
 			speed->setEnabled(true);
 		} else {
 			speed->setEnabled(false);
-			if (player->damageTime >= 1 && counter == 5)
+			if (player->damageTime >= 1 && counter == 5) {
 				setEnabled(false);
+			}
 		}
 	}
 #endif

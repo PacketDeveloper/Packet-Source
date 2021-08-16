@@ -287,18 +287,19 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 				moveVec.x = g_Data.getLocalPlayer()->velocity.x;
 				if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
 					if (tCounter == 3) {
+						*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
 						tCounter = 1;
 					} else {
 						tCounter++;
 					}
-					if (tCounter == 2) {
+					if (tCounter == 2 && player->onGround) {
+						*g_Data.getClientInstance()->minecraft->timer = 6.f;
 						player->fallDistance = 0;
 						vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 						vec3_t pos;
 						pos.x = 0.f + pPos.x;
 						pos.y = 1.f + pPos.y;
 						pos.z = 0.f + pPos.z;
-						//moveVec.y = -1;
 						g_Data.getLocalPlayer()->setPos(pos);
 					}
 				} else { // not on the hoe :((((
@@ -410,6 +411,7 @@ void Scaffold::onDisable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
-	if (!player->onGround && towerMode)
-		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
+	if (!player->onGround && towerMode) {
+	}
+		//g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 }
