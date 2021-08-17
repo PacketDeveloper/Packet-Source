@@ -23,22 +23,18 @@ void Freecam::onEnable() {
 void Freecam::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	gm->player->aabb.upper.y = gm->player->aabb.lower.y;
+	auto speed = moduleMgr->getModule<Speed>();
+	auto flight = moduleMgr->getModule<Flight>();
 	gm->player->fallDistance = 0.f;
 	gm->player->aabb.upper.y = 0.f;
 	auto player = g_Data.getLocalPlayer();
+	speed->setEnabled(false);
+	flight->setEnabled(false);
 	float yaw = player->yaw;
 	if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
 		gm->player->velocity = vec3_t(0, 0, 0);
 	}
 		player->velocity.y = 0;
-	auto speedMod = moduleMgr->getModule<Speed>();
-	auto flyMod = moduleMgr->getModule<Flight>();
-	if (speedMod->isEnabled()) {
-		speedMod->setEnabled(false);
-	}
-	if (flyMod->isEnabled()) {
-		flyMod->setEnabled(false);
-	}
 }
 
 void Freecam::onMove(C_MoveInputHandler* input) {
@@ -51,11 +47,9 @@ void Freecam::onMove(C_MoveInputHandler* input) {
 	bool pressed = moveVec2d.magnitude() > 0.01f;
 	if (input->isJumping) {
 		player->velocity.y += speed;
-		player->fallDistance = -0.1f;
 	}
 	if (input->isSneakDown) {
 		player->velocity.y -= speed;
-		player->fallDistance = -0.1f;
 	}
 	if (input->right) {
 		yaw += 90.f;
@@ -84,14 +78,9 @@ void Freecam::onMove(C_MoveInputHandler* input) {
 }
 
 void Freecam::onDisable() {
-	auto player = g_Data.getLocalPlayer();
-	if (g_Data.getLocalPlayer() != nullptr) {
-		if (g_Data.getLocalPlayer()->gamemode != 1) {
-			g_Data.getLocalPlayer()->setGameModeType(0);
-		}
+	if (g_Data.getLocalPlayer() != nullptr && g_Data.getLocalPlayer()->gamemode != 1) {
+		g_Data.getLocalPlayer()->setGameModeType(0);
 	}
+	g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 	g_Data.getLocalPlayer()->setPos(oldPos);
-	player->velocity.x = 0.f;
-	player->velocity.y = 0.f;
-	player->velocity.z = 0.f;
 }

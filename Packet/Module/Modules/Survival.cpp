@@ -3,13 +3,14 @@
 #include "Survival.h"
 
 Survival::Survival() : IModule(0, Category::MISC, "Automates Survival") {
-	//this->registerBoolSetting("AntiHunger", &this->antiHunger, this->antiHunger);
-	this->registerBoolSetting("LiquidNuker", &this->liquidNuker, this->liquidNuker);
-	this->registerBoolSetting("TreeNuker", &this->treeNuker, this->treeNuker);
-	this->registerBoolSetting("OreNuker", &this->oreNuker, this->oreNuker);
-	this->registerBoolSetting("NoFall", &this->nofall, this->nofall);
-	this->registerBoolSetting("Fly", &this->fly, this->fly);
-	this->registerIntSetting("Timer", &this->timer, this->timer, 20, 500);
+	//registerBoolSetting("AntiHunger", &antiHunger, antiHunger);
+	registerBoolSetting("LiquidNuker", &liquidNuker, liquidNuker);
+	registerBoolSetting("TreeNuker", &treeNuker, treeNuker);
+	registerBoolSetting("OreNuker", &oreNuker, oreNuker);
+	registerBoolSetting("NoFall", &nofall, nofall);
+	registerBoolSetting("Fly", &fly, fly);
+	registerBoolSetting("SpawnTP", &spawntp, spawntp);
+	registerIntSetting("Timer", &timer, timer, 20, 500);
 }
 
 const char* Survival::getModuleName() {
@@ -20,7 +21,14 @@ void Survival::onEnable() {
 }
 
 void Survival::onTick(C_GameMode* gm) {
-	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
+	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
+	auto player = g_Data.getLocalPlayer();
+	if (spawntp) {
+		player->setSleeping(true);
+		setEnabled(false);
+	} else if (config) {
+		//onLoadConfig;
+	}
 	if (treeNuker) {
 		vec3_t* pos = gm->player->getPos();
 		for (int x = (int)pos->x - range; x < pos->x + range; x++) {
@@ -29,8 +37,8 @@ void Survival::onTick(C_GameMode* gm) {
 					vec3_ti blockPos = vec3_ti(x, y, z);
 					bool destroy = false;
 					int id = gm->player->region->getBlock(blockPos)->toLegacy()->blockId;
-					if (id == 17 && this->treeN) destroy = true;  // Logs
-					if (id == 18 && this->treeN) destroy = true;  // Leaves
+					if (id == 17 && treeN) destroy = true;  // Logs
+					if (id == 18 && treeN) destroy = true;  // Leaves
 					if (destroy) {
 						gm->destroyBlock(&blockPos, 0);
 						return;
@@ -47,10 +55,10 @@ void Survival::onTick(C_GameMode* gm) {
 					vec3_ti blockPos = vec3_ti(x, y, z);
 					bool destroy = false;
 					int id = gm->player->region->getBlock(blockPos)->toLegacy()->blockId;
-					if (id == 10 && this->liquidN) destroy = true;  // Flowing Lava
-					if (id == 11 && this->liquidN) destroy = true;  // Lava
-					if (id == 8 && this->liquidN) destroy = true;   // Flowing Water
-					if (id == 9 && this->liquidN) destroy = true;   // Water
+					if (id == 10 && liquidN) destroy = true;  // Flowing Lava
+					if (id == 11 && liquidN) destroy = true;  // Lava
+					if (id == 8 && liquidN) destroy = true;   // Flowing Water
+					if (id == 9 && liquidN) destroy = true;   // Water
 					if (destroy) {
 						gm->destroyBlock(&blockPos, 0);
 						return;
@@ -67,15 +75,15 @@ void Survival::onTick(C_GameMode* gm) {
 					vec3_ti blockPos = vec3_ti(x, y, z);
 					bool destroy = false;
 					int id = gm->player->region->getBlock(blockPos)->toLegacy()->blockId;
-					if (id == 14 && this->oreN) destroy = true;
-					if (id == 15 && this->oreN) destroy = true;
-					if (id == 16 && this->oreN) destroy = true;
-					if (id == 21 && this->oreN) destroy = true;
-					if (id == 56 && this->oreN) destroy = true;
-					if (id == 73 && this->oreN) destroy = true;
-					if (id == 74 && this->oreN) destroy = true;
-					if (id == 129 && this->oreN) destroy = true;
-					if (id == 153 && this->oreN) destroy = true;
+					if (id == 14 && oreN) destroy = true;
+					if (id == 15 && oreN) destroy = true;
+					if (id == 16 && oreN) destroy = true;
+					if (id == 21 && oreN) destroy = true;
+					if (id == 56 && oreN) destroy = true;
+					if (id == 73 && oreN) destroy = true;
+					if (id == 74 && oreN) destroy = true;
+					if (id == 129 && oreN) destroy = true;
+					if (id == 153 && oreN) destroy = true;
 					if (destroy) {
 						gm->destroyBlock(&blockPos, 0);
 						return;
@@ -84,15 +92,15 @@ void Survival::onTick(C_GameMode* gm) {
 			}
 		}
 	}
-	/*if (treeNuker) { // Place saplings on dirt
+	if (treeNuker) { // Place saplings on dirt
 		vec3_t* pos = gm->player->getPos();
 		for (int x = (int)pos->x - range; x < pos->x + range; x++) {
 			for (int z = (int)pos->z - range; z < pos->z + range; z++) {
 				for (int y = (int)pos->y - range; y < pos->y + range; y++) {
-					vec3_ti blockPos = vec3_ti(x, y, z);
+					vec3_ti blockPos = vec3_ti(x, y + 1, z);
 					bool build = false;
 					int id = gm->player->region->getBlock(blockPos)->toLegacy()->blockId;
-					if (id == 3 && this->treeN) build = true;  // Dirt
+					if (id == 3 && treeN) build = true;  // Dirt
 					if (build) {
 						gm->buildBlock(&blockPos, 0);
 						return;
@@ -100,7 +108,7 @@ void Survival::onTick(C_GameMode* gm) {
 				}
 			}
 		}
-	}*/
+	}
 }
 
 void Survival::onMove(C_MoveInputHandler* input) {

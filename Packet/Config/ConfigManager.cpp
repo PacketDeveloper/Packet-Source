@@ -61,7 +61,7 @@ void ConfigManager::loadConfig(std::string name, bool create) {
 			} catch (json::parse_error& e) {
 				logF("Config Load Exception!: %s", e.what());
 			}
-			currentConfigObj["from"] = "PacketClientBeta";
+			currentConfigObj["from"] = "PacketClient";
 		}
 
 		if (configExists) {

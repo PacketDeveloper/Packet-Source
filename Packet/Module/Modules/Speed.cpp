@@ -49,6 +49,14 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		} else {
 			velocity = true;
 		}
+		if (height <= 0.04 && !input->isJumping) {
+			player->velocity.y += height;
+			velocity = false;
+		}
+		//if (height >= 0.385 || height <= 0.04) {
+			//clientMessageF("velocity = true");
+			//velocity = true;
+		//}
 		if (player->onGround && pressed && !input->isJumping && velocity)
 			player->velocity.y = height;
 		if (!pressed && player->damageTime == 0) {

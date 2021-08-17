@@ -149,11 +149,9 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 		case Category::MISC:
 			ourWindow->pos.x = yot / 7.f * 5.f;
 			break;
-#ifdef _DEBUG
 		case Category::CONFIG:
-			ourWindow->pos.x = yot / 7.f * 5.2f;
+			ourWindow->pos.x = yot / 7.f * 6.2f;
 			break;
-#endif
 		case Category::CUSTOM:
 			ourWindow->pos.x = yot / 7.f * 6.f;
 			break;

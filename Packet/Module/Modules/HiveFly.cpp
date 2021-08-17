@@ -54,6 +54,8 @@ void HiveFly::onTick(C_GameMode* gm) {
 	}
 	if (timerBoost) {  // Boost Mode Slowdown
 		*g_Data.getClientInstance()->minecraft->timer = 27.4124367756534f;
+	} else {
+		*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	}
 	if (strafeMode) {
 		auto killauraMod = moduleMgr->getModule<Killaura>();
