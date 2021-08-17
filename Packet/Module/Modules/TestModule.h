@@ -26,6 +26,7 @@ private:
 	int kowInt1 = 0;
 	int kowInt2 = 0;
 	float glideMod = -0.0f;
+	float kowFloat = 2;
 
 public:
 	// testing

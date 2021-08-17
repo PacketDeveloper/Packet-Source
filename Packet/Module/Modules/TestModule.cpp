@@ -15,6 +15,7 @@ TestModule::TestModule() : IModule(0, Category::MISC, "Description") {
 	registerFloatSetting("SliderY", &sliderY, sliderY, 0.f, 800.f);
 
 	registerBoolSetting("Kow", &kowBool, kowBool);
+	registerFloatSetting("KowFloat", &kowFloat, kowFloat, 0.2f, 10.f);
 }
 
 const char* TestModule::getModuleName() {
@@ -155,9 +156,9 @@ void TestModule::onTick(C_GameMode* gm) {
 			if (kowBool) {
 				if (g_Data.canUseMoveKeys()) {
 					if (GameData::isKeyDown(*input->spaceBarKey))
-						glideModEffective += 2.f;
+						glideModEffective += kowFloat;
 					if (GameData::isKeyDown(*input->sneakKey))
-						glideModEffective -= 2.f;
+						glideModEffective -= kowFloat;
 				}
 
 				float yaw = player->yaw;
@@ -204,9 +205,9 @@ void TestModule::onMove(C_MoveInputHandler* input) {
 		float c = cos(calcYaw);
 		float s = sin(calcYaw);
 		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
-		moveVec.x = moveVec2d.x * 2.f;
+		moveVec.x = moveVec2d.x * kowFloat;
 		moveVec.y = player->velocity.y;
-		moveVec.z = moveVec2d.y * 2.f;
+		moveVec.z = moveVec2d.y * kowFloat;
 		if (pressed) player->lerpMotion(moveVec);
 	}
 }
