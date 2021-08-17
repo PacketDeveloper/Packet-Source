@@ -2,7 +2,7 @@
 #include "Phase.h"
 
 Phase::Phase() : IModule(0, Category::EXPLOIT, "Walk through walls") {
-	this->registerBoolSetting("Vertical", &this->vertMode, this->vertMode);
+	registerBoolSetting("Vertical", &vertMode, vertMode);
 }
 
 Phase::~Phase() {
@@ -15,9 +15,8 @@ const char* Phase::getModuleName() {
 void Phase::onTick(C_GameMode* gm) {
 	gm->player->aabb.upper.y = gm->player->aabb.lower.y;
 
-	if (vertMode) {
+	if (vertMode)
 		gm->player->aabb.upper.y = 0.f;
-	}
 }
 
 void Phase::onDisable() {

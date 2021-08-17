@@ -2,8 +2,8 @@
 
 #include "../../Module/ModuleManager.h"
 
-FreeTP::FreeTP() : IModule(0, Category::MOVEMENT, "burne") {
-	registerFloatSetting("Speed", &this->speed, this->speed, 0.5f, 3.f);
+FreeTP::FreeTP() : IModule(0, Category::MOVEMENT, "weee") {
+	registerFloatSetting("Speed", &speed, speed, 0.5f, 3.f);
 }
 
 FreeTP::~FreeTP() {
@@ -20,10 +20,9 @@ void FreeTP::onTick(C_GameMode* gm) {
 	gm->player->aabb.upper.y = 0.f;
 	auto player = g_Data.getLocalPlayer();
 	float yaw = player->yaw;
-	if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
+	if (input->forwardKey && input->backKey && input->rightKey && input->leftKey)
 		gm->player->velocity = vec3_t(0, 0, 0);
-	}
-	player->velocity.y = 0;
+	player->velocity.y = -0.f;
 	auto speed = moduleMgr->getModule<Speed>();
 	auto flight = moduleMgr->getModule<Flight>();
 	flight->setEnabled(false);
@@ -74,9 +73,8 @@ void FreeTP::onMove(C_MoveInputHandler* input) {
 
 void FreeTP::onDisable() {
 	auto player = g_Data.getLocalPlayer();
-	if (g_Data.getLocalPlayer()->gamemode != 1) {
+	if (g_Data.getLocalPlayer()->gamemode != 1)
 		g_Data.getLocalPlayer()->setGameModeType(0);
-	}
 	player->velocity = vec3_t(0, 0, 0);
 	if (g_Data.getLocalPlayer() != nullptr) {
 		g_Data.getLocalPlayer()->aabb.upper.y += 1.8f;
