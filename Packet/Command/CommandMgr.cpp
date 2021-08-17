@@ -38,7 +38,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new CoordsCommand());
 	commandList.push_back(new SayCommand());
 	//mmandList.push_back(new SpammerCommand());
-	//commandList.push_back(new DupeCommand());
+	commandList.push_back(new DupeCommand());
 	//commandList.push_back(new DamageCommand());
 	commandList.push_back(new ConfigCommand());
 	commandList.push_back(new SetprefixCommand());

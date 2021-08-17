@@ -8,6 +8,7 @@ public:
 	bool antiHunger = false;
 	bool treeNuker = false;
 	bool oreNuker = false;
+	bool spawntp = false;
 	bool liquidN = true;
 	bool nofall = false;
 	bool treeN = true;
@@ -17,6 +18,8 @@ public:
 	//int delay = 0;
 	int timer = 20;
 	int range = 4;
+
+	bool config = false;
 
 	Survival();
 	virtual void onEnable() override;

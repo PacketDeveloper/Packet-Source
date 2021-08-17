@@ -77,23 +77,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Spider()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Criticals()));
 
-		// Unused modules
-		//moduleList.push_back(std::shared_ptr<IModule>(new Derp()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new Waypoints())); // Crashes
-		//moduleList.push_back(std::shared_ptr<IModule>(new Safewalk()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new Blink()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new Criticals()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new Tower()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new AntiVoid()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new ChestAura()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new InventoryCleaner()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new AirStuck()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new Nbt()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new ChestStealer()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new PacketLogger()));
-
-#ifdef _DEBUG
+#ifdef _DEBUG // Private modules
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
 		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
@@ -143,7 +127,6 @@ void ModuleManager::onLoadConfig(void* confVoid) {
 	getModule<ClickGuiMod>()->setEnabled(false);
 	//getModule<NameTags>()->setEnabled(false);
 	//getModule<Disabler>()->setEnabled(false);
-	getModule<AutoArmor>()->setEnabled(false);
 }
 
 void ModuleManager::onSaveConfig(void* confVoid) {

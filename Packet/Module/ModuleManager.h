@@ -42,7 +42,6 @@
 #include "Modules/ClickGuiMod.h"
 #include "Modules/Hitbox.h"
 #include "Modules/InventoryMove.h"
-#include "Modules/AutoArmor.h"
 #include "Modules/AutoClicker.h"
 #include "Modules/Nametags.h"
 #include "Modules/Killaura.h"
@@ -64,7 +63,6 @@
 #include "Modules/FastStop.h"
 #include "Modules/Spammer.h"
 #include "Modules/CrystalAura.h"
-#include "Modules/BehindAura.h"
 #include "Modules/Packet.h"
 #include "Modules/Spider.h"
 #include "Modules/Criticals.h"
@@ -83,9 +81,10 @@
 #include "Modules/Survival.h"
 #include "Modules/NoSlow.h"
 // Broken
+#include "Modules/AutoArmor.h"
 #include "Modules/TriggerBot.h"
+#include "Modules/BehindAura.h"
 #endif
-#include "Modules/CrystalAura.h"
 
 
 class ModuleManager {
