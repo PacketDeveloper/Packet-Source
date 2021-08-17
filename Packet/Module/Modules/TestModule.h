@@ -4,7 +4,7 @@
 
 class TestModule : public IModule {
 private:
-	float glideModEffective = 0;
+	float glideModEffective = -0;
 	int counter = 1;
 	int testCounter = 0;
 	bool test = false;
@@ -20,9 +20,12 @@ private:
 	float tpSpeed = 3288.50f;
 	bool randomThing = false;
 	int testTimer = 0;
+
 	bool kowBool = false;
+	bool kowBool2 = false;
 	int kowInt1 = 0;
 	int kowInt2 = 0;
+	float glideMod = -0.0f;
 
 public:
 	// testing
