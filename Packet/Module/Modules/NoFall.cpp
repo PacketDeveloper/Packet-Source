@@ -5,6 +5,7 @@ NoFall::NoFall() : IModule(0, Category::EXPLOIT, "NoFuK") {
 	mode.addEntry("Packet", 0);
 	mode.addEntry("Motion", 1);
 	mode.addEntry("Hive", 2);
+	mode.addEntry("Breakfall", 3);
 	registerIntSetting("Distance", &dist, dist, 3, 8);
 }
 
@@ -39,6 +40,19 @@ void NoFall::onTick(C_GameMode* gm) {
 				pos.z = 0.f + pPos.z;
 				g_Data.getLocalPlayer()->setPos(pos);
 			}
+		}
+	}
+
+	vec3_t blockBelowBF = g_Data.getLocalPlayer()->eyePos0;
+	blockBelowBF.y -= g_Data.getLocalPlayer()->height;
+	blockBelowBF.y -= 1.5;
+	if (mode.getSelectedValue() == 3) {
+		if (gm->player->onGround)
+			gm->player->fallDistance = 0;
+
+		if (gm->player->fallDistance >= dist && ((gm->player->region->getBlock(blockBelowBF)->blockLegacy))->blockId != 0 && ((gm->player->region->getBlock(blockBelowBF)->blockLegacy))->material->isSolid) {
+			gm->player->velocity.y = .001f;
+			gm->player->fallDistance = 0;
 		}
 	}
 }

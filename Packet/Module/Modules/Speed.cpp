@@ -160,9 +160,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 				player->velocity.x *= 0;
 				player->velocity.z *= 0;
 			}
-			if (input->right || input->left) {
+			if (input->right || input->left)
 				*g_Data.getClientInstance()->minecraft->timer = 19.f;
-			}
 		}
 	}
 	if (mode.getSelectedValue() == 3 && g_Data.isInGame()) {
@@ -192,9 +191,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		moveVec.y = player->velocity.y;
 		moveVec.z = moveVec2d.y * speed;
 		if (pressed) player->lerpMotion(moveVec);
-		if (input->right || input->left) {
+		if (input->right || input->left)
 			*g_Data.getClientInstance()->minecraft->timer = 19.f;
-		}
 
 		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
 			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 1.3f, 0.f, moveVec.z / 1.3f)));

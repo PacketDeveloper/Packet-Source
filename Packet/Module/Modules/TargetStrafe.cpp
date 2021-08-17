@@ -1,11 +1,11 @@
 #include "TargetStrafe.h"
 
 TargetStrafe::TargetStrafe() : IModule(0, Category::MOVEMENT, "Strafe around the target") {
-	this->registerBoolSetting("CircleRender", &this->circleRender, this->circleRender);
-	this->registerBoolSetting("EdgeCheck", &this->avoidvoid, this->avoidvoid);
-	this->registerBoolSetting("OnKey", &this->onKey, this->onKey);
-	this->registerFloatSetting("Distance", &this->StrafeDistance, this->StrafeDistance, 1.f, 10.f);
-	this->registerFloatSetting("Speed", &this->speedMod, this->speedMod, 0.2f, 5.f);
+	registerBoolSetting("CircleRender", &circleRender, circleRender);
+	registerBoolSetting("EdgeCheck", &avoidvoid, avoidvoid);
+	registerBoolSetting("OnKey", &onKey, onKey);
+	registerFloatSetting("Distance", &StrafeDistance, StrafeDistance, 1.f, 10.f);
+	registerFloatSetting("Speed", &speedMod, speedMod, 0.2f, 5.f);
 }
 
 TargetStrafe::~TargetStrafe() {
@@ -125,9 +125,8 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 
 		bool lowerObstructed = isObstructed(0, &lowerObsVec);
 
-		if (upperObstructed || lowerObstructed) {
+		if (upperObstructed || lowerObstructed)
 			intersectingTimer++;
-		}
 		if ((upperObstructed || lowerObstructed)) {
 			if (clockwise && intersectingTimer >= 1) {
 				//clientMessageF("changed");
@@ -148,9 +147,8 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 			vec2_t angle2 = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList69[0]->getPos());
 			vec2_t angle = getAngles3(*gm->player->getPos(), *targetList69[0]->getPos());
 			C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-			if (jump && gm->player->onGround) {
+			if (jump && gm->player->onGround)
 				gm->player->jumpFromGround();
-			}
 
 			if (testMode) {
 				float distance = 99;
