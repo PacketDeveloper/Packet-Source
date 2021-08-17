@@ -15,20 +15,20 @@
 #include "Animations.h"
 static std::vector<C_Entity> targList;
 Animations::Animations() : IModule(0, Category::VISUAL, "Custom item view model") {
-	//registerFloatSetting("float1", &this->float1, 0, -10, 10);
-	//this->registerBoolSetting("Translate", &this->doTranslate, this->doTranslate);
-	//this->registerBoolSetting("Scale", &this->doScale, this->doScale);
-	this->registerBoolSetting("Spin", &this->aroundWorld, this->aroundWorld);
-	this->registerFloatSetting("X", &this->xTrans, 0.f, -2.f, 2.f);
-	this->registerFloatSetting("Y", &this->yTrans, 0.f, -2.f, 2.f);
-	this->registerFloatSetting("Z", &this->zTrans, 0.f, -2.f, 2.f);
-	this->registerFloatSetting("ScaleX", &this->xMod, 1.f, 0.f, 2.f);
-	this->registerFloatSetting("ScaleY", &this->yMod, 1.f, 0.f, 2.f);
-	this->registerFloatSetting("ScaleZ", &this->zMod, 1.f, 0.f, 2.f);
-	registerBoolSetting("Reset", &this->redo, this->redo);
-	//this->registerFloatSetting("RotateX", &this->xRotate, 1.f, 0.f, 2.f);
-	//this->registerFloatSetting("RotateY", &this->yRotate, 1.f, 0.f, 2.f);
-	//this->registerFloatSetting("RotateZ", &this->zRotate, 1.f, 0.f, 2.f);
+	//registerFloatSetting("float1", &float1, 0, -10, 10);
+	//registerBoolSetting("Translate", &doTranslate, doTranslate);
+	//registerBoolSetting("Scale", &doScale, doScale);
+	registerBoolSetting("Spin", &aroundWorld, aroundWorld);
+	registerFloatSetting("X", &xTrans, 0.f, -2.f, 2.f);
+	registerFloatSetting("Y", &yTrans, 0.f, -2.f, 2.f);
+	registerFloatSetting("Z", &zTrans, 0.f, -2.f, 2.f);
+	registerFloatSetting("ScaleX", &xMod, 1.f, 0.f, 2.f);
+	registerFloatSetting("ScaleY", &yMod, 1.f, 0.f, 2.f);
+	registerFloatSetting("ScaleZ", &zMod, 1.f, 0.f, 2.f);
+	registerBoolSetting("Reset", &redo, redo);
+	//registerFloatSetting("RotateX", &xRotate, 1.f, 0.f, 2.f);
+	//registerFloatSetting("RotateY", &yRotate, 1.f, 0.f, 2.f);
+	//registerFloatSetting("RotateZ", &zRotate, 1.f, 0.f, 2.f);
 }
 
 Animations::~Animations() {
