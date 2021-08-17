@@ -20,6 +20,9 @@ private:
 	float tpSpeed = 3288.50f;
 	bool randomThing = false;
 	int testTimer = 0;
+	bool kowBool = false;
+	int kowInt1 = 0;
+	int kowInt2 = 0;
 
 public:
 	// testing
