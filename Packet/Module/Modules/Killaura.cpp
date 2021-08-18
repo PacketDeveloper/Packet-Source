@@ -3,7 +3,8 @@
 Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entites") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Multi", 0);
-	mode.addEntry("Switch", 1); // it switches between players it isnt single lol
+	mode.addEntry("Switch", 1);//bolz
+	registerBoolSetting("TargetRender", &render, render);
 	registerBoolSetting("Rotations", &rot, rot);
 	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
 	registerBoolSetting("MobAura", &isMobAura, isMobAura);
@@ -272,5 +273,69 @@ void Killaura::onDisable() {
 		*offset2 -= 8;
 		VirtualProtect((void*)offset, sizeof(int), offsetProt, 0);
 		VirtualProtect((void*)offset2, sizeof(int), offsetProt2, 0);
+	}
+}
+
+
+float t = 0;
+void Killaura::onLevelRender() {
+	if (distanceCheck)
+		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+
+	if (render && !targetList.empty()) {
+		t++;
+		DrawUtils::setColor(1, 1, 1, 0.9f);
+
+		vec3_t permutations[56];
+		for (int i = 0; i < 56; i++)
+			permutations[i] = {sinf((i * 10.f) / (180 / PI)), 0.f, cosf((i * 10.f) / (180 / PI))};
+
+		const float coolAnim = 0.9f + 0.9f * sin((t / 60) * PI * 2);
+
+		if (!mode.getSelectedValue() == 0) {
+			if (targetList[0]->damageTime >= 1) {
+				vec3_t* start = targetList[0]->getPosOld();
+				vec3_t* end = targetList[0]->getPos();
+
+				auto te = DrawUtils::getLerpTime();
+				vec3_t pos = start->lerp(end, te);
+
+				auto yPos = pos.y;
+				yPos -= 1.62f;
+				yPos += coolAnim;
+
+				std::vector<vec3_t> posList;
+				posList.reserve(56);
+				for (auto& perm : permutations) {
+					vec3_t curPos(pos.x, yPos, pos.z);
+					posList.push_back(curPos.add(perm));
+				}
+
+				DrawUtils::drawLinestrip3d(posList);
+			}
+		} else {
+			for (auto& i : targetList) {
+				if (i->damageTime >= 1) {
+					vec3_t* start = i->getPosOld();
+					vec3_t* end = i->getPos();
+
+					auto te = DrawUtils::getLerpTime();
+					vec3_t pos = start->lerp(end, te);
+
+					auto yPos = pos.y;
+					yPos -= 1.62f;
+					yPos += coolAnim;
+
+					std::vector<vec3_t> posList;
+					posList.reserve(56);
+					for (auto& perm : permutations) {
+						vec3_t curPos(pos.x, yPos, pos.z);
+						posList.push_back(curPos.add(perm));
+					}
+
+					DrawUtils::drawLinestrip3d(posList);
+				}
+			}
+		}
 	}
 }
