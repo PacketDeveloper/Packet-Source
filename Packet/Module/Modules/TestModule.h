@@ -40,4 +40,5 @@ public:
 	virtual void onEnable() override;
 	virtual bool isFlashMode() override;
 	virtual void onMove(C_MoveInputHandler* input) override;
+	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

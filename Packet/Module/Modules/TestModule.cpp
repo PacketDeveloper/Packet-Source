@@ -26,6 +26,9 @@ const char* TestModule::getModuleName() {
 
 void TestModule::onEnable() {
 	auto blinkMod = moduleMgr->getModule<Blink>();
+	auto player = g_Data.getLocalPlayer();
+	if (g_Data.getLocalPlayer() == nullptr)
+		setEnabled(false);
 	if (banUMode) {
 		if (counter == 5) {
 			counter = 0;
@@ -72,6 +75,8 @@ void TestModule::onEnable() {
 			blinkMod->setEnabled(true);
 			kowInt2 = 0;
 			kowInt1 = 0;
+			if (player->onGround)
+			player->jumpFromGround();
 		}
 }
 
@@ -85,6 +90,8 @@ void TestModule::onTick(C_GameMode* gm) {
 	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 	auto player = g_Data.getLocalPlayer();
 	auto blinkMod = moduleMgr->getModule<Blink>();
+	if (!g_Data.canUseMoveKeys())
+		setEnabled(false);
 	if (autoDisable) {
 		auto testmoduleMod = moduleMgr->getModule<TestModule>();
 		if (testmoduleMod->isEnabled()) {
@@ -139,17 +146,21 @@ void TestModule::onTick(C_GameMode* gm) {
 				kowInt1++;
 				if (kowInt1 >= 6 && kowInt1 <= 7) {
 					blinkMod->setEnabled(false);
+					*g_Data.getClientInstance()->minecraft->timer = 4;
 				}
 				if (kowInt1 >= 8) {
 					kowInt1 = 0;
 					blinkMod->setEnabled(true);
 					kowInt2++;
+					*g_Data.getClientInstance()->minecraft->timer = 20;
 				}
 			}
-			if (kowInt2 >= 6) {
+			if (kowInt2 >= 3) {
+				blinkMod->setEnabled(false);
 				kowBool2 = false;
 				kowInt1 = 0;
 				kowInt2 = 0;
+				*g_Data.getClientInstance()->minecraft->timer = 20;
 			}
 			if (GameData::isKeyDown(*input->sneakKey) && kowBool)
 				g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
@@ -166,11 +177,6 @@ void TestModule::onTick(C_GameMode* gm) {
 					gm->player->velocity = vec3_t(0.f, -.0001f, -0.f);
 				gm->player->velocity.y = glideModEffective-0.0001f;
 				glideModEffective = glideMod;
-
-				if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
-					C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
-					g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
-				}
 			}
 		}
 
@@ -209,6 +215,12 @@ void TestModule::onMove(C_MoveInputHandler* input) {
 		moveVec.y = player->velocity.y;
 		moveVec.z = moveVec2d.y * kowFloat;
 		if (pressed) player->lerpMotion(moveVec);
+		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
+			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 1.3f, 0.f, moveVec.z / 1.3f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
+			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
+		}
 	}
 }
 
@@ -228,7 +240,39 @@ void TestModule::onDisable() {
 	if (blink)
 		blinkMod->setEnabled(false);
 	if (kowBool) {
-		player->velocity = vec3_t(0, -1, 0);
+		player->velocity = vec3_t(0.f, .01f, 0.f);
 		blinkMod->setEnabled(false);
+	}
+}
+
+void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+	auto player = g_Data.getLocalPlayer();
+	auto raknet = g_Data.getRakNetInstance();
+	if (GameData::canUseMoveKeys()) {
+		if (!(g_Data.getLocalPlayer() == nullptr)) {
+			if (raknet == nullptr) return;
+
+			std::string servIp = raknet->serverIp.getText();
+			std::string servPort = std::to_string(raknet->serverPort);
+
+			vec2_t textPos = vec2_t(g_Data.getClientInstance()->getGuiData()->windowSize.y / 30.f + -16.f, g_Data.getClientInstance()->getGuiData()->windowSize.x - 12.1f);
+
+			if (raknet->serverIp.getTextLength() < 1 || raknet->serverIp.getText() == nullptr)
+				servIp = "localhost";
+			if (raknet->serverIp.getText() == 0)
+				servIp = "0.0.0.0";
+			if (raknet->serverPort == 0)
+				servPort = "0";
+			if (servPort.c_str() == nullptr)
+				servPort = "localhost";
+
+			std::string serverInfo = "IP: " + servIp + " " + "Port: " + servPort;
+
+			float x = windowSize.x / 30.f + -16.f;
+			float y = windowSize.y - 12.1f;
+
+			DrawUtils::drawText(vec2_t(x, y), &serverInfo, MC_Color(255, 255, 255), 1.f, true);
+		}
 	}
 }
