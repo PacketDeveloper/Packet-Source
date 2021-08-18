@@ -4,7 +4,7 @@
 
 class TestModule : public IModule {
 private:
-	float glideModEffective = 0;
+	float glideModEffective = -0;
 	int counter = 1;
 	int testCounter = 0;
 	bool test = false;
@@ -21,6 +21,13 @@ private:
 	bool randomThing = false;
 	int testTimer = 0;
 
+	bool kowBool = false;
+	bool kowBool2 = false;
+	int kowInt1 = 0;
+	int kowInt2 = 0;
+	float glideMod = -0.0f;
+	float kowFloat = 2;
+
 public:
 	// testing
 	float sliderX = 0.f;
@@ -33,4 +40,5 @@ public:
 	virtual void onEnable() override;
 	virtual bool isFlashMode() override;
 	virtual void onMove(C_MoveInputHandler* input) override;
+	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

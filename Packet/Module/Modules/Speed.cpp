@@ -3,9 +3,7 @@ Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
-#ifdef _DEBUG
 	mode.addEntry("KowSpecial", 3);
-#endif
 	registerIntSetting("TimerBoost", &timer, timer, 20, 35);
 	registerFloatSetting("Height", &height, height, 0.000001f, 0.40f);
 	registerFloatSetting("Speed", &speed, speed, 0.2f, 2.f);
