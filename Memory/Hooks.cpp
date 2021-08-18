@@ -162,10 +162,13 @@ void Hooks::Init() {
 		//bad
 		//void* ConnectionRequest__create = reinterpret_cast<void*>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 49 8B D9 4D 8B F8"));
 		//g_Hooks.ConnectionRequest_createHook = std::make_unique<FuncHook>(ConnectionRequest__create, Hooks::ConnectionRequest_create);
+		void* ConnectionRequest__create = reinterpret_cast<void*>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 4D 8B E1 4D 8B F8 48 89 55"));
+		g_Hooks.ConnectionRequest_createHook = std::make_unique<FuncHook>(ConnectionRequest__create, Hooks::ConnectionRequest_create);
 		
 		//bad
 	//	void* _getSkinPack = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E2 48 8B F1"));
 		//g_Hooks.SkinRepository___loadSkinPackHook = std::make_unique<FuncHook>(_getSkinPack, Hooks::SkinRepository___loadSkinPack);
+
 		
 		//bad
 		//void* _toStyledString = reinterpret_cast<void*>(FindSignature("40 55 56 57 48 81 EC ?? ?? ?? ?? 48 C7 44 24 ?? FE FF FF FF 48 89 9C 24 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B FA 48 8B D9 48 89 54 24 ?? 33 D2"));
@@ -300,34 +303,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 
 	DrawUtils::setCtx(renderCtx, dat);
-
-	{
-		static bool wasConnectedBefore = false;
-		static LARGE_INTEGER start;
-		static LARGE_INTEGER frequency;
-		if (frequency.QuadPart == 0) {
-			QueryPerformanceFrequency(&frequency);
-			QueryPerformanceCounter(&start);
-		}
-		static bool hasSentWarning = false;
-		if (!g_Data.isInjectorConnectionActive() && !hasSentWarning) {
-			__int64 retval = oText(a1, renderCtx);
-
-			LARGE_INTEGER end, elapsed;
-			QueryPerformanceCounter(&end);
-			elapsed.QuadPart = end.QuadPart - start.QuadPart;
-			float elapsedFlot = (float)elapsed.QuadPart / frequency.QuadPart;
-			if (elapsedFlot > 1.5f && !hasSentWarning) {
-				hasSentWarning = true;
-				auto box = g_Data.addInfoBox("Packet Client is now injected!");
-				box->closeTimer = 12;
-			}
-
-			if (!hasSentWarning)  // Wait for injector, it might connect in time
-				return retval;
-		} else
-			wasConnectedBefore = true;
-	}
 
 	if (GameData::shouldHide() || !g_Hooks.shouldRender || !moduleMgr->isInitialized())
 		return oText(a1, renderCtx);

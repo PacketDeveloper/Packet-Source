@@ -293,10 +293,12 @@
     <ClCompile Include="Packet\Module\Modules\BehindAura.cpp" />
     <ClCompile Include="Packet\Module\Modules\BlockESP.cpp" />
     <ClCompile Include="Packet\Module\Modules\CustomSky.cpp" />
+    <ClCompile Include="Packet\Module\Modules\EntityControl.cpp" />
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
     <ClCompile Include="Packet\Module\Modules\Notifications.cpp" />
     <ClCompile Include="Packet\Module\Modules\Sneak.cpp" />
     <ClCompile Include="Packet\Module\Modules\Spammer.cpp" />
+    <ClCompile Include="Packet\Module\Modules\SpawnTP.cpp" />
     <ClCompile Include="Packet\Module\Modules\Sprint.cpp" />
     <ClCompile Include="Packet\Module\Modules\Speed.cpp" />
     <ClCompile Include="Packet\Module\Modules\Blink.cpp" />
@@ -464,10 +466,12 @@
     <ClInclude Include="Packet\Module\Modules\BehindAura.h" />
     <ClInclude Include="Packet\Module\Modules\BlockESP.h" />
     <ClInclude Include="Packet\Module\Modules\CustomSky.h" />
+    <ClInclude Include="Packet\Module\Modules\EntityControl.h" />
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />
     <ClInclude Include="Packet\Module\Modules\Notifications.h" />
     <ClInclude Include="Packet\Module\Modules\Sneak.h" />
     <ClInclude Include="Packet\Module\Modules\Spammer.h" />
+    <ClInclude Include="Packet\Module\Modules\SpawnTP.h" />
     <ClInclude Include="Packet\Module\Modules\Sprint.h" />
     <ClInclude Include="Packet\Module\Modules\Speed.h" />
     <ClInclude Include="Packet\Module\Modules\Blink.h" />

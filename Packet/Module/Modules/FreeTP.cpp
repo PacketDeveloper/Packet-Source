@@ -2,7 +2,7 @@
 
 #include "../../Module/ModuleManager.h"
 
-FreeTP::FreeTP() : IModule(0, Category::MOVEMENT, "weee") {
+FreeTP::FreeTP() : IModule(0, Category::EXPLOIT, "weee") {
 	registerFloatSetting("Speed", &speed, speed, 0.5f, 3.f);
 }
 

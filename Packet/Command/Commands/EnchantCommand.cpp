@@ -1,4 +1,5 @@
 #include "EnchantCommand.h"
+
 #include "../../../Utils/Utils.h"
 
 EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] <mode: auto / manual : 1/0>") {
@@ -36,6 +37,7 @@ EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enc
 	enchantMap["piercing"] = 34;
 	enchantMap["luck_of_sea"] = 23;
 	enchantMap["lure"] = 24;
+	enchantMap["soul_speed"] = 36;
 }
 
 EnchantCommand::~EnchantCommand() {
@@ -85,7 +87,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr);
 			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
 				secondAction = new C_InventoryAction(0, nullptr, item, 32766, 100);
-			else 
+			else
 				secondAction = new C_InventoryAction(0, nullptr, item, 507, 99999);
 			manager->addInventoryAction(*firstAction);
 			manager->addInventoryAction(*secondAction);
@@ -125,11 +127,11 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 						*(unsigned int*)(proxy + 16),
 						item);  // Player::selectItem
 
-				 //g_Data.getLocalPlayer()->sendInventory();
+				//g_Data.getLocalPlayer()->sendInventory();
 			}
 			free(EnchantData);
 		}
-		clientMessageF("%sEnchant failed %ssuccessfully!", RED, GREEN);
+		clientMessageF("%sEnchant successful!", GREEN);
 	} else {
 		void* EnchantData = malloc(0x60);
 		if (EnchantData != nullptr)
@@ -149,7 +151,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 					item);  // Player::selectItem
 
 			//g_Data.getLocalPlayer()->sendInventory();
-			clientMessageF("%sEnchant failed %ssuccessfully!", RED, GREEN);
+			clientMessageF("%sEnchant successful!", GREEN);
 		} else
 			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
 

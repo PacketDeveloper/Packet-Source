@@ -9,7 +9,7 @@ BlockESP::BlockESP() : IModule(0, Category::VISUAL, "Outlines Blocks") {
 	registerBoolSetting("Gold", &gOre, gOre);
 	registerBoolSetting("Iron", &iOre, iOre);
 	registerBoolSetting("Coal", &cOre, cOre);
-	registerIntSetting("Range", &range, range, 1, 10);
+	registerIntSetting("Range", &range, range, 1, 15);
 	registerFloatSetting("Width", &width, width, 0.3, 1);
 }
 

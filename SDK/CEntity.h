@@ -582,7 +582,6 @@ public:
 	virtual __int64 reportMovementTelemetry(enum MovementEventType);                                                                                                                                                                                                                                                                                                                                          // 445
 	virtual __int64 onMovePlayerPacketNormal(vec3_t const &, vec2_t const &, float);                                                                                                                                                                                                                                                                                                                         // 446
 
-
 public:
 	C_InventoryTransactionManager *getTransactionManager();
 

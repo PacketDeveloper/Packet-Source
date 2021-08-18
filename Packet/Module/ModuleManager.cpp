@@ -72,20 +72,22 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new XP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new FastStop()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Spammer()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Criticals()));
 		moduleList.push_back(std::shared_ptr<IModule>(new CrystalAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Packet()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Spider()));
-		moduleList.push_back(std::shared_ptr<IModule>(new Criticals()));
+		moduleList.push_back(std::shared_ptr<IModule>(new SpawnTP()));
 
 #ifdef _DEBUG // Private modules
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
+		moduleList.push_back(std::shared_ptr<IModule>(new EntityControl()));
 		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		// Broken
 		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
+		moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
 #endif
 
 		// Sort modules alphabetically
@@ -105,7 +107,8 @@ void ModuleManager::initModules() {
 	getModule<AntiBot>()->setEnabled(true);
 	getModule<Sprint>()->setEnabled(true);
 	getModule<AntiBot>()->setEnabled(true);
-	//getModule<Disabler>()->setEnabled(false);
+	auto box = g_Data.addInfoBox("Packet Client is now Injected!");
+	box->closeTimer = 15;
 }
 
 void ModuleManager::disable() {

@@ -4,11 +4,18 @@
 
 Freelook::Freelook(): IModule(0, Category::VISUAL, "Move straight while moving your camera around") {
 }
+
 Freelook::~Freelook() {
 }
+
 const char* Freelook::getModuleName() {
 	return "Freelook";
 }
+
+bool Freelook::isFlashMode() {
+	return true;
+}
+
 vec2_t mouseEnd = {0, 0};
 void Freelook::onEnable() {
 	if(!g_Data.isInGame() || this->resetViewTick > -1){
@@ -21,6 +28,7 @@ void Freelook::onEnable() {
 	this->initialViewAngles = g_Data.getLocalPlayer()->viewAngles;
 	this->lastCameraAngle = {0, 0};
 }
+
 void Freelook::onDisable() {
 	if(g_Data.isInGame() && this->resetViewTick == -1 && this->redirectMouse){
 
@@ -39,6 +47,7 @@ void Freelook::onDisable() {
 		this->redirectMouse = false;
 	}
 }
+
 void Freelook::onPostRender(C_MinecraftUIRenderContext* mode) {
 	if(!this->redirectMouse)
 		return;
@@ -67,6 +76,7 @@ void Freelook::onPostRender(C_MinecraftUIRenderContext* mode) {
 		}
 	}
 }
+
 void Freelook::onTick(C_GameMode* mode) {
 	if(this->resetViewTick == 0){
 		this->redirectMouse = false;

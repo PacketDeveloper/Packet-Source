@@ -16,7 +16,7 @@ public:
 	bool targethudEnabled = false;
 	int targethud = 0;
 	bool rot = true;
-	bool click = true;
+	bool click = false;
 	bool strafe = false;
 	int delay = 0;
 	bool packetcock = false;

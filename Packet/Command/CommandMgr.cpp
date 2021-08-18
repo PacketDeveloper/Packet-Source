@@ -26,7 +26,7 @@ void CommandMgr::initCommands() {
 	//commandList.push_back(new GameModeCommand());
 	commandList.push_back(new FriendListCommand());
 	commandList.push_back(new UnbindCommand());
-	//commandList.push_back(new EnchantCommand());
+	commandList.push_back(new EnchantCommand());
 	commandList.push_back(new HelpCommand());
 	commandList.push_back(new ModulesCommand());
 	commandList.push_back(new PanicCommand());

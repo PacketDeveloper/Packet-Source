@@ -62,10 +62,11 @@
 #include "Modules/XP.h"
 #include "Modules/FastStop.h"
 #include "Modules/Spammer.h"
+#include "Modules/Criticals.h"
 #include "Modules/CrystalAura.h"
 #include "Modules/Packet.h"
 #include "Modules/Spider.h"
-#include "Modules/Criticals.h"
+#include "Modules/SpawnTP.h"
 #include "Modules/Module.h"
 
 // Unused
@@ -73,10 +74,10 @@
 #include "Modules/ChestStealer.h"
 //#include "Modules/Derp.h"
 //#include "Modules/Waypoints.h" // Crashes
-//#include "Modules/Criticals.h"
 
 #ifdef _DEBUG
 #include "Modules/TestModule.h"
+#include "Modules/EntityControl.h"
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
 #include "Modules/NoSlow.h"

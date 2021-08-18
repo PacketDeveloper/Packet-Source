@@ -140,14 +140,14 @@ void Flight::onTick(C_GameMode* gm) {
 		glideMod = -0.00034065544605255127;
 		if (!player->onGround) {
 			auto box = g_Data.addInfoBox("Flight: You must be on the ground");
-			box->closeTimer = 8;
+			box->closeTimer = 15;
 			this->setEnabled(false);
 		}
 		gm->player->velocity.y = glideModEffective;
 		static bool restored = false;
 		if (clickGUI->isEnabled()) {
 			auto box = g_Data.addInfoBox("Flight: Disabled to prevent flags/errors");
-			box->closeTimer = 12;
+			box->closeTimer = 15;
 			setEnabled(false);
 		}
 		if (placeCounter == placeDelay /*8*/) {
@@ -226,23 +226,6 @@ void Flight::onTick(C_GameMode* gm) {
 		}
 	}
 	if (mode.getSelectedValue() == 6) {  // Hive
-		if (hiveC == 7) {
-			hiveC = 1;
-		} else {
-			hiveC++;
-		}
-		if (hiveC == 3) {
-			player->velocity.y = -0.64565547658657876585663567537607653 * 453;
-			*g_Data.getClientInstance()->minecraft->timer = 110.f;
-		}
-		if (hiveC == 4) {
-			player->velocity.y = 0;
-			*g_Data.getClientInstance()->minecraft->timer = 40.f;
-		}
-		if (hiveC == 6) {
-			player->velocity.y = 0;
-			*g_Data.getClientInstance()->minecraft->timer = 15.f;
-		}
 	}
 }
 

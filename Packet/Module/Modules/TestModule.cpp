@@ -102,7 +102,12 @@ void TestModule::onTick(C_GameMode* gm) {
 		//player->setSleeping(true);
 		//player->updateWalkAnim();
 		//player->getAttackAnim(1);
-		player->setSize(300, 0);
+		//player->setSize(300, 0);
+		 //if (player->isInWater()) {
+			//gm->player->onGround = true;
+			//gm->player->velocity.y = 1;
+		//}
+
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
