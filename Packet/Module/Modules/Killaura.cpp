@@ -251,8 +251,13 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 					vec3_t EntPos = *i->getPos();
 					vec2_t CalcRot = getAngles6(*player->getPos(), EntPos).normAngles();
 					auto rotation2 = g_Data.getLocalPlayer();
+					float prevyaw2 = rotation2->yaw;
 					rotation2->yawUnused1 = angle.y;
 					rotation2->pitch = angle.x;
+					rotation2->yaw2 = angle.y;
+
+					rotation2->bodyYaw = angle.y;
+					rotation2->yawUnused2 = prevyaw2;
 				}
 				if (rot && !targetList.empty()) {
 					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
