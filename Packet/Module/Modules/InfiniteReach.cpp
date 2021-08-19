@@ -19,7 +19,7 @@ static std::vector<C_Entity*> targetList0;
 void findEntities0(C_Entity* currentEntity, bool isRegularEntitie) {
 	static auto infiniteReachMod = moduleMgr->getModule<InfiniteReach>();
 
-	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
+	if (currentEntity == g_Data.getLocalPlayer())
 		return;
 
 	if (currentEntity == 0)
@@ -28,7 +28,7 @@ void findEntities0(C_Entity* currentEntity, bool isRegularEntitie) {
 	if (currentEntity->timeSinceDeath > 0 || currentEntity->damageTime >= 7)
 		return;
 
-	if (FriendList::findPlayer(currentEntity->getNameTag()->getText()))  // Skip Friend
+	if (FriendList::findPlayer(currentEntity->getNameTag()->getText()))
 		return;
 
 	if (!Target::isValidTarget(currentEntity))
@@ -42,7 +42,6 @@ void findEntities0(C_Entity* currentEntity, bool isRegularEntitie) {
 }
 
 void InfiniteReach::onTick(C_GameMode* gm) {
-	//Loop through all our players and retrieve their information
 	targetList0.clear();
 
 	g_Data.forEachEntity(findEntities0);
@@ -71,7 +70,6 @@ void InfiniteReach::onTick(C_GameMode* gm) {
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&movePlayerPacket);
 		}
 
-		// Attack all entitys in targetList
 		if (isMulti) {
 			for (int i = 0; i < targetList0.size(); i++) {
 				vec3_t pos = *targetList0[i]->getPos();

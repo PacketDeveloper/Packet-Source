@@ -34,7 +34,7 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if (currentEntity == nullptr)
 		return;
 
-	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
+	if (currentEntity == g_Data.getLocalPlayer())
 		return;
 
 	if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
@@ -51,8 +51,10 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 			return;
 		if (currentEntity->width <= 0.01f || currentEntity->height <= 0.01f)  // Don't hit this pesky antibot on 2b2e.org
 			return;
-		if (currentEntity->getEntityTypeId() == 64)  // item
+		if (currentEntity->getEntityTypeId() == 64)  //item
 			return;
+		//if someone knows the entityTypeId of the xp orb can they pls add it here
+
 	} else {
 		if (!Target::isValidTarget(currentEntity))
 			return;
