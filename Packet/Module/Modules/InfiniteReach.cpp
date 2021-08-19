@@ -16,7 +16,7 @@ const char* InfiniteReach::getModuleName() {
 
 static std::vector<C_Entity*> targetList0;
 
-void findEntities(C_Entity* currentEntity, bool isRegularEntitie) {
+void findEntities0(C_Entity* currentEntity, bool isRegularEntitie) {
 	static auto infiniteReachMod = moduleMgr->getModule<InfiniteReach>();
 
 	if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
@@ -45,7 +45,7 @@ void InfiniteReach::onTick(C_GameMode* gm) {
 	//Loop through all our players and retrieve their information
 	targetList0.clear();
 
-	g_Data.forEachEntity(findEntities);
+	g_Data.forEachEntity(findEntities0);
 	Odelay++;
 
 	if (targetList0.size() > 0 && Odelay >= delay) {
