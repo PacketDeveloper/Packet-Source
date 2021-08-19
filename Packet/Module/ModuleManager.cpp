@@ -77,6 +77,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Packet()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Spider()));
 		moduleList.push_back(std::shared_ptr<IModule>(new SpawnTP()));
+		moduleList.push_back(std::shared_ptr<IModule>(new InfiniteReach()));
 
 #ifdef _DEBUG // Private modules
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
