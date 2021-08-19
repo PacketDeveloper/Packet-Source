@@ -15,9 +15,6 @@
 #include "Animations.h"
 static std::vector<C_Entity> targList;
 Animations::Animations() : IModule(0, Category::VISUAL, "Custom item view model") {
-	//registerFloatSetting("float1", &float1, 0, -10, 10);
-	//registerBoolSetting("Translate", &doTranslate, doTranslate);
-	//registerBoolSetting("Scale", &doScale, doScale);
 	registerBoolSetting("Spin", &aroundWorld, aroundWorld);
 	registerFloatSetting("X", &xTrans, 0.f, -2.f, 2.f);
 	registerFloatSetting("Y", &yTrans, 0.f, -2.f, 2.f);
@@ -25,32 +22,28 @@ Animations::Animations() : IModule(0, Category::VISUAL, "Custom item view model"
 	registerFloatSetting("ScaleX", &xMod, 1.f, 0.f, 2.f);
 	registerFloatSetting("ScaleY", &yMod, 1.f, 0.f, 2.f);
 	registerFloatSetting("ScaleZ", &zMod, 1.f, 0.f, 2.f);
-	registerBoolSetting("Reset", &redo, redo);
-	//registerFloatSetting("RotateX", &xRotate, 1.f, 0.f, 2.f);
-	//registerFloatSetting("RotateY", &yRotate, 1.f, 0.f, 2.f);
-	//registerFloatSetting("RotateZ", &zRotate, 1.f, 0.f, 2.f);
+	registerBoolSetting("Reset", &reset, reset);
 }
 
 Animations::~Animations() {
 }
 
 void Animations::onTick(C_GameMode* gm) {
-	if (redo) {
-		auto aniMod = moduleMgr->getModule<Animations>();
-		aniMod->redo = false;
-			float1 = 0;
-			xMod = 1.f;
-			yMod = 1.f;
-			zMod = 1.f;
+	if (reset) {
+		float1 = 0;
+		xMod = 1.f;
+		yMod = 1.f;
+		zMod = 1.f;
 
-			xTrans = 0.f;
-			yTrans = 0.f;
-			zTrans = 0.f;
+		xTrans = 0.f;
+		yTrans = 0.f;
+		zTrans = 0.f;
 
-			xRotate = 0.f;
-			yRotate = 0.f;
-			zRotate = 0.f;
-		}
+		xRotate = 0.f;
+		yRotate = 0.f;
+		zRotate = 0.f;
+		reset = false;
+	}
 }
 
 const char* Animations::getModuleName() {

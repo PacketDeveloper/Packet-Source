@@ -12,6 +12,7 @@ public:
 	bool liquidN = true;
 	bool nofall = false;
 	bool treeN = true;
+	bool test = false;
 	bool oreN = true;
 	bool fly = false;
 	int testTimer = 0;

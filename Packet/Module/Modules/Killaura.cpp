@@ -284,7 +284,6 @@ void Killaura::onLevelRender() {
 
 	if (render && !targetList.empty()) {
 		t++;
-		DrawUtils::setColor(1, 1, 1, 0.9f);
 
 		vec3_t permutations[56];
 		for (int i = 0; i < 56; i++)
@@ -316,6 +315,7 @@ void Killaura::onLevelRender() {
 		} else {
 			for (auto& i : targetList) {
 				if (i->damageTime >= 1) {
+					DrawUtils::setColor(1, 0, 0, 1);
 					vec3_t* start = i->getPosOld();
 					vec3_t* end = i->getPos();
 
@@ -334,6 +334,8 @@ void Killaura::onLevelRender() {
 					}
 
 					DrawUtils::drawLinestrip3d(posList);
+				} else {
+					DrawUtils::setColor(1, 1, 1, 1);
 				}
 			}
 		}

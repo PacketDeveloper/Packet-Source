@@ -2,7 +2,7 @@
 
 #include "../../Module/ModuleManager.h"
 
-NameCommand::NameCommand() : IMCCommand("clientname", "Edit Clients Name", "<name>") {
+NameCommand::NameCommand() : IMCCommand("clientname", "Edit Clients Name", "<name/reset> <name>") {
 	registerAlias("watermark");
 	registerAlias("name");
 }
@@ -17,7 +17,7 @@ bool NameCommand::execute(std::vector<std::string>* args) {
 
 	auto watermark = moduleMgr->getModule<Watermark>();
 
-	if (option == "name") {
+	if (args->at(1) == "name" && args->size() > 2) {
 		std::ostringstream os;
 		for (int i = 2; i < args->size(); i++) {
 			if (i > 1)
@@ -28,5 +28,10 @@ bool NameCommand::execute(std::vector<std::string>* args) {
 		watermark->getMessage() = text;
 		clientMessageF("%sName set to %s%s%s!", GREEN, GRAY, text.c_str(), GREEN);
 		return true;
+	} else if (args->at(1) == "reset") {
+		watermark->getMessage() = "Packet Client";
+		clientMessageF("[%sPacket%s] %sReset!", GRAY, WHITE, GREEN);
+		return true;
 	}
+	return false;
 }

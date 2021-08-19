@@ -9,7 +9,7 @@ Survival::Survival() : IModule(0, Category::MISC, "Automates Survival") {
 	registerBoolSetting("OreNuker", &oreNuker, oreNuker);
 	registerBoolSetting("NoFall", &nofall, nofall);
 	registerBoolSetting("Fly", &fly, fly);
-	registerBoolSetting("SpawnTP", &spawntp, spawntp);
+	registerBoolSetting("Test", &test, test);
 	registerIntSetting("Timer", &timer, timer, 20, 500);
 }
 
@@ -26,8 +26,8 @@ void Survival::onTick(C_GameMode* gm) {
 	if (spawntp) {
 		player->setSleeping(true);
 		setEnabled(false);
-	} else if (config) {
-		//onLoadConfig;
+	}
+	if (test) {
 	}
 	if (treeNuker) {
 		vec3_t* pos = gm->player->getPos();
