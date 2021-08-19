@@ -1,10 +1,10 @@
 #include "InfiniteReach.h"
 
 InfiniteReach::InfiniteReach() : IModule(0, Category::COMBAT, "Killaura with infinite reach") {
-	this->registerBoolSetting("multiaura", &this->isMulti, this->isMulti);
-	this->registerBoolSetting("BackToPacketPos", &this->comebacklol, this->comebacklol);
-	this->registerFloatSetting("range", &this->range, this->range, 15, 200);
-	this->registerIntSetting("delay", &this->delay, this->delay, 1, 20);
+	registerBoolSetting("multiaura", &isMulti, isMulti);
+	registerBoolSetting("BackToPacketPos", &comebacklol, comebacklol);
+	registerFloatSetting("range", &range, range, 15, 200);
+	registerIntSetting("delay", &delay, delay, 1, 20);
 }
 
 InfiniteReach::~InfiniteReach() {
