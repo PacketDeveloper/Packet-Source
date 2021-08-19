@@ -14,6 +14,9 @@ Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entit
 	registerBoolSetting("Click", &click, click);
 	registerFloatSetting("range", &range, range, 3.f, 8.f);
 	registerIntSetting("delay", &delay, delay, 0, 5);
+#ifdef _DEBUG
+	registerBoolSetting("TestMode", &test, test);
+#endif
 }
 
 Killaura::~Killaura() {
@@ -229,6 +232,12 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 					auto rotation2 = g_Data.getLocalPlayer();
 					rotation2->yawUnused1 = angle.y;
 					rotation2->pitch = angle.x;
+				}
+				if (test) {
+					vec2_t appl = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos()).normAngles();
+					appl.x /= (100.f - 50);
+					appl.y /= (100.f - 50);
+					player->applyTurnDelta(&appl);
 				}
 				if (rot && !targetList.empty()) {
 					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
