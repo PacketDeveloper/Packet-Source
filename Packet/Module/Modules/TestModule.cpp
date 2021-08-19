@@ -249,35 +249,36 @@ void TestModule::onDisable() {
 		blinkMod->setEnabled(false);
 	}
 }
-
 void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 	auto player = g_Data.getLocalPlayer();
 	auto raknet = g_Data.getRakNetInstance();
-	if (GameData::canUseMoveKeys()) {
-		if (!(g_Data.getLocalPlayer() == nullptr)) {
-			if (raknet == nullptr) return;
+	if (kowBool) {
+		if (GameData::canUseMoveKeys()) {
+			if (!(g_Data.getLocalPlayer() == nullptr)) {
+				if (raknet == nullptr) return;
 
-			std::string servIp = raknet->serverIp.getText();
-			std::string servPort = std::to_string(raknet->serverPort);
+				std::string servIp = raknet->serverIp.getText();
+				std::string servPort = std::to_string(raknet->serverPort);
 
-			vec2_t textPos = vec2_t(g_Data.getClientInstance()->getGuiData()->windowSize.y / 30.f + -16.f, g_Data.getClientInstance()->getGuiData()->windowSize.x - 12.1f);
+				vec2_t textPos = vec2_t(g_Data.getClientInstance()->getGuiData()->windowSize.y / 30.f + -16.f, g_Data.getClientInstance()->getGuiData()->windowSize.x - 12.1f);
 
-			if (raknet->serverIp.getTextLength() < 1 || raknet->serverIp.getText() == nullptr)
-				servIp = "localhost";
-			if (raknet->serverIp.getText() == 0)
-				servIp = "0.0.0.0";
-			if (raknet->serverPort == 0)
-				servPort = "0";
-			if (servPort.c_str() == nullptr)
-				servPort = "localhost";
+				if (raknet->serverIp.getTextLength() < 1 || raknet->serverIp.getText() == nullptr)
+					servIp = "localhost";
+				if (raknet->serverIp.getText() == 0)
+					servIp = "0.0.0.0";
+				if (raknet->serverPort == 0)
+					servPort = "0";
+				if (servPort.c_str() == nullptr)
+					servPort = "localhost";
 
-			std::string serverInfo = "IP: " + servIp + " " + "Port: " + servPort;
+				std::string serverInfo = "IP: " + servIp + " " + "Port: " + servPort;
 
-			float x = windowSize.x / 30.f + -16.f;
-			float y = windowSize.y - 12.1f;
+				float x = windowSize.x / 30.f + -16.f;
+				float y = windowSize.y - 12.1f;
 
-			DrawUtils::drawText(vec2_t(x, y), &serverInfo, MC_Color(255, 255, 255), 1.f, true);
+				DrawUtils::drawText(vec2_t(x, y), &serverInfo, MC_Color(255, 255, 255), 1.f, true);
+			}
 		}
 	}
 }

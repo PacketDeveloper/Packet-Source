@@ -14,6 +14,9 @@ Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entit
 	registerBoolSetting("Click", &click, click);
 	registerFloatSetting("range", &range, range, 3.f, 8.f);
 	registerIntSetting("delay", &delay, delay, 0, 5);
+#ifdef _DEBUG
+	registerBoolSetting("TestMode", &test, test);
+#endif
 }
 
 Killaura::~Killaura() {
@@ -219,13 +222,32 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 			}
 	}
 }
-
+vec2_t getAngles6(vec3_t PlayerPosition, vec3_t EntityPosition) {
+	vec2_t Angles;
+	float dX = PlayerPosition.x - EntityPosition.x;
+	float dY = PlayerPosition.y - EntityPosition.y;
+	float dZ = PlayerPosition.z - EntityPosition.z;
+	double distance = sqrt(dX * dX + dY * dY + dZ * dZ);
+	Angles.x = (float)(atan2(dY, distance) * 180.0f / PI);
+	Angles.y = (float)(atan2(dZ, dX) * 180.0f / PI) + 90.0f;
+	return Angles;
+};
 void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	auto player = g_Data.getLocalPlayer();
 	if (targethud > 1) {
 			for (auto& i : targetList) {
 				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 				if (rot && !targetList.empty()) {
+					auto rotation2 = g_Data.getLocalPlayer();
+					rotation2->yawUnused1 = angle.y;
+					rotation2->pitch = angle.x;
+				}
+				if (test) {
+					vec2_t appl = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos()).normAngles();
+					appl.x /= (100.f - 50);
+					appl.y /= (100.f - 50);
+					vec3_t EntPos = *i->getPos();
+					vec2_t CalcRot = getAngles6(*player->getPos(), EntPos).normAngles();
 					auto rotation2 = g_Data.getLocalPlayer();
 					rotation2->yawUnused1 = angle.y;
 					rotation2->pitch = angle.x;
