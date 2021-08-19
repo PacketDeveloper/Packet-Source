@@ -222,7 +222,16 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 			}
 	}
 }
-
+vec2_t getAngles6(vec3_t PlayerPosition, vec3_t EntityPosition) {
+	vec2_t Angles;
+	float dX = PlayerPosition.x - EntityPosition.x;
+	float dY = PlayerPosition.y - EntityPosition.y;
+	float dZ = PlayerPosition.z - EntityPosition.z;
+	double distance = sqrt(dX * dX + dY * dY + dZ * dZ);
+	Angles.x = (float)(atan2(dY, distance) * 180.0f / PI);
+	Angles.y = (float)(atan2(dZ, dX) * 180.0f / PI) + 90.0f;
+	return Angles;
+};
 void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	auto player = g_Data.getLocalPlayer();
 	if (targethud > 1) {
@@ -237,7 +246,11 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 					vec2_t appl = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos()).normAngles();
 					appl.x /= (100.f - 50);
 					appl.y /= (100.f - 50);
-					player->applyTurnDelta(&appl);
+					vec3_t EntPos = *i->getPos();
+					vec2_t CalcRot = getAngles6(*player->getPos(), EntPos).normAngles();
+					auto rotation2 = g_Data.getLocalPlayer();
+					rotation2->yawUnused1 = angle.y;
+					rotation2->pitch = angle.x;
 				}
 				if (rot && !targetList.empty()) {
 					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
