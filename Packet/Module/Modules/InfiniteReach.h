@@ -1,16 +1,17 @@
 #pragma once
 
-#include "Module.h"
 #include "../ModuleManager.h"
+#include "Module.h"
 
 class InfiniteReach : public IModule {
 private:
-	int delay = 0;
+	int delay = 15;
 	int Odelay = 0;
-	bool isMulti = true;
+	bool isMulti = false;
+	bool comebacklol = false;
 
 public:
-	float range = 250;
+	float range = 15;
 	InfiniteReach();
 	~InfiniteReach();
 	// Inherited via IModule
