@@ -11,6 +11,7 @@ public:
 	bool spawntp = false;
 	bool liquidN = true;
 	bool nofall = false;
+	bool itemtp = false;
 	bool treeN = true;
 	bool test = false;
 	bool oreN = true;
@@ -21,6 +22,10 @@ public:
 	int range = 4;
 
 	bool config = false;
+
+	int delay = 0;
+	vec3_t prevPos;
+	int Odelay = 0;
 
 	Survival();
 	virtual void onEnable() override;

@@ -8,9 +8,12 @@ Survival::Survival() : IModule(0, Category::MISC, "Automates Survival") {
 	registerBoolSetting("TreeNuker", &treeNuker, treeNuker);
 	registerBoolSetting("OreNuker", &oreNuker, oreNuker);
 	registerBoolSetting("NoFall", &nofall, nofall);
-	registerBoolSetting("Fly", &fly, fly);
+	//registerBoolSetting("Fly", &fly, fly);
+	registerBoolSetting("ItemTP", &itemtp, itemtp);
 	registerBoolSetting("Test", &test, test);
 	registerIntSetting("Timer", &timer, timer, 20, 500);
+	registerIntSetting("Range", &range, range, 1, 255);
+	registerIntSetting("Delay", &delay, delay, 0, 5);
 }
 
 const char* Survival::getModuleName() {
@@ -26,8 +29,6 @@ void Survival::onTick(C_GameMode* gm) {
 	if (spawntp) {
 		player->setSleeping(true);
 		setEnabled(false);
-	}
-	if (test) {
 	}
 	if (treeNuker) {
 		vec3_t* pos = gm->player->getPos();
@@ -92,23 +93,6 @@ void Survival::onTick(C_GameMode* gm) {
 			}
 		}
 	}
-	if (treeNuker) { // Place saplings on dirt
-		vec3_t* pos = gm->player->getPos();
-		for (int x = (int)pos->x - range; x < pos->x + range; x++) {
-			for (int z = (int)pos->z - range; z < pos->z + range; z++) {
-				for (int y = (int)pos->y - range; y < pos->y + range; y++) {
-					vec3_ti blockPos = vec3_ti(x, y + 1, z);
-					bool build = false;
-					int id = gm->player->region->getBlock(blockPos)->toLegacy()->blockId;
-					if (id == 3 && treeN) build = true;  // Dirt
-					if (build) {
-						gm->buildBlock(&blockPos, 0);
-						return;
-					}
-				}
-			}
-		}
-	}
 }
 
 void Survival::onMove(C_MoveInputHandler* input) {
@@ -131,10 +115,9 @@ void Survival::onSendPacket(C_Packet* packet) {
 }
 
 void Survival::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
-	if (treeNuker) {
-	}
 }
 
 void Survival::onDisable() {
+	auto player = g_Data.getLocalPlayer();
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
 }

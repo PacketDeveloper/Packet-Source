@@ -295,6 +295,7 @@
     <ClCompile Include="Packet\Module\Modules\CustomSky.cpp" />
     <ClCompile Include="Packet\Module\Modules\EntityControl.cpp" />
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
+    <ClCompile Include="Packet\Module\Modules\ItemTP.cpp" />
     <ClCompile Include="Packet\Module\Modules\Notifications.cpp" />
     <ClCompile Include="Packet\Module\Modules\Sneak.cpp" />
     <ClCompile Include="Packet\Module\Modules\Spammer.cpp" />
@@ -468,6 +469,7 @@
     <ClInclude Include="Packet\Module\Modules\CustomSky.h" />
     <ClInclude Include="Packet\Module\Modules\EntityControl.h" />
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />
+    <ClInclude Include="Packet\Module\Modules\ItemTP.h" />
     <ClInclude Include="Packet\Module\Modules\Notifications.h" />
     <ClInclude Include="Packet\Module\Modules\Sneak.h" />
     <ClInclude Include="Packet\Module\Modules\Spammer.h" />

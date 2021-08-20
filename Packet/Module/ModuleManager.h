@@ -67,6 +67,7 @@
 #include "Modules/Packet.h"
 #include "Modules/Spider.h"
 #include "Modules/SpawnTP.h"
+#include "Modules/ItemTP.h"
 #include "Modules/Module.h"
 
 // Unused

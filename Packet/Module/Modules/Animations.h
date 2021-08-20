@@ -3,7 +3,7 @@
 #include "Module.h"
 class Animations : public IModule {
 private:
-	bool redo = false;
+	bool reset = false;
 	int delay = 0;
 
 public:
