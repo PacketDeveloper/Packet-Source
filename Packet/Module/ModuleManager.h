@@ -69,6 +69,7 @@
 #include "Modules/SpawnTP.h"
 #include "Modules/Module.h"
 #include "Modules/InfiniteReach.h"
+#include "Modules/EditionFaker.h"
 
 // Unused
 #include "Modules/InventoryCleaner.h"
