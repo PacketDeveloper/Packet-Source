@@ -15,6 +15,9 @@ HiveFly::HiveFly() : IModule(0, Category::MOVEMENT, "FlightModule") {
 HiveFly::~HiveFly() {
 }
 
+// hive patched fly :(
+
+
 const char* HiveFly::getModuleName() {
 	return ("HiveFly");
 }
@@ -47,7 +50,7 @@ void HiveFly::onTick(C_GameMode* gm) {
 	}
 	auto player = g_Data.getLocalPlayer();
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-	if (counter == 10) {
+	if (counter == 6) {
 		counter = 1;
 	} else {
 		counter++;
@@ -64,6 +67,14 @@ void HiveFly::onTick(C_GameMode* gm) {
 	float yaw = player->yaw;
 	if (counter >= 0) {
 		gm->player->velocity = vec3_t(0, 0, 0);
+	}
+	if (counter >= 5) {
+		gm->player->velocity.y += 0.1;
+	}
+	if (counter == 6) {
+		gm->player->velocity.y -= 0.5545697;
+		*g_Data.getClientInstance()->minecraft->timer = 9.f;
+
 	}
 	if (counter == 1) {
 		player->velocity.y = speed2;

@@ -355,14 +355,10 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {  // Tower
 		C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());  // Rotations (kinda)
 		auto player = g_Data.getLocalPlayer();
 		if (speed > 0.05f) {
-			//p.pitch = (float)(rand() % 1);
-			//p.yaw = (float)(rand() % -1);
-			player->pitch = (float)(rand() % -154);
-			//player->bodyYaw = (float)(rand() % -1);
-			//gm->player->yawUnused2 = (float)(rand() % +65);
+			player->pitch = blockBelow.x * blockBelow.y;
+
 			player->bodyYaw = player->yaw - blockBelow.x;
 		} else if (GameData::isKeyDown(*input->spaceBarKey)) {
-			player->pitch = (float)(rand() % -154);
 			player->bodyYaw = player->yaw - blockBelow.x;
 		}
 	}
