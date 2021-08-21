@@ -1652,13 +1652,14 @@ void Hooks::GameMode_startDestroyBlock(C_GameMode* _this, vec3_ti* a2, uint8_t f
 
 		int range = nukerModule->getNukerRadius();
 		const bool isVeinMiner = nukerModule->isVeinMiner();
+		const bool tree = nukerModule->treeMode();
 		const bool isAutoMode = nukerModule->isAutoMode();
 
 		C_BlockSource* region = g_Data.getLocalPlayer()->region;
 		auto selectedBlockId = ((region->getBlock(*a2)->blockLegacy))->blockId;
 		uint8_t selectedBlockData = region->getBlock(*a2)->data;
 
-		if (!isAutoMode) {
+		if (!isAutoMode && !tree) {
 			for (int x = -range; x < range; x++) {
 				for (int y = -range; y < range; y++) {
 					for (int z = -range; z < range; z++) {

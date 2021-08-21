@@ -5,6 +5,7 @@ class Nuker : public IModule {
 private:
 	int delay = 0;
 	int nukerRadius = 4;
+	bool tree = false;
 	int up = 4;
 	int down = 4;
 	bool veinMiner = false;
@@ -16,6 +17,7 @@ public:
 
 	inline bool isAutoMode() { return autodestroy; };
 	int getNukerRadius() { return nukerRadius; };
+	inline bool treeMode() { return tree; };
 	int getDownRadius() { return down; };
 	int getUpRadius() { return up; };
 

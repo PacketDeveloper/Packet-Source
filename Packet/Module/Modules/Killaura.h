@@ -12,6 +12,7 @@ private:
 	bool showtarget = false;
 	void findWeapon();
 	bool render = false;
+	bool test = false;
 
 public:
 	bool targethudEnabled = false;

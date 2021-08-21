@@ -57,3 +57,8 @@ void ItemTP::onTick(C_GameMode* gm) {
 		setEnabled(false);
 	}
 }
+
+void ItemTP::onDisable() {
+	auto player = g_Data.getLocalPlayer();
+	player->setPos(prevPos);
+}
