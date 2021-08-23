@@ -67,6 +67,7 @@ void TSNew::onTick(C_GameMode* gm) {
 	auto speed = moduleMgr->getModule<Speed>();
 	taregtList69420.clear();
 	g_Data.forEachEntity(findEntityTSS);
+	playerVel = gm->player->velocity;
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	if (input == nullptr) return;
 	if (initRender) {
@@ -158,6 +159,7 @@ void TSNew::onTick(C_GameMode* gm) {
 					distance = i->getPos()->dist(myPos);
 					distanc = distance;
 				}
+
 				if (control && !onKey) {
 					if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
 						clockwise = false;
@@ -199,15 +201,16 @@ void TSNew::onTick(C_GameMode* gm) {
 						}
 					}
 				}
+
 				if (g_Data.canUseMoveKeys()) {
+					vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
 					if (control && !onKey) {
-						vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
 						player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
 					} else if (control && onKey) {
-						if (GameData::isKeyDown(*input->spaceBarKey)) {
-							vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+						if (GameData::isKeyDown(*input->spaceBarKey))
 							player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
-						}
+					} else {
+						player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
 					}
 
 				}

@@ -31,6 +31,8 @@ public:
 	float range = 6;
 	int gayTimer = 0;
 
+	vec3_t playerVel;
+
 	TSNew();
 	~TSNew();
 
