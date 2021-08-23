@@ -3,7 +3,7 @@
 #include "../ModuleManager.h"
 #include "Module.h"
 
-class TSNew : public IModule {
+class TargetStrafeOld : public IModule {
 private:
 	bool circleRender = false;
 	bool jump = false;
@@ -16,7 +16,6 @@ private:
 	bool avoidvoid = true;
 	bool collide = true;
 	bool onKey = true;
-	bool control = false;
 
 	bool initRender = false;
 	int renderTimer = 0;
@@ -31,10 +30,8 @@ public:
 	float range = 6;
 	int gayTimer = 0;
 
-	vec3_t playerVel;
-
-	TSNew();
-	~TSNew();
+	TargetStrafeOld();
+	~TargetStrafeOld();
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

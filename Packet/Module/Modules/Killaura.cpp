@@ -46,6 +46,9 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if (!currentEntity->isAlive())
 		return;
 
+	if (currentEntity->getEntityTypeId() == 69)  // XP
+		return;
+
 	if (killauraMod->isMobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
 			return;
@@ -53,7 +56,6 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 			return;
 		if (currentEntity->getEntityTypeId() == 64)  //item
 			return;
-		//if someone knows the entityTypeId of the xp orb can they pls add it here
 
 	} else {
 		if (!Target::isValidTarget(currentEntity))

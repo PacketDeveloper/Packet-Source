@@ -11,7 +11,7 @@ const char* FastStop::getModuleName() {
 }
 
 void FastStop::onMove(C_MoveInputHandler* input) {
-	auto targetstrafe = moduleMgr->getModule<TargetStrafe>();
+	//auto targetstrafe = moduleMgr->getModule<TargetStrafeOld>();
 	auto player = g_Data.getLocalPlayer();
 	vec2_t move = {input->forwardMovement, -input->sideMovement};
 	bool pressed = move.magnitude() > 0.f;

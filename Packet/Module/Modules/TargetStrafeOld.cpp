@@ -1,28 +1,27 @@
-#include "TSNew.h"
+#include "TargetStrafeOld.h"
 
-TSNew::TSNew() : IModule(0, Category::MOVEMENT, "Strafe around the target") {
-	registerBoolSetting("Controllable", &control, control);
-	registerBoolSetting("DrawCircle", &circleRender, circleRender);
+TargetStrafeOld::TargetStrafeOld() : IModule(0, Category::MOVEMENT, "Strafe around the target") {
+	registerBoolSetting("CircleRender", &circleRender, circleRender);
 	registerBoolSetting("EdgeCheck", &avoidvoid, avoidvoid);
 	registerBoolSetting("OnKey", &onKey, onKey);
-	registerFloatSetting("Radius", &StrafeDistance, StrafeDistance, 1.f, 10.f);
-	//registerFloatSetting("Speed", &speedMod, speedMod, 0.2f, 5.f); // pls no
+	registerFloatSetting("Distance", &StrafeDistance, StrafeDistance, 1.f, 10.f);
+	registerFloatSetting("Speed", &speedMod, speedMod, 0.2f, 5.f);
 }
 
-TSNew::~TSNew() {
+TargetStrafeOld::~TargetStrafeOld() {
 }
 
-const char* TSNew::getModuleName() {
-	return ("TStrafeNew");
+const char* TargetStrafeOld::getModuleName() {
+	return ("TargetStrafeOldOld");
 }
 
-void TSNew::onMove(C_MoveInputHandler* input) {
+void TargetStrafeOld::onMove(C_MoveInputHandler* input) {
 }
 
-static std::vector<C_Entity*> taregtList69420;
+static std::vector<C_Entity*> targetList69;
 
-void findEntityTSS(C_Entity* currentEntity, bool isRegularEntity) {
-	static auto targetstrafeMod = moduleMgr->getModule<TSNew>();
+void findEntityTS(C_Entity* currentEntity, bool isRegularEntity) {
+	static auto TargetStrafeOldMod = moduleMgr->getModule<TargetStrafeOld>();
 
 	if (currentEntity == nullptr)
 		return;
@@ -41,12 +40,12 @@ void findEntityTSS(C_Entity* currentEntity, bool isRegularEntity) {
 
 	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
 
-	if (dist < targetstrafeMod->range) {
-		taregtList69420.push_back(currentEntity);
+	if (dist < TargetStrafeOldMod->range) {
+		targetList69.push_back(currentEntity);
 	}
 }
 
-vec2_t getAngles34(vec3_t PlayerPosition, vec3_t EntityPosition) {
+vec2_t getAngles3(vec3_t PlayerPosition, vec3_t EntityPosition) {
 	vec2_t Angles;
 	float dX = PlayerPosition.x - EntityPosition.x;
 	float dY = PlayerPosition.y - EntityPosition.y;
@@ -56,6 +55,7 @@ vec2_t getAngles34(vec3_t PlayerPosition, vec3_t EntityPosition) {
 	Angles.y = (float)(atan2(dZ, dX) * 180.0f / PI) + 90.0f;
 	return Angles;
 };
+
 struct CompareTargetEnArray {
 	bool operator()(C_Entity* lhs, C_Entity* rhs) {
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
@@ -63,11 +63,10 @@ struct CompareTargetEnArray {
 	}
 };
 
-void TSNew::onTick(C_GameMode* gm) {
+void TargetStrafeOld::onTick(C_GameMode* gm) {
 	auto speed = moduleMgr->getModule<Speed>();
-	taregtList69420.clear();
-	g_Data.forEachEntity(findEntityTSS);
-	playerVel = gm->player->velocity;
+	targetList69.clear();
+	g_Data.forEachEntity(findEntityTS);
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	if (input == nullptr) return;
 	if (initRender) {
@@ -143,12 +142,14 @@ void TSNew::onTick(C_GameMode* gm) {
 		}
 	}
 
-	for (auto& i : taregtList69420) {
-		if (!taregtList69420.empty()) {
-			std::sort(taregtList69420.begin(), taregtList69420.end(), CompareTargetEnArray());
-			vec2_t angle2 = g_Data.getLocalPlayer()->getPos()->CalcAngle(*taregtList69420[0]->getPos());
-			vec2_t angle = getAngles34(*gm->player->getPos(), *taregtList69420[0]->getPos());
+	for (auto& i : targetList69) {
+		if (!targetList69.empty()) {
+			std::sort(targetList69.begin(), targetList69.end(), CompareTargetEnArray());
+			vec2_t angle2 = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList69[0]->getPos());
+			vec2_t angle = getAngles3(*gm->player->getPos(), *targetList69[0]->getPos());
 			C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+			if (jump && gm->player->onGround)
+				gm->player->jumpFromGround();
 
 			if (testMode) {
 				float distance = 99;
@@ -159,23 +160,14 @@ void TSNew::onTick(C_GameMode* gm) {
 					distance = i->getPos()->dist(myPos);
 					distanc = distance;
 				}
-
-				if (control && !onKey) {
-					if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
-						clockwise = false;
-					} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
-						clockwise = true;
-					}
-				} else if (control && onKey && GameData::isKeyDown(*input->spaceBarKey)) {
-					if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
-						clockwise = false;
-					} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
-						clockwise = true;
-					}
+				if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+					clockwise = false;
+				} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+					clockwise = true;
 				}
-
 				C_LocalPlayer* player = g_Data.getLocalPlayer();
-				vec2_t CalcRot = getAngles34(*player->getPos(), EntPos);
+
+				vec2_t CalcRot = getAngles3(*player->getPos(), EntPos);
 				if (clockwise) {
 					CalcRot.y += 90.0f;
 					if (distanc > StrafeDistance) CalcRot.y -= 45.0f;
@@ -201,43 +193,76 @@ void TSNew::onTick(C_GameMode* gm) {
 						}
 					}
 				}
-
 				if (g_Data.canUseMoveKeys()) {
-					vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
-					if (control && !onKey) {
-						player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
-					} else if (control && onKey) {
-						if (GameData::isKeyDown(*input->spaceBarKey))
+					/*if (onKey) {
+						if (GameData::isKeyDown(*input->spaceBarKey)) {
+							vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
 							player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+							if (player->onGround) player->jumpFromGround();
+						}
 					} else {
-						player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+						//if (speed->isEnabled()) {
+							vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+							player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+						//}
+					}*/
+					if (!speedCheck) {
+						if (spacekeyMode)
+							if (GameData::isKeyDown(*input->spaceBarKey)) {
+								vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+								player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+							}
+					}
+					if (!speedCheck) {
+						if (!spacekeyMode) {
+							vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+							player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+						}
+					}
+					if (spacekeyMode) {
+						auto bhopMod = moduleMgr->getModule<Speed>();
+						if (speedCheck)
+							if (bhopMod->isEnabled()) {
+								if (GameData::isKeyDown(*input->spaceBarKey)) {
+									vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+									player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+								}
+							}
 					}
 
+					if (!spacekeyMode) {
+						auto bhopMod = moduleMgr->getModule<Speed>();
+						if (speedCheck)
+							if (bhopMod->isEnabled()) {
+								vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+								player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+							}
+					}
 				}
 			}
 		}
 	}
 }
 
-void TSNew::onEnable() {
+void TargetStrafeOld::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
-		setEnabled(false);
+		this->setEnabled(false);
 	initRender = true;
 }
 
-void TSNew::onDisable() {
+void TargetStrafeOld::onDisable() {
 	initRender = false;
 	renderTimer = 0;
 }
 
-void TSNew::onSendPacket(C_Packet* packet) {
+void TargetStrafeOld::onSendPacket(C_Packet* packet) {
 }
 
-float ttt = 0;
-void TSNew::onLevelRender() {
-	if (renderTimer >= 4 && circleRender && !taregtList69420.empty()) {
-		std::sort(taregtList69420.begin(), taregtList69420.end(), CompareTargetEnArray());
-		ttt++;
+float tt = 0;
+void TargetStrafeOld::onLevelRender() {
+	if (renderTimer >= 4 && circleRender && !targetList69.empty()) {
+		std::sort(targetList69.begin(), targetList69.end(), CompareTargetEnArray());
+		tt++;
 		DrawUtils::setColor(1, 1, 1, 0.9f);
 
 		vec3_t permutations[56];
@@ -245,10 +270,10 @@ void TSNew::onLevelRender() {
 			permutations[i] = {sinf((i * 10.f) / (180 / PI)), 0.f, cosf((i * 10.f) / (180 / PI))};
 		}
 
-		const float coolAnim = 0.9f + 0.9f * sin((ttt / 60) * PI * 2);
+		const float coolAnim = 0.9f + 0.9f * sin((tt / 60) * PI * 2);
 
-		vec3_t* start = taregtList69420[0]->getPosOld();
-		vec3_t* end = taregtList69420[0]->getPos();
+		vec3_t* start = targetList69[0]->getPosOld();
+		vec3_t* end = targetList69[0]->getPos();
 
 		auto te = DrawUtils::getLerpTime();
 		vec3_t pos = start->lerp(end, te);
@@ -268,8 +293,8 @@ void TSNew::onLevelRender() {
 	}
 }
 
-void TSNew::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+void TargetStrafeOld::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
-void TSNew::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
+void TargetStrafeOld::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 }

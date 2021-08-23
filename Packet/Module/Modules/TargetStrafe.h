@@ -16,19 +16,22 @@ private:
 	bool avoidvoid = true;
 	bool collide = true;
 	bool onKey = true;
+	bool control = false;
 
 	bool initRender = false;
 	int renderTimer = 0;
 
 public:
 	float StrafeDistance = 3.f;
-	float speedMod = 0.5f;
+	float speedMod = 0.44f;
 	bool packetMode = false;
 	bool speedCheck = true;
 	bool spacekeyMode = true;
 	bool isMobAura = false;
 	float range = 6;
 	int gayTimer = 0;
+
+	vec3_t playerVel;
 
 	TargetStrafe();
 	~TargetStrafe();

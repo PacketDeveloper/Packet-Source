@@ -36,7 +36,7 @@ void Speed::onTick(C_GameMode* gm) {
 
 void Speed::onMove(C_MoveInputHandler* input) {
 	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
-	auto targetstrafe = moduleMgr->getModule<TargetStrafe>();
+	//auto targetstrafe = moduleMgr->getModule<TargetStrafeOld>();
 	bool pressed = moveVec2d.magnitude() > 0.f;
 	auto player = g_Data.getLocalPlayer();
 	if (mode.getSelectedValue() == 0) {  // Vanilla
