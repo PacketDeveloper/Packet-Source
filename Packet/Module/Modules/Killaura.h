@@ -12,6 +12,8 @@ private:
 	bool showtarget = false;
 	void findWeapon();
 	bool render = false;
+	int renderStart = 0;
+
 	bool test = false;
 
 public:

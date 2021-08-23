@@ -99,6 +99,11 @@ void Killaura::onTick(C_GameMode* gm) {
 		silent = false;
 	}
 
+	if (renderStart >= 1)
+		renderStart++;
+	if (renderStart >= 5)
+		renderStart = 5;
+
 	//Loop through all our players and retrieve their information
 	targetList.clear();
 
@@ -162,6 +167,8 @@ void Killaura::onEnable() {
 	targethud = 0;
 	if (g_Data.getLocalPlayer() == nullptr)
 		setEnabled(false);
+	if (render)
+	renderStart++;
 	//Minecraft.Windows.exe + 1D4C043;
 	//Minecraft.Windows.exe + BFADDA;
 
@@ -297,6 +304,7 @@ void Killaura::onSendPacket(C_Packet* packet) {
 
 void Killaura::onDisable() {
 	targethud = 0;
+	renderStart = 0;
 	if (offset && offset2) {
 		*offset -= 8;
 		*offset2 -= 8;
@@ -320,7 +328,6 @@ void Killaura::onLevelRender() {
 
 		const float coolAnim = 0.9f + 0.9f * sin((t / 60) * PI * 2);
 
-		if (!mode.getSelectedValue() == 0) {
 			if (targetList[0]->damageTime >= 1) {
 				vec3_t* start = targetList[0]->getPosOld();
 				vec3_t* end = targetList[0]->getPos();
@@ -341,32 +348,5 @@ void Killaura::onLevelRender() {
 
 				DrawUtils::drawLinestrip3d(posList);
 			}
-		} else {
-			for (auto& i : targetList) {
-				if (i->damageTime >= 1) {
-					DrawUtils::setColor(1, 0, 0, 1);
-					vec3_t* start = i->getPosOld();
-					vec3_t* end = i->getPos();
-
-					auto te = DrawUtils::getLerpTime();
-					vec3_t pos = start->lerp(end, te);
-
-					auto yPos = pos.y;
-					yPos -= 1.62f;
-					yPos += coolAnim;
-
-					std::vector<vec3_t> posList;
-					posList.reserve(56);
-					for (auto& perm : permutations) {
-						vec3_t curPos(pos.x, yPos, pos.z);
-						posList.push_back(curPos.add(perm));
-					}
-
-					DrawUtils::drawLinestrip3d(posList);
-				} else {
-					DrawUtils::setColor(1, 1, 1, 1);
-				}
-			}
-		}
 	}
 }
