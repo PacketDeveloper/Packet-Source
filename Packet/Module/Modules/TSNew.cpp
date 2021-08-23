@@ -1,12 +1,12 @@
 #include "TSNew.h"
 
 TSNew::TSNew() : IModule(0, Category::MOVEMENT, "Strafe around the target") {
-	registerFloatSetting("Radius", &StrafeDistance, StrafeDistance, 1.f, 10.f);
-	registerBoolSetting("On Jump Key", &onKey, onKey);
 	registerBoolSetting("Controllable", &control, control);
 	registerBoolSetting("DrawCircle", &circleRender, circleRender);
-	registerBoolSetting("Stop On Edges", &avoidvoid, avoidvoid);
-	//registerFloatSetting("Speed", &speedMod, speedMod, 0.2f, 5.f);
+	registerBoolSetting("EdgeCheck", &avoidvoid, avoidvoid);
+	registerBoolSetting("OnKey", &onKey, onKey);
+	registerFloatSetting("Radius", &StrafeDistance, StrafeDistance, 1.f, 10.f);
+	//registerFloatSetting("Speed", &speedMod, speedMod, 0.2f, 5.f); // pls no
 }
 
 TSNew::~TSNew() {
