@@ -1,4 +1,5 @@
 #include "Nbt.h"
+
 #include "../../../SDK/Tag.h"
 #include "../../../Utils/Utils.h"
 
@@ -17,10 +18,9 @@ void Nbt::onTick(C_GameMode* gm) {
 		return;
 	}
 	PointingStruct* pointingStruct = g_Data.getClientInstance()->getPointerStruct();
-	
+
 	if (GameData::isRightClickDown()) {  // && Utils::getClipboardText() != this->lastCopy) {
 		if (pointingStruct->hasEntity()) {
-
 			if (!(g_Data.getRakNetInstance()->serverIp.getTextLength() < 1))
 				return;
 			std::unique_ptr<CompoundTag> tag = std::make_unique<CompoundTag>();

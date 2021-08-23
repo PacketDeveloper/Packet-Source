@@ -271,7 +271,8 @@ void Hooks::Actor_baseTick(C_Entity* _this) {
 __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oSetup = g_Hooks.UIScene_setupAndRenderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
-	g_Hooks.shouldRender = uiscene->isPlayScreen();
+	g_Hooks.shouldRender = false;
+	//g_Hooks.shouldRender = uiscene->isPlayScreen();
 
 	return oSetup(uiscene, screencontext);
 }
@@ -279,7 +280,8 @@ __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext)
 __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oRender = g_Hooks.UIScene_renderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
-	g_Hooks.shouldRender = uiscene->isPlayScreen();
+	//g_Hooks.shouldRender = uiscene->isPlayScreen();
+	g_Hooks.shouldRender = false;
 
 	bool alwaysRender = moduleMgr->isInitialized() && moduleMgr->getModule<ArrayList>()->alwaysShow;
 
@@ -291,7 +293,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	}
 
 	if (!g_Hooks.shouldRender) {
-		g_Hooks.shouldRender = alwaysRender || (strcmp(alloc.getText(), "start_screen") == 0 || (alloc.getTextLength() >= 11 && strncmp(alloc.getText(), "play_screen", 11)) == 0);
+		g_Hooks.shouldRender = (strcmp(alloc.getText(), "start_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0);
 	}
 	alloc.resetWithoutDelete();
 
@@ -815,8 +817,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					float textSize = hudMod->scale;
 					float textPadding = 0.6f * textSize;
 					float textHeight = 10.0f * textSize;
-					float smoothness = 2;
-
+					float smoothness = 3;
+					
 					struct IModuleContainer {
 						// Struct used to Sort IModules in a std::set
 						std::shared_ptr<IModule> backingModule;
@@ -1231,6 +1233,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		auto notifications = moduleMgr->getModule<Notifications>();
 		auto hudMod = moduleMgr->getModule<HudModule>();
 		auto box = g_Data.getFreshInfoBox();
+		float epicMathHack = 2;
 		if (box) {
 			box->fade();
 			if (box->fadeTarget == 1 && box->closeTimer <= 0 && box->closeTimer > -1)
@@ -1343,7 +1346,8 @@ float Hooks::Dimension_getSunIntensity(__int64 a1, float a2, vec3_t* a3, float a
 void Hooks::ChestBlockActor_tick(C_ChestBlockActor* _this, void* a) {
 	static auto oTick = g_Hooks.ChestBlockActor_tickHook->GetFastcall<void, C_ChestBlockActor*, void*>();
 	oTick(_this, a);
-	if (_this != nullptr)
+	static auto* chestEspMod = moduleMgr->getModule<ChestESP>();
+	if (_this != nullptr && chestEspMod->isEnabled())
 		GameData::addChestToList(_this);
 }
 

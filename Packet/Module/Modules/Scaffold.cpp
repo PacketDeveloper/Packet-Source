@@ -184,6 +184,26 @@ void Scaffold::onTick(C_GameMode* gm) {
 }
 
 void Scaffold::onMove(C_MoveInputHandler* input) {
+	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
+	auto player = g_Data.getLocalPlayer();
+	if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
+		if (speed > 0.05f) {
+			player->bodyYaw = player->yaw - 200;
+			if (input->forward) {
+				forward = true;
+			} else {
+				forward = false;
+			}
+			if (input->backward) {
+				backwards = true;
+			} else {
+				backwards = false;
+			}
+		} else {
+			forward = false;
+			backwards = false;
+		}
+	}
 }
 
 bool Scaffold::tryScaffold(vec3_t blockBelow) {
@@ -321,6 +341,7 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {  // Tower
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	float speedY = g_Data.getLocalPlayer()->velocity.magnitudexy();
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
+	auto player = g_Data.getLocalPlayer();
 	if (towerMode)
 		if (g_Data.getLocalPlayer() == nullptr)
 			return;
@@ -351,15 +372,12 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {  // Tower
 			}
 		}
 	}
-	if (rotations) {
-		C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());  // Rotations (kinda)
-		auto player = g_Data.getLocalPlayer();
-		if (speed > 0.05f) {
-			player->pitch = blockBelow.x * blockBelow.y;
-
-			player->bodyYaw = player->yaw - blockBelow.x;
-		} else if (GameData::isKeyDown(*input->spaceBarKey)) {
-			player->bodyYaw = player->yaw - blockBelow.x;
+	if (rotations && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
+		if (forward) {
+			player->pitch += 132;
+		} else if (backwards) {
+			player->bodyYaw = -360;
+			player->viewAngles;
 		}
 	}
 }

@@ -5,7 +5,6 @@ class HudModule : public IModule {
 public:
 	SettingEnum color = this;
 
-	float speed = 0.f;
 	float scale = 1.f;
 	bool tabgui = false;
 	bool arraylist = true;

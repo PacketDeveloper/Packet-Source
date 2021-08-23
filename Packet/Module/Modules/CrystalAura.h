@@ -6,7 +6,7 @@
 class CrystalAura : public IModule {
 private:
 	int prevSlot;
-	int delay = 0;
+	int delay = -50;
 	int eRange = 3;
 	bool autoplace = true;
 	bool pEnhanced = false;

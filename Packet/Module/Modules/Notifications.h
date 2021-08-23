@@ -9,7 +9,7 @@ public:
 	bool modInfo = false;
 	bool enable = true;
 	bool disable = true;
-	float opacity = 0.2f;
+	float opacity = 0.65f;
 
 	Notifications();
 	~Notifications();

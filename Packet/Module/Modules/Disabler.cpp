@@ -53,7 +53,7 @@ void Disabler::onTick(C_GameMode* gm) {
 			speed->setEnabled(true);
 		} else {
 			speed->setEnabled(false);
-			if (player->damageTime >= 1 && counter == 5) {
+			if (player->damageTime >= 1 && counter == 6) {
 				setEnabled(false);
 			}
 		}

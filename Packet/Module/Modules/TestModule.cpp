@@ -127,7 +127,6 @@ void TestModule::onTick(C_GameMode* gm) {
 			//gm->player->onGround = true;
 			//gm->player->velocity.y = 1;
 		//}
-
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();

@@ -8,14 +8,12 @@ HiveFly::HiveFly() : IModule(0, Category::MOVEMENT, "FlightModule") {
 	registerBoolSetting("DmgBoost", &dmgBoost, dmgBoost);
 	//registerBoolSetting("Boost", &this->boost, this->boost);
 	registerBoolSetting("Strafe", &strafeMode, strafeMode);
-	registerFloatSetting("Value", &speed2, speed2, -0.02f, 0.f);
-	registerFloatSetting("Speed", &speedA, speedA, 0.10f, 1.f);
+	registerFloatSetting("Value", &value, value, -0.02f, 0.001f);
+	registerFloatSetting("Speed", &speed, speed, 0.10f, 1.f);
 }
 
 HiveFly::~HiveFly() {
 }
-
-// hive patched fly :(
 
 
 const char* HiveFly::getModuleName() {
@@ -26,13 +24,16 @@ void HiveFly::onEnable() {
 	auto scaffold = moduleMgr->getModule<Scaffold>();
 	auto speed = moduleMgr->getModule<Speed>();
 	if (speed->isEnabled()) {
+		speed->setEnabled(false);
+		auto speedBoxo = g_Data.addInfoBox("HiveFly: Disabled speed to prevent flags/errors");
+		speedBoxo->closeTimer = 6;
 		speedWasEnabled = true;
 	}
 	if (scaffold->isEnabled()) {
+		scaffold->setEnabled(false);
+		auto boxo = g_Data.addInfoBox("HiveFly: Disabled scaffold to prevent flags/errors");
+		boxo->closeTimer = 6;
 		scfWasEnabled = true;
-	}
-	if (boost) {
-		counter2 = 1;
 	}
 	auto player = g_Data.getLocalPlayer();
 	if (dmgBoost)
@@ -40,17 +41,14 @@ void HiveFly::onEnable() {
 }
 
 void HiveFly::onTick(C_GameMode* gm) {
-	if (boost) {
-		if (counter2 == 1000) {
-			//g_Data.getGuiData()->displayClientMessageF("[R] Reset counter");
-			counter2 = 1;
-		} else {
-			counter2++;
-		}
-	}
+	auto scaffoldMod = moduleMgr->getModule<Scaffold>();
+	auto bhopMod = moduleMgr->getModule<Speed>();
+	scaffoldMod->setEnabled(false);
+	bhopMod->setEnabled(false);
 	auto player = g_Data.getLocalPlayer();
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-	if (counter == 6) {
+	if (counter == 3) {
+		*g_Data.getClientInstance()->minecraft->timer = 1.f;
 		counter = 1;
 	} else {
 		counter++;
@@ -66,33 +64,20 @@ void HiveFly::onTick(C_GameMode* gm) {
 	}
 	float yaw = player->yaw;
 	if (counter >= 0) {
-		gm->player->velocity = vec3_t(0, 0, 0);
+		gm->player->velocity = vec3_t(0.f, -0.001f, 0.f);
 	}
-	if (counter >= 5) {
+	/*if (counter >= 5) {
 		gm->player->velocity.y += 0.1;
 	}
 	if (counter == 6) {
 		gm->player->velocity.y -= 0.5545697;
 		*g_Data.getClientInstance()->minecraft->timer = 9.f;
 
-	}
-	if (counter == 1) {
-		player->velocity.y = speed2;
-		if (boost)
-			if (boost) {
-				auto dmgMod = moduleMgr->getModule<TestModule>();
-				if (dmgMod->isEnabled()) {
-					dmgMod->setEnabled(false);
-				}
-			}
-		auto scaffoldMod = moduleMgr->getModule<Scaffold>();  // Disable
-		if (scaffoldMod->isEnabled()) {
-			scaffoldMod->setEnabled(false);
-		}
-		auto bhopMod = moduleMgr->getModule<Speed>();  // Disable
-		if (bhopMod->isEnabled()) {
-			bhopMod->setEnabled(false);
-		}
+	}*/
+	if (counter == 2) {
+		player->velocity.y = value;
+	} else if (counter == 3) {
+		*g_Data.getClientInstance()->minecraft->timer = 15.f;
 	}
 }
 
@@ -139,32 +124,21 @@ void HiveFly::onMove(C_MoveInputHandler* input) {
 	if (input->right) {
 		yaw += 90.f;
 		if (!input->isJumping) {
-			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->isJumping && counter == 3) {
-			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->isSneakDown && counter == 3) {
-			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->forward)
 			yaw -= 45.f;
 		else if (input->backward)
 			yaw += 45.f;
 		if (!input->isJumping) {
-			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
-		}
-		if (input->isJumping && counter == 3) {
-			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
-		}
-		if (input->isSneakDown && counter == 3) {
-			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 	}
 	if (input->left) {
 		yaw -= 90.f;
 		if (!input->isJumping) {
-			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		}
 		if (input->isJumping && counter == 3) {
 			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
@@ -182,9 +156,9 @@ void HiveFly::onMove(C_MoveInputHandler* input) {
 	if (pressed) {
 		float calcYaw = (yaw + 90.f) * (PI / 180.f);
 		vec3_t moveVec;
-		moveVec.x = cos(calcYaw) * speedA;  // Value
+		moveVec.x = cos(calcYaw) * speed;  // Value
 		moveVec.y = player->velocity.y;
-		moveVec.z = sin(calcYaw) * speedA;  // Value
+		moveVec.z = sin(calcYaw) * speed;  // Value
 		if (pressed) player->lerpMotion(moveVec);
 	}
 }

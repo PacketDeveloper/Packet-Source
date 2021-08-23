@@ -29,7 +29,7 @@ public:
 	bool showTooltips = false;
 	bool rainbowColor = false;
 	bool animations = true;
-	float opacity = 0.3f;
+	float opacity = 0.8f;
 	int bgCounter = 1;
 	float bgOpacity = 0.f;
 	bool enabled = true;

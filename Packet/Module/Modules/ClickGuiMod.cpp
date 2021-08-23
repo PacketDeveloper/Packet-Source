@@ -31,21 +31,21 @@ void ClickGuiMod::onTick(C_GameMode* gm) {
 		bgCounter++;
 	}
 	if (bgCounter == 2) {
-		bgOpacity = 0.1f;
+		bgOpacity = 0.3f;
 	} else if (bgCounter == 3) {
-		bgOpacity = 0.115f;
+		bgOpacity = 0.315f;
 	} else if (bgCounter == 4) {
-		bgOpacity = 0.12f;
+		bgOpacity = 0.32f;
 	} else if (bgCounter == 5) {
-		bgOpacity = 0.13f;
+		bgOpacity = 0.33f;
 	} else if (bgCounter == 6) {
-		bgOpacity = 0.14f;
+		bgOpacity = 0.34f;
 	} else if (bgCounter == 7) {
-		bgOpacity = 0.15f;
+		bgOpacity = 0.35f;
 	} else if (bgCounter == 8) {
-		bgOpacity = 0.16f;
+		bgOpacity = 0.36f;
 	} else if (bgCounter == 9) {
-		bgOpacity = 0.17f;
+		bgOpacity = 0.37f;
 	}
 
 

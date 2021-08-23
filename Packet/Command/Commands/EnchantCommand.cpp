@@ -46,7 +46,6 @@ EnchantCommand::~EnchantCommand() {
 bool EnchantCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->size() > 1);
 
-	bool dupe = false;
 	int enchantId = 0;
 	int enchantLevel = 32767;
 	bool isAuto = true;
@@ -156,9 +155,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 
 			//g_Data.getLocalPlayer()->sendInventory();
 			clientMessageF("%sEnchant successful!", GREEN);
-			dupe = true;
 		} else
-			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
+			clientMessageF("%sEnchantment failed", RED);
 
 		free(EnchantData);
 	}

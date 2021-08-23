@@ -17,10 +17,10 @@ HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
 	color.addEntry("Blue", 9);
 	color.addEntry("Purple", 11);
 	color.addEntry("Pink", 12);
+	registerBoolSetting("Positions", &this->coordinates, this->coordinates);
 	registerBoolSetting("Keystrokes", &this->keystrokes, this->keystrokes);
 	registerBoolSetting("ArmorHUD", &this->displayArmor, this->displayArmor);
 	registerBoolSetting("FPS", &this->fps, this->fps);
-	//registerBoolSetting("coords", &this->coordinates, this->coordinates);
 	//registerBoolSetting("BPS", &this->bps, this->bps);
 	//registerBoolSetting("Always show", &this->alwaysShow, this->alwaysShow);
 }
@@ -46,19 +46,6 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	float startY = tabgui ? 6 * f : 0.f;
 	if (tabgui && scriptMgr.getNumEnabledScripts() > 0)
 		startY += f;
-
-/*{  // FPS
-		if (g_Data.canUseMoveKeys()) {
-			if (!(g_Data.getLocalPlayer() == nullptr || !this->fps)) {
-				std::string fpsText = "FPS: " + std::to_string(g_Data.getFPS());
-				float x = windowSize.x / 30.f + -16.f;  // dont question this
-				float y = windowSize.y - 12.1f;         // 12.1 so it is exactly 16 pixels away from the edge lol
-				DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), scale);
-
-				startY *= f;
-			}
-		}
-	}*/
 
 	{  // CPS
 		if (!(g_Data.getLocalPlayer() == nullptr || !this->cps)) {

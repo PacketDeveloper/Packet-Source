@@ -27,6 +27,10 @@ public:
 	bool lockY = false;
 	bool speedLockY = false;
 
+	// stupid
+	bool forward = false;
+	bool backwards = false;
+
 	Scaffold();
 	~Scaffold();
 

@@ -8,7 +8,7 @@ public:
 
 	bool arraylist = true;
 	bool arraylistBackground = true;
-	float bgOp = 0.2f;
+	float bgOp = 0.65f;
 	bool clickToggle = false;
 	bool keybinds = false;
 	bool alwaysShow = false;

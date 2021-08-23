@@ -12,8 +12,8 @@ public:
 	int counter = 1;
 	int testTimer = 1;
 	int counter2 = 1;
-	float speedA = 0.30183640122413635;    // Speed
-	float speed2 = -0.004993199370801449;  // Value
+	float speed = 0.30183640122413635;
+	float value = -0.004993199370801449;  // Value
 	HiveFly();
 	~HiveFly();
 

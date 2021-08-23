@@ -42,11 +42,11 @@ void CommandMgr::initCommands() {
 	//commandList.push_back(new DamageCommand());
 	commandList.push_back(new ConfigCommand());
 	commandList.push_back(new SetprefixCommand());
-	//commandList.push_back(new NbtCommand());
+	commandList.push_back(new NbtCommand());
 	//mmandList.push_back(new WaypointCommand());
 	commandList.push_back(new TopCommand());
 
-	//commandList.push_back(new CommandBlockExploitCommand());
+	commandList.push_back(new CommandBlockExploitCommand());
 	commandList.push_back(new NameSpoofCommand());
 	commandList.push_back(new ExecuteCommand());
 	//commandList.push_back(new ScriptCommand());

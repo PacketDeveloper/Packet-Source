@@ -177,10 +177,9 @@ void Flight::onTick(C_GameMode* gm) {
 			g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 			C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());  // Rotations (kinda)
 			if (speed > 0.05f) {
-				p.pitch = (float)(rand() % 1);
-				p.yaw = (float)(rand() % -1);
-				gm->player->pitch = (float)(rand() % -154);
-				gm->player->bodyYaw = (float)(rand() % -1);
+				player->pitch += 132;
+				player->bodyYaw = -360;
+				player->viewAngles;
 			}
 			if (g_Data.getLocalPlayer() == nullptr)
 				return;
