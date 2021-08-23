@@ -4,7 +4,7 @@ Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entit
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Multi", 0);
 	mode.addEntry("Switch", 1);//bolz
-	registerBoolSetting("ShowTarget", &render, render);
+	registerBoolSetting("TargetRender", &render, render);
 	registerBoolSetting("Rotations", &rot, rot);
 	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
 	registerBoolSetting("MobAura", &isMobAura, isMobAura);
@@ -94,10 +94,15 @@ struct CompareTargetEnArray {
 
 void Killaura::onTick(C_GameMode* gm) {
 	if (silent && rot) {
-		auto KAbox = g_Data.addInfoBox("Killaura: Disabled to prevent errors");
+		auto KAbox = g_Data.addInfoBox("Killaura: Disabled to prevent crash");
 		KAbox->closeTimer = 12;
 		silent = false;
 	}
+
+	if (renderStart >= 1)
+		renderStart++;
+	if (renderStart >= 5)
+		renderStart = 5;
 
 	//Loop through all our players and retrieve their information
 	targetList.clear();
@@ -162,6 +167,8 @@ void Killaura::onEnable() {
 	targethud = 0;
 	if (g_Data.getLocalPlayer() == nullptr)
 		setEnabled(false);
+	if (render)
+	renderStart++;
 	//Minecraft.Windows.exe + 1D4C043;
 	//Minecraft.Windows.exe + BFADDA;
 
@@ -183,50 +190,47 @@ void Killaura::onEnable() {
 }
 
 void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
-	if (render) {
-		if (targetList.size() == 1) {
-			if (targethud > 1 && g_Data.canUseMoveKeys()) {
-				for (auto& i : targetList) {
-					C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
-					vec2_t windowSize = dat->windowSize;
-					std::string text = targetList[0]->getNameTag()->getText();
-					text = Utils::sanitize(text);
-					std::string realname = "Name: " + text;
-					int dist2 = (int)(*targetList[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
-					auto dist = std::to_string(dist2);
-					auto distancestring = std::string("Distance: " + dist);
-					vec4_t duotagteam = (vec4_t(windowSize.x / 1.5f - (windowSize.x / 7),
-												windowSize.y / 1.61f - (windowSize.y / 13),
-												windowSize.x / 1.7f + (windowSize.x / 9 + targetList[0]->getNameTag()->textLength),
-												windowSize.y / 2 - windowSize.y / 8 + windowSize.y / 4));
-					DrawUtils::fillRectangle(vec4_t(duotagteam),
-											 MC_Color(0.05f, 0.05f, 0.05f), 0.35f);
-					DrawUtils::drawRectangle(vec4_t(duotagteam),
-											 MC_Color(1.f, 1.f, 1.f), 1.f);
+	if (targetList.size() == 1) {
+		if (targethud > 1 && g_Data.canUseMoveKeys()) {
+			for (auto& i : targetList) {
+				C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
+				vec2_t windowSize = dat->windowSize;
+				std::string text = targetList[0]->getNameTag()->getText();
+				text = Utils::sanitize(text);
+				std::string realname = "Name: " + text;
+				int dist2 = (int)(*targetList[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
+				auto dist = std::to_string(dist2);
+				auto distancestring = std::string("Distance: " + dist);
+				vec4_t duotagteam = (vec4_t(windowSize.x / 1.5f - (windowSize.x / 7),
+											windowSize.y / 1.61f - (windowSize.y / 13),
+											windowSize.x / 1.7f + (windowSize.x / 9 + targetList[0]->getNameTag()->textLength),
+											windowSize.y / 2 - windowSize.y / 8 + windowSize.y / 4));
+				DrawUtils::fillRectangle(vec4_t(duotagteam),
+										 MC_Color(0.05f, 0.05f, 0.05f), 0.35f);
+				DrawUtils::drawRectangle(vec4_t(duotagteam),
+										 MC_Color(1.f, 1.f, 1.f), 1.f);
 
-					DrawUtils::drawText(vec2_t(windowSize.x / 1.5f - windowSize.x / 7.25f,
-											   windowSize.y / 2 - windowSize.y / 5.f + windowSize.y / 4),
-										&realname,
-										MC_Color(1.f, 1.f, 1.f), 1.f);
+				DrawUtils::drawText(vec2_t(windowSize.x / 1.5f - windowSize.x / 7.25f,
+										   windowSize.y / 2 - windowSize.y / 5.f + windowSize.y / 4),
+									&realname,
+									MC_Color(1.f, 1.f, 1.f), 1.f);
 
-					DrawUtils::drawText(vec2_t(windowSize.x / 1.5f - windowSize.x / 7.25f,
-											   windowSize.y / 2 - windowSize.y / 5.8f + windowSize.y / 4),
-										&distancestring,
-										MC_Color(1.f, 1.f, 1.f), 1.f);
-					DrawUtils::flush();
-					vec2_t textPos;
-					vec4_t rectPos;
-					auto* player = reinterpret_cast<C_Player*>(targetList[0]);
-					float x = windowSize.x / 1.5f - windowSize.x / 7.1f;
-					float y = windowSize.y / 2 - windowSize.y / 6.4f + windowSize.y / 4;
-					float scale = 3 * 0.26f;
-					float spacing = scale + 15.f + 2;
+				DrawUtils::drawText(vec2_t(windowSize.x / 1.5f - windowSize.x / 7.25f,
+										   windowSize.y / 2 - windowSize.y / 5.8f + windowSize.y / 4),
+									&distancestring,
+									MC_Color(1.f, 1.f, 1.f), 1.f);
+				DrawUtils::flush();
+				vec2_t textPos;
+				vec4_t rectPos;
+				auto* player = reinterpret_cast<C_Player*>(targetList[0]);
+				float x = windowSize.x / 1.5f - windowSize.x / 7.1f;
+				float y = windowSize.y / 2 - windowSize.y / 6.4f + windowSize.y / 4;
+				float scale = 3 * 0.26f;
+				float spacing = scale + 15.f + 2;
 				}
 			}
-		}
 	}
 }
-
 vec2_t getAngles6(vec3_t PlayerPosition, vec3_t EntityPosition) {
 	vec2_t Angles;
 	float dX = PlayerPosition.x - EntityPosition.x;
@@ -300,6 +304,7 @@ void Killaura::onSendPacket(C_Packet* packet) {
 
 void Killaura::onDisable() {
 	targethud = 0;
+	renderStart = 0;
 	if (offset && offset2) {
 		*offset -= 8;
 		*offset2 -= 8;
@@ -313,7 +318,7 @@ float t = 0;
 void Killaura::onLevelRender() {
 	if (distanceCheck)
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-	DrawUtils::setColor(1, 1, 1, 1);
+
 	if (render && !targetList.empty()) {
 		t++;
 
@@ -323,7 +328,6 @@ void Killaura::onLevelRender() {
 
 		const float coolAnim = 0.9f + 0.9f * sin((t / 60) * PI * 2);
 
-		if (!mode.getSelectedValue() == 0) {
 			if (targetList[0]->damageTime >= 1) {
 				vec3_t* start = targetList[0]->getPosOld();
 				vec3_t* end = targetList[0]->getPos();
@@ -344,29 +348,5 @@ void Killaura::onLevelRender() {
 
 				DrawUtils::drawLinestrip3d(posList);
 			}
-		} else {
-			for (auto& i : targetList) {
-				if (i->damageTime >= 1) {
-					vec3_t* start = i->getPosOld();
-					vec3_t* end = i->getPos();
-
-					auto te = DrawUtils::getLerpTime();
-					vec3_t pos = start->lerp(end, te);
-
-					auto yPos = pos.y;
-					yPos -= 1.62f;
-					yPos += coolAnim;
-
-					std::vector<vec3_t> posList;
-					posList.reserve(56);
-					for (auto& perm : permutations) {
-						vec3_t curPos(pos.x, yPos, pos.z);
-						posList.push_back(curPos.add(perm));
-					}
-
-					DrawUtils::drawLinestrip3d(posList);
-				}
-			}
-		}
 	}
 }
