@@ -9,6 +9,7 @@ private:
 	int up = 4;
 	int down = 4;
 	bool veinMiner = false;
+	bool ore = false;
 	bool autodestroy = false;
 
 public:

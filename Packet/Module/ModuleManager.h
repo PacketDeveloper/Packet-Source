@@ -21,7 +21,7 @@
 #include "Modules/TPAura.h"
 #include "Modules/Disabler.h"
 #include "Modules/Speed.h"
-//#include "Modules/TargetStrafeOld.h"
+#include "Modules/TargetStrafeOld.h"
 #include "Modules/TargetStrafe.h"
 #include "Modules/Reach.h"
 #include "Modules/ESP.h"
