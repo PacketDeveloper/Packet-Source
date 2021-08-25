@@ -25,13 +25,13 @@ void HiveFly::onEnable() {
 	auto speed = moduleMgr->getModule<Speed>();
 	if (speed->isEnabled()) {
 		speed->setEnabled(false);
-		auto speedBoxo = g_Data.addInfoBox("HiveFly: Disabled speed to prevent flags/errors");
-		speedBoxo->closeTimer = 6;
+		auto boxo = g_Data.addInfoBox("HiveFly: Disabled speed");
+		boxo->closeTimer = 6;
 		speedWasEnabled = true;
 	}
 	if (scaffold->isEnabled()) {
 		scaffold->setEnabled(false);
-		auto boxo = g_Data.addInfoBox("HiveFly: Disabled scaffold to prevent flags/errors");
+		auto boxo = g_Data.addInfoBox("HiveFly: Disabled scaffold");
 		boxo->closeTimer = 6;
 		scfWasEnabled = true;
 	}
@@ -172,10 +172,14 @@ void HiveFly::onDisable() {
 	if (speedWasEnabled == true) {
 		speed->setEnabled(true);
 		speedWasEnabled = false;
+		auto boxo = g_Data.addInfoBox("HiveFly: Re-Enabled speed");
+		boxo->closeTimer = 6;
 	}
 	if (scfWasEnabled == true) {
 		scaffold->setEnabled(true);
 		scfWasEnabled = false;
+		auto boxo = g_Data.addInfoBox("HiveFly: Re-Enabled scaffold");
+		boxo->closeTimer = 6;
 	}
 	if (!player->onGround) {
 		player->velocity.x = 0.f;
