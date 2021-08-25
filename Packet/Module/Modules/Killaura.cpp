@@ -4,7 +4,7 @@ Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entit
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Multi", 0);
 	mode.addEntry("Switch", 1);//bolz
-	registerBoolSetting("TargetRender", &render, render);
+	registerBoolSetting("ShowTarget", &render, render);
 	registerBoolSetting("Rotations", &rot, rot);
 	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
 	registerBoolSetting("MobAura", &isMobAura, isMobAura);
@@ -192,6 +192,8 @@ void Killaura::onEnable() {
 }
 
 void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
+if (render) {
+// will recode this shit later
 	if (targetList.size() == 1) {
 		if (targethud > 1 && g_Data.canUseMoveKeys()) {
 			for (auto& i : targetList) {
@@ -231,6 +233,7 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 				float spacing = scale + 15.f + 2;
 				}
 			}
+		}
 	}
 }
 vec2_t getAngles6(vec3_t PlayerPosition, vec3_t EntityPosition) {
@@ -277,7 +280,6 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 					rotation->setRot(angle);
 
 					// Head
-					//player->pitch = (float)(rand() % -154);
 					rotation->yawUnused1 = angle.y;
 					rotation->pitch = angle.x;
 					rotation->yaw2 = angle.y;
