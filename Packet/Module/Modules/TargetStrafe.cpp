@@ -6,7 +6,7 @@ TargetStrafe::TargetStrafe() : IModule(0, Category::MOVEMENT, "Strafe around the
 	registerBoolSetting("EdgeCheck", &avoidvoid, avoidvoid);
 	registerBoolSetting("OnKey", &onKey, onKey);
 	registerFloatSetting("Radius", &StrafeDistance, StrafeDistance, 1, 5);
-	registerFloatSetting("Speed", &speedMod, speedMod, 0.2, 1); // pls no
+	registerFloatSetting("Speed", &speedMod, speedMod, 0.2, 1); // might remove eventually or use if controllable disabled
 }
 
 TargetStrafe::~TargetStrafe() {
