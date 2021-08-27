@@ -28,6 +28,7 @@
 #include "Modules/Aimbot.h"
 #include "Modules/ChestESP.h"
 #include "Modules/BlockESP.h"
+#include "Modules/BlockOutline.h"
 #include "Modules/Velocity.h"
 #include "Modules/Step.h"
 #include "Modules/Flight.h"

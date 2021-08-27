@@ -292,6 +292,7 @@
     <ClCompile Include="Packet\Module\Modules\AutoClicker.cpp" />
     <ClCompile Include="Packet\Module\Modules\BehindAura.cpp" />
     <ClCompile Include="Packet\Module\Modules\BlockESP.cpp" />
+    <ClCompile Include="Packet\Module\Modules\BlockOutline.cpp" />
     <ClCompile Include="Packet\Module\Modules\CustomSky.cpp" />
     <ClCompile Include="Packet\Module\Modules\EntityControl.cpp" />
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
@@ -467,6 +468,7 @@
     <ClInclude Include="Packet\Module\Modules\AutoClicker.h" />
     <ClInclude Include="Packet\Module\Modules\BehindAura.h" />
     <ClInclude Include="Packet\Module\Modules\BlockESP.h" />
+    <ClInclude Include="Packet\Module\Modules\BlockOutline.h" />
     <ClInclude Include="Packet\Module\Modules\CustomSky.h" />
     <ClInclude Include="Packet\Module\Modules\EntityControl.h" />
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />

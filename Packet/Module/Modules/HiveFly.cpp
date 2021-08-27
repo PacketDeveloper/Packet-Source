@@ -4,12 +4,13 @@
 #include "TestModule.h"
 
 HiveFly::HiveFly() : IModule(0, Category::MOVEMENT, "FlightModule") {
+#ifdef _DEBUG
 	registerBoolSetting("TimerBoost", &timerBoost, timerBoost);
-	registerBoolSetting("DmgBoost", &dmgBoost, dmgBoost);
-	//registerBoolSetting("Boost", &this->boost, this->boost);
+	registerBoolSetting("Boost", &dmgBoost, dmgBoost);
 	registerBoolSetting("Strafe", &strafeMode, strafeMode);
 	registerFloatSetting("Value", &value, value, -0.02f, 0.001f);
 	registerFloatSetting("Speed", &speed, speed, 0.10f, 1.f);
+#endif
 }
 
 HiveFly::~HiveFly() {
@@ -25,13 +26,13 @@ void HiveFly::onEnable() {
 	auto speed = moduleMgr->getModule<Speed>();
 	if (speed->isEnabled()) {
 		speed->setEnabled(false);
-		auto speedBoxo = g_Data.addInfoBox("HiveFly: Disabled speed to prevent flags/errors");
-		speedBoxo->closeTimer = 6;
+		auto boxo = g_Data.addInfoBox("HiveFly: Disabled speed");
+		boxo->closeTimer = 6;
 		speedWasEnabled = true;
 	}
 	if (scaffold->isEnabled()) {
 		scaffold->setEnabled(false);
-		auto boxo = g_Data.addInfoBox("HiveFly: Disabled scaffold to prevent flags/errors");
+		auto boxo = g_Data.addInfoBox("HiveFly: Disabled scaffold");
 		boxo->closeTimer = 6;
 		scfWasEnabled = true;
 	}
@@ -41,6 +42,7 @@ void HiveFly::onEnable() {
 }
 
 void HiveFly::onTick(C_GameMode* gm) {
+#ifdef _DEBUG
 	auto scaffoldMod = moduleMgr->getModule<Scaffold>();
 	auto bhopMod = moduleMgr->getModule<Speed>();
 	scaffoldMod->setEnabled(false);
@@ -79,9 +81,11 @@ void HiveFly::onTick(C_GameMode* gm) {
 	} else if (counter == 3) {
 		*g_Data.getClientInstance()->minecraft->timer = 15.f;
 	}
+#endif
 }
 
 void HiveFly::onMove(C_MoveInputHandler* input) {
+#ifdef _DEBUG
 	if (boost) {  // Boost Upwards
 		auto player = g_Data.getLocalPlayer();
 		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
@@ -161,6 +165,7 @@ void HiveFly::onMove(C_MoveInputHandler* input) {
 		moveVec.z = sin(calcYaw) * speed;  // Value
 		if (pressed) player->lerpMotion(moveVec);
 	}
+	#endif
 }
 
 void HiveFly::onDisable() {
@@ -172,10 +177,14 @@ void HiveFly::onDisable() {
 	if (speedWasEnabled == true) {
 		speed->setEnabled(true);
 		speedWasEnabled = false;
+		auto boxo = g_Data.addInfoBox("HiveFly: Re-Enabled speed");
+		boxo->closeTimer = 6;
 	}
 	if (scfWasEnabled == true) {
 		scaffold->setEnabled(true);
 		scfWasEnabled = false;
+		auto boxo = g_Data.addInfoBox("HiveFly: Re-Enabled scaffold");
+		boxo->closeTimer = 6;
 	}
 	if (!player->onGround) {
 		player->velocity.x = 0.f;

@@ -25,7 +25,7 @@ public:
 	int prevSlot = 0;
 
 	// Hive
-	int hiveC = 1;
+	int hiveC = 0;
 
 		C_MovePlayerPacket* jetpack = nullptr;
 		SettingEnum mode = this;

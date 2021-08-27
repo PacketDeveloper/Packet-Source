@@ -239,9 +239,11 @@ public:
 	C_LocalPlayer** getPtrLocalPlayer() {
 		return &localPlayer;
 	};
+
 	bool isInGame() {
 		return localPlayer != nullptr;
 	}
+
 	const SlimUtils::SlimModule* getModule() {
 		return gameModule;
 	};

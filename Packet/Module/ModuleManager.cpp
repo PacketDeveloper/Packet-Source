@@ -38,6 +38,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Aimbot()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ChestESP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new BlockESP()));
+		moduleList.push_back(std::shared_ptr<IModule>(new BlockOutline()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Velocity()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Step()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Flight()));

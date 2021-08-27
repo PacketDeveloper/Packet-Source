@@ -11,7 +11,7 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "yes") {
 	mode.addEntry("Teleport", 3);
 	mode.addEntry("Jetpack", 4);
 	mode.addEntry("AirJump", 5);
-	//mode.addEntry("Hive", 6);
+	mode.addEntry("Hive", 6);
 	//registerIntSetting("PlaceDelay", &placeDelay, placeDelay, 2, 20);
 	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
 	registerFloatSetting("value", &glideMod, glideMod, -0.15f, 0.00);
@@ -54,6 +54,9 @@ void Flight::onEnable() {
 		pos.y = 0.1f + pPos.y;
 		pos.z = 0.f + pPos.z;
 		g_Data.getLocalPlayer()->setPos(pos);
+	}
+	if (mode.getSelectedValue() == 6) {
+		hiveC = 0;
 	}
 }
 
@@ -225,6 +228,14 @@ void Flight::onTick(C_GameMode* gm) {
 		}
 	}
 	if (mode.getSelectedValue() == 6) {  // Hive
+		if (hiveC == 2) {
+			hiveC = 0;
+		}
+		if (hiveC == 1) { // shutup lmao
+			vec3_t pos = *g_Data.getLocalPlayer()->getPos();
+			gm->player->velocity = vec3_t(0, 0, 0);
+			if (input == nullptr) return;
+		}
 	}
 }
 
@@ -308,21 +319,26 @@ void Flight::onMove(C_MoveInputHandler* input) {
 		}
 	}
 	if (mode.getSelectedValue() == 6) {
-		auto player = g_Data.getLocalPlayer();
-		if (player == nullptr) return;
+		if (hiveC == 2) {
+			hiveC = 0;
+		} else {
+			hiveC++;
+		}
+		if (hiveC == 1) {
+			vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+			bool pressed = moveVec2d.magnitude() > 0.01f;
+			vec3_t pos = *g_Data.getLocalPlayer()->getPos();
 
-		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
-		bool pressed = moveVec2d.magnitude() > 0.01f;
-
-		float calcYaw = (player->yaw + 90) * (PI / 180);
-		vec3_t moveVec;
-		float c = cos(calcYaw);
-		float s = sin(calcYaw);
-		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
-		moveVec.x = moveVec2d.x * 0.1;
-		moveVec.y = player->velocity.y;
-		moveVec.z = moveVec2d.y * 0.1;
-		if (pressed) player->lerpMotion(moveVec);
+			float calcYaw = (player->yaw + 90) * (PI / 180);
+			vec3_t moveVec;
+			float c = cos(calcYaw);
+			float s = sin(calcYaw);
+			moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+			moveVec.x = moveVec2d.x * speed;
+			moveVec.y = -0.0f;
+			moveVec.z = moveVec2d.y * speed;
+			player->setPos(pos.add(vec3_t(moveVec.x, moveVec.y, moveVec.z)));
+		}
 	}
 }
 

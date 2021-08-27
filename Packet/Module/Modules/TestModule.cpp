@@ -26,6 +26,7 @@ const char* TestModule::getModuleName() {
 
 void TestModule::onEnable() {
 	auto blinkMod = moduleMgr->getModule<Blink>();
+	auto speed = moduleMgr->getModule<Speed>();
 	auto player = g_Data.getLocalPlayer();
 	if (g_Data.getLocalPlayer() == nullptr)
 		setEnabled(false);
@@ -78,6 +79,9 @@ void TestModule::onEnable() {
 			if (player->onGround)
 			player->jumpFromGround();
 		}
+		if (test) {
+			counter = 0;
+		}
 }
 
 bool TestModule::isFlashMode() {
@@ -127,6 +131,19 @@ void TestModule::onTick(C_GameMode* gm) {
 			//gm->player->onGround = true;
 			//gm->player->velocity.y = 1;
 		//}
+		auto flight = moduleMgr->getModule<Flight>();
+		auto speed = moduleMgr->getModule<Speed>();
+		if (counter == 7) {
+			//flight->setEnabled(false);
+			counter = 1;
+		} else {
+			counter++;
+		}
+		if (counter == 1) {
+			flight->setEnabled(true);
+		} else if (counter == 5) {
+			flight->setEnabled(false);
+		}
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
@@ -135,10 +152,6 @@ void TestModule::onTick(C_GameMode* gm) {
 				if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
 					gm->player->velocity = vec3_t(0, 0, 0);
 				}
-				if (GameData::isKeyDown(*input->spaceBarKey))
-					glideModEffective += 0.0f;
-				if (GameData::isKeyDown(*input->sneakKey))
-					glideModEffective -= 0.0f;
 			}
 			if (dmgMode) {
 				*g_Data.getClientInstance()->minecraft->timer = 20.f;
@@ -230,6 +243,7 @@ void TestModule::onMove(C_MoveInputHandler* input) {
 
 void TestModule::onDisable() {
 	auto blinkMod = moduleMgr->getModule<Blink>();
+	auto flight = moduleMgr->getModule<Flight>();
 	auto player = g_Data.getLocalPlayer();
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	if (istpMode) {
@@ -239,6 +253,9 @@ void TestModule::onDisable() {
 			}
 		}
 	if (test) {
+			auto speed = moduleMgr->getModule<Speed>();
+			flight->setEnabled(false);
+			speed->setEnabled(false);
 		//g_Data.getLocalPlayer()->setGameModeType(0);
 	}
 	if (blink)
@@ -276,7 +293,7 @@ void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			float x = windowSize.x / 30.f + -16.f;
 			float y = windowSize.y - 12.1f;
 
-			DrawUtils::drawText(vec2_t(x, y), &serverInfo, MC_Color(255, 255, 255), 1.f, true);
+			DrawUtils::drawText(vec2_t(x, y), &serverInfo, MC_Color(255, 255, 255), 1, 1, true);
 		}
 	}
 }
