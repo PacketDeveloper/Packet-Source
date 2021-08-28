@@ -368,6 +368,7 @@
     <ClCompile Include="Packet\Module\Modules\Spider.cpp" />
     <ClCompile Include="Packet\Module\Modules\Packet.cpp" />
     <ClCompile Include="Packet\Module\Modules\TargetStrafe.cpp" />
+    <ClCompile Include="Packet\Module\Modules\Switcher.cpp" />
     <ClCompile Include="Packet\Scripting\Functions\CommandManagerFunctions.cpp" />
     <ClCompile Include="Packet\Scripting\Functions\DrawFunctions.cpp" />
     <ClCompile Include="Packet\Scripting\Functions\EntityFunctions.cpp" />
@@ -544,6 +545,7 @@
     <ClInclude Include="Packet\Module\Modules\Spider.h" />
     <ClInclude Include="Packet\Module\Modules\Packet.h" />
     <ClInclude Include="Packet\Module\Modules\TargetStrafe.h" />
+    <ClInclude Include="Packet\Module\Modules\Switcher.h" />
     <ClInclude Include="Packet\Scripting\Functions\CommandManagerFunctions.h" />
     <ClInclude Include="Packet\Scripting\Functions\DrawFunctions.h" />
     <ClInclude Include="Packet\Scripting\Functions\EntityFunctions.h" />
