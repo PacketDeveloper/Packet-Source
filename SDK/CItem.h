@@ -201,8 +201,8 @@ class C_Item {
 public:
 	bool isTool(void) {
 		if (getAttackDamage() > 0) return true;           // Does Attack Damage
-		if (itemId == 261 || itemId == 262) return true;  // Bow
-		if (itemId == 259) return true;                   // Flint n Steel
+		if (itemId == 300 || itemId == 301) return true;  // Bow
+		if (itemId == 299) return true;                   // Flint and Steel
 		return false;
 	}
 	/*bool isFood(void) {
