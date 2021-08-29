@@ -280,11 +280,13 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 					rotation->setRot(angle);
 
 					// Head
-					rotation->yawUnused1 = angle.y;
-					rotation->pitch = angle.x;
-					rotation->yaw2 = angle.y;
-					rotation->yaw = prevyaw2;
-					rotation->pitch2 = angle.x;
+					for (int i = 0; i < 0; i++) {
+						rotation->yawUnused1 = angle.y;
+						rotation->pitch = angle.x;
+						rotation->yaw2 = angle.y;
+						rotation->yaw = prevyaw2;
+						rotation->pitch2 = angle.x;
+					}
 
 					// Body
 					rotation->bodyYaw = angle.y;
