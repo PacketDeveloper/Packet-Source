@@ -83,6 +83,7 @@
 #include "Modules/EntityControl.h"
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
+#include "Modules/Switcher.h"
 #include "Modules/NoSlow.h"
 // Broken
 #include "Modules/AutoArmor.h"

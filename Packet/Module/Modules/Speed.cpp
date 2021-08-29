@@ -41,7 +41,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 	auto player = g_Data.getLocalPlayer();
 	if (mode.getSelectedValue() == 0) {  // Vanilla
 		static bool velocity = false;
-		if (height >= 0.385) { // very stupid code
+		if (height >= 0.385) { // very stupid code - yes
 			if (player->onGround && pressed) player->jumpFromGround();
 			velocity = false;
 		} else {

@@ -86,6 +86,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new EntityControl()));
 		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Switcher()));
 		// Broken
 		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
