@@ -21,14 +21,14 @@ void BlockOutline::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
 		vec3_t block = pointing->block.toVec3t();
 		block = block.floor();
-		vec3_t cock = pointing->block.toVec3t();
-		cock = cock.floor();
-		cock.x += 1.f;
-		cock.y += 1.f;
-		cock.z += 1.f;
+		vec3_t outline = pointing->block.toVec3t();
+		outline = outline.floor();
+		outline.x += 1.f;
+		outline.y += 1.f;
+		outline.z += 1.f;
 		if (!rainbow) {
 			DrawUtils::setColor(red, green, blue, 1);
 		}
-		DrawUtils::drawBox(block, cock, width, 1);
+		DrawUtils::drawBox(block, outline, width, 1);
 	}
 }

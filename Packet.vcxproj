@@ -281,6 +281,7 @@
     <ClCompile Include="Packet\ImmediateGui.cpp" />
     <ClCompile Include="Packet\Loader.cpp" />
     <ClCompile Include="Packet\Menu\ClickGui.cpp" />
+    <ClCompile Include="Packet\Menu\HudEditor.cpp" />
     <ClCompile Include="Packet\Menu\TabGui.cpp" />
     <ClCompile Include="Packet\Module\ModuleManager.cpp" />
     <ClCompile Include="Packet\Module\Modules\Aimbot.cpp" />
@@ -296,6 +297,7 @@
     <ClCompile Include="Packet\Module\Modules\CustomSky.cpp" />
     <ClCompile Include="Packet\Module\Modules\EntityControl.cpp" />
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
+    <ClCompile Include="Packet\Module\Modules\HudEditorMod.cpp" />
     <ClCompile Include="Packet\Module\Modules\ItemTP.cpp" />
     <ClCompile Include="Packet\Module\Modules\Notifications.cpp" />
     <ClCompile Include="Packet\Module\Modules\Sneak.cpp" />
@@ -458,6 +460,7 @@
     <ClInclude Include="Packet\ImmediateGui.h" />
     <ClInclude Include="Packet\Loader.h" />
     <ClInclude Include="Packet\Menu\ClickGui.h" />
+    <ClInclude Include="Packet\Menu\HudEditor.h" />
     <ClInclude Include="Packet\Menu\TabGui.h" />
     <ClInclude Include="Packet\Module\ModuleManager.h" />
     <ClInclude Include="Packet\Module\Modules\Aimbot.h" />
@@ -473,6 +476,7 @@
     <ClInclude Include="Packet\Module\Modules\CustomSky.h" />
     <ClInclude Include="Packet\Module\Modules\EntityControl.h" />
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />
+    <ClInclude Include="Packet\Module\Modules\HudEditorMod.h" />
     <ClInclude Include="Packet\Module\Modules\ItemTP.h" />
     <ClInclude Include="Packet\Module\Modules\Notifications.h" />
     <ClInclude Include="Packet\Module\Modules\Sneak.h" />

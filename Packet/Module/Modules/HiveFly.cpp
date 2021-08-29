@@ -93,7 +93,6 @@ void HiveFly::onMove(C_MoveInputHandler* input) {
 		if (player->onGround)
 			player->jumpFromGround();
 	}
-	auto player = g_Data.getLocalPlayer();
 	float yaw = player->yaw;
 	if (player == nullptr) return;
 	if (player->isSneaking())

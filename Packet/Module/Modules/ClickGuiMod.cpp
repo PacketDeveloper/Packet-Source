@@ -6,7 +6,6 @@ ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui 
 	registerEnumSetting("Theme", &theme, 1);
 	theme.addEntry("Packet", 0);
 	theme.addEntry("Fadeaway", 1);
-	//registerBoolSetting("Rainbow", &this->rainbowColor, this->rainbowColor);
 	registerFloatSetting("Opacity", &this->opacity, this->opacity, 0.05f, 1.f);
 }
 
@@ -19,37 +18,13 @@ const char* ClickGuiMod::getModuleName() {
 
 void ClickGuiMod::onEnable() {
 	g_Data.getClientInstance()->releaseMouse();
-	bgOpacity = 0.1f;
-	bgCounter = 1;
 }
 
 void ClickGuiMod::onTick(C_GameMode* gm) {
-	// worst code but idc
-	if (bgCounter == INFINITY) {
-		bgCounter = 1;
-	} else {
-		bgCounter++;
-	}
-	if (bgCounter == 2) {
-		bgOpacity = 0.3f;
-	} else if (bgCounter == 3) {
-		bgOpacity = 0.315f;
-	} else if (bgCounter == 4) {
-		bgOpacity = 0.32f;
-	} else if (bgCounter == 5) {
-		bgOpacity = 0.33f;
-	} else if (bgCounter == 6) {
-		bgOpacity = 0.34f;
-	} else if (bgCounter == 7) {
-		bgOpacity = 0.35f;
-	} else if (bgCounter == 8) {
-		bgOpacity = 0.36f;
-	} else if (bgCounter == 9) {
-		bgOpacity = 0.37f;
-	}
+	// background fade-in thing
+	// ill make soon
 
-
-	// alot of color code yes
+	// ????? what is this LMAO
 	if (theme.getSelectedValue() == 0) {  // packet
 		backroundR = 0;
 		backroundG = 0;
@@ -117,6 +92,7 @@ void ClickGuiMod::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (GameData::canUseMoveKeys())
 		g_Data.getClientInstance()->releaseMouse();
 }
+
 void ClickGuiMod::onLoadConfig(void* conf) {
 	IModule::onLoadConfig(conf);
 	ClickGui::onLoadConfig(conf);
