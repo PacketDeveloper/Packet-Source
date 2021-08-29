@@ -3,7 +3,7 @@
 #include "../../Module/ModuleManager.h"
 #include "TestModule.h"
 
-HiveFly::HiveFly() : IModule(0, Category::MOVEMENT, "FlightModule") {
+HiveFly::HiveFly() : IModule(0, Category::MOVEMENT, "shitcode101") {
 #ifdef _DEBUG
 	registerBoolSetting("TimerBoost", &timerBoost, timerBoost);
 	registerBoolSetting("Boost", &dmgBoost, dmgBoost);
@@ -43,22 +43,22 @@ void HiveFly::onEnable() {
 
 void HiveFly::onTick(C_GameMode* gm) {
 #ifdef _DEBUG
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	auto scaffoldMod = moduleMgr->getModule<Scaffold>();
 	auto bhopMod = moduleMgr->getModule<Speed>();
 	scaffoldMod->setEnabled(false);
 	bhopMod->setEnabled(false);
 	auto player = g_Data.getLocalPlayer();
-	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+	if (timerBoost) {
+		*g_Data.getClientInstance()->minecraft->timer = 27.4124367756534f;
+	} else {
+		*g_Data.getClientInstance()->minecraft->timer = 20.f;
+	}
 	if (counter == 3) {
 		*g_Data.getClientInstance()->minecraft->timer = 1.f;
 		counter = 1;
 	} else {
 		counter++;
-	}
-	if (timerBoost) {  // Boost Mode Slowdown
-		*g_Data.getClientInstance()->minecraft->timer = 27.4124367756534f;
-	} else {
-		*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	}
 	if (strafeMode) {
 		auto killauraMod = moduleMgr->getModule<Killaura>();
@@ -85,22 +85,19 @@ void HiveFly::onTick(C_GameMode* gm) {
 }
 
 void HiveFly::onMove(C_MoveInputHandler* input) {
+	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+	bool pressed = moveVec2d.magnitude() > 0.01f;
+	auto player = g_Data.getLocalPlayer();
 #ifdef _DEBUG
-	if (boost) {  // Boost Upwards
-		auto player = g_Data.getLocalPlayer();
-		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
-		bool pressed = moveVec2d.magnitude() > 0.01f;
+	if (boost) {
 		if (player->onGround)
 			player->jumpFromGround();
-		vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 	}
 	auto player = g_Data.getLocalPlayer();
 	float yaw = player->yaw;
 	if (player == nullptr) return;
 	if (player->isSneaking())
 		return;
-	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
-	bool pressed = moveVec2d.magnitude() > 0.01f;
 	if (input->isJumping && counter == 3) {
 		player->velocity.y -= 0.000000000001f;
 		player->fallDistance = 0;
@@ -125,53 +122,23 @@ void HiveFly::onMove(C_MoveInputHandler* input) {
 		*g_Data.getClientInstance()->minecraft->timer = 5.f;
 		g_Data.getLocalPlayer()->setPos(pos);
 	}
-	if (input->right) {
-		yaw += 90.f;
-		if (!input->isJumping) {
-		}
-		if (input->isJumping && counter == 3) {
-		}
-		if (input->isSneakDown && counter == 3) {
-		}
-		if (input->forward)
-			yaw -= 45.f;
-		else if (input->backward)
-			yaw += 45.f;
-		if (!input->isJumping) {
-		}
-	}
-	if (input->left) {
-		yaw -= 90.f;
-		if (!input->isJumping) {
-		}
-		if (input->isJumping && counter == 3) {
-			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
-		}
-		if (input->isSneakDown && counter == 3) {
-			//*g_Data.getClientInstance()->minecraft->timer = 20.f;
-		}
-		if (input->forward)
-			yaw += 45.f;
-		else if (input->backward)
-			yaw -= 45.f;
-	}
-	if (input->backward && !input->left && !input->right)
-		yaw += 180.f;
-	if (pressed) {
-		float calcYaw = (yaw + 90.f) * (PI / 180.f);
-		vec3_t moveVec;
-		moveVec.x = cos(calcYaw) * speed;  // Value
-		moveVec.y = player->velocity.y;
-		moveVec.z = sin(calcYaw) * speed;  // Value
-		if (pressed) player->lerpMotion(moveVec);
-	}
+
+	float calcYaw = (player->yaw + 90) * (PI / 180);
+	vec3_t moveVec;
+	float c = cos(calcYaw);
+	float s = sin(calcYaw);
+	moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+	moveVec.x = moveVec2d.x * speed;
+	moveVec.y = player->velocity.y;
+	moveVec.z = moveVec2d.y * speed;
+	if (pressed) player->lerpMotion(moveVec);
 	#endif
 }
 
 void HiveFly::onDisable() {
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	auto player = g_Data.getLocalPlayer();
-	// re-enable modules
+	// shit code
 	auto scaffold = moduleMgr->getModule<Scaffold>();
 	auto speed = moduleMgr->getModule<Speed>();
 	if (speedWasEnabled == true) {

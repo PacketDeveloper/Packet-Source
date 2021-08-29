@@ -2,7 +2,7 @@
 #include "EntityControl.h"
 
 EntityControl::EntityControl() : IModule(0, Category::EXPLOIT, "Controls Entities") {
-	registerBoolSetting("Control", &control, control);
+	registerBoolSetting("BoatFly", &control, control);
 	registerFloatSetting("Speed", &speed, speed, 1, 2);
 	registerFloatSetting("Range", &range, range, 1, 8);
 }

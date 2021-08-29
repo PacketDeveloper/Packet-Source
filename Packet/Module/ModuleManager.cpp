@@ -81,9 +81,10 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new SpawnTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ItemTP()));
 
-#ifdef _DEBUG // Private modules
+#ifdef _DEBUG
+		moduleList.push_back(std::shared_ptr<IModule>(new HudEditorMod()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
-		moduleList.push_back(std::shared_ptr<IModule>(new EntityControl()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new EntityControl())); // eh
 		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Switcher()));

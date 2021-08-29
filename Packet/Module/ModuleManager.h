@@ -75,12 +75,12 @@
 // Unused
 #include "Modules/InventoryCleaner.h"
 #include "Modules/ChestStealer.h"
-//#include "Modules/Derp.h"
 //#include "Modules/Waypoints.h" // Crashes
 
 #ifdef _DEBUG
+#include "Modules/HudEditorMod.h"
 #include "Modules/TestModule.h"
-#include "Modules/EntityControl.h"
+//#include "Modules/EntityControl.h"
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
 #include "Modules/Switcher.h"
