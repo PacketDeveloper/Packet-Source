@@ -267,6 +267,7 @@ vec2_t getAngles6(vec3_t PlayerPosition, vec3_t EntityPosition) {
 };
 void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	auto player = g_Data.getLocalPlayer();
+<<<<<<< HEAD
 	for (auto& i : targetList) {
 		vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 		if (rot && !targetList.empty()) {
@@ -307,6 +308,52 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			// Body
 			rotation->bodyYaw = angle.y;
 			rotation->yawUnused2 = prevyaw2;
+=======
+	if (targethud > 1) {
+			for (auto& i : targetList) {
+				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+				if (rot && !targetList.empty()) {
+					auto rotation2 = g_Data.getLocalPlayer();
+					rotation2->yawUnused1 = angle.y;
+					rotation2->pitch = angle.x;
+				}
+				if (test) {
+					vec2_t appl = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos()).normAngles();
+					appl.x /= (100.f - 50);
+					appl.y /= (100.f - 50);
+					vec3_t EntPos = *i->getPos();
+					vec2_t CalcRot = getAngles6(*player->getPos(), EntPos).normAngles();
+					auto rotation2 = g_Data.getLocalPlayer();
+					float prevyaw2 = rotation2->yaw;
+					rotation2->yawUnused1 = angle.y;
+					rotation2->pitch = angle.x;
+					rotation2->yaw2 = angle.y;
+
+					rotation2->bodyYaw = angle.y;
+					rotation2->yawUnused2 = prevyaw2;
+				}
+				if (rot && !targetList.empty()) {
+					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+					auto rotation = g_Data.getLocalPlayer();
+					float prevyaw = rotation->yawUnused1;
+					float prevyaw2 = rotation->yaw;
+					float prevyaw3 = rotation->yaw2;
+					rotation->setRot(angle);
+
+					// Head
+					for (int i = 0; i < 0; i++) {
+						rotation->yawUnused1 = angle.y;
+						rotation->pitch = angle.x;
+						rotation->yaw2 = angle.y;
+						rotation->yaw = prevyaw2;
+						rotation->pitch2 = angle.x;
+					}
+
+					// Body
+					rotation->bodyYaw = angle.y;
+					rotation->yawUnused2 = prevyaw2;
+				}
+>>>>>>> 0f1b9a14229445879fb26bf413480f3b887d5d1c
 		}
 	}
 }
