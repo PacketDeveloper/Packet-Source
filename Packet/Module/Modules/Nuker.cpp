@@ -1,12 +1,14 @@
 #include "Nuker.h"
 
 Nuker::Nuker() : IModule(0, Category::MISC, "Break multiple blocks at once") {
-	this->registerBoolSetting("AutoDestroy", &this->autodestroy, this->autodestroy);
-	this->registerBoolSetting("VeinMiner", &this->veinMiner, this->veinMiner);
-	this->registerBoolSetting("Treeos", &this->tree, this->tree);
-	this->registerIntSetting("Radius", &this->nukerRadius, this->nukerRadius, 1, 15);
-	this->registerIntSetting("Upo", &this->up, this->up, 1, 15);
-	this->registerIntSetting("Downo", &this->down, this->down, 1, 15);
+	registerBoolSetting("AutoDestroy", &autodestroy, autodestroy);
+	registerBoolSetting("VeinMiner", &veinMiner, veinMiner);
+	registerIntSetting("Up", &up, up, 1, 15);
+	registerIntSetting("Down", &down, down, 1, 15);
+	registerIntSetting("Radius", &nukerRadius, nukerRadius, 1, 15);
+#ifdef _DEBUG
+	registerBoolSetting("Treeos", &tree, tree);
+#endif
 }
 
 Nuker::~Nuker() {

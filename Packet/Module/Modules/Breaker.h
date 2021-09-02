@@ -4,8 +4,8 @@
 
 class Breaker : public IModule {
 private:
+	bool switchSlot = false;
 	bool treasures = false;
-	bool carrots = false;
 	bool chests = false;
 	bool cakes = false;
 	bool beds = false;
@@ -17,6 +17,7 @@ private:
 	int Odelay = 0;
 	int delay = 0;
 	int range = 5;
+	int slot = 1;
 
 public:
 	Breaker();
