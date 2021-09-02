@@ -277,10 +277,10 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 					float prevyaw = rotation->yawUnused1;
 					float prevyaw2 = rotation->yaw;
 					float prevyaw3 = rotation->yaw2;
-					rotation->setRot(angle);
+					//rotation->setRot(angle);
 
 					// Head
-					for (int i = 0; i < 0; i++) {
+					for (int i = 0; i > 0; i++) {
 						rotation->yawUnused1 = angle.y;
 						rotation->pitch = angle.x;
 						rotation->yaw2 = angle.y;
@@ -289,8 +289,8 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 					}
 
 					// Body
-					rotation->bodyYaw = angle.y;
-					rotation->yawUnused2 = prevyaw2;
+					//rotation->bodyYaw = angle.y;
+					//rotation->yawUnused2 = prevyaw2;
 				}
 		}
 	}
