@@ -131,7 +131,7 @@ void TestModule::onTick(C_GameMode* gm) {
 			//gm->player->onGround = true;
 			//gm->player->velocity.y = 1;
 		//}
-		auto flight = moduleMgr->getModule<Flight>();
+		/*auto flight = moduleMgr->getModule<Flight>();
 		auto speed = moduleMgr->getModule<Speed>();
 		if (counter == 7) {
 			//flight->setEnabled(false);
@@ -143,7 +143,15 @@ void TestModule::onTick(C_GameMode* gm) {
 			flight->setEnabled(true);
 		} else if (counter == 5) {
 			flight->setEnabled(false);
-		}
+		}*/
+		vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
+
+		vec3_t pos;
+		pos.x = 0.f + pPos.x;
+		pos.y = 300.f + pPos.y;
+		pos.z = 0.f + pPos.z;
+
+		g_Data.getLocalPlayer()->setPos(pos);
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();

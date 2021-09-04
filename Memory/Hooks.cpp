@@ -268,6 +268,16 @@ void Hooks::Actor_baseTick(C_Entity* _this) {
 		moduleMgr->onTick(gm);
 }
 
+/*void Hooks::Actor_rotation(C_Entity* _this, vec2_t& newAngle) {
+	static auto oFunc = g_Hooks.Actor_rotationHook->GetFastcall<void, C_Entity*, vec2_t&>();
+	static auto killauraMod = moduleMgr->getModule<Killaura>();
+	if (killauraMod->isEnabled()) {
+		if (g_Data.getLocalPlayer() != nullptr)
+			return oFunc(_this, killauraMod->rot);
+	}
+	oFunc(_this, newAngle);
+}*/
+
 __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oSetup = g_Hooks.UIScene_setupAndRenderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
@@ -310,6 +320,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		return oText(a1, renderCtx);
 
 	static auto hudMod = moduleMgr->getModule<HudModule>();
+	static auto hudEditorMod = moduleMgr->getModule<HudEditorMod>();
 	static auto arraylistMod = moduleMgr->getModule<ArrayList>();
 	static auto watermark = moduleMgr->getModule<Watermark>();
 	static auto blinkMod = moduleMgr->getModule<Blink>();
@@ -876,9 +887,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						for (auto it : *moduleList) {
 							if (it.get() != arraylistMod)
 								if (it.get() != hudMod)
-#ifdef _DEBUG
-									if (it.get() != blinkMod)
-#endif
+									if (it.get() != hudEditorMod)
 										if (it.get() != watermark)
 											if (it.get() != clickGuiModule)
 												modContainerList.emplace(IModuleContainer(it));
@@ -1488,6 +1497,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 
 	static auto sneakMod = moduleMgr->getModule<Sneak>();
 	static auto freecamMod = moduleMgr->getModule<Freecam>();
+	static auto flight = moduleMgr->getModule<Flight>();
 	static auto freetpMod = moduleMgr->getModule<FreeTP>();
 	static auto blinkMod = moduleMgr->getModule<Blink>();
 	//static auto noPacketMod = moduleMgr->getModule<Packetsfbgh>();
@@ -1552,6 +1562,46 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			}
 			blinkMod->getPlayerAuthInputPacketHolder()->clear();
 			return;
+		}
+	}
+	if (flight->isEnabled() || blinkMod->isEnabled()) {
+		if (flight->blink) {
+			if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
+				if (blinkMod->isEnabled()) {
+					if (packet->isInstanceOf<C_MovePlayerPacket>()) {
+						C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
+						meme->onGround = true;                                                            //Don't take Fall Damages when turned off
+						blinkMod->getMovePlayerPacketHolder()->push_back(new C_MovePlayerPacket(*meme));  // Saving the packets
+					} else {
+						char* npacket = new char[sizeof(PlayerAuthInputPacket)];
+						memcpy(npacket, packet, sizeof(PlayerAuthInputPacket));
+						blinkMod->getPlayerAuthInputPacketHolder()->push_back((PlayerAuthInputPacket*)npacket);
+					}
+				}
+				return;  // Dont call LoopbackPacketSender_sendToServer
+			}
+		}
+	} else if (!blinkMod->isEnabled()) {
+		if (flight->blink) {
+			if (blinkMod->getMovePlayerPacketHolder()->size() > 0) {
+				for (auto it : *blinkMod->getMovePlayerPacketHolder()) {
+					oFunc(a, (it));
+					delete it;
+					it = nullptr;
+				}
+				blinkMod->getMovePlayerPacketHolder()->clear();
+				return;
+			}
+			if (blinkMod->getPlayerAuthInputPacketHolder()->size() > 0) {
+				for (PlayerAuthInputPacket* it : *blinkMod->getPlayerAuthInputPacketHolder()) {
+					memset((int*)&it->yawUnused + 2, 0, 0x5C);
+					oFunc(a, (it));
+					delete it;
+					it = nullptr;
+				}
+				blinkMod->getPlayerAuthInputPacketHolder()->clear();
+				return;
+			}
 		}
 	}
 	if (freetpMod->isEnabled() || blinkMod->isEnabled()) {

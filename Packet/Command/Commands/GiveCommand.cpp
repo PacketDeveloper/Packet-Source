@@ -36,6 +36,8 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 			clientMessageF("%sInvalid item name!", RED);
 			return true;
 		}
+		if (count > 64) count = 64;
+		if (count < 1) count = 1;
 		yot = new C_ItemStack(***cStack, count, itemData);
 	} else {
 		std::unique_ptr<void*> ItemPtr = std::make_unique<void*>();
@@ -48,7 +50,7 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 	}
 
 	if (yot != nullptr)
-		yot->count = count;
+		yot->count = 1;
 
 	int slot = inv->getFirstEmptySlot();
 
@@ -67,9 +69,6 @@ bool GiveCommand::execute(std::vector<std::string>* args) {
 
 	firstAction = new C_InventoryAction(0, desc, nullptr, yot, nullptr, count, 507, 99999);
 	secondAction = new C_InventoryAction(slot, nullptr, desc, nullptr, yot, count);
-
-	//firstAction = new C_InventoryAction(0,yot, nullptr, 507, 99999);
-	//secondAction = new C_InventoryAction(slot, nullptr, yot);
 
 	transactionManager->addInventoryAction(*firstAction);
 	transactionManager->addInventoryAction(*secondAction);

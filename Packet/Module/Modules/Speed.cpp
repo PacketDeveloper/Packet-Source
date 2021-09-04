@@ -26,12 +26,6 @@ void Speed::onEnable() {
 
 void Speed::onTick(C_GameMode* gm) {
 	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
-	auto scaffold = moduleMgr->getModule<Scaffold>();
-	if (scaffold->speedLockY) {
-		scaffold->lockY = true;
-	} else {
-		scaffold->lockY = false;
-	}
 }
 
 void Speed::onMove(C_MoveInputHandler* input) {
@@ -215,7 +209,6 @@ void Speed::onDisable() {
 		player->velocity.x = 0.f;
 		player->velocity.z = 0.f;
 	}
-	if (scaffold->speedLockY) scaffold->lockY = false;
 	preventKick = false;
 }
 

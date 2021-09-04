@@ -70,6 +70,7 @@
 #include "Modules/Spider.h"
 #include "Modules/SpawnTP.h"
 #include "Modules/ItemTP.h"
+#include "Modules/BreadCrumbs.h"
 #include "Modules/Module.h"
 
 // Unused
@@ -80,7 +81,7 @@
 #ifdef _DEBUG
 #include "Modules/HudEditorMod.h"
 #include "Modules/TestModule.h"
-//#include "Modules/EntityControl.h"
+#include "Modules/EntityControl.h"
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
 #include "Modules/Switcher.h"

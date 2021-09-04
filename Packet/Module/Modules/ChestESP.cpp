@@ -2,7 +2,7 @@
 #include "../../DrawUtils.h"
 #include "../ModuleManager.h"
 
-ChestESP::ChestESP() : IModule('0', Category::VISUAL, "ESP") {
+ChestESP::ChestESP() : IModule(0, Category::VISUAL, "ESP") {
 }
 
 ChestESP::~ChestESP() {

@@ -9,11 +9,6 @@ Step::~Step() {
 }
 
 const char* Step::getModuleName() {
-	if (isEnabled()) {
-		static char modName[30];  // This is kinda ghetto rn, there should be a better way to make this...
-		sprintf_s(modName, 30, "Step %.1f", height);
-		return modName;
-	} else
 		return ("Step");
 }
 

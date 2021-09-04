@@ -793,7 +793,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 			vec2_t windowSize2 = g_Data.getClientInstance()->getGuiData()->windowSize;
 			float x = windowSize2.x / 114;
 			float y = windowSize2.y - 11;
-			std::string text = "Packet Client";
+			std::string text = "HUD Editor";
 			std::string textStr = categoryName;
 			mid.x -= DrawUtils::getTextWidth(&textStr, textSize) / 1.5;
 			//mid.y += 0.f;
@@ -855,7 +855,7 @@ void ClickGui::render() {
 									 0,
 									 g_Data.getClientInstance()->getGuiData()->widthGame,
 									 g_Data.getClientInstance()->getGuiData()->heightGame),
-								 MC_Color(0, 0, 0), clickGUIMod->bgOpacity);
+								 MC_Color(0, 0, 0), 0.3);
 	}
 
 	// Render all categorys
@@ -936,6 +936,7 @@ void ClickGui::onKeyUpdate(int key, bool isDown) {
 			clickGuiMod->setEnabled(false);
 	}
 }
+
 using json = nlohmann::json;
 void ClickGui::onLoadConfig(void* confVoid) {
 	savedWindowSettings.clear();

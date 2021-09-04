@@ -25,6 +25,10 @@ public:
 	int prevSlot = 0;
 
 	// Hive
+	int testTimer = 0;
+	bool blink2 = true;
+	bool blink = false;
+	bool freeze = true;
 	int hiveC = 0;
 
 		C_MovePlayerPacket* jetpack = nullptr;

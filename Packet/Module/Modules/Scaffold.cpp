@@ -5,7 +5,7 @@
 #include "../../Module/ModuleManager.h"
 
 Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
-	registerBoolSetting("SpeedLockY", &speedLockY, speedLockY);
+	registerBoolSetting("LockY", &lockY, lockY);
 	registerBoolSetting("Downwards", &staircase, staircase);
 	registerBoolSetting("Rotations", &rotations, rotations);
 	registerBoolSetting("AirPlace", &airplace, airplace);
@@ -26,6 +26,13 @@ void Scaffold::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	prevSlot = g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot;
+	auto player = g_Data.getLocalPlayer();
+	if (lockY) {
+		vec3_t blockBelowLock = *player->getPos();
+		blockBelowLock.y -= 2.f;
+
+		//initialPos = blockBelowLock;
+	}
 }
 
 void Scaffold::onTick(C_GameMode* gm) {
@@ -62,7 +69,6 @@ void Scaffold::onTick(C_GameMode* gm) {
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
 	vel = vel.normalize();  // Only use values from 0 - 1
-
 	if (extendMode) {
 		if (staircase && !GameData::isKeyDown(*input->sneakKey)) {
 			float cal = (gm->player->yaw + 90) * (PI / 180);
@@ -181,6 +187,28 @@ void Scaffold::onTick(C_GameMode* gm) {
 			}
 		}
 	}
+	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
+	blockBelow.y; //= initialPos.y;
+	float cal = (gm->player->yaw + 90) * (PI / 180);
+
+	//if (useExtend) {
+	blockBelow.x = blockBelow.x += cos(cal) * expand;
+	blockBelow.z = blockBelow.z += sin(cal) * expand;
+	//}
+
+	if (!tryScaffold(blockBelow)) {
+		if (speed > 0.05f) {  // Are we actually walking?
+			blockBelow.z -= vel.z * 0.4f;
+			if (!tryScaffold(blockBelow)) {
+				blockBelow.x -= vel.x * 0.4f;
+				if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
+					blockBelow.z += vel.z;
+					blockBelow.x += vel.x;
+					tryScaffold(blockBelow);
+				}
+			}
+		}
+	}
 }
 
 void Scaffold::onMove(C_MoveInputHandler* input) {
@@ -215,14 +243,14 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	C_BlockLegacy* blockLegacy = (block->blockLegacy);
 	if (blockLegacy->material->isReplaceable) {
 		vec3_ti blok(blockBelow);
-		if (lockY) {
+		/*if (lockY) {
 			if (!GameData::isKeyDown(*input->spaceBarKey)) {
 				if (g_Data.getLocalPlayer()->onGround)
 					yLock = blok.y;
 				else if (yLock > -1)
 					blok.y = yLock;
 			}
-		}
+		}*/
 
 		if (airplace) {
 			g_Data.getCGameMode()->buildBlock(&blok, i);
@@ -337,7 +365,7 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 	return false;
 }
 
-void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {  // Tower
+void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	float speedY = g_Data.getLocalPlayer()->velocity.magnitudexy();
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
@@ -373,9 +401,33 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {  // Tower
 		}
 	}
 	if (rotations && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
-		if (forward) {
-			player->pitch += 132;
-		} else if (backwards) {
+		vec3_t blockBelowP = g_Data.getLocalPlayer()->eyePos0;
+		blockBelowP.y -= g_Data.getLocalPlayer()->height;
+		float pitch = g_Data.getLocalPlayer()->pitch;
+		auto lPlayer = g_Data.getLocalPlayer();
+		float yaw = g_Data.getLocalPlayer()->yaw;
+		blockBelowP.y -= 0.5f;
+		vec3_ti blok(blockBelow);
+		vec3_ti angle = blok;
+		blok.y = blockBelow.y;
+		float prevyaw = lPlayer->yawUnused1;
+		float prevyaw2 = lPlayer->yaw;
+		float prevyaw3 = lPlayer->yaw2;
+		if (g_Data.getLocalPlayer()->onGround)
+			yLock = blok.y - pitch;
+		else if (yLock > -3)
+			blok.y = yLock;
+		if (speed > 0.05f || (GameData::isKeyDown(*input->spaceBarKey))) {
+			lPlayer->yawUnused1 = angle.y -= blok.y;
+			player->yaw = pitch + angle.x - angle.y;
+			lPlayer->pitch = angle.x * blok.y;
+			lPlayer->pitch = angle.y;
+			lPlayer->yaw2 = angle.y;
+			lPlayer->yaw = prevyaw2;
+			lPlayer->pitch2 = angle.y + angle.x;
+			player->pitch = yLock;
+		}
+		if (backwards) {
 			player->bodyYaw = -360;
 			player->viewAngles;
 		}

@@ -75,6 +75,7 @@ public:
 
 private:
 	static void Actor_baseTick(C_Entity* _this);
+	//static void Actor_rotation(C_Entity* _this, vec2_t& newAngle);
 	static __int64 UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 UIScene_render(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx);

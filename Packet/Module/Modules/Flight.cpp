@@ -33,6 +33,7 @@ const char* Flight::getRawModuleName() {
 }
 
 void Flight::onEnable() {
+	auto player = g_Data.getLocalPlayer();
 	auto scaffold = moduleMgr->getModule<Scaffold>();
 	auto speed = moduleMgr->getModule<Speed>();
 	if (speed->isEnabled())
@@ -56,7 +57,9 @@ void Flight::onEnable() {
 		g_Data.getLocalPlayer()->setPos(pos);
 	}
 	if (mode.getSelectedValue() == 6) {
-		hiveC = 0;
+		blink2 = true;
+		freeze = true;
+		hiveC = 1;
 	}
 }
 
@@ -82,10 +85,6 @@ void Flight::onTick(C_GameMode* gm) {
 	scaffoldMod->setEnabled(false);
 	longjump->setEnabled(false);
 	speedMod->setEnabled(false);
-	if (endzone) {
-		int bCnter = 1;
-		bCnter++;
-	}
 	if (mode.getSelectedValue() == 3) {  // Teleport
 		vec3_t pos = *g_Data.getLocalPlayer()->getPos();
 		gm->player->velocity = vec3_t(0, 0, 0);
@@ -176,13 +175,9 @@ void Flight::onTick(C_GameMode* gm) {
 			gm->player->velocity = vec3_t(0, 0, 0);
 		}
 		if (placeCounter == 2) {
-			*g_Data.getClientInstance()->minecraft->timer = 16.f;
+			*g_Data.getClientInstance()->minecraft->timer = 16;
 			g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
-			C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());  // Rotations (kinda)
 			if (speed > 0.05f) {
-				player->pitch += 132;
-				player->bodyYaw = -360;
-				player->viewAngles;
 			}
 			if (g_Data.getLocalPlayer() == nullptr)
 				return;
@@ -219,7 +214,7 @@ void Flight::onTick(C_GameMode* gm) {
 		if (input == nullptr)
 			return;
 
-			int hasJumped = 0;
+		int hasJumped = 0;
 		if (GameData::isKeyDown(*input->spaceBarKey) && hasJumped == 0) {
 			gm->player->onGround = true;
 			hasJumped = 1;
@@ -228,14 +223,33 @@ void Flight::onTick(C_GameMode* gm) {
 		}
 	}
 	if (mode.getSelectedValue() == 6) {  // Hive
-		if (hiveC == 2) {
-			hiveC = 0;
-		}
-		if (hiveC == 1) { // shutup lmao
-			vec3_t pos = *g_Data.getLocalPlayer()->getPos();
-			gm->player->velocity = vec3_t(0, 0, 0);
-			if (input == nullptr) return;
-		}
+		// 
+		/*float currentVel = -0.000003;
+		if (blink2) {
+			if (hiveC == 17) {
+				currentVel = -0.000003;
+				//currentVel = -0.0000534563;
+				//*g_Data.getClientInstance()->minecraft->timer = 17;
+				gm->player->velocity = vec3_t(0, 0, 0);
+				blink = false;
+				hiveC = 1;
+			} else {
+				hiveC++;
+			}
+			if (hiveC >= 3) {
+				gm->player->velocity.y = currentVel;
+				gm->player->onGround = true;
+			}
+			if (hiveC == 4) { // && hiveC <= 15
+				currentVel = -0.0000305563;
+				blink = true;
+				*g_Data.getClientInstance()->minecraft->timer = 56;
+				//clientMessageF("blink = true");
+			} else  if (hiveC >= 10) {
+				gm->player->velocity = vec3_t(0, 0, 0);
+				blink = false;
+			}
+		}*/
 	}
 }
 
@@ -280,9 +294,7 @@ void Flight::onMove(C_MoveInputHandler* input) {
 		moveVec.y = player->velocity.y;
 		moveVec.z = moveVec2d.y * speed;
 		if (pressed) player->lerpMotion(moveVec);
-	}
-
-	if (mode.getSelectedValue() == 0) {  // Vanilla
+	} else if (mode.getSelectedValue() == 0) {  // Vanilla
 		auto player = g_Data.getLocalPlayer();
 		if (player == nullptr) return;
 
@@ -298,8 +310,7 @@ void Flight::onMove(C_MoveInputHandler* input) {
 		moveVec.y = player->velocity.y;
 		moveVec.z = moveVec2d.y * speed;
 		if (pressed) player->lerpMotion(moveVec);
-	}
-	if (mode.getSelectedValue() == 2) {  // BlockFly
+	} else if (mode.getSelectedValue() == 2) {  // BlockFly
 		if (placeCounter != 2) {
 			auto player = g_Data.getLocalPlayer();
 			if (player == nullptr) return;
@@ -317,28 +328,9 @@ void Flight::onMove(C_MoveInputHandler* input) {
 			moveVec.z = moveVec2d.y * speed;
 			if (pressed) player->lerpMotion(moveVec);
 		}
-	}
-	if (mode.getSelectedValue() == 6) {
-		if (hiveC == 2) {
-			hiveC = 0;
-		} else {
-			hiveC++;
-		}
-		if (hiveC == 1) {
-			vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
-			bool pressed = moveVec2d.magnitude() > 0.01f;
-			vec3_t pos = *g_Data.getLocalPlayer()->getPos();
-
-			float calcYaw = (player->yaw + 90) * (PI / 180);
-			vec3_t moveVec;
-			float c = cos(calcYaw);
-			float s = sin(calcYaw);
-			moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
-			moveVec.x = moveVec2d.x * speed;
-			moveVec.y = -0.0f;
-			moveVec.z = moveVec2d.y * speed;
-			player->setPos(pos.add(vec3_t(moveVec.x, moveVec.y, moveVec.z)));
-		}
+	} else if (mode.getSelectedValue() == 6) { // Hive
+		//if (player->onGround && pressed)
+			//player->jumpFromGround();
 	}
 }
 
@@ -412,5 +404,8 @@ void Flight::onDisable() {
 	}
 	if (mode.getSelectedValue() == 6) { // Hive
 		*g_Data.getClientInstance()->minecraft->timer = 20.f;
+		blink = false;
+		freeze = false;
+		blink2 = false;
 	}
 }
