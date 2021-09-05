@@ -84,6 +84,7 @@ void ModuleManager::initModules() {
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new HudEditorMod()));
+		moduleList.push_back(std::shared_ptr<IModule>(new InventoryCleaner()));
 		moduleList.push_back(std::shared_ptr<IModule>(new EntityControl()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
 		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
@@ -134,7 +135,7 @@ void ModuleManager::onLoadConfig(void* confVoid) {
 		mod->onLoadConfig(conf);
 	}
 	getModule<ClickGuiMod>()->setEnabled(false);
-	//getModule<NameTags>()->setEnabled(false);
+	getModule<Scaffold>()->setEnabled(false);
 	//getModule<Disabler>()->setEnabled(false);
 }
 

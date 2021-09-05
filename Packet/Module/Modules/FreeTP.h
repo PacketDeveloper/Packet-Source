@@ -2,6 +2,8 @@
 #include "Module.h"
 class FreeTP : public IModule {
 private:
+	bool speedWasEnabled = false;
+	bool scfWasEnabled = false;
 	float speed = 1.f;
 
 public:
@@ -9,6 +11,7 @@ public:
 	~FreeTP();
 
 	// Inherited via IModule
+	virtual void onEnable() override;
 	virtual void onMove(C_MoveInputHandler* input) override;
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;

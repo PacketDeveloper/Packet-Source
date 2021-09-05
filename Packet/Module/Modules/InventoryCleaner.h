@@ -7,14 +7,22 @@ private:
 	std::vector<int> findStackableItems();
 	std::vector<int> findUselessItems();
 	bool isLastItem(C_Item* item);
-
+	
+	bool clean = true;
 	bool keepTools = true;
 	bool keepArmor = true;
 	bool keepBlocks = true;
 	bool keepFood = true;
 
 	bool openInv = true;
-	bool autoSort = false;
+	int test = 0;
+	bool autoSort = true;
+
+	// Slots
+	int swordSlot = 0;
+	int pickSlot = 1;
+	int axeSlot = 2;
+	int blockSlot = 9;
 
 public:
 	bool stackIsUseful(C_ItemStack* itemStack);

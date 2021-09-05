@@ -8,8 +8,7 @@ Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
 	mode.addEntry("Nethergames", 0);
 	mode.addEntry("Mineville", 1);
 #ifdef _DEBUG
-	mode.addEntry("Endzone", 2);
-	mode.addEntry("Hive", 3);
+	mode.addEntry("Hive", 2);
 #endif
 }
 
@@ -23,14 +22,11 @@ const char* Disabler::getModuleName() {
 void Disabler::onEnable() {
 	if (mode.getSelectedValue() == 3)
 		counter = 1;
-	else if (mode.getSelectedValue() == 2) {
-		auto box = g_Data.addInfoBox("Make sure you have an Elytra");
-		box->closeTimer = 15;
-	}
 }
 
 void Disabler::onTick(C_GameMode* gm) {
 	auto speed = moduleMgr->getModule<Speed>();
+	auto d = moduleMgr->getModule<Disabler>();
 	//if (g_Data.canUseMoveKeys()) {
 	if (mode.getSelectedValue() == 0 && !gm->player->onGround) {
 		C_MovePlayerPacket pNether(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
@@ -42,9 +38,9 @@ void Disabler::onTick(C_GameMode* gm) {
 	}
 	//}
 #ifdef _DEBUG
-	if (mode.getSelectedValue() == 3) {
+	if (mode.getSelectedValue() == 2) {
 		auto player = g_Data.getLocalPlayer();
-		if (counter == 5) {
+		if (counter == 6) {
 			counter = 1;
 		} else {
 			counter++;
@@ -55,6 +51,8 @@ void Disabler::onTick(C_GameMode* gm) {
 			speed->setEnabled(false);
 			if (player->damageTime >= 1 && counter == 6) {
 				setEnabled(false);
+				if (player->damageTime > 1)
+					d->setEnabled(false);
 			}
 		}
 	}

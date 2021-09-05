@@ -787,21 +787,47 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 			}
 		}
 
-		// Draw component
+	// Draw component
 		{
-			// Draw Text
+			// Draw hudeditor button
+			auto hudEditor = moduleMgr->getModule<HudEditorMod>();
+			vec2_t textPos2 = vec2_t(
+				currentXOffset + textPadding,
+				categoryHeaderYOffset + textPadding);
 			vec2_t windowSize2 = g_Data.getClientInstance()->getGuiData()->windowSize;
-			float x = windowSize2.x / 114;
-			float y = windowSize2.y - 11;
-			std::string text = "HUD Editor";
-			std::string textStr = categoryName;
-			mid.x -= DrawUtils::getTextWidth(&textStr, textSize) / 1.5;
-			//mid.y += 0.f;
-			DrawUtils::drawText(mid, &textStr, MC_Color(255, 255, 255), textSize);
 
-			DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(255, 255, 255), 1.f);
+			std::string length = "HUD Editor";
+
+			float startY = windowSize2.y - 24;
+			float l = DrawUtils::getTextWidth(&length, 1.4) + 3;
+
+			vec4_t rectPos22 = vec4_t(2.5, startY + 4, l, startY + 20);
+			vec2_t textPos22 = vec2_t(rectPos22.x + 9, rectPos22.y + 4);
+
+			DrawUtils::drawLine(vec2_t(rectPos22.x, rectPos22.y + 17), vec2_t(rectPos22.x + l - 2.5, rectPos22.y + 17), 1);
+			DrawUtils::drawText(vec2_t(textPos22), &length, MC_Color(255, 255, 255), 1, 1, true);
+
+			if (rectPos22.contains(&mousePos)) {
+				DrawUtils::fillRectangle(rectPos22, MC_Color(64, 64, 64), 0.1);
+			} else {
+				DrawUtils::fillRectangle(rectPos22, MC_Color(0, 0, 0), 0.1);
+			}
+
+			if (shouldToggleLeftClick && rectPos22.contains(&mousePos)) {
+				DrawUtils::fillRectangle(rectPos22, MC_Color(64, 64, 64), 0.1);
+				clickGUI->setEnabled(false);
+				hudEditor->setEnabled(true);
+			}
+
+			std::string textStr = categoryName;
+			DrawUtils::drawText(textPos2, &textStr, MC_Color(255, 255, 255), textSize);
+			//DrawUtils::drawText(vec2_t(x, y), &text, MC_Color(255, 255, 255), 1.f);
+			Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[2], rcolors[1], currColor[0], currColor[1], currColor[2]);
+			currColor[0] += 1.f / moduleList.size();
+			Utils::ColorConvertHSVtoRGB(currColor[0], currColor[2], currColor[3], currColor[0], currColor[1], currColor[2]);
+
 			if (Rainbow)
-				DrawUtils::drawText(textPos, &textStr, MC_Color(currColor), textSize);
+				DrawUtils::drawText(textPos2, &textStr, MC_Color(currColor), textSize);
 			DrawUtils::fillRectangle(rectPos, moduleColor, backgroundAlpha);
 
 			DrawUtils::fillRectangle(vec4_t(rectPos.x, rectPos.w - 1, rectPos.z, rectPos.w), MC_Color(255, 255, 255), 1 - ourWindow->animation);

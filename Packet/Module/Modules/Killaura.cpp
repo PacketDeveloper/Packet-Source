@@ -95,6 +95,7 @@ struct CompareTargetEnArray {
 };
 
 void Killaura::onTick(C_GameMode* gm) {
+	auto scaffold = moduleMgr->getModule<Scaffold>();
 	if (silent && rot) {
 		auto KAbox = g_Data.addInfoBox("Killaura: Disabled to prevent crash");
 		KAbox->closeTimer = 12;
@@ -106,79 +107,80 @@ void Killaura::onTick(C_GameMode* gm) {
 	if (renderStart >= 5)
 		renderStart = 5;
 
-	//Loop through all our players and retrieve their information
-	targetList.clear();
+	if (scaffold->useRot) {
+		//Loop through all our players and retrieve their information
+		targetList.clear();
 
-	g_Data.forEachEntity(findEntity);
+		g_Data.forEachEntity(findEntity);
 
-	Odelay++;
-	if (distanceCheck)
-		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-	if (!targetList.empty() && Odelay >= delay) {
-		if (autoweapon) findWeapon();
-		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() < 0.01) {
-			C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);  // make sure to update rotation if player is standing still
-		}
-
-		// Attack all entitys in targetList
-		if (mode.getSelectedValue() == 0) {  // Multi
-			for (auto& i : targetList) {
-				if (!(i->damageTime > 1 && hurttime)) {
+		Odelay++;
+		if (distanceCheck)
+			std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+		if (!targetList.empty() && Odelay >= delay) {
+			if (autoweapon) findWeapon();
+			if (g_Data.getLocalPlayer()->velocity.squaredxzlen() < 0.01) {
+				C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);  // make sure to update rotation if player is standing still
+			}
+			// Attack all entitys in targetList
+			if (mode.getSelectedValue() == 0) {  // Multi
+				for (auto& i : targetList) {
+					if (!(i->damageTime > 1 && hurttime)) {
+						g_Data.getLocalPlayer()->swing();
+						g_Data.getCGameMode()->attack(i);
+						targethud++;
+					} else
+						targethud = 0;
+				}
+			} else {  // Switch
+				if (!(targetList[0]->damageTime > 1 && hurttime)) {
 					g_Data.getLocalPlayer()->swing();
-					g_Data.getCGameMode()->attack(i);
+					g_Data.getCGameMode()->attack(targetList[0]);
 					targethud++;
 				} else
 					targethud = 0;
 			}
-		} else {  // Switch
-			if (!(targetList[0]->damageTime > 1 && hurttime)) {
-				g_Data.getLocalPlayer()->swing();
-				g_Data.getCGameMode()->attack(targetList[0]);
-				targethud++;
-			} else
-				targethud = 0;
+			Odelay = 0;
 		}
-		Odelay = 0;
-	}
-	if (targetList.empty())
-		targethud = 0;
+		if (targetList.empty())
+			targethud = 0;
 
-	for (auto& i : targetList) {
-		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-		PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
-		Odelay++;
+		for (auto& i : targetList) {
+			C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+			PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
+			Odelay++;
 
-		if (click && !targetList.empty()) {
-			if (Odelay >= delay) {
-				g_Data.leftclickCount++;
-				if (pointing->hasEntity())
-					gm->attack(pointing->getEntity());
+			if (click && !targetList.empty()) {
+				if (Odelay >= delay) {
+					g_Data.leftclickCount++;
+					if (pointing->hasEntity())
+						gm->attack(pointing->getEntity());
+				}
 			}
-		}
-		if (strafe && !targetList.empty()) {
-			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-			auto weewee = g_Data.getLocalPlayer();
-			weewee->setRot(angle);
-		}
-		if (rot && !targetList.empty()) {
-			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-			auto rotation = g_Data.getLocalPlayer();
-			float prevyaw = rotation->yawUnused1;
-			float prevyaw2 = rotation->yaw;
-			float prevyaw3 = rotation->yaw2;
-			rotation->setRot(angle);
+			if (strafe && !targetList.empty()) {
+				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+				auto weewee = g_Data.getLocalPlayer();
+				weewee->setRot(angle);
+			}
+			if (rot && !targetList.empty()) {
+				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+				auto rotation = g_Data.getLocalPlayer();
+				float prevyaw = rotation->yawUnused1;
+				float prevyaw2 = rotation->yaw;
+				float prevyaw3 = rotation->yaw2;
+				rotation->setRot(angle);
 
-			// Head
-			rotation->yawUnused1 = angle.y;
-			rotation->pitch = angle.x;
-			rotation->yaw2 = angle.y;
-			rotation->yaw = prevyaw2;
-			rotation->pitch2 = angle.x;
+				// Head
+				rotation->yawUnused1 = angle.y;
+				rotation->pitch = angle.x;
+				rotation->yaw2 = angle.y;
+				rotation->yaw = prevyaw2;
+				rotation->pitch2 = angle.x;
 
-			// Body
-			rotation->bodyYaw = angle.y;
-			rotation->yawUnused2 = prevyaw2;
+				// Body
+				rotation->bodyYaw = angle.y;
+				rotation->yawUnused2 = prevyaw2;
+			}
 		}
 	}
 }
@@ -211,50 +213,52 @@ void Killaura::onEnable() {
 }
 
 void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
-if (render) {
-// will recode this shit later
-	if (targetList.size() == 1) {
-		if (targethud > 1 && g_Data.canUseMoveKeys()) {
-			for (auto& i : targetList) {
-				C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
-				vec2_t windowSize = dat->windowSize;
-				std::string text = targetList[0]->getNameTag()->getText();
-				text = Utils::sanitize(text);
-				std::string realname = "Name: " + text;
-				int dist2 = (int)(*targetList[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
-				auto dist = std::to_string(dist2);
-				auto distancestring = std::string("Distance: " + dist);
-				vec4_t duotagteam = (vec4_t(windowSize.x / 1.5f - (windowSize.x / 7),
-											windowSize.y / 1.61f - (windowSize.y / 13),
-											windowSize.x / 1.7f + (windowSize.x / 9 + targetList[0]->getNameTag()->textLength),
-											windowSize.y / 2 - windowSize.y / 8 + windowSize.y / 4));
-				DrawUtils::fillRectangle(vec4_t(duotagteam),
-										 MC_Color(0.05f, 0.05f, 0.05f), 0.35f);
-				DrawUtils::drawRectangle(vec4_t(duotagteam),
-										 MC_Color(1.f, 1.f, 1.f), 1.f);
+	auto scaffold = moduleMgr->getModule<Scaffold>();
+	if (render && scaffold->useRot) {
+		// will recode this shit later
+		if (targetList.size() == 1) {
+			if (targethud > 1 && g_Data.canUseMoveKeys()) {
+				for (auto& i : targetList) {
+					C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
+					vec2_t windowSize = dat->windowSize;
+					std::string text = targetList[0]->getNameTag()->getText();
+					text = Utils::sanitize(text);
+					std::string realname = "Name: " + text;
+					int dist2 = (int)(*targetList[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
+					auto dist = std::to_string(dist2);
+					auto distancestring = std::string("Distance: " + dist);
+					vec4_t duotagteam = (vec4_t(windowSize.x / 1.5f - (windowSize.x / 7),
+												windowSize.y / 1.61f - (windowSize.y / 13),
+												windowSize.x / 1.7f + (windowSize.x / 9 + targetList[0]->getNameTag()->textLength),
+												windowSize.y / 2 - windowSize.y / 8 + windowSize.y / 4));
+					DrawUtils::fillRectangle(vec4_t(duotagteam),
+											 MC_Color(0.05f, 0.05f, 0.05f), 0.35f);
+					DrawUtils::drawRectangle(vec4_t(duotagteam),
+											 MC_Color(1.f, 1.f, 1.f), 1.f);
 
-				DrawUtils::drawText(vec2_t(windowSize.x / 1.5f - windowSize.x / 7.25f,
-										   windowSize.y / 2 - windowSize.y / 5.f + windowSize.y / 4),
-									&realname,
-									MC_Color(1.f, 1.f, 1.f), 1.f);
+					DrawUtils::drawText(vec2_t(windowSize.x / 1.5f - windowSize.x / 7.25f,
+											   windowSize.y / 2 - windowSize.y / 5.f + windowSize.y / 4),
+										&realname,
+										MC_Color(1.f, 1.f, 1.f), 1.f);
 
-				DrawUtils::drawText(vec2_t(windowSize.x / 1.5f - windowSize.x / 7.25f,
-										   windowSize.y / 2 - windowSize.y / 5.8f + windowSize.y / 4),
-									&distancestring,
-									MC_Color(1.f, 1.f, 1.f), 1.f);
-				DrawUtils::flush();
-				vec2_t textPos;
-				vec4_t rectPos;
-				auto* player = reinterpret_cast<C_Player*>(targetList[0]);
-				float x = windowSize.x / 1.5f - windowSize.x / 7.1f;
-				float y = windowSize.y / 2 - windowSize.y / 6.4f + windowSize.y / 4;
-				float scale = 3 * 0.26f;
-				float spacing = scale + 15.f + 2;
+					DrawUtils::drawText(vec2_t(windowSize.x / 1.5f - windowSize.x / 7.25f,
+											   windowSize.y / 2 - windowSize.y / 5.8f + windowSize.y / 4),
+										&distancestring,
+										MC_Color(1.f, 1.f, 1.f), 1.f);
+					DrawUtils::flush();
+					vec2_t textPos;
+					vec4_t rectPos;
+					auto* player = reinterpret_cast<C_Player*>(targetList[0]);
+					float x = windowSize.x / 1.5f - windowSize.x / 7.1f;
+					float y = windowSize.y / 2 - windowSize.y / 6.4f + windowSize.y / 4;
+					float scale = 3 * 0.26f;
+					float spacing = scale + 15.f + 2;
 				}
 			}
 		}
 	}
 }
+
 vec2_t getAngles6(vec3_t PlayerPosition, vec3_t EntityPosition) {
 	vec2_t Angles;
 	float dX = PlayerPosition.x - EntityPosition.x;
@@ -265,16 +269,19 @@ vec2_t getAngles6(vec3_t PlayerPosition, vec3_t EntityPosition) {
 	Angles.y = (float)(atan2(dZ, dX) * 180.0f / PI) + 90.0f;
 	return Angles;
 };
+
 void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+	auto scaffold = moduleMgr->getModule<Scaffold>();
 	auto player = g_Data.getLocalPlayer();
-	for (auto& i : targetList) {
-		vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-		if (rot && !targetList.empty()) {
-			auto rotation2 = g_Data.getLocalPlayer();
-			rotation2->yawUnused1 = angle.y;
-			rotation2->pitch = angle.x;
-		}
-		/*if (test) {
+	if (scaffold->useRot) {
+		for (auto& i : targetList) {
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+			if (rot && !targetList.empty()) {
+				auto rotation2 = g_Data.getLocalPlayer();
+				rotation2->yawUnused1 = angle.y;
+				rotation2->pitch = angle.x;
+			}
+			/*if (test) {
 				vec2_t appl = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos()).normAngles();
 				appl.x /= (100.f - 50);
 				appl.y /= (100.f - 50);
@@ -289,6 +296,7 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 				rotation2->bodyYaw = angle.y;
 				rotation2->yawUnused2 = prevyaw2;
 			}*/
+<<<<<<< Updated upstream
 		if (rot && !targetList.empty()) {
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 			auto rotation = g_Data.getLocalPlayer();
@@ -307,18 +315,42 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			// Body
 			rotation->bodyYaw = angle.y;
 			rotation->yawUnused2 = prevyaw2;
+=======
+			if (rot && !targetList.empty()) {
+				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+				auto rotation = g_Data.getLocalPlayer();
+				float prevyaw = rotation->yawUnused1;
+				float prevyaw2 = rotation->yaw;
+				float prevyaw3 = rotation->yaw2;
+				rotation->setRot(angle);
+
+				// Head
+				rotation->yawUnused1 = angle.y;
+				rotation->pitch = angle.x;
+				rotation->yaw2 = angle.y;
+				rotation->yaw = prevyaw2;
+				rotation->pitch2 = angle.x;
+
+				// Body
+				rotation->bodyYaw = angle.y;
+				rotation->yawUnused2 = prevyaw2;
+			}
+>>>>>>> Stashed changes
 		}
 	}
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {
-	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && !rot && silent) {
-		if (!targetList.empty()) {
-			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
-			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
-			movePacket->pitch = angle.x;
-			movePacket->headYaw = angle.y;
-			movePacket->yaw = angle.y;
+	auto scaffold = moduleMgr->getModule<Scaffold>();
+	if (scaffold->useRot) {
+		if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && !rot && silent) {
+			if (!targetList.empty()) {
+				auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
+				movePacket->pitch = angle.x;
+				movePacket->headYaw = angle.y;
+				movePacket->yaw = angle.y;
+			}
 		}
 	}
 }

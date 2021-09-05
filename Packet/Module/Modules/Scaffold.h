@@ -17,6 +17,7 @@ private:
 	bool tryTower(vec3_t blockBelow);
 	bool selectBlock();
 	bool findBlock();
+	vec3_t initialPos;
 
 	int yLock = -1;
 
@@ -25,10 +26,12 @@ public:
 	int timer = 20;
 	int tCounter = 1;
 	bool lockY = false;
-	bool speedLockY = false;
+	bool useRot = true;
 
 	// stupid
 	bool forward = false;
+	bool left = false;
+	bool right = false;
 	bool backwards = false;
 
 	Scaffold();

@@ -2,19 +2,16 @@
 #include "TestModule.h"
 
 TestModule::TestModule() : IModule(0, Category::MISC, "Description") {
-	registerBoolSetting("AlertHiveStaff", &banUMode, banUMode);//Why
 	registerBoolSetting("AlertBox", &alertBox, alertBox);
 	registerBoolSetting("Teleport", &istpMode, istpMode);
 	//registerBoolSetting("Teleport2", &istpModeTwo, istpModeTwo);
 	registerBoolSetting("Damage", &dmgMode, dmgMode);
 	registerBoolSetting("Blink", &blink, blink);
 	registerBoolSetting("Test", &test, test);
-	registerBoolSetting("AutoDisable", &autoDisable, autoDisable);
-	//registerBoolSetting("HiveDmgFly", &dmgflyMode, dmgflyMode);
-	registerFloatSetting("SliderX", &sliderX, sliderX, 0.f, 800.f);
-	registerFloatSetting("SliderY", &sliderY, sliderY, 0.f, 800.f);
-
 	registerBoolSetting("Kow", &kowBool, kowBool);
+	registerBoolSetting("AutoDisable", &autoDisable, autoDisable);
+	registerFloatSetting("SliderX", &sliderX, sliderX, -800, 100);
+	registerFloatSetting("SliderY", &sliderY, sliderY, -1000, 1000);
 	registerFloatSetting("KowFloat", &kowFloat, kowFloat, 0.2f, 10.f);
 }
 

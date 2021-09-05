@@ -2,20 +2,25 @@
 
 #include "../ModuleManager.h"
 
-InventoryCleaner::InventoryCleaner() : IModule(0, Category::MISC, "Automatically throws not needed stuff out of your inventory") {
-	registerBoolSetting("Tools", &this->keepTools, this->keepTools);
-	registerBoolSetting("Armor", &this->keepArmor, this->keepArmor);
-	registerBoolSetting("Food", &this->keepFood, this->keepFood);
-	registerBoolSetting("Blocks", &this->keepBlocks, this->keepBlocks);
-	registerBoolSetting("OpenInv", &this->openInv, this->openInv);
-	registerBoolSetting("AutoSort", &this->autoSort, this->autoSort);
+InventoryCleaner::InventoryCleaner() : IModule(0, Category::PLAYER, "Automatintory YEP") {
+	registerBoolSetting("Clean", &clean, clean);
+	//registerBoolSetting("Blocks", &keepBlocks, keepBlocks);
+	//registerBoolSetting("Tools", &keepTools, keepTools);
+	//registerBoolSetting("Armor", &keepArmor, keepArmor);
+	//registerBoolSetting("Food", &keepFood, keepFood);
+
+	registerBoolSetting("InvOnly", &openInv, openInv);
+	registerIntSetting("Sword", &swordSlot, swordSlot, 0, 9);
+	registerIntSetting("Pickaxe", &pickSlot, pickSlot, 0, 9);
+	registerIntSetting("Axe", &axeSlot, axeSlot, 0, 9);
+	registerIntSetting("Block", &blockSlot, blockSlot, 0, 9);
 }
 
 InventoryCleaner::~InventoryCleaner() {
 }
 
 const char* InventoryCleaner::getModuleName() {
-	return ("InventoryCleaner");
+	return ("InvManager");
 }
 
 void InventoryCleaner::onTick(C_GameMode* gm) {
@@ -23,20 +28,23 @@ void InventoryCleaner::onTick(C_GameMode* gm) {
 		return;
 
 	// Drop useless items
+	if (clean) {
 	std::vector<int> dropSlots = findUselessItems();
-	if (!dropSlots.empty()) {
-		for (int i : dropSlots) {
-			g_Data.getLocalPlayer()->getSupplies()->inventory->dropSlot(i);
+		if (!dropSlots.empty()) {
+			for (int i : dropSlots) {
+					g_Data.getLocalPlayer()->getSupplies()->inventory->dropSlot(i);
+					dropSlots.push_back(i);
+			}
 		}
 	}
 
 	if (autoSort) {
-		// Put sword in first slot
-		{
+		// Put sword in first slot -- crashes
+		/*{
 			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 			C_Inventory* inv = supplies->inventory;
 			float damage = 0;
-			int item = 0;
+			int item = 256;
 			for (int n = 0; n < 36; n++) {
 				C_ItemStack* stack = inv->getItemStack(n);
 				if (stack->item != NULL) {
@@ -47,8 +55,8 @@ void InventoryCleaner::onTick(C_GameMode* gm) {
 					}
 				}
 			}
-			if (item != 0) inv->moveItem(item, 0);
-		}
+			if (item != 0) inv->moveItem(item, swordSlot);
+		}*/
 	}
 }
 
@@ -236,6 +244,7 @@ bool InventoryCleaner::stackIsUseful(C_ItemStack* itemStack) {
 	if (keepFood && (*itemStack->item)->isFood()) return true;        // Food
 	if (keepBlocks && (*itemStack->item)->isBlock()) return true;     // Block
 	if (keepTools && (*itemStack->item)->itemId == 368) return true;  // Ender Pearl
+	if (keepTools && (*itemStack->item)->itemId == 449) return true;  // Totem
 	return false;
 }
 

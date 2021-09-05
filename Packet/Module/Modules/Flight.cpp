@@ -57,9 +57,11 @@ void Flight::onEnable() {
 		g_Data.getLocalPlayer()->setPos(pos);
 	}
 	if (mode.getSelectedValue() == 6) {
-		blink2 = true;
-		freeze = true;
-		hiveC = 1;
+		auto freeTP = moduleMgr->getModule<FreeTP>();
+		auto speed = moduleMgr->getModule<Speed>();
+		speed->setEnabled(true);
+		freeTP->setEnabled(true);
+		timeEnabled = 1;
 	}
 }
 
@@ -223,33 +225,36 @@ void Flight::onTick(C_GameMode* gm) {
 		}
 	}
 	if (mode.getSelectedValue() == 6) {  // Hive
-		// 
-		/*float currentVel = -0.000003;
-		if (blink2) {
-			if (hiveC == 17) {
-				currentVel = -0.000003;
-				//currentVel = -0.0000534563;
-				//*g_Data.getClientInstance()->minecraft->timer = 17;
-				gm->player->velocity = vec3_t(0, 0, 0);
-				blink = false;
-				hiveC = 1;
-			} else {
-				hiveC++;
+		float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
+		auto freeTP = moduleMgr->getModule<FreeTP>();
+		auto freecam = moduleMgr->getModule<Freecam>();
+		if (hiveC == 3) {
+			hiveC = 1;
+		} else {
+			hiveC++;
+		}
+		if (timeEnabled == 52) {
+			setEnabled(false);
+			//timeEnabled = 1;
+		} else {
+			timeEnabled++;
+		}
+		if (timeEnabled >= 38 && timeEnabled <= 49) {
+			player->velocity.x = 0;
+			player->velocity.z = 0;
+			if (hiveC == 1) {
+				freecam->setEnabled(true);
 			}
-			if (hiveC >= 3) {
-				gm->player->velocity.y = currentVel;
-				gm->player->onGround = true;
+			if (hiveC == 2) {
+				freecam->setEnabled(false);
 			}
-			if (hiveC == 4) { // && hiveC <= 15
-				currentVel = -0.0000305563;
-				blink = true;
-				*g_Data.getClientInstance()->minecraft->timer = 56;
-				//clientMessageF("blink = true");
-			} else  if (hiveC >= 10) {
-				gm->player->velocity = vec3_t(0, 0, 0);
-				blink = false;
-			}
-		}*/
+		}
+		if (timeEnabled == 30) {
+			freecam->setEnabled(true);
+		}
+		if (timeEnabled == 36) {
+			freeTP->setEnabled(false);
+		}
 	}
 }
 
@@ -391,7 +396,7 @@ void Flight::onDisable() {
 		scfWasEnabled = false;
 	}
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
-	if (mode.getSelectedValue() != 2 || mode.getSelectedValue() != 5) {
+	if (mode.getSelectedValue() != 2 || mode.getSelectedValue() != 5 || mode.getSelectedValue() != 6) {
 		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 	}
 	if (mode.getSelectedValue() == 2) {  // BlockFly
@@ -403,9 +408,15 @@ void Flight::onDisable() {
 		g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
 	}
 	if (mode.getSelectedValue() == 6) { // Hive
+		auto freeTP = moduleMgr->getModule<FreeTP>();
+		auto freecam = moduleMgr->getModule<Freecam>();
 		*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		blink = false;
 		freeze = false;
 		blink2 = false;
+		auto speed = moduleMgr->getModule<Speed>();
+		speed->setEnabled(false);
+		freeTP->setEnabled(false);
+		freecam->setEnabled(false);
 	}
 }

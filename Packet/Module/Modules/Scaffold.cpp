@@ -5,11 +5,12 @@
 #include "../../Module/ModuleManager.h"
 
 Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
-	registerBoolSetting("LockY", &lockY, lockY);
 	registerBoolSetting("Downwards", &staircase, staircase);
 	registerBoolSetting("Rotations", &rotations, rotations);
 	registerBoolSetting("AirPlace", &airplace, airplace);
 	registerBoolSetting("Tower", &towerMode, towerMode);
+	registerBoolSetting("LockY", &lockY, lockY);
+	registerBoolSetting("Spoof", &spoof, spoof);
 	//registerFloatSetting("Tower Speed", &this->motion, this->motion, 0.3f, 1.f);
 	registerIntSetting("TimerBoost", &timer, timer, 20, 80);
 	registerIntSetting("Extend", &expand, expand, 0, 7);
@@ -31,7 +32,7 @@ void Scaffold::onEnable() {
 		vec3_t blockBelowLock = *player->getPos();
 		blockBelowLock.y -= 2.f;
 
-		//initialPos = blockBelowLock;
+		initialPos = blockBelowLock;
 	}
 }
 
@@ -187,27 +188,35 @@ void Scaffold::onTick(C_GameMode* gm) {
 			}
 		}
 	}
-	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
-	blockBelow.y; //= initialPos.y;
-	float cal = (gm->player->yaw + 90) * (PI / 180);
+	if (lockY) {
+		float cal = (gm->player->yaw + 90) * (PI / 180);
+		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
+		blockBelow.y = initialPos.y;
 
-	//if (useExtend) {
-	blockBelow.x = blockBelow.x += cos(cal) * expand;
-	blockBelow.z = blockBelow.z += sin(cal) * expand;
-	//}
+		//if (useExtend) {
+		blockBelow.x = blockBelow.x += cos(cal) * expand;
+		blockBelow.z = blockBelow.z += sin(cal) * expand;
+		//}
 
-	if (!tryScaffold(blockBelow)) {
-		if (speed > 0.05f) {  // Are we actually walking?
-			blockBelow.z -= vel.z * 0.4f;
-			if (!tryScaffold(blockBelow)) {
-				blockBelow.x -= vel.x * 0.4f;
-				if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-					blockBelow.z += vel.z;
-					blockBelow.x += vel.x;
-					tryScaffold(blockBelow);
+		if (!tryScaffold(blockBelow)) {
+			if (speed > 0.05f) {  // Are we actually walking?
+				blockBelow.z -= vel.z * 0.4f;
+				if (!tryScaffold(blockBelow)) {
+					blockBelow.x -= vel.x * 0.4f;
+					if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
+						blockBelow.z += vel.z;
+						blockBelow.x += vel.x;
+						tryScaffold(blockBelow);
+					}
 				}
 			}
 		}
+	}
+	if (spoof) {
+		C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+		C_Inventory* inv = supplies->inventory;
+		//C_ItemStack* inv = getItemStack(slot);
+		g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = inv->getFirstEmptySlot();
 	}
 }
 
@@ -217,11 +226,25 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 	if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
 		if (speed > 0.05f) {
 			player->bodyYaw = player->yaw - 200;
+			// Forward
 			if (input->forward) {
 				forward = true;
 			} else {
 				forward = false;
 			}
+			// Left
+			if (input->left) {
+				left = true;
+			} else {
+				left = false;
+			}
+			// Right
+			if (input->right) {
+				right = true;
+			} else {
+				right = false;
+			}
+			// Back
 			if (input->backward) {
 				backwards = true;
 			} else {
@@ -229,6 +252,8 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 			}
 		} else {
 			forward = false;
+			left = false;
+			right = false;
 			backwards = false;
 		}
 	}
@@ -341,12 +366,12 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 						tCounter++;
 					}
 					if (tCounter == 2 && player->onGround) {
-						*g_Data.getClientInstance()->minecraft->timer = 6.f;
+						*g_Data.getClientInstance()->minecraft->timer = 2.f;
 						player->fallDistance = 0;
 						vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 						vec3_t pos;
 						pos.x = 0.f + pPos.x;
-						pos.y = 1.f + pPos.y;
+						pos.y = 2.f + pPos.y;
 						pos.z = 0.f + pPos.z;
 						g_Data.getLocalPlayer()->setPos(pos);
 					}
@@ -373,8 +398,8 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (towerMode)
 		if (g_Data.getLocalPlayer() == nullptr)
 			return;
-	if (!g_Data.canUseMoveKeys())
-		return;
+	//if (!g_Data.canUseMoveKeys())
+		//return;
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 	if (!selectedItem->isValid() || !(*selectedItem->item)->isBlock())  // Block in hand?
 		return;
@@ -406,26 +431,36 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		float pitch = g_Data.getLocalPlayer()->pitch;
 		auto lPlayer = g_Data.getLocalPlayer();
 		float yaw = g_Data.getLocalPlayer()->yaw;
+		auto testModule = moduleMgr->getModule<TestModule>();
 		blockBelowP.y -= 0.5f;
 		vec3_ti blok(blockBelow);
 		vec3_ti angle = blok;
-		blok.y = blockBelow.y;
+		blok.y = blockBelow.y - -335; // dont ask
 		float prevyaw = lPlayer->yawUnused1;
 		float prevyaw2 = lPlayer->yaw;
 		float prevyaw3 = lPlayer->yaw2;
-		if (g_Data.getLocalPlayer()->onGround)
-			yLock = blok.y - pitch;
-		else if (yLock > -3)
+		if (g_Data.getLocalPlayer()->onGround) yLock = blok.y - 10;
+		else if (yLock > -1)
 			blok.y = yLock;
 		if (speed > 0.05f || (GameData::isKeyDown(*input->spaceBarKey))) {
 			lPlayer->yawUnused1 = angle.y -= blok.y;
 			player->yaw = pitch + angle.x - angle.y;
-			lPlayer->pitch = angle.x * blok.y;
+			lPlayer->pitch = angle.y += yLock;
 			lPlayer->pitch = angle.y;
 			lPlayer->yaw2 = angle.y;
 			lPlayer->yaw = prevyaw2;
-			lPlayer->pitch2 = angle.y + angle.x;
+			lPlayer->pitch2 = angle.x;
 			player->pitch = yLock;
+
+			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
+				if (forward || backwards || left || right || (GameData::isKeyDown(*input->spaceBarKey))) {
+					useRot = false;
+				} else {
+					useRot = true;
+				}
+			} else {
+				useRot = true;
+			}
 		}
 		if (backwards) {
 			player->bodyYaw = -360;
@@ -467,6 +502,7 @@ bool Scaffold::selectBlock() {
 
 void Scaffold::onDisable() {
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
+	useRot = true;
 	auto player = g_Data.getLocalPlayer();
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;

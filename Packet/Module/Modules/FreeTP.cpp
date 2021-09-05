@@ -13,6 +13,15 @@ const char* FreeTP::getModuleName() {
 	return ("FreeTP");
 }
 
+void FreeTP::onEnable() {
+	auto scaffold = moduleMgr->getModule<Scaffold>();
+	auto speed = moduleMgr->getModule<Speed>();
+	if (speed->isEnabled())
+		speedWasEnabled = true;
+	if (scaffold->isEnabled())
+		scfWasEnabled = true;
+}
+
 void FreeTP::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	gm->player->aabb.upper.y = gm->player->aabb.lower.y;
@@ -25,7 +34,7 @@ void FreeTP::onTick(C_GameMode* gm) {
 	player->velocity.y = -0.f;
 	auto speed = moduleMgr->getModule<Speed>();
 	auto flight = moduleMgr->getModule<Flight>();
-	flight->setEnabled(false);
+	//flight->setEnabled(false);
 	speed->setEnabled(false);
 }
 
@@ -84,5 +93,15 @@ void FreeTP::onDisable() {
 		pos.y = 0.0000001f + pPos.y;
 		pos.z = pPos.z;
 		g_Data.getLocalPlayer()->setPos(pos);
+	}
+	auto scaffold = moduleMgr->getModule<Scaffold>();
+	auto speed = moduleMgr->getModule<Speed>();
+	if (speedWasEnabled == true) {
+		speed->setEnabled(true);
+		speedWasEnabled = false;
+	}
+	if (scfWasEnabled == true) {
+		scaffold->setEnabled(true);
+		scfWasEnabled = false;
 	}
 }

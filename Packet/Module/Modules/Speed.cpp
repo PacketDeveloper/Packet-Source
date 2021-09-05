@@ -91,10 +91,10 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			moveVec.y = player->velocity.y;
 			moveVec.z = movement.y * 0.4;
 			if (pressed) player->lerpMotion(moveVec);
-		}
-		vec2_t movement = {input->forwardMovement, -input->sideMovement};
+		}*/
+		/*vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;
-		if (jumpMode && !lowMode) {
+		if (height >= 0.385) {
 			if (player->onGround && pressed)
 				player->jumpFromGround();
 		} else {
@@ -128,8 +128,14 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		}
 		moveVec.x = movement.x *= 0.315;
 		moveVec.y = player->velocity.y;
-		moveVec.z = movement.y *= 0.315;
+		moveVec.z = movement.y *= 0.315; // 0.315
 		if (pressed) player->lerpMotion(moveVec);
+		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
+			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 5.f, 0.f, moveVec.z / 5.f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
+			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
+		}
 	}
 	if (mode.getSelectedValue() == 2) {  // HiveGround - unused
 		auto scaffold = moduleMgr->getModule<Scaffold>();
@@ -138,7 +144,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		float c = cos(calcYaw);
 		float s = sin(calcYaw);
 		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
-		if (input->isJumping && !scaffold->isEnabled()) {
+		if (!player->onGround && !scaffold->isEnabled()) {
 			moveVec.x = moveVec2d.x * 0.30;
 			moveVec.y = player->velocity.y;
 			moveVec.z = moveVec2d.y * 0.30;

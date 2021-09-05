@@ -29,7 +29,7 @@ void Freecam::onTick(C_GameMode* gm) {
 	gm->player->aabb.upper.y = 0.f;
 	auto player = g_Data.getLocalPlayer();
 	speed->setEnabled(false);
-	flight->setEnabled(false);
+	//flight->setEnabled(false);
 	float yaw = player->yaw;
 	if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
 		gm->player->velocity = vec3_t(0, 0, 0);

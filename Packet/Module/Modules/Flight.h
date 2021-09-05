@@ -30,6 +30,7 @@ public:
 	bool blink = false;
 	bool freeze = true;
 	int hiveC = 0;
+	int timeEnabled = 0;
 
 		C_MovePlayerPacket* jetpack = nullptr;
 		SettingEnum mode = this;
