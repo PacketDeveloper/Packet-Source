@@ -17,12 +17,12 @@ HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
 	color.addEntry("Blue", 9);
 	color.addEntry("Purple", 11);
 	color.addEntry("Pink", 12);
-	registerBoolSetting("Positions", &this->coordinates, this->coordinates);
-	registerBoolSetting("Keystrokes", &this->keystrokes, this->keystrokes);
-	registerBoolSetting("ArmorHUD", &this->displayArmor, this->displayArmor);
-	registerBoolSetting("FPS", &this->fps, this->fps);
-	//registerBoolSetting("BPS", &this->bps, this->bps);
-	//registerBoolSetting("Always show", &this->alwaysShow, this->alwaysShow);
+	registerBoolSetting("Keystrokes", &keystrokes, keystrokes);
+	registerBoolSetting("ArmorHUD", &displayArmor, displayArmor);
+	registerBoolSetting("Position", &coordinates, coordinates);
+	registerBoolSetting("FPS", &fps, fps);
+	//registerBoolSetting("BPS", &bps, bps);
+	//registerBoolSetting("Always show", &alwaysShow, alwaysShow);
 }
 
 HudModule::~HudModule() {
@@ -40,7 +40,7 @@ void HudModule::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-	float f = 10.f * this->scale;
+	float f = 10.f * scale;
 	std::string tempStr("Movement");
 	float len = DrawUtils::getTextWidth(&tempStr, scale) + 7.f;
 	float startY = tabgui ? 6 * f : 0.f;
@@ -48,7 +48,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		startY += f;
 
 	{  // CPS
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->cps)) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !cps)) {
 			std::string cpsText = "CPS: " + std::to_string(g_Data.getLeftCPS());
 			vec4_t rectPos = vec4_t(2.5f, startY + 5.f * scale, len, startY + 15.f * scale);
 			vec2_t textPos = vec2_t(rectPos.x * cpspos2, rectPos.y * cpspos);  //CPS Location
@@ -58,7 +58,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	}
 
 	{  // Coordinates
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->coordinates)) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !coordinates)) {
 			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
 
 			std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z)); // amazing code
@@ -68,7 +68,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 	{  // ArmorHUD
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->displayArmor || !GameData::canUseMoveKeys())) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !displayArmor || !GameData::canUseMoveKeys())) {
 			static float constexpr scale = 1.f;
 			static float constexpr opacity = 0.25f;
 			static float constexpr spacing = scale + 15.f;
@@ -90,7 +90,7 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 	{  // Keystrokes
-		if (!(g_Data.getLocalPlayer() == nullptr || !this->keystrokes || !GameData::canUseMoveKeys())) {
+		if (!(g_Data.getLocalPlayer() == nullptr || !keystrokes || !GameData::canUseMoveKeys())) {
 			C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 			DrawUtils::drawKeystroke(*input->forwardKey, vec2_t(32.f, windowSize.y - 74));
 			DrawUtils::drawKeystroke(*input->leftKey, vec2_t(10.f, windowSize.y - 52));

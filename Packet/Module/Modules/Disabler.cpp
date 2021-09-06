@@ -40,21 +40,20 @@ void Disabler::onTick(C_GameMode* gm) {
 #ifdef _DEBUG
 	if (mode.getSelectedValue() == 2) {
 		auto player = g_Data.getLocalPlayer();
-		if (counter == 6) {
+		int timeEnabled = 0;
+		if (counter == 4) {
+			//setEnabled(false);
 			counter = 1;
 		} else {
+			timeEnabled++;
 			counter++;
 		}
-		if (gm->player->damageTime >= 1 && counter == 4) {
+		if (gm->player->damageTime >= 1 && counter == 3) {
 			speed->setEnabled(true);
 		} else {
 			speed->setEnabled(false);
-			if (player->damageTime >= 1 && counter == 6) {
-				setEnabled(false);
-				if (player->damageTime > 1)
-					d->setEnabled(false);
-			}
 		}
+		if (timeEnabled >= 10) setEnabled(false);
 	}
 #endif
 }

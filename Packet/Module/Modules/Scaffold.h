@@ -22,7 +22,7 @@ private:
 	int yLock = -1;
 
 public:
-	bool towerMode = true;
+	bool towerMode = false;
 	int timer = 20;
 	int tCounter = 1;
 	bool lockY = false;

@@ -75,7 +75,7 @@ void ChestStealer::chestScreenController_tick(C_ChestScreenController* c) {
 	ContainerScreenController* ctrler = (ContainerScreenController*)c;
 	if (ctrler != nullptr && !g_Data.getLocalPlayer()->canOpenContainerScreen()) {
 		std::vector<int> items = {};
-		auto invcleanerMod = moduleMgr->getModule<InventoryCleaner>();
+		auto invManager = moduleMgr->getModule<InvManager>();
 		for (int i = 0; i < 54; i++) {
 			static TextHolder container_items("container_items");
 			C_ItemStack* stack = ctrler->_getItemStack(&container_items, i);

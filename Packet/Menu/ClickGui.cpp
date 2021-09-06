@@ -790,12 +790,13 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 	// Draw component
 		{
 			// Draw hudeditor button
-			auto hudEditor = moduleMgr->getModule<HudEditorMod>();
 			vec2_t textPos2 = vec2_t(
 				currentXOffset + textPadding,
 				categoryHeaderYOffset + textPadding);
 			vec2_t windowSize2 = g_Data.getClientInstance()->getGuiData()->windowSize;
 
+			#ifdef _DEBUG
+			auto hudEditor = moduleMgr->getModule<HudEditorMod>();
 			std::string length = "HUD Editor";
 
 			float startY = windowSize2.y - 24;
@@ -818,6 +819,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 				clickGUI->setEnabled(false);
 				hudEditor->setEnabled(true);
 			}
+#endif
 
 			std::string textStr = categoryName;
 			DrawUtils::drawText(textPos2, &textStr, MC_Color(255, 255, 255), textSize);

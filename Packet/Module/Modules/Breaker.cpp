@@ -9,9 +9,9 @@ Breaker::Breaker() : IModule(0, Category::MISC, "Destroys Beds, Eggs, Treasures 
 	registerBoolSetting("Cakes", &cakes, cakes);
 	registerBoolSetting("Beds", &beds, beds);
 	registerBoolSetting("Eggs", &eggs, eggs);
-	registerBoolSetting("Switch", &switchSlot, switchSlot);
+	//registerBoolSetting("Switch", &switchSlot, switchSlot);
 	registerIntSetting("Range", &range, range, 1, 10);
-	registerIntSetting("Slot", &slot, slot, 1, 9);
+	//registerIntSetting("Slot", &slot, slot, 1, 9);
 }
 
 Breaker::~Breaker() {

@@ -11,7 +11,7 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "yes") {
 	mode.addEntry("Teleport", 3);
 	mode.addEntry("Jetpack", 4);
 	mode.addEntry("AirJump", 5);
-	mode.addEntry("Hive", 6);
+	//mode.addEntry("Hive", 6);
 	//registerIntSetting("PlaceDelay", &placeDelay, placeDelay, 2, 20);
 	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
 	registerFloatSetting("value", &glideMod, glideMod, -0.15f, 0.00);
@@ -57,10 +57,10 @@ void Flight::onEnable() {
 		g_Data.getLocalPlayer()->setPos(pos);
 	}
 	if (mode.getSelectedValue() == 6) {
-		auto freeTP = moduleMgr->getModule<FreeTP>();
+		//auto freeTP = moduleMgr->getModule<FreeTP>();
 		auto speed = moduleMgr->getModule<Speed>();
 		speed->setEnabled(true);
-		freeTP->setEnabled(true);
+		//freeTP->setEnabled(true);
 		timeEnabled = 1;
 	}
 }
@@ -144,14 +144,14 @@ void Flight::onTick(C_GameMode* gm) {
 		glideMod = -0.00034065544605255127;
 		if (!player->onGround) {
 			auto box = g_Data.addInfoBox("Flight: You must be on the ground");
-			box->closeTimer = 15;
+			box->closeTimer = 10;
 			this->setEnabled(false);
 		}
 		gm->player->velocity.y = glideModEffective;
 		static bool restored = false;
 		if (clickGUI->isEnabled()) {
 			auto box = g_Data.addInfoBox("Flight: Disabled to prevent flags/errors");
-			box->closeTimer = 15;
+			box->closeTimer = 10;
 			setEnabled(false);
 		}
 		if (placeCounter == placeDelay /*8*/) {
@@ -225,36 +225,6 @@ void Flight::onTick(C_GameMode* gm) {
 		}
 	}
 	if (mode.getSelectedValue() == 6) {  // Hive
-		float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
-		auto freeTP = moduleMgr->getModule<FreeTP>();
-		auto freecam = moduleMgr->getModule<Freecam>();
-		if (hiveC == 3) {
-			hiveC = 1;
-		} else {
-			hiveC++;
-		}
-		if (timeEnabled == 52) {
-			setEnabled(false);
-			//timeEnabled = 1;
-		} else {
-			timeEnabled++;
-		}
-		if (timeEnabled >= 38 && timeEnabled <= 49) {
-			player->velocity.x = 0;
-			player->velocity.z = 0;
-			if (hiveC == 1) {
-				freecam->setEnabled(true);
-			}
-			if (hiveC == 2) {
-				freecam->setEnabled(false);
-			}
-		}
-		if (timeEnabled == 30) {
-			freecam->setEnabled(true);
-		}
-		if (timeEnabled == 36) {
-			freeTP->setEnabled(false);
-		}
 	}
 }
 
@@ -359,6 +329,7 @@ bool Flight::selectBlock() {
 	for (int i = 0; i < 9; i++) {
 		C_Block* block = *(C_Block**)(((char*)&inv->inventory->getItemStack(i)->tag) + 8);
 		if (block != nullptr && block->toLegacy()->material->isSolid) {
+
 			inv->selectedHotbarSlot = i;
 			return true;
 		}
@@ -369,7 +340,7 @@ bool Flight::selectBlock() {
 void Flight::onSendPacket(C_Packet* packet) {
 	auto player = g_Data.getLocalPlayer();
 	if (mode.getSelectedValue() == 6) {  // Hive
-		/* if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr) {
+		if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr) {
 			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*g_Data.getLocalPlayer()->getPos());
 			float myPitchq = player->pitch;
@@ -378,7 +349,7 @@ void Flight::onSendPacket(C_Packet* packet) {
 			movePacket->pitch = myPitchq;
 			movePacket->headYaw = myYawq;
 			//movePacket->yaw = bodyYawq;
-		}*/
+		}
 	}
 }
 
@@ -416,7 +387,7 @@ void Flight::onDisable() {
 		blink2 = false;
 		auto speed = moduleMgr->getModule<Speed>();
 		speed->setEnabled(false);
-		freeTP->setEnabled(false);
-		freecam->setEnabled(false);
+		//freeTP->setEnabled(false);
+		//freecam->setEnabled(false);
 	}
 }

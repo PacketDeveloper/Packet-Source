@@ -15,7 +15,7 @@ bool resetStartPos2 = true;
 bool initialized = false;
 int scrollingDirection2 = 0;
 
-void HudEditor::render() {
+/*void HudEditor::render() {
 	static auto hudEditorMod = moduleMgr->getModule<HudEditorMod>();
 	if (!moduleMgr->isInitialized())
 		return;

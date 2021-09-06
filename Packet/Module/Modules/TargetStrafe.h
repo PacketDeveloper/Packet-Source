@@ -5,6 +5,7 @@
 
 class TargetStrafe : public IModule {
 private:
+	bool test = true;
 	bool circleRender = false;
 	bool jump = false;
 	bool flyMode = false;

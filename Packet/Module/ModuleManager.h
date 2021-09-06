@@ -74,7 +74,7 @@
 #include "Modules/Module.h"
 
 // Unused
-#include "Modules/InventoryCleaner.h"
+#include "Modules/InvManager.h"
 #include "Modules/ChestStealer.h"
 //#include "Modules/Waypoints.h" // Crashes
 

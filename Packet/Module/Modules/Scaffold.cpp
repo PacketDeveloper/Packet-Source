@@ -9,7 +9,7 @@ Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
 	registerBoolSetting("Rotations", &rotations, rotations);
 	registerBoolSetting("AirPlace", &airplace, airplace);
 	registerBoolSetting("Tower", &towerMode, towerMode);
-	registerBoolSetting("LockY", &lockY, lockY);
+	//registerBoolSetting("LockY", &lockY, lockY);
 	registerBoolSetting("Spoof", &spoof, spoof);
 	//registerFloatSetting("Tower Speed", &this->motion, this->motion, 0.3f, 1.f);
 	registerIntSetting("TimerBoost", &timer, timer, 20, 80);
@@ -213,10 +213,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 		}
 	}
 	if (spoof) {
-		C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-		C_Inventory* inv = supplies->inventory;
-		//C_ItemStack* inv = getItemStack(slot);
-		g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = inv->getFirstEmptySlot();
+		gm->player->getSupplies()->selectedHotbarSlot = prevSlot;
 	}
 }
 
@@ -398,8 +395,8 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	if (towerMode)
 		if (g_Data.getLocalPlayer() == nullptr)
 			return;
-	//if (!g_Data.canUseMoveKeys())
-		//return;
+	if (!g_Data.canUseMoveKeys())
+		return;
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 	if (!selectedItem->isValid() || !(*selectedItem->item)->isBlock())  // Block in hand?
 		return;
@@ -425,31 +422,43 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			}
 		}
 	}
-	if (rotations && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
+
+	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+	C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
+
+	std::string test = "blocks";
+	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+
+	float x = windowSize.x / 114;
+	float y = windowSize.y - 1;
+
+	DrawUtils::drawText(vec2_t(x, y), &test, MC_Color(255, 255, 255), 1, 1, true);
+	if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
 		vec3_t blockBelowP = g_Data.getLocalPlayer()->eyePos0;
 		blockBelowP.y -= g_Data.getLocalPlayer()->height;
 		float pitch = g_Data.getLocalPlayer()->pitch;
 		auto lPlayer = g_Data.getLocalPlayer();
 		float yaw = g_Data.getLocalPlayer()->yaw;
-		auto testModule = moduleMgr->getModule<TestModule>();
 		blockBelowP.y -= 0.5f;
 		vec3_ti blok(blockBelow);
 		vec3_ti angle = blok;
-		blok.y = blockBelow.y - -335; // dont ask
+		blok.y = blockBelow.y - 56;
+		blok.x = blockBelow.x - 56;
 		float prevyaw = lPlayer->yawUnused1;
 		float prevyaw2 = lPlayer->yaw;
 		float prevyaw3 = lPlayer->yaw2;
-		if (g_Data.getLocalPlayer()->onGround) yLock = blok.y - 10;
+		if (g_Data.getLocalPlayer()->onGround)
+			yLock = blok.y - 10;
 		else if (yLock > -1)
 			blok.y = yLock;
 		if (speed > 0.05f || (GameData::isKeyDown(*input->spaceBarKey))) {
 			lPlayer->yawUnused1 = angle.y -= blok.y;
-			player->yaw = pitch + angle.x - angle.y;
-			lPlayer->pitch = angle.y += yLock;
+			player->yaw = pitch - angle.x - angle.y;
+			lPlayer->pitch = angle.x += blok.y;
 			lPlayer->pitch = angle.y;
 			lPlayer->yaw2 = angle.y;
 			lPlayer->yaw = prevyaw2;
-			lPlayer->pitch2 = angle.x;
+			lPlayer->pitch2 = angle.y + angle.x;
 			player->pitch = yLock;
 
 			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
@@ -466,8 +475,12 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			player->bodyYaw = -360;
 			player->viewAngles;
 		}
+		C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+		C_Inventory* inv = supplies->inventory;
 	}
 }
+
+
 
 bool Scaffold::findBlock() {
 	__int64 id = *g_Data.getLocalPlayer()->getUniqueId();

@@ -77,51 +77,43 @@ void AutoArmor::onTick(C_GameMode* gm) {
 				int slot = inv->getFirstEmptySlot();
 
 				first = new C_InventoryAction(i, armorItem, nullptr, 632);
-				//second = new C_InventoryAction(slot, nullptr, armorItem);
+				second = new C_InventoryAction(slot, nullptr, armorItem);
 
 				*g_Data.getLocalPlayer()->getArmor(i) = *emptyItemStack;
 				*inv->getItemStack(slot) = *armorItem;
 
 				manager->addInventoryAction(*first);
-				//manager->addInventoryAction(*second);
+				manager->addInventoryAction(*second);
 
 				delete first;
-				//delete second;
+				delete second;
 
 				first = new C_InventoryAction(armorList[0].m_slot, armorList[0].m_item, nullptr);
-				//second = new C_InventoryAction(i, nullptr, armorList[0].m_item, 632);
+				second = new C_InventoryAction(i, nullptr, armorList[0].m_item, 632);
 
 				*g_Data.getLocalPlayer()->getArmor(i) = *inv->getItemStack(armorList[0].m_slot);
 				*inv->getItemStack(armorList[0].m_slot) = *emptyItemStack;
 
-				auto player = g_Data.getLocalPlayer();
-
-				//manager->addInventoryAction(*first);
-				//manager->addInventoryAction(*second);
+				manager->addInventoryAction(*first);
+				manager->addInventoryAction(*second);
 
 				delete first;
-				//delete second;
+				delete second;
 			}
 			if (armorItem->item == nullptr) {
 				*g_Data.getLocalPlayer()->getArmor(i) = *inv->getItemStack(armorList[0].m_slot);
 
 				first = new C_InventoryAction(armorList[0].m_slot, armorList[0].m_item, nullptr);
-				//second = new C_InventoryAction(i, nullptr, armorList[0].m_item, 632);
+				second = new C_InventoryAction(i, nullptr, armorList[0].m_item, 632);
 
 				*inv->getItemStack(armorList[0].m_slot) = *emptyItemStack;
-				//armorList.clear();
-				armorList.reserve(1);
-				armorList.begin();
-				armorItem->count;
-				armorList.end();
-				//clientMessageF("aids!");
-				//manager->addInventoryAction(*first);
-				//manager->addInventoryAction(*first);
 
-				//delete first;
-				//delete second;
+				manager->addInventoryAction(*first);
+				manager->addInventoryAction(*second);
+
+				delete first;
+				delete second;
 			}
-			//armorList.clear();
 		}
 		armorList.clear();
 	}

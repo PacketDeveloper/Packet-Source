@@ -98,7 +98,7 @@ void Killaura::onTick(C_GameMode* gm) {
 	auto scaffold = moduleMgr->getModule<Scaffold>();
 	if (silent && rot) {
 		auto KAbox = g_Data.addInfoBox("Killaura: Disabled to prevent crash");
-		KAbox->closeTimer = 12;
+		KAbox->closeTimer = 10;
 		silent = false;
 	}
 
@@ -281,7 +281,7 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 				rotation2->yawUnused1 = angle.y;
 				rotation2->pitch = angle.x;
 			}
-			/*if (test) {
+			if (rot) {
 				vec2_t appl = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos()).normAngles();
 				appl.x /= (100.f - 50);
 				appl.y /= (100.f - 50);
@@ -295,9 +295,8 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 
 				rotation2->bodyYaw = angle.y;
 				rotation2->yawUnused2 = prevyaw2;
-			}*/
-
-		if (rot && !targetList.empty()) {
+			}
+			if (rot && !targetList.empty()) {
 				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 				auto rotation = g_Data.getLocalPlayer();
 				float prevyaw = rotation->yawUnused1;
@@ -315,26 +314,6 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 				// Body
 				rotation->bodyYaw = angle.y;
 				rotation->yawUnused2 = prevyaw2;
-
-				if (rot && !targetList.empty()) {
-					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-					auto rotation = g_Data.getLocalPlayer();
-					float prevyaw = rotation->yawUnused1;
-					float prevyaw2 = rotation->yaw;
-					float prevyaw3 = rotation->yaw2;
-					rotation->setRot(angle);
-
-					// Head
-					rotation->yawUnused1 = angle.y;
-					rotation->pitch = angle.x;
-					rotation->yaw2 = angle.y;
-					rotation->yaw = prevyaw2;
-					rotation->pitch2 = angle.x;
-
-					// Body
-					rotation->bodyYaw = angle.y;
-					rotation->yawUnused2 = prevyaw2;
-				}
 			}
 		}
 	}

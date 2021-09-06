@@ -5,6 +5,7 @@ TargetStrafe::TargetStrafe() : IModule(0, Category::MOVEMENT, "Strafe around the
 	registerBoolSetting("DrawCircle", &circleRender, circleRender);
 	registerBoolSetting("EdgeCheck", &avoidvoid, avoidvoid);
 	registerBoolSetting("OnKey", &onKey, onKey);
+	registerBoolSetting("Test", &test, test);
 	registerFloatSetting("Radius", &StrafeDistance, StrafeDistance, 1, 5);
 	registerFloatSetting("Speed", &speedMod, speedMod, 0.2, 1); // might remove eventually or use if controllable disabled
 }
@@ -219,7 +220,7 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 					}
 				}
 
-				if (g_Data.canUseMoveKeys()) {
+				if (g_Data.canUseMoveKeys() && !test) {
 					vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
 					if (control && !onKey) {
 						player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
@@ -231,6 +232,28 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 					}
 
 				}
+			}
+		}
+		if (test && !taregtList69420.empty()) {
+			int dist2 = (int)(*taregtList69420[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+			auto player = g_Data.getLocalPlayer();
+			if (onKey) {
+				if (GameData::isKeyDown(*input->spaceBarKey)) {
+					player->setRot(angle);
+				}
+			} else {
+				player->setRot(angle);
+			}
+			if (dist2 >= StrafeDistance) {
+				if (onKey) {
+					if (GameData::isKeyDown(*input->spaceBarKey)) {
+						// move towards targetlist while holding down A or D
+					}
+				} else {
+					// move towards targetlist while holding down A or D
+				}
+				//clientMessageF("(>= distance) blocks away");
 			}
 		}
 	}

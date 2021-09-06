@@ -330,7 +330,7 @@
     <ClCompile Include="Packet\Module\Modules\ExtendedBlockReach.cpp" />
     <ClCompile Include="Packet\Module\Modules\HudModule.cpp" />
     <ClCompile Include="Packet\Module\Modules\InstaBreak.cpp" />
-    <ClCompile Include="Packet\Module\Modules\InventoryCleaner.cpp" />
+    <ClCompile Include="Packet\Module\Modules\InvManager.cpp" />
     <ClCompile Include="Packet\Module\Modules\InventoryMove.cpp" />
     <ClCompile Include="Packet\Module\Modules\JavascriptModule.cpp" />
     <ClCompile Include="Packet\Module\Modules\Killaura.cpp" />
@@ -510,7 +510,7 @@
     <ClInclude Include="Packet\Module\Modules\ExtendedBlockReach.h" />
     <ClInclude Include="Packet\Module\Modules\HudModule.h" />
     <ClInclude Include="Packet\Module\Modules\InstaBreak.h" />
-    <ClInclude Include="Packet\Module\Modules\InventoryCleaner.h" />
+    <ClInclude Include="Packet\Module\Modules\InvManager.h" />
     <ClInclude Include="Packet\Module\Modules\InventoryMove.h" />
     <ClInclude Include="Packet\Module\Modules\JavascriptModule.h" />
     <ClInclude Include="Packet\Module\Modules\Killaura.h" />

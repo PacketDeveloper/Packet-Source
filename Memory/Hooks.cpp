@@ -320,7 +320,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		return oText(a1, renderCtx);
 
 	static auto hudMod = moduleMgr->getModule<HudModule>();
+#ifdef _DEBUG
 	static auto hudEditorMod = moduleMgr->getModule<HudEditorMod>();
+#endif
 	static auto arraylistMod = moduleMgr->getModule<ArrayList>();
 	static auto watermark = moduleMgr->getModule<Watermark>();
 	static auto blinkMod = moduleMgr->getModule<Blink>();
@@ -887,7 +889,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						for (auto it : *moduleList) {
 							if (it.get() != arraylistMod)
 								if (it.get() != hudMod)
+#ifdef _DEBUG
 									if (it.get() != hudEditorMod)
+#endif
 										if (it.get() != watermark)
 											if (it.get() != clickGuiModule)
 												modContainerList.emplace(IModuleContainer(it));
