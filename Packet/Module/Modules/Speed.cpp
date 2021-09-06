@@ -221,11 +221,42 @@ void Speed::onDisable() {
 void Speed::onSendPacket(C_Packet* packet) {
 	auto player = g_Data.getLocalPlayer();
 	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3 && g_Data.isInGame()) {
-		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);//poggies
 		float myPitchq = player->pitch;
 		float myYawq = player->yaw;
 		float bodyYawq = player->bodyYaw;
-		movePacket->pitch = myPitchq;
-		movePacket->headYaw = myYawq;
+		//movePacket->pitch = myPitchq;
+		//movePacket->headYaw = myYawq;
+
+		C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+
+		if (input == nullptr)
+			return;
+
+		float yaw = player->yaw;
+
+		if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->backKey))
+			return;
+		else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+			yaw += 45.f;
+		} else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+			yaw -= 45.f;
+		} else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+			yaw += 135.f;
+		} else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+			yaw -= 135.f;
+		} else if (GameData::isKeyDown(*input->forwardKey)) {
+		} else if (GameData::isKeyDown(*input->backKey)) {
+			yaw += 180.f;
+		} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+			yaw += 90.f;
+		} else if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+			yaw -= 90.f;
+		}
+		if (yaw >= 180)
+			yaw -= 360.f;
+		float calcYaw = (yaw + 90) * (PI / 180);
+
+		movePacket->headYaw = yaw;
 	}
 }
