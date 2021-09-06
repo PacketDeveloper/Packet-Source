@@ -60,12 +60,11 @@ void InvManager::onTick(C_GameMode* gm) {
 			if (item != 0) inv->moveItem(item, swordSlot);
 		}*/
 	}
-	if (autoDisable) {
-		if (g_Data.getLocalPlayer() == nullptr) {
-			auto box = g_Data.addInfoBox("InvManager: Disabled");
-			box->closeTimer = 10;
-			setEnabled(false);
-		}
+	auto autoDisable = g_Data.canUseMoveKeys();
+	if (!autoDisable) {
+		auto box = g_Data.addInfoBox("InvManager: Disabled");
+		box->closeTimer = 10;
+		setEnabled(false);
 	}
 }
 
