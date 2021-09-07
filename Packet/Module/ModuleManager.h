@@ -20,6 +20,8 @@
 #include "Modules/LongJump.h"
 #include "Modules/TPAura.h"
 #include "Modules/Disabler.h"
+#include "Modules/InvManager.h"
+#include "Modules/ChestStealer.h"
 #include "Modules/Speed.h"
 #include "Modules/TargetStrafeOld.h"
 #include "Modules/TargetStrafe.h"
@@ -73,9 +75,6 @@
 #include "Modules/BreadCrumbs.h"
 #include "Modules/Module.h"
 
-// Unused
-#include "Modules/InvManager.h"
-#include "Modules/ChestStealer.h"
 //#include "Modules/Waypoints.h" // Crashes
 
 #ifdef _DEBUG

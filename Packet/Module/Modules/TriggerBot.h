@@ -4,11 +4,12 @@
 
 class TriggerBot : public IModule {
 private:
+	bool hurttime = false;
 	int delay = 0;
 	int Odelay = 0;
-	bool sword = true;
 
 public:
+	float range = 8;
 	TriggerBot();
 	~TriggerBot();
 

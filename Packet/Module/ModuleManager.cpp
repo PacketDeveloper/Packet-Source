@@ -30,6 +30,8 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new LongJump()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TPAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Disabler()));
+		moduleList.push_back(std::shared_ptr<IModule>(new InvManager()));
+		moduleList.push_back(std::shared_ptr<IModule>(new ChestStealer()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Speed()));
 		//moduleList.push_back(std::shared_ptr<IModule>(new TargetStrafeOld()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TargetStrafe()));
@@ -84,16 +86,15 @@ void ModuleManager::initModules() {
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new HudEditorMod()));
-		moduleList.push_back(std::shared_ptr<IModule>(new InvManager()));
-		moduleList.push_back(std::shared_ptr<IModule>(new EntityControl()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new EntityControl()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
 		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Switcher()));
+		moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		// Broken
 		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
-		moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
 #endif
 

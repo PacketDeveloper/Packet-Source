@@ -13,6 +13,11 @@ private:
 public:
 	int timer = 20;
 	float speed = 0.325f;
+
+	// Hive
+	float hSpeed = 0.315;
+	int hiveC = 1;
+
 	Speed();
 	~Speed();
 

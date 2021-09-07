@@ -60,12 +60,11 @@ void InvManager::onTick(C_GameMode* gm) {
 			if (item != 0) inv->moveItem(item, swordSlot);
 		}*/
 	}
-	if (autoDisable) {
-		if (g_Data.getLocalPlayer() == nullptr) {
-			auto box = g_Data.addInfoBox("InvManager: Disabled");
-			box->closeTimer = 10;
-			setEnabled(false);
-		}
+	auto inGame = g_Data.isInGame();
+	if (autoDisable && !inGame) {
+		auto box = g_Data.addInfoBox("InvManager: Disabled");
+		box->closeTimer = 10;
+		setEnabled(false);
 	}
 }
 
@@ -254,12 +253,6 @@ bool InvManager::stackIsUseful(C_ItemStack* itemStack) {
 		if ((*itemStack->item)->isWeapon()) return true;     // Weapon
 		if ((*itemStack->item)->isFood()) return true;       // Food
 		if ((*itemStack->item)->isBlock()) return true;      // Block
-		if ((*itemStack->item)->itemId == 368) return true;  // Ender Pearl
-		if ((*itemStack->item)->itemId == 449) return true;  // Totem
-		if ((*itemStack->item)->itemId == 266) return true;  // Gold Ingot
-		if ((*itemStack->item)->itemId == 265) return true;  // Iron Ingot
-		if ((*itemStack->item)->itemId == 264) return true;  // Diamond
-		if ((*itemStack->item)->itemId == 288) return true;  // Emerald
 	}
 	return false;
 }

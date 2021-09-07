@@ -1,12 +1,12 @@
 #include "CrystalAura.h"
 
 CrystalAura::CrystalAura() : IModule(0, Category::COMBAT, "Destroys nearby Crystals") {
-	registerBoolSetting("AutoPlace", &this->autoplace, this->autoplace);
-	registerBoolSetting("Switch", &this->AutoSelect, this->AutoSelect);
-	registerIntSetting("Range", &this->range, this->range, 1, 10);
-	registerIntSetting("CrystalRange", &this->cRange, this->cRange, 1, 15);
-	registerIntSetting("PlaceRange", &this->eRange, this->eRange, 1, 5);
-	registerIntSetting("PlayerRange", &this->pRange, this->pRange, 1, 10);
+	registerBoolSetting("AutoPlace", &autoplace, autoplace);
+	registerBoolSetting("Switch", &AutoSelect, AutoSelect);
+	registerIntSetting("Range", &range, range, 1, 10);
+	registerIntSetting("CrystalRange", &cRange, cRange, 1, 15);
+	registerIntSetting("PlaceRange", &eRange, eRange, 1, 5);
+	registerIntSetting("PlayerRange", &pRange, pRange, 1, 10);
 	delay = 0;
 }
 CrystalAura::~CrystalAura() {
@@ -19,7 +19,7 @@ static std::vector<C_Entity*> targetList;
 
 void CrystalAura::onEnable() {
 	targetList.clear();
-	this->delay = 0;
+	delay = 0;
 }
 
 bool CfindEntity(C_Entity* curEnt, bool isRegularEntity) {
@@ -116,19 +116,19 @@ void CrystalAura::onTick(C_GameMode* gm) {
 	if (shouldChange) {
 		shouldChange = false;
 	}
-	this->delay++;
+	delay++;
 	if (supplies == nullptr)
 		supplies = g_Data.getLocalPlayer()->getSupplies();
 	if (inv == nullptr)
 		inv = supplies->inventory;
 	targetList.clear();
 	g_Data.forEachEntity(CfindEntity);
-	if (this->delay == 0) {
+	if (delay == 0) {
 		// place block around players?
 		return;
 	}
 
-	if (this->delay == 1 && AutoSelect) {
+	if (delay == 1 && AutoSelect) {
 		prevSlot = supplies->selectedHotbarSlot;
 		FinishSelect = true;
 		for (int n = 0; n < 9; n++) {
@@ -143,7 +143,7 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		}
 		return;
 	}
-	if (this->delay == 2) {
+	if (delay == 2) {
 		int selectedItemId = g_Data.getLocalPlayer()->getSelectedItemId();
 		if (autoplace && selectedItemId == 629) {  //endcrystal
 			if (pEnhanced)
@@ -157,12 +157,12 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		}
 		return;
 	}
-	if (this->delay == 3 && FinishSelect) {
+	if (delay == 3 && FinishSelect) {
 		supplies->selectedHotbarSlot = prevSlot;
 		FinishSelect = false;
 		return;
 	}
-	if (this->delay == 4) {
+	if (delay == 4) {
 		g_Data.forEachEntity([](C_Entity* ent, bool b) {
 			int entityType = ent->getEntityTypeId();
 			if (entityType != 0x47)
@@ -176,8 +176,8 @@ void CrystalAura::onTick(C_GameMode* gm) {
 		});
 		return;
 	}
-	if (this->delay >= 5) {
-		this->delay = 0;
+	if (delay >= 5) {
+		delay = 0;
 		return;
 	}
 }
@@ -201,5 +201,5 @@ void CrystalAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
 void CrystalAura::onDisable() {
-	this->delay = 0;
+	delay = 0;
 }

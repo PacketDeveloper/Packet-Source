@@ -10,13 +10,15 @@ private:
 	float height = 1.f;
 	bool autoweapon = false;
 	bool showtarget = false;
-	void findWeapon();
 	bool render = false;
 	int renderStart = 0;
-
-	bool test = false;
+	bool hold = false;
 
 public:
+	bool targetListA = false;
+	vec2_t testRot;
+	bool test = false;
+	bool useSprint = true;
 	bool targethudEnabled = false;
 	int targethud = 0;
 	bool rot = true;

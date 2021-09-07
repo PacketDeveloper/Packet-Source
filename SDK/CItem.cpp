@@ -1,23 +1,23 @@
 #include "CItem.h"
 
+#include "../Memory/GameData.h"
 #include "../Utils/Utils.h"
 #include "Tag.h"
-#include "../Memory/GameData.h"
 
 C_BaseActorRenderContext::C_BaseActorRenderContext(C_ScreenContext *ScreenCtx, C_ClientInstance *client, MinecraftGame *game) {
 	memset(this, 0, sizeof(C_BaseActorRenderContext));
 	using BaseActorRenderContext_t = __int64(__fastcall *)(C_BaseActorRenderContext *, C_ScreenContext *, C_ClientInstance *, MinecraftGame *);
-	static BaseActorRenderContext_t BaseActorRenderContext_constructor = reinterpret_cast<BaseActorRenderContext_t>(FindSignature("48 89 5C 24 ?? 48 89 74 24 ?? 48 89 4C 24 ?? 57 48 83 EC ?? 49 8B D8 48 8B F9 48 8D 05"));
+	static BaseActorRenderContext_t BaseActorRenderContext_constructor = reinterpret_cast<BaseActorRenderContext_t>(FindSignature("48 89 5C 24 ?? 48 89 74 24 ?? 48 89 4C 24 08 57 48 83 EC ?? ?? ?? ?? 48 8B F9 48 8D 05 ?? ?? ?? ?? 48 89 ?? 33 F6 48 89 71 08"));
 	BaseActorRenderContext_constructor(this, ScreenCtx, client, game);
 }
 void C_ItemRenderer::renderGuiItemNew(C_BaseActorRenderContext *BaseActorRenderCtx, C_ItemStack *item, MinecraftGame *game, float x, float y, float opacity, float scale, bool isEnchanted) {
 	using renderGuiItemNew_t = void(__fastcall *)(C_ItemRenderer *, C_BaseActorRenderContext *, C_ItemStack *, MinecraftGame *, float, float, float, float, float, bool);
-	static renderGuiItemNew_t renderGuiItemNew = reinterpret_cast<renderGuiItemNew_t>(FindSignature("48 8B C4 48 89 58 ?? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC 00 01 00 00 0F 29 70 B8 0F 29 78 A8 48 8B 05"));
+	static renderGuiItemNew_t renderGuiItemNew = reinterpret_cast<renderGuiItemNew_t>(FindSignature("48 8B C4 48 89 58 20 55 56 57 41 54 41 55 41 56 41 57 48 81 EC 00 01 00 00 0F 29 70 B8 ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ??"));
 	item->setShowPickUp(false);
 	renderGuiItemNew(this, BaseActorRenderCtx, item, game, x, y, 1, opacity, scale, isEnchanted);
 }
 
-void C_ItemRenderer::renderGuiItemInChunk(C_BaseActorRenderContext* BaseActorRenderCtx, C_ItemStack* item, float x, float y, float opacity, float scale, bool isEnchanted, int mode) {
+void C_ItemRenderer::renderGuiItemInChunk(C_BaseActorRenderContext *BaseActorRenderCtx, C_ItemStack *item, float x, float y, float opacity, float scale, bool isEnchanted, int mode) {
 	using renderGuiItemInChunk_t = void(__fastcall *)(C_ItemRenderer *, C_BaseActorRenderContext *, __int64, C_ItemStack *, float, float, float, float, float, int);
 	static renderGuiItemInChunk_t renderGuiItem = reinterpret_cast<renderGuiItemInChunk_t>(FindSignature("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 B8 0F 29 78 A8 44 0F 29 40 ? 44 0F 29 48 ? 44 0F 29 90 ? ? ? ? 44 0F 29 98 ? ? ? ? 44 0F 29 A0 ? ? ? ? 44 0F 29 A8 ? ? ? ? 48 8B 05 ? ? ? ?"));
 	//item->setShowPickUp(false);
@@ -47,12 +47,12 @@ void C_ItemStack::fromTag(const Tag &tag) {
 }
 void C_ItemStack::save(CompoundTag **tag) {
 	using ItemStackBase__saveF = void(__fastcall *)(C_ItemStack *, CompoundTag **);
-	ItemStackBase__saveF save = reinterpret_cast<ItemStackBase__saveF>(FindSignature("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B FA 48 8B F1 48 89 55 F7 45 33 ED"));
+	ItemStackBase__saveF save = reinterpret_cast<ItemStackBase__saveF>(FindSignature("48 89 5C 24 ?? 55 56 57 41 56 41 57 48 8D 6C 24 C9 48 81 EC ?? ?? ?? ?? 48 8B FA 48 8B F1 48 89 55 0F 45 33 ?? 44 89 7D 97 33 C0"));
 	return save(this, tag);
 }
 void C_ItemStack::setUserData(std::unique_ptr<Tag> tag) {
 	using setUserData_t = void(__fastcall *)(C_ItemStack *, std::unique_ptr<Tag>);
-	setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ? 48 8B DA 48 8D 51 10 48 3B D3 74 1F 48 8B 03 48 C7 03 ? ? ? ?"));
+	setUserData_t setUserData = reinterpret_cast<setUserData_t>(FindSignature("40 53 48 83 EC ?? 48 8B DA 48 8D 51 50 48 3B D3 74 1F 48 8B 03 48 C7 03 ?? ?? ?? ??"));
 	setUserData(this, std::move(tag));
 }
 void C_ItemStack::reinit(C_BlockLegacy &legacy, int count) {

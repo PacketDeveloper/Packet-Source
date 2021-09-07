@@ -13,6 +13,7 @@ private:
 	bool rOre = false;
 	bool dOre = false;
 	bool eOre = false;
+	bool gOre = false;
 	int counter = 1;
 	int Odelay = 0;
 	int delay = 0;

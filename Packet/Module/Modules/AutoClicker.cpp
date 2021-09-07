@@ -4,7 +4,7 @@ AutoClicker::AutoClicker() : IModule(0, Category::COMBAT, "A simple autoclicker,
 	this->registerBoolSetting("RightClick", &this->rightclick, rightclick);
 	//this->registerBoolSetting("only weapons", &this->weapons, this->weapons);
 	//this->registerBoolSetting("break blocks", &this->breakBlocks, this->breakBlocks);
-	this->registerIntSetting("delay", &this->delay, this->delay, 0, 5);
+	this->registerIntSetting("delay", &this->delay, this->delay, 0, 10);
 	//this->registerBoolSetting("hold", &this->hold, this->hold);
 }
 

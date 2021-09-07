@@ -7,8 +7,7 @@ private:
 	std::vector<int> findStackableItems();
 	std::vector<int> findUselessItems();
 	bool isLastItem(C_Item* item);
-	
-	bool autoDisable = false;
+
 	bool openInv = true;
 	bool autoSort = true;
 	bool clean = true;
@@ -22,6 +21,7 @@ private:
 
 public:
 	bool stackIsUseful(C_ItemStack* itemStack);
+	bool autoDisable = false;
 	InvManager();
 	~InvManager();
 

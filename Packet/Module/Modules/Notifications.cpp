@@ -11,7 +11,7 @@ Notifications::~Notifications() {
 
 void Notifications::onEnable() {
 	auto box = g_Data.addInfoBox("Example Notification");
-	box->closeTimer = 15;
+	box->closeTimer = 13;
 	setEnabled(false);
 }
 

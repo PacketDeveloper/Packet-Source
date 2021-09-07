@@ -147,7 +147,7 @@ void Hooks::Init() {
 		g_Hooks.ClickFuncHook = std::make_unique<FuncHook>(clickHook, Hooks::ClickFunc);
 
 		void* chestScreenControllerTick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 08 57 48 83 EC 20 48 8B F9 E8 ?? ?? ?? ?? 48 8B 17 48 8B CF 8B D8 FF 92 ?? ?? ?? ?? 84 C0 74 31"));
-		g_Hooks.ChestScreenController_tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::ChestScreenController_tick);
+        g_Hooks.ChestScreenController_tickHook = std::make_unique<FuncHook>(chestScreenControllerTick, Hooks::ChestScreenController_tick);
 
 		void* fullbright = reinterpret_cast<void*>(FindSignature("48 83 EC ?? 80 B9 ?? ?? ?? ?? ?? 48 8D 54 24 ?? 48 8B 01 74 35 41 B8 0D 01 00 00"));
 		g_Hooks.GetGammaHook = std::make_unique<FuncHook>(fullbright, Hooks::GetGamma);
@@ -158,10 +158,14 @@ void Hooks::Init() {
 
 		void* RakNetInstance__tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 48 89 74 24 18 55 57 41 54 41 56 41 57 48 8D ?? 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 8B F9 45 33 E4 4C"));
 		g_Hooks.RakNetInstance_tickHook = std::make_unique<FuncHook>(RakNetInstance__tick, Hooks::RakNetInstance_tick);
+
+		void* getRotation = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80 ?? ?? ?? ?? ?? 00 48 8B FA 48 8B D9"));
+        g_Hooks.Actor_getRotationHook = std::make_unique<FuncHook>(getRotation, Hooks::Actor_getRotation);
 		
 		//bad
 		//void* ConnectionRequest__create = reinterpret_cast<void*>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 49 8B D9 4D 8B F8"));
 		//g_Hooks.ConnectionRequest_createHook = std::make_unique<FuncHook>(ConnectionRequest__create, Hooks::ConnectionRequest_create);
+
 		void* ConnectionRequest__create = reinterpret_cast<void*>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 4D 8B E1 4D 8B F8 48 89 55"));
 		g_Hooks.ConnectionRequest_createHook = std::make_unique<FuncHook>(ConnectionRequest__create, Hooks::ConnectionRequest_create);
 		
@@ -178,7 +182,7 @@ void Hooks::Init() {
 		void* addAction = reinterpret_cast<void*>(FindSignature("55 56 57 41 56 41 57 48 83 EC ?? 45 0F B6 F8 4C 8B F2 48 8B F1 48 8B 01 48 8B 88") - 5);
 		g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
 #endif
-		
+
 		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature(" 48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80 ?? ?? ?? ?? ?? 00 48 8B FA 48 8B D9"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
 		
@@ -191,7 +195,7 @@ void Hooks::Init() {
 		
 		void* levelRendererBobView = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B D9 0F 29 B4 24 ?? ?? ?? ?? 48 8B 89"));
 
-		static auto bobViewHookF = [](__int64 _this, glm::mat4& matrix, float lerpT){
+		static auto bobViewHookF = [](__int64 _this, glm::mat4& matrix, float lerpT) {
 			static auto origFunc = g_Hooks.lambdaHooks.at(lambda_counter)->GetFastcall<void, __int64, glm::mat4&, float>();
 			static auto testMod = moduleMgr->getModule<Animations>();
             auto p = g_Data.getLocalPlayer();
@@ -268,15 +272,15 @@ void Hooks::Actor_baseTick(C_Entity* _this) {
 		moduleMgr->onTick(gm);
 }
 
-/*void Hooks::Actor_rotation(C_Entity* _this, vec2_t& newAngle) {
-	static auto oFunc = g_Hooks.Actor_rotationHook->GetFastcall<void, C_Entity*, vec2_t&>();
-	static auto killauraMod = moduleMgr->getModule<Killaura>();
-	if (killauraMod->isEnabled()) {
+void Hooks::Actor_getRotation(C_Entity* _this, vec2_t& newAngle) {
+	static auto oFunc = g_Hooks.Actor_getRotationHook->GetFastcall<void, C_Entity*, vec2_t&>();
+	static auto killaura = moduleMgr->getModule<Killaura>();
+	if (killaura->isEnabled() && killaura->test && !killaura->targetListA) {
 		if (g_Data.getLocalPlayer() != nullptr)
-			return oFunc(_this, killauraMod->rot);
+			return oFunc(_this, killaura->testRot);
 	}
 	oFunc(_this, newAngle);
-}*/
+}
 
 __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oSetup = g_Hooks.UIScene_setupAndRenderHook->GetFastcall<__int64, C_UIScene*, __int64>();
@@ -304,6 +308,19 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 	if (!g_Hooks.shouldRender) {
 		g_Hooks.shouldRender = (strcmp(alloc.getText(), "start_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0);
+	}
+	static auto invManager = moduleMgr->getModule<InvManager>();
+	static auto chestStealer = moduleMgr->getModule<ChestStealer>();
+	std::string screenName(g_Hooks.currentScreenName);
+	if (invManager->autoDisable && strcmp(screenName.c_str(), "start_screen") == 0) {
+		auto box = g_Data.addInfoBox("InvManager: Disabled");
+		box->closeTimer = 14;
+		invManager->setEnabled(false);
+	}
+	if (chestStealer->autoDisable && strcmp(screenName.c_str(), "start_screen") == 0) {
+		auto box = g_Data.addInfoBox("ChestStealer: Disabled");
+		box->closeTimer = 14;
+		chestStealer->setEnabled(false);
 	}
 	alloc.resetWithoutDelete();
 
@@ -829,7 +846,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					float textSize = hudMod->scale;
 					float textPadding = 0.6f * textSize;
 					float textHeight = 10.0f * textSize;
-					float smoothness = 3;
+					float smoothness = 2;
 					
 					struct IModuleContainer {
 						// Struct used to Sort IModules in a std::set
@@ -1239,26 +1256,27 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 
-        // Draw Notifications
+	// Draw Notifications
 	{
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 		auto notifications = moduleMgr->getModule<Notifications>();
 		auto hudMod = moduleMgr->getModule<HudModule>();
 		auto box = g_Data.getFreshInfoBox();
-		float epicMathHack = 2;
 		if (box) {
 			box->fade();
 			if (box->fadeTarget == 1 && box->closeTimer <= 0 && box->closeTimer > -1)
 				box->fadeTarget = 0;
 			else if (box->closeTimer > 0 && box->fadeVal > 0.9f)
 				box->closeTimer -= 1.f / 60;
+
 			const float titleTextSize = box->fadeVal * 1;
 			const float messageTextSize = box->fadeVal * 1;
 			const float titleTextHeight = DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight() * titleTextSize;
-
+			vec2_t* pos;
 			int lines = 1;
 
 			std::string substring = box->message;
+
 			while (lines < 5) {
 				auto brea = substring.find("\n");
 				if (brea == std::string::npos || brea + 1 >= substring.size())
@@ -1280,26 +1298,30 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			float nameLength = DrawUtils::getTextWidth(&substring, boxMessage);
 			float fullTextLength = nameLength + DrawUtils::getTextWidth(&version, unused) + 2;
 
-			vec4_t rect = vec4_t(
-				windowSize.x - margin - fullTextLength - borderPadding * 2,
-				windowSize.y - margin - textHeight + 4,
-				windowSize.x - margin + borderPadding,
-				windowSize.y - margin);
-
-			vec4_t line = vec4_t(
-				windowSize.x - margin - fullTextLength - borderPadding - 0.5,
-				windowSize.y - margin - textHeight + 3,
-				windowSize.x - margin + borderPadding - 0.5,
-				windowSize.y - margin - 13.5);
-
-			if (box->isOpen) {
+			if (box->closeTimer <= 1 && box->closeTimer > -1) {
+				vec4_t rect2 = vec4_t(
+					windowSize.x - box->closeTimer * 100,
+					windowSize.y - margin - textHeight + 4,
+					windowSize.x - box->closeTimer,
+					windowSize.y - margin);
+				vec2_t textPos = vec2_t(rect2.x + 1.5, rect2.y + 3);
+				DrawUtils::drawText(vec2_t(textPos.x + borderPadding, textPos.y), &substring, MC_Color(255, 255, 255), 1, 1, true);
+				DrawUtils::fillRectangle(rect2, MC_Color(0, 0, 0), notifications->opacity);
 			}
 
-			vec2_t textPos = vec2_t(rect.x + 1.5, rect.y + 3);
+			vec4_t rect = vec4_t(
+				windowSize.x - margin - fullTextLength - 2 - borderPadding * 2,
+				windowSize.y - margin - textHeight + 4,
+				windowSize.x - margin + borderPadding - 2,
+				windowSize.y - margin);
 
-			DrawUtils::drawRectangle(line, MC_Color(), 1.f, box->fadeVal);
-			DrawUtils::fillRectangle(rect, MC_Color(0, 0, 0), notifications->opacity);
-			DrawUtils::drawText(vec2_t(textPos.x + borderPadding, textPos.y), &substring, MC_Color(255, 255, 255), box->fadeVal, 1, true);
+			vec2_t textPos = vec2_t(rect.x + 1.5, rect.y + 3);
+			if (box->closeTimer > 1) {
+				DrawUtils::setColor(1, 1, 1, 1);
+				DrawUtils::drawLine(vec2_t(rect.x + fullTextLength - box->closeTimer * 7, rect.y + 14), vec2_t(rect.x + fullTextLength + 3, rect.y + 14), 1), vec2_t(rect.x - box->closeTimer, rect.y + 14);
+				DrawUtils::drawText(vec2_t(textPos.x + borderPadding, textPos.y), &substring, MC_Color(255, 255, 255), 1, 1, true);
+				DrawUtils::fillRectangle(rect, MC_Color(0, 0, 0), notifications->opacity);
+			}
 		}
 	}
 	DrawUtils::flush();
@@ -1853,10 +1875,11 @@ __int64 Hooks::MoveInputHandler_tick(C_MoveInputHandler* a1, C_Entity* a2) {
 
 __int64 Hooks::ChestScreenController_tick(C_ChestScreenController* a1) {
 	static auto oFunc = g_Hooks.ChestScreenController_tickHook->GetFastcall<__int64, C_ChestScreenController*>();
-	return oFunc(a1);
 
 	static auto chestStealerMod = moduleMgr->getModule<ChestStealer>();
 	if (chestStealerMod->isEnabled()) chestStealerMod->chestScreenController_tick(a1);
+
+	return oFunc(a1);
 }
 
 float Hooks::GetGamma(uintptr_t* a1) {

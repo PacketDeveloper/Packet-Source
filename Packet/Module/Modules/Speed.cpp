@@ -66,53 +66,6 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		if (pressed) player->lerpMotion(moveVec);
 	}
 	if (mode.getSelectedValue() == 1) {  // Hive
-		/*auto player = g_Data.getLocalPlayer();
-		vec2_t movement = {input->forwardMovement, -input->sideMovement};
-		bool pressed = movement.magnitude() > 0.f;
-		if (player->onGround && pressed)
-			player->jumpFromGround();
-		float calcYaw = (player->yaw + 90) * (PI / 180);
-		vec3_t moveVec;
-		float c = cos(calcYaw);
-		float s = sin(calcYaw);
-		movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
-		moveVec.x = movement.x * speed;
-		moveVec.y = player->velocity.y;
-		moveVec.z = movement.y * speed;
-		if (pressed)
-			player->lerpMotion(moveVec);
-		else if (input->sideMovement) {
-			float calcYaw = (player->yaw + 90) * (PI / 180);
-			vec3_t moveVec;
-			float c = cos(calcYaw);
-			float s = sin(calcYaw);
-			movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
-			moveVec.x = movement.x * 0.4;
-			moveVec.y = player->velocity.y;
-			moveVec.z = movement.y * 0.4;
-			if (pressed) player->lerpMotion(moveVec);
-		}*/
-		/*vec2_t movement = {input->forwardMovement, -input->sideMovement};
-		bool pressed = movement.magnitude() > 0.f;
-		if (height >= 0.385) {
-			if (player->onGround && pressed)
-				player->jumpFromGround();
-		} else {
-			if (player->onGround && pressed)
-				player->velocity.y += height /+ 1;
-			player->velocity.y += height / 4;
-
-			float calcYaw = (player->yaw + 90) * (PI / 180);
-			vec3_t moveVec;
-			float c = cos(calcYaw);
-			float s = sin(calcYaw);
-			movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
-			moveVec.x = movement.x *=+ speed;
-			moveVec.y = player->velocity.y;
-			moveVec.z = movement.y *=+ speed;
-			if (pressed)
-				player->lerpMotion(moveVec);
-		}*/
 		auto player = g_Data.getLocalPlayer();
 		vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;
@@ -221,11 +174,42 @@ void Speed::onDisable() {
 void Speed::onSendPacket(C_Packet* packet) {
 	auto player = g_Data.getLocalPlayer();
 	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3 && g_Data.isInGame()) {
-		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);//poggies
 		float myPitchq = player->pitch;
 		float myYawq = player->yaw;
 		float bodyYawq = player->bodyYaw;
-		movePacket->pitch = myPitchq;
-		movePacket->headYaw = myYawq;
+		//movePacket->pitch = myPitchq;
+		//movePacket->headYaw = myYawq;
+
+		C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+
+		if (input == nullptr)
+			return;
+
+		float yaw = player->yaw;
+
+		if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->backKey))
+			return;
+		else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+			yaw += 45.f;
+		} else if (GameData::isKeyDown(*input->forwardKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+			yaw -= 45.f;
+		} else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+			yaw += 135.f;
+		} else if (GameData::isKeyDown(*input->backKey) && GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+			yaw -= 135.f;
+		} else if (GameData::isKeyDown(*input->forwardKey)) {
+		} else if (GameData::isKeyDown(*input->backKey)) {
+			yaw += 180.f;
+		} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+			yaw += 90.f;
+		} else if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+			yaw -= 90.f;
+		}
+		if (yaw >= 180)
+			yaw -= 360.f;
+		float calcYaw = (yaw + 90) * (PI / 180);
+
+		movePacket->headYaw = yaw;
 	}
 }

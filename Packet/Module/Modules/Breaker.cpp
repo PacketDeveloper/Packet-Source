@@ -5,6 +5,7 @@ Breaker::Breaker() : IModule(0, Category::MISC, "Destroys Beds, Eggs, Treasures 
 	registerBoolSetting("Redstone", &rOre, rOre);
 	registerBoolSetting("Diamond", &dOre, dOre);
 	registerBoolSetting("Emerald", &eOre, eOre);
+	registerBoolSetting("Gold", &gOre, gOre);
 	registerBoolSetting("Chests", &chests, chests);
 	registerBoolSetting("Cakes", &cakes, cakes);
 	registerBoolSetting("Beds", &beds, beds);
@@ -39,6 +40,7 @@ void Breaker::onTick(C_GameMode* gm) {
 				if (id == 73 && rOre) destroy = true;      // Redstone Ore
 				if (id == 56 && dOre) destroy = true;      // Diamond Ore
 				if (id == 129 && eOre) destroy = true;     // Emerald Ore
+				if (id == 14 && gOre) destroy = true;     // Gold Ore
 				if (id == 54 && chests) destroy = true;    // Chests
 
 				if (destroy) {
