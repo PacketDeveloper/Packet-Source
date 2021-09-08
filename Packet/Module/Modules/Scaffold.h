@@ -22,6 +22,8 @@ private:
 	int yLock = -1;
 
 public:
+	bool foundCandidate2 = false;
+	vec2_t scaffoldRot;
 	bool towerMode = false;
 	int timer = 20;
 	int tCounter = 1;

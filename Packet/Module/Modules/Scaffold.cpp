@@ -254,6 +254,22 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 			backwards = false;
 		}
 	}
+	if (towerMode && strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
+		if (foundCandidate2 && input->isJumping) {
+			vec2_t movement = {input->forwardMovement, -input->sideMovement};
+			bool pressed = movement.magnitude() > 0.f;
+			float calcYaw = (player->yaw + 90) * (PI / 180);
+			vec3_t moveVec;
+			float c = cos(calcYaw);
+			float s = sin(calcYaw);
+
+			player->jumpFromGround();
+			movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
+			moveVec.y = player->velocity.y;
+			player->velocity.x = 0;
+			player->velocity.z = 0;
+		}
+	}
 }
 
 bool Scaffold::tryScaffold(vec3_t blockBelow) {
@@ -352,27 +368,11 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 				}
 				i++;
 			}
+			foundCandidate2 = foundCandidate;
 			if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
 				vec3_t moveVec;
 				moveVec.x = g_Data.getLocalPlayer()->velocity.x;
-				if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
-					if (tCounter == 3) {
-						*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
-						tCounter = 1;
-					} else {
-						tCounter++;
-					}
-					if (tCounter == 2 && player->onGround) {
-						*g_Data.getClientInstance()->minecraft->timer = 2.f;
-						player->fallDistance = 0;
-						vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
-						vec3_t pos;
-						pos.x = 0.f + pPos.x;
-						pos.y = 2.f + pPos.y;
-						pos.z = 0.f + pPos.z;
-						g_Data.getLocalPlayer()->setPos(pos);
-					}
-				} else { // not on the hoe :((((
+				if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") != 0) {
 					moveVec.y = towerSpeed;
 				}
 				moveVec.z = g_Data.getLocalPlayer()->velocity.z;
@@ -423,17 +423,13 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 
-	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-	C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
-
-	std::string test = "blocks";
-	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-
-	float x = windowSize.x / 114;
-	float y = windowSize.y - 1;
-
-	DrawUtils::drawText(vec2_t(x, y), &test, MC_Color(255, 255, 255), 1, 1, true);
-	if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
+	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
+		if (towerMode && rotations && input->spaceBarKey) {
+			// yay
+			vec3_t eyePos = player->eyePos0;
+			eyePos.y = eyePos.y - 1.5;
+		}
+	} else if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
 		vec3_t blockBelowP = g_Data.getLocalPlayer()->eyePos0;
 		blockBelowP.y -= g_Data.getLocalPlayer()->height;
 		float pitch = g_Data.getLocalPlayer()->pitch;

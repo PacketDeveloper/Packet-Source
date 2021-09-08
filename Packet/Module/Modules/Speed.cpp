@@ -67,7 +67,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 	}
 	if (mode.getSelectedValue() == 1) {  // Hive
 		auto player = g_Data.getLocalPlayer();
-		vec2_t movement = {input->forwardMovement, -input->sideMovement};
+		/*vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;
 		float calcYaw = (player->yaw + 90) * (PI / 180);
 		vec3_t moveVec;
@@ -88,31 +88,31 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
-		}
-	}
-	if (mode.getSelectedValue() == 2) {  // HiveGround - unused
-		auto scaffold = moduleMgr->getModule<Scaffold>();
+		}*/
+		vec2_t movement = {input->forwardMovement, -input->sideMovement};
+		bool pressed = movement.magnitude() > 0.f;
 		float calcYaw = (player->yaw + 90) * (PI / 180);
 		vec3_t moveVec;
 		float c = cos(calcYaw);
 		float s = sin(calcYaw);
-		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
-		if (!player->onGround && !scaffold->isEnabled()) {
-			moveVec.x = moveVec2d.x * 0.30;
+		if (player->onGround && pressed) player->jumpFromGround();
+		movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
+		if (!pressed && player->damageTime == 0) {
+			player->velocity.x = 0;
+			player->velocity.z = 0;
+		}
+
+		if (player->onGround && input->isJumping) {
+			moveVec.x = movement.x * speed;
 			moveVec.y = player->velocity.y;
-			moveVec.z = moveVec2d.y * 0.30;
+			moveVec.z = movement.y * speed;
 			if (pressed) player->lerpMotion(moveVec);
-		} else {
-			moveVec.x = moveVec2d.x * speed;
+		}
+		if (!input->isJumping) {
+			moveVec.x = movement.x * 0.315;
 			moveVec.y = player->velocity.y;
-			moveVec.z = moveVec2d.y * speed;
+			moveVec.z = movement.y * 0.315;
 			if (pressed) player->lerpMotion(moveVec);
-			if (!pressed) {
-				player->velocity.x *= 0;
-				player->velocity.z *= 0;
-			}
-			if (input->right || input->left)
-				*g_Data.getClientInstance()->minecraft->timer = 19.f;
 		}
 	}
 	if (mode.getSelectedValue() == 3 && g_Data.isInGame()) {
