@@ -275,14 +275,11 @@ void Hooks::Actor_baseTick(C_Entity* _this) {
 void Hooks::Actor_getRotation(C_Entity* _this, vec2_t& newAngle) {
 	static auto oFunc = g_Hooks.Actor_getRotationHook->GetFastcall<void, C_Entity*, vec2_t&>();
 	static auto killaura = moduleMgr->getModule<Killaura>();
-	static auto scaffold = moduleMgr->getModule<Scaffold>();
-	if (killaura->isEnabled() && !killaura->targetListEmpty) {
-		if (g_Data.getLocalPlayer() != nullptr && killaura->rotations && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
+	if (killaura->isEnabled() && killaura->rotations && !killaura->targetListEmpty) {
+		if (g_Data.getLocalPlayer() != nullptr)
+			if (killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1) {
 				return oFunc(_this, killaura->testRot);
-	}
-	if (scaffold->isEnabled() && scaffold->towerMode) {
-		if (g_Data.getLocalPlayer() != nullptr && strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0/*&& scaffold->foundCandidate2 */)
-			return oFunc(_this, scaffold->scaffoldRot);
+			}
 	}
 	oFunc(_this, newAngle);
 }
@@ -1000,7 +997,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						currColor[3] = rcolors[3];
 						if (hudMod->color.getSelectedValue() == 0) {  // Rainbow
 							Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[2], rcolors[1], currColor[0], currColor[1], currColor[2]);
-							currColor[0] += 0.8f / a * c;
+							currColor[0] += 2.f / a * c;
 							Utils::ColorConvertHSVtoRGB(currColor[0], currColor[2], currColor[3], currColor[0], currColor[1], currColor[2]);
 						}
 						if (hudMod->color.getSelectedValue() == 2) {  // Horion
