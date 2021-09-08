@@ -62,7 +62,7 @@ void HiveFly::onTick(C_GameMode* gm) {
 	}
 	if (strafeMode) {
 		auto killauraMod = moduleMgr->getModule<Killaura>();
-		killauraMod->strafe = true;
+		//killauraMod->strafe = true;
 	}
 	float yaw = player->yaw;
 	if (counter >= 0) {
@@ -158,6 +158,6 @@ void HiveFly::onDisable() {
 	}
 	if (strafeMode) {
 		auto killauraMod = moduleMgr->getModule<Killaura>();
-		killauraMod->strafe = false;
+		//killauraMod->strafe = false;
 	}
 }
