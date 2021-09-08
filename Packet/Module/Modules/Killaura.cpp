@@ -3,14 +3,14 @@
 Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entites") {
 	registerEnumSetting("Rotations", &mode, 0);
 	mode.addEntry("Normal", 0);
-	mode.addEntry("Chronos", 1);
+	mode.addEntry("Smooth", 1);
 	mode.addEntry("Old", 2);
 	mode.addEntry("Silent", 3);
 	registerBoolSetting("ShowTarget", &render, render);
 	registerBoolSetting("Rotations", &rotations, rotations);
+	registerBoolSetting("MultiAura", &multi, multi);
 	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
 	registerBoolSetting("MobAura", &mobAura, mobAura);
-	registerBoolSetting("Multi", &multi, multi);
 	registerBoolSetting("Click", &click, click);
 	registerBoolSetting("Hold", &hold, hold);
 	registerFloatSetting("range", &range, range, 3.f, 8.f);
@@ -25,14 +25,6 @@ Killaura::~Killaura() {
 
 const char* Killaura::getModuleName() {
 	return ("Killaura");
-}
-
-void Killaura::onEnable() {
-	targethud = 0;
-	if (g_Data.getLocalPlayer() == nullptr)
-		setEnabled(false);
-	if (render)
-		renderStart++;
 }
 
 static std::vector<C_Entity*> targetList;
@@ -85,14 +77,28 @@ struct CompareTargetEnArray {
 	}
 };
 
+void Killaura::onEnable() {
+	if (g_Data.getLocalPlayer() == nullptr)
+		setEnabled(false);
+	targetListEmpty = targetList.empty();
+	targethud = 0;
+	if (render)
+		renderStart++;
+}
+
 void Killaura::onTick(C_GameMode* gm) {
+	auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
 	auto scaffold = moduleMgr->getModule<Scaffold>();
-	targetListA = targetList.empty();
+	targetListEmpty = targetList.empty();
+
+	if (clickGUI->isEnabled()) {
+		targetListEmpty = true;
+	}
 
 	targetList.clear();
 
 	g_Data.forEachEntity(findEntity);
-
+	
 	if (renderStart >= 1)
 		renderStart++;
 	if (renderStart >= 5)
@@ -153,6 +159,8 @@ void Killaura::onTick(C_GameMode* gm) {
 				}
 			}
 		}
+	} else {
+		targetListEmpty = true;
 	}
 }
 

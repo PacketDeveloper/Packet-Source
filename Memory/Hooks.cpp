@@ -275,7 +275,7 @@ void Hooks::Actor_baseTick(C_Entity* _this) {
 void Hooks::Actor_getRotation(C_Entity* _this, vec2_t& newAngle) {
 	static auto oFunc = g_Hooks.Actor_getRotationHook->GetFastcall<void, C_Entity*, vec2_t&>();
 	static auto killaura = moduleMgr->getModule<Killaura>();
-	if (killaura->isEnabled() && killaura->rotations && !killaura->targetListA) {
+	if (killaura->isEnabled() && killaura->rotations && !killaura->targetListEmpty) {
 		if (g_Data.getLocalPlayer() != nullptr)
 			if (killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1) {
 				return oFunc(_this, killaura->testRot);

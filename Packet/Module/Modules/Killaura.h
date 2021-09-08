@@ -23,7 +23,7 @@ public:
 	int delay = 0;
 
 	// Rotations
-	bool targetListA = false;
+	bool targetListEmpty = true;
 	bool rotations = true;
 	vec2_t testRot;
 
