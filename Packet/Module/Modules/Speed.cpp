@@ -66,7 +66,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		if (pressed) player->lerpMotion(moveVec);
 	}
 	if (mode.getSelectedValue() == 1) {  // Hive
-		auto player = g_Data.getLocalPlayer();
+		//auto player = g_Data.getLocalPlayer();
 		/*vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;
 		float calcYaw = (player->yaw + 90) * (PI / 180);
@@ -90,30 +90,39 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
 		}*/
 		//auto player = g_Data.getLocalPlayer();
-		vec2_t movement = {input->forwardMovement, -input->sideMovement};
-		bool pressed = movement.magnitude() > 0.f;
-		float calcYaw = (player->yaw + 90) * (PI / 180);
-		vec3_t moveVec;
-		float c = cos(calcYaw);
-		float s = sin(calcYaw);
-
-		if (pressed && player->onGround) {
-			player->jumpFromGround();
+			auto player = g_Data.getLocalPlayer();
+			vec2_t movement = {input->forwardMovement, -input->sideMovement};
+			bool pressed = movement.magnitude() > 0.f;
+			float calcYaw = (player->yaw + 90) * (PI / 180);
+			vec3_t moveVec;
+			float c = cos(calcYaw);
+			float s = sin(calcYaw);
+			movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
+			if (pressed && player->onGround) {
+				input->isJumping = true;
+				player->jumpFromGround();
+			}
+			if (input->forward && player->onGround) {
+				moveVec.x = movement.x * speed;
+				moveVec.y = player->velocity.y;
+				moveVec.z = movement.y * speed;
+				if (pressed && player->onGround) player->lerpMotion(moveVec);
+			}
+			
+			if (input->sideMovement) {
+				moveVec.x = movement.x * 0.315;
+				moveVec.y = player->velocity.y;
+				moveVec.z = movement.y * 0.315;
+				if (pressed) player->lerpMotion(moveVec);
+			}
+			if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
+			
+				C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 1.3f, 0.f, moveVec.z / 1.3f)));
+				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
+				C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
+				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
+			}
 		}
-
-		movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
-		if (input->isJumping) {
-			moveVec.x = movement.x * 0.7894170188903809;
-			moveVec.y = player->velocity.y;
-			moveVec.z = movement.y * 0.7894170188903809;
-			if (pressed && player->onGround) player->lerpMotion(moveVec);
-		} else {
-			moveVec.x = movement.x * 0.315;
-			moveVec.y = player->velocity.y;
-			moveVec.z = movement.y * 0.315;
-			if (pressed) player->lerpMotion(moveVec);
-		}
-	}
 	if (mode.getSelectedValue() == 3 && g_Data.isInGame()) {
 		if (player == nullptr) return;
 
