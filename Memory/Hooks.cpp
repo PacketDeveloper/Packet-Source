@@ -1,4 +1,4 @@
-#include "Hooks.h"
+﻿#include "Hooks.h"
 
 #include <algorithm>
 #include <glm/ext/matrix_clip_space.hpp>
@@ -278,10 +278,10 @@ void Hooks::Actor_getRotation(C_Entity* _this, vec2_t& newAngle) {
 	static auto scaffold = moduleMgr->getModule<Scaffold>();
 	if (killaura->isEnabled() && !killaura->targetListEmpty) {
 		if (g_Data.getLocalPlayer() != nullptr && killaura->rotations && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
-				return oFunc(_this, killaura->testRot);
+			return oFunc(_this, killaura->testRot);
 	}
 	if (scaffold->isEnabled() && scaffold->towerMode) {
-		if (g_Data.getLocalPlayer() != nullptr && strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0/*&& scaffold->foundCandidate2 */)
+		if (g_Data.getLocalPlayer() != nullptr && scaffold->isOnHive && scaffold->isHoldingSpace)
 			return oFunc(_this, scaffold->scaffoldRot);
 	}
 	oFunc(_this, newAngle);
@@ -318,13 +318,13 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	static auto chestStealer = moduleMgr->getModule<ChestStealer>();
 	std::string screenName(g_Hooks.currentScreenName);
 	if (invManager->autoDisable && strcmp(screenName.c_str(), "start_screen") == 0) {
-		auto box = g_Data.addInfoBox("InvManager: Disabled");
-		box->closeTimer = 14;
+		//auto box = g_Data.addInfoBox("InvManager: Disabled");
+		//box->closeTimer = 14;
 		invManager->setEnabled(false);
 	}
 	if (chestStealer->autoDisable && strcmp(screenName.c_str(), "start_screen") == 0) {
-		auto box = g_Data.addInfoBox("ChestStealer: Disabled");
-		box->closeTimer = 14;
+		//auto box = g_Data.addInfoBox("ChestStealer: Disabled");
+		//box->closeTimer = 14;
 		chestStealer->setEnabled(false);
 	}
 	alloc.resetWithoutDelete();

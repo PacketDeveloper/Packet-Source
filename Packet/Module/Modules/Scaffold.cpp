@@ -11,9 +11,9 @@ Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
 	registerBoolSetting("Tower", &towerMode, towerMode);
 	//registerBoolSetting("LockY", &lockY, lockY);
 	registerBoolSetting("Spoof", &spoof, spoof);
-	//registerFloatSetting("Tower Speed", &this->motion, this->motion, 0.3f, 1.f);
 	registerIntSetting("TimerBoost", &timer, timer, 20, 80);
 	registerIntSetting("Extend", &expand, expand, 0, 7);
+	//registerIntSetting("Tower Speed", &towerSpeed, towerSpeed, 20, 80);
 }
 
 Scaffold::~Scaffold() {
@@ -37,8 +37,8 @@ void Scaffold::onEnable() {
 }
 
 void Scaffold::onTick(C_GameMode* gm) {
-	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
 	auto breakerMod = moduleMgr->getModule<Breaker>();
 	auto speedMod = moduleMgr->getModule<Speed>();
 	auto scMod = moduleMgr->getModule<Scaffold>();
@@ -62,8 +62,11 @@ void Scaffold::onTick(C_GameMode* gm) {
 		restored = false;
 	}
 
+	isHoldingSpace = (GameData::isKeyDown(*input->spaceBarKey));
+	isOnHive = strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0;
+
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
-	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()) && !spoof)  // Block in hand?
+	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()))  // Block in hand?
 		return;
 
 	// Adjustment by velocity
@@ -71,55 +74,9 @@ void Scaffold::onTick(C_GameMode* gm) {
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
 	vel = vel.normalize();  // Only use values from 0 - 1
 	if (extendMode) {
-		if (staircase && !GameData::isKeyDown(*input->sneakKey)) {
-			float cal = (gm->player->yaw + 90) * (PI / 180);
-
-			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
-			blockBelow.y -= g_Data.getLocalPlayer()->height;
-			blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block 1 ahead the player X
-			blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block 1 ahead the player Z
-			if (!tryScaffold(blockBelow)) {
-				if (speed > 0.05f) {  // Are we actually walking?
-					blockBelow.z -= vel.z * 0.4f;
-					if (!tryScaffold(blockBelow)) {
-						blockBelow.x -= vel.x * 0.4f;
-
-						if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-							blockBelow.z += vel.z;
-							blockBelow.x += vel.x;
-							tryScaffold(blockBelow);
-						}
-					}
-				}
-			}
-		}
-	}
-	if (extendMode) {
-		if (towerMode && !GameData::isKeyDown(*input->sneakKey) && !GameData::isKeyDown(*input->spaceBarKey)) {
-			float cal = (gm->player->yaw + 90) * (PI / 180);
-
-			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
-			blockBelow.y -= g_Data.getLocalPlayer()->height;
-			blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block 1 ahead the player X
-			blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block 1 ahead the player Z
-			if (!tryScaffold(blockBelow)) {
-				if (speed > 0.05f) {  // Are we actually walking?
-					blockBelow.z -= vel.z * 0.4f;
-					if (!tryScaffold(blockBelow)) {
-						blockBelow.x -= vel.x * 0.4f;
-
-						if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-							blockBelow.z += vel.z;
-							blockBelow.x += vel.x;
-							tryScaffold(blockBelow);
-						}
-					}
-				}
-			}
-		}
-	}
-	if (extendMode) {
-		if (!staircase) {  // Prevent Downwards from breaking
+		if (towerMode && GameData::isKeyDown(*input->spaceBarKey))
+			return;
+		if (!GameData::isKeyDown(*input->sneakKey)) {
 			float cal = (gm->player->yaw + 90) * (PI / 180);
 
 			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
@@ -218,35 +175,21 @@ void Scaffold::onTick(C_GameMode* gm) {
 }
 
 void Scaffold::onMove(C_MoveInputHandler* input) {
+	C_GameSettingsInput* inpute = g_Data.getClientInstance()->getGameSettingsInput();
+	if (inpute == nullptr) return;
+	if (g_Data.getLocalPlayer() == nullptr)
+		return;
+	if (!g_Data.canUseMoveKeys())
+		return;
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	auto player = g_Data.getLocalPlayer();
 	if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
 		if (speed > 0.05f) {
 			player->bodyYaw = player->yaw - 200;
-			// Forward
-			if (input->forward) {
-				forward = true;
-			} else {
-				forward = false;
-			}
-			// Left
-			if (input->left) {
-				left = true;
-			} else {
-				left = false;
-			}
-			// Right
-			if (input->right) {
-				right = true;
-			} else {
-				right = false;
-			}
-			// Back
-			if (input->backward) {
-				backwards = true;
-			} else {
-				backwards = false;
-			}
+			forward = input->forward;
+			left = input->left;
+			right = input->right;
+			backwards = input->backward;
 		} else {
 			forward = false;
 			left = false;
@@ -254,8 +197,11 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 			backwards = false;
 		}
 	}
-	if (towerMode && strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
-		if (foundCandidate2 && input->isJumping) {
+	if (towerMode && isOnHive && isHoldingSpace) {
+		auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
+		//*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->towerSpeed);
+		//*g_Data.getClientInstance()->minecraft->timer = 20;
+		if (foundCandidate2 && !clickGUI->isEnabled()) {
 			vec2_t movement = {input->forwardMovement, -input->sideMovement};
 			bool pressed = movement.magnitude() > 0.f;
 			float calcYaw = (player->yaw + 90) * (PI / 180);
@@ -263,8 +209,8 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 			float c = cos(calcYaw);
 			float s = sin(calcYaw);
 
-			player->jumpFromGround();
 			movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
+			player->jumpFromGround();
 			moveVec.y = player->velocity.y;
 			player->velocity.x = 0;
 			player->velocity.z = 0;
@@ -423,60 +369,39 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 
-	if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
-		if (towerMode && rotations && input->spaceBarKey) {
-			// yay
+	if (isOnHive) {
+		if (towerMode && isHoldingSpace) {
 			vec3_t eyePos = player->eyePos0;
 			eyePos.y = eyePos.y - 1.5;
+			blockBeloww.push_back(eyePos);
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
+			auto weewee = g_Data.getLocalPlayer();
+			weewee->setRot(angle);
+			vec2_t scaffoldRot = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
+			auto rotation = g_Data.getLocalPlayer();
+			float prevyaw = rotation->yawUnused1;
+			float prevyaw2 = rotation->yaw;
+			float prevyaw3 = rotation->yaw2;
+			rotation->setRot(scaffoldRot);
+			rotation->yawUnused1 = scaffoldRot.y;
+			rotation->pitch = scaffoldRot.x;
+			rotation->yaw2 = scaffoldRot.y;
+			rotation->yaw = prevyaw2;
+			rotation->pitch2 = scaffoldRot.x;
 		}
-	} else if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
-		vec3_t blockBelowP = g_Data.getLocalPlayer()->eyePos0;
-		blockBelowP.y -= g_Data.getLocalPlayer()->height;
-		float pitch = g_Data.getLocalPlayer()->pitch;
-		auto lPlayer = g_Data.getLocalPlayer();
-		float yaw = g_Data.getLocalPlayer()->yaw;
-		blockBelowP.y -= 0.5f;
-		vec3_ti blok(blockBelow);
-		vec3_ti angle = blok;
-		blok.y = blockBelow.y - 56;
-		blok.x = blockBelow.x - 56;
-		float prevyaw = lPlayer->yawUnused1;
-		float prevyaw2 = lPlayer->yaw;
-		float prevyaw3 = lPlayer->yaw2;
-		if (g_Data.getLocalPlayer()->onGround)
-			yLock = blok.y - 10;
-		else if (yLock > -1)
-			blok.y = yLock;
-		if (speed > 0.05f || (GameData::isKeyDown(*input->spaceBarKey))) {
-			lPlayer->yawUnused1 = angle.y -= blok.y;
-			player->yaw = pitch - angle.x - angle.y;
-			lPlayer->pitch = angle.x += blok.y;
-			lPlayer->pitch = angle.y;
-			lPlayer->yaw2 = angle.y;
-			lPlayer->yaw = prevyaw2;
-			lPlayer->pitch2 = angle.y + angle.x;
-			player->pitch = yLock;
-
-			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0) {
-				if (forward || backwards || left || right || (GameData::isKeyDown(*input->spaceBarKey))) {
-					useRot = false;
-				} else {
-					useRot = true;
-				}
-			} else {
-				useRot = true;
-			}
-		}
-		if (backwards) {
-			player->bodyYaw = -360;
-			player->viewAngles;
-		}
-		C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-		C_Inventory* inv = supplies->inventory;
 	}
+	if (isOnHive) {
+		useRot = (forward || backwards || left || right || (GameData::isKeyDown(*input->spaceBarKey)));
+	} else {
+		useRot = true;
+	}
+	if (backwards) {
+		player->bodyYaw = -360;
+		player->viewAngles;
+	}
+	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+	C_Inventory* inv = supplies->inventory;
 }
-
-
 
 bool Scaffold::findBlock() {
 	__int64 id = *g_Data.getLocalPlayer()->getUniqueId();
@@ -524,5 +449,5 @@ void Scaffold::onDisable() {
 	g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
 	if (!player->onGround && towerMode) {
 	}
-		//g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
+	//g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 }

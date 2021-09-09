@@ -89,26 +89,25 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
 		}*/
+		//auto player = g_Data.getLocalPlayer();
 		vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;
 		float calcYaw = (player->yaw + 90) * (PI / 180);
 		vec3_t moveVec;
 		float c = cos(calcYaw);
 		float s = sin(calcYaw);
-		if (player->onGround && pressed) player->jumpFromGround();
-		movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
-		if (!pressed && player->damageTime == 0) {
-			player->velocity.x = 0;
-			player->velocity.z = 0;
+
+		if (pressed && player->onGround) {
+			player->jumpFromGround();
 		}
 
-		if (player->onGround && input->isJumping) {
-			moveVec.x = movement.x * speed;
+		movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
+		if (input->isJumping) {
+			moveVec.x = movement.x * 0.7894170188903809;
 			moveVec.y = player->velocity.y;
-			moveVec.z = movement.y * speed;
-			if (pressed) player->lerpMotion(moveVec);
-		}
-		if (!input->isJumping) {
+			moveVec.z = movement.y * 0.7894170188903809;
+			if (pressed && player->onGround) player->lerpMotion(moveVec);
+		} else {
 			moveVec.x = movement.x * 0.315;
 			moveVec.y = player->velocity.y;
 			moveVec.z = movement.y * 0.315;

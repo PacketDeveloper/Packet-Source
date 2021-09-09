@@ -10,10 +10,10 @@ InvManager::InvManager() : IModule(0, Category::PLAYER, "Automatintory YEP") {
 	//registerBoolSetting("Food", &keepFood, keepFood);
 
 	registerBoolSetting("InvOnly", &openInv, openInv);
-	registerIntSetting("Sword", &swordSlot, swordSlot, 0, 9);
-	registerIntSetting("Pickaxe", &pickSlot, pickSlot, 0, 9);
-	registerIntSetting("Axe", &axeSlot, axeSlot, 0, 9);
-	registerIntSetting("Blocks", &blockSlot, blockSlot, 0, 9);
+	//registerIntSetting("Sword", &swordSlot, swordSlot, 0, 9);
+	//registerIntSetting("Pickaxe", &pickSlot, pickSlot, 0, 9);
+	//registerIntSetting("Axe", &axeSlot, axeSlot, 0, 9);
+	//registerIntSetting("Blocks", &blockSlot, blockSlot, 0, 9);
 	registerBoolSetting("AutoDisable", &autoDisable, autoDisable);
 }
 

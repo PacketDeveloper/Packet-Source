@@ -7,9 +7,8 @@ private:
 	bool extendMode = true;
 	bool staircase = true;
 	bool airplace = false;
-	bool rotations = true;
 	bool spoof = false;
-	float towerSpeed = 0.45f;
+	int towerSpeed = 20;
 	int prevSlot = 0;
 	int expand = 1;
 
@@ -22,9 +21,13 @@ private:
 	int yLock = -1;
 
 public:
+	std::vector<vec3_t> blockBeloww;
 	bool foundCandidate2 = false;
-	vec2_t scaffoldRot;
+	bool isHoldingSpace = false;
+	bool isOnHive = false;
 	bool towerMode = false;
+	bool rotations = true;
+	vec2_t scaffoldRot;
 	int timer = 20;
 	int tCounter = 1;
 	bool lockY = false;

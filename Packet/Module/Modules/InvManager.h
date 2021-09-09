@@ -8,7 +8,7 @@ private:
 	std::vector<int> findUselessItems();
 	bool isLastItem(C_Item* item);
 
-	bool openInv = true;
+	bool openInv = false;
 	bool autoSort = true;
 	bool clean = true;
 	bool keep = true;
