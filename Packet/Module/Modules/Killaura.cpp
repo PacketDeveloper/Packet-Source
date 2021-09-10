@@ -171,55 +171,81 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 			return;
 		auto scaffold = moduleMgr->getModule<Scaffold>();
 		for (auto& i : targetList) {
-		if (render && scaffold->useRot && (i->getEntityTypeId() == 319)) {
-			vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-			static auto hudMod = moduleMgr->getModule<HudModule>();
-					vec3_t* pos = targetList[0]->getPos();
-					std::string namestr = "Name: ";
-					std::string name = namestr + targetList[0]->getNameTag()->getText();
-					std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z));
+			if (render && scaffold->useRot && (i->getEntityTypeId() == 319)) {
+				vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+				static auto hudMod = moduleMgr->getModule<HudModule>();
+				vec3_t* pos = targetList[0]->getPos();
+				std::string namestr = "Name: ";
+				std::string name = namestr + targetList[0]->getNameTag()->getText();
+				std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z));
 
-					name = Utils::sanitize(name);
+				name = Utils::sanitize(name);
 
-					float margin = windowSize.x / 5;
-					constexpr float borderPadding = 1;
-					constexpr float unused = 5;
-					constexpr float idek = 5;
+				float margin = windowSize.x / 5;
+				constexpr float borderPadding = 1;
+				constexpr float unused = 5;
+				constexpr float idek = 5;
 
-					float nameLength = DrawUtils::getTextWidth(&name);
-					//float fullTextLength = nameLength + DrawUtils::getTextWidth(&name);
+				float nameLength = DrawUtils::getTextWidth(&name) + 20;
+				//float fullTextLength = nameLength + DrawUtils::getTextWidth(&name);
 
-					static const float rectHeight = (idek, unused) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
+				static const float rectHeight = (idek, unused) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
 
-					vec4_t rectPos = vec4_t(
-						windowSize.x - margin - nameLength - 15 - borderPadding * 2,
-						windowSize.y - margin - rectHeight + 4,
-						windowSize.x - margin + borderPadding - 2,
-						windowSize.y - margin);
+				vec4_t rectPos = vec4_t(
+					windowSize.x - margin - nameLength - 15 - borderPadding * 2,
+					windowSize.y - margin - rectHeight + 10,
+					windowSize.x - margin + borderPadding - 2,
+					windowSize.y - margin + 10);
 
-					vec4_t LinePos = vec4_t(
-						windowSize.x - margin - nameLength - 5 - borderPadding * 2,
-						windowSize.y - margin - rectHeight + 38,
-						windowSize.x - margin + borderPadding - 15,
-						windowSize.y - margin - 5);
+				vec4_t LinePos = vec4_t(
+					windowSize.x - margin - nameLength - 5 - borderPadding * 2,
+					windowSize.y - margin - rectHeight + 39,
+					windowSize.x - margin + borderPadding - 15,
+					windowSize.y - margin - 5);
 
-					vec2_t TextPos = vec2_t(rectPos.x + 2, rectPos.y + 5);
-					vec2_t TextPos2 = vec2_t(rectPos.x + 2, rectPos.y + 20);
+				vec2_t TextPos = vec2_t(rectPos.x + 8, rectPos.y + 5);
+				vec2_t ArmorPos = vec2_t(rectPos.x + 20, rectPos.y + 38);
+				vec2_t TextPos2 = vec2_t(rectPos.x + 8, rectPos.y + 15);
 
-					if (targetList[0]->damageTime >= 1) {
-						DrawUtils::fillRectangle(LinePos, MC_Color(255, 0, 0), 1);
-					} else {
-							DrawUtils::fillRectangle(LinePos, MC_Color(0, 255, 0), 1);
-					}
+				if (targetList[0]->damageTime >= 1) {
+					DrawUtils::fillRectangle(LinePos, MC_Color(255, 0, 0), 0.5);
+					DrawUtils::drawRectangle(LinePos, MC_Color(255, 0, 0), 1);
+				} else {
+					DrawUtils::fillRectangle(LinePos, MC_Color(0, 255, 0), 0.5);
+					DrawUtils::drawRectangle(LinePos, MC_Color(0, 255, 0), 1);
+				}
+
+				DrawUtils::flush();
+
+					if (render && (i->getEntityTypeId() == 319)) {
+					static float constexpr opacity = 1;
+					float scale = 3 * 0.26f;
+					float spacing = scale + 15.f + 2;
+
+					auto* player = reinterpret_cast<C_Player*>(targetList[0]);
 					
+					for (int t = 0; t < 4; t++) {
+						C_ItemStack* stack = player->getArmor(t);
+						if (stack->isValid()) {
+							DrawUtils::drawItem(stack, vec2_t(ArmorPos), 1, scale, false);  //* stack->isEnchanted() is run by the thing already, this bool is if it forces it to be enchanted or no
+							ArmorPos.x += scale * spacing;
+						}
+					}
+					C_PlayerInventoryProxy* supplies = player->getSupplies();
+					C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
+					if (item->isValid())
+						DrawUtils::drawItem(item, vec2_t(ArmorPos), opacity, scale, item->isEnchanted());
+				}
 
 					DrawUtils::setColor(1, 1, 1, 1);
 					//DrawUtils::drawLine(vec2_t(rectPos.x, rectPos.y), vec2_t(rectPos.x + nameLength + 16, rectPos.y), 1);
 					DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.3);
+					DrawUtils::drawRectangle(rectPos, MC_Color(0, 0, 0), 0.35);
 					DrawUtils::drawText(TextPos, &name, MC_Color(255, 255, 255), 1, 1, true);
 					DrawUtils::drawText(TextPos2, &position, MC_Color(255, 255, 255), 1, 1, true);
 
 					//DrawUtils::drawLine(vec2_t(rectPos.x, rectPos.y), vec2_t(rectPos.x + l, rectPos.y), 1);
+				
 			}
 		}
 	}
