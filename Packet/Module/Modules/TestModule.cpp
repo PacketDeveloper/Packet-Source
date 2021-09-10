@@ -21,6 +21,39 @@ const char* TestModule::getModuleName() {
 
 // most of this code is old so thats why its messy
 
+static std::vector<C_Entity*> hackerDetector;
+
+void findHackerMan(C_Entity* currentEntity, bool isRegularEntity) {
+	//static auto killauraMod = moduleMgr->getModule<Killaura>();
+
+	if (currentEntity == nullptr)
+		return;
+
+	if (currentEntity == g_Data.getLocalPlayer())
+		return;
+
+	if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
+		return;
+
+	if (!g_Data.getLocalPlayer()->isAlive())
+		return;
+
+	if (!currentEntity->isAlive())
+		return;
+
+	if (currentEntity->getEntityTypeId() == 69)  // XP
+		return;
+		if (!Target::isValidTarget(currentEntity))
+			return;
+
+	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
+
+
+	if (dist < 255) {
+		hackerDetector.push_back(currentEntity);
+	}
+}
+
 void TestModule::onEnable() {
 	auto blinkMod = moduleMgr->getModule<Blink>();
 	auto speed = moduleMgr->getModule<Speed>();
@@ -91,8 +124,6 @@ void TestModule::onTick(C_GameMode* gm) {
 	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
 	auto player = g_Data.getLocalPlayer();
 	auto blinkMod = moduleMgr->getModule<Blink>();
-	if (!g_Data.canUseMoveKeys())
-		setEnabled(false);
 	if (autoDisable) {
 		auto testmoduleMod = moduleMgr->getModule<TestModule>();
 		if (testmoduleMod->isEnabled()) {
@@ -141,14 +172,14 @@ void TestModule::onTick(C_GameMode* gm) {
 		} else if (counter == 5) {
 			flight->setEnabled(false);
 		}*/
-		vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
+		//vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 
-		vec3_t pos;
-		pos.x = 0.f + pPos.x;
-		pos.y = 300.f + pPos.y;
-		pos.z = 0.f + pPos.z;
+	//	vec3_t pos;
+		//pos.x = 0.f + pPos.x;
+		//pos.y = 300.f + pPos.y;
+		//pos.z = 0.f + pPos.z;
 
-		g_Data.getLocalPlayer()->setPos(pos);
+		//g_Data.getLocalPlayer()->setPos(pos);
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
@@ -157,11 +188,6 @@ void TestModule::onTick(C_GameMode* gm) {
 				if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
 					gm->player->velocity = vec3_t(0, 0, 0);
 				}
-			}
-			if (dmgMode) {
-				*g_Data.getClientInstance()->minecraft->timer = 20.f;
-				auto speedMod = moduleMgr->getModule<Speed>();
-				speedMod->setEnabled(false);
 			}
 
 			if (kowBool && kowBool2 && kowInt2 <= 3) {
@@ -272,7 +298,7 @@ void TestModule::onDisable() {
 }
 
 void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
-	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+	/*vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 	auto player = g_Data.getLocalPlayer();
 	auto raknet = g_Data.getRakNetInstance();
 	if (GameData::canUseMoveKeys()) {
@@ -300,5 +326,24 @@ void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 
 			DrawUtils::drawText(vec2_t(x, y), &serverInfo, MC_Color(255, 255, 255), 1, 1, true);
 		}
+	}*/
+	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+	auto player = g_Data.getLocalPlayer();
+	if (test) {
+		float x = windowSize.x / 114 + 1;
+		float y = windowSize.y - 20;
+
+		float x2 = windowSize.x / 114 + 1;
+		float y2 = windowSize.y - 30;
+
+		float x3 = windowSize.x / 114 + 1;
+		float y3 = windowSize.y - 40;
+
+		std::string fpsText = "Player Pitch: " + std::to_string(player->pitch);
+		std::string fpsText2 = "Player Yaw: " + std::to_string(player->yaw);
+		std::string fpsText3 = "Body Yaw: " + std::to_string(player->bodyYaw);
+		DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), 1, 1, true);
+		DrawUtils::drawText(vec2_t(x2, y2), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
+		DrawUtils::drawText(vec2_t(x3, y3), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
 	}
 }

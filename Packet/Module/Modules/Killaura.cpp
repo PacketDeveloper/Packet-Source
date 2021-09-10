@@ -89,6 +89,7 @@ void Killaura::onEnable() {
 void Killaura::onTick(C_GameMode* gm) {
 	auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
 	auto scaffold = moduleMgr->getModule<Scaffold>();
+	auto player = g_Data.getLocalPlayer();
 	targetListEmpty = targetList.empty();
 
 	if (clickGUI->isEnabled()) {
@@ -188,13 +189,15 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 				if (rotations && mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
 					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 					auto weewee = g_Data.getLocalPlayer();
-					weewee->setRot(angle);
+					//weewee->setRot(angle);
+				}
+				if (rotations && mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
 					vec2_t testRot = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 					auto rotation = g_Data.getLocalPlayer();
 					float prevyaw = rotation->yawUnused1;
 					float prevyaw2 = rotation->yaw;
 					float prevyaw3 = rotation->yaw2;
-					rotation->setRot(testRot);
+					//rotation->setRot(testRot);
 
 					// Head
 					rotation->yawUnused1 = testRot.y;
@@ -231,6 +234,23 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			}
 		}
 	}
+	auto player = g_Data.getLocalPlayer();
+	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+	float x = windowSize.x / 114 + 1;
+	float y = windowSize.y - 20;
+
+	float x2 = windowSize.x / 114 + 1;
+	float y2 = windowSize.y - 30;
+
+	float x3 = windowSize.x / 114 + 1;
+	float y3 = windowSize.y - 40;
+
+	std::string fpsText = "Player Pitch: " + std::to_string(player->pitch);
+	std::string fpsText2 = "Player Yaw: " + std::to_string(player->yaw);
+	std::string fpsText3 = "Body Yaw: " + std::to_string(player->bodyYaw);
+	DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), 1, 1, true);
+	DrawUtils::drawText(vec2_t(x2, y2), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
+	DrawUtils::drawText(vec2_t(x3, y3), &fpsText3, MC_Color(255, 255, 255), 1, 1, true);
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {

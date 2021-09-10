@@ -159,7 +159,7 @@ void Hooks::Init() {
 		void* RakNetInstance__tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 48 89 74 24 18 55 57 41 54 41 56 41 57 48 8D ?? 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 8B F9 45 33 E4 4C"));
 		g_Hooks.RakNetInstance_tickHook = std::make_unique<FuncHook>(RakNetInstance__tick, Hooks::RakNetInstance_tick);
 
-		void* getRotation = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80 ?? ?? ?? ?? ?? 00 48 8B FA 48 8B D9"));
+		void* getRotation = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80"));
         g_Hooks.Actor_getRotationHook = std::make_unique<FuncHook>(getRotation, Hooks::Actor_getRotation);
 		
 		//bad
@@ -276,7 +276,7 @@ void Hooks::Actor_getRotation(C_Entity* _this, vec2_t& newAngle) {
 	static auto oFunc = g_Hooks.Actor_getRotationHook->GetFastcall<void, C_Entity*, vec2_t&>();
 	static auto killaura = moduleMgr->getModule<Killaura>();
 	static auto scaffold = moduleMgr->getModule<Scaffold>();
-	if (killaura->isEnabled() && !killaura->targetListEmpty) {
+	if (killaura->isEnabled() && !killaura->targetListEmpty && scaffold->useRot) {
 		if (g_Data.getLocalPlayer() != nullptr && killaura->rotations && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
 			return oFunc(_this, killaura->testRot);
 	}
@@ -316,6 +316,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	}
 	static auto invManager = moduleMgr->getModule<InvManager>();
 	static auto chestStealer = moduleMgr->getModule<ChestStealer>();
+	static auto scaffold = moduleMgr->getModule<Scaffold>();
 	std::string screenName(g_Hooks.currentScreenName);
 	if (invManager->autoDisable && strcmp(screenName.c_str(), "start_screen") == 0) {
 		//auto box = g_Data.addInfoBox("InvManager: Disabled");
@@ -326,6 +327,9 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 		//auto box = g_Data.addInfoBox("ChestStealer: Disabled");
 		//box->closeTimer = 14;
 		chestStealer->setEnabled(false);
+	}
+	if (scaffold->isEnabled() && strcmp(screenName.c_str(), "start_screen") == 0) {
+		scaffold->setEnabled(false);
 	}
 	alloc.resetWithoutDelete();
 
@@ -1238,7 +1242,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		float x = windowSize.x / 114 + 1;
 		float y = windowSize.y - 10;
 
-		if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+		if (hudMod->color.getSelectedValue() != 1)  // Rainbowf
 			DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(currColor), 1, 1, true);
 		if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
 			DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(dynamic, dynamic, dynamic), 1, 1, true);

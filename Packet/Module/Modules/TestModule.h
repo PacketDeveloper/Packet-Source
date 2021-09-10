@@ -21,6 +21,8 @@ private:
 	bool randomThing = false;
 	int testTimer = 0;
 
+	float speedDetector = 0;
+	bool detectedSpeed = false;
 	bool kowBool = false;
 	bool kowBool2 = false;
 	int kowInt1 = 0;

@@ -216,6 +216,15 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 			player->velocity.z = 0;
 		}
 	}
+	if (isOnHive) {
+		if (isHoldingSpace) {
+			useRot = false;
+		} else {
+			useRot = true;
+		}
+	} else {
+		useRot = true;
+	}
 }
 
 bool Scaffold::tryScaffold(vec3_t blockBelow) {
@@ -316,13 +325,13 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 			}
 			foundCandidate2 = foundCandidate;
 			if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
-				vec3_t moveVec;
-				moveVec.x = g_Data.getLocalPlayer()->velocity.x;
+				vec3_t moveVec2;
+				moveVec2.x = g_Data.getLocalPlayer()->velocity.x;
 				if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") != 0) {
-					moveVec.y = towerSpeed;
+					moveVec2.y = towerSpeed;
 				}
-				moveVec.z = g_Data.getLocalPlayer()->velocity.z;
-				g_Data.getLocalPlayer()->lerpMotion(moveVec);
+				moveVec2.z = g_Data.getLocalPlayer()->velocity.z;
+				g_Data.getLocalPlayer()->lerpMotion(moveVec2);
 				g_Data.getCGameMode()->buildBlock(&blok, i);
 
 				return true;
@@ -443,7 +452,7 @@ void Scaffold::onDisable() {
 	__int64 id = *g_Data.getLocalPlayer()->getUniqueId();
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_MobEquipmentPacket a(id, *g_Data.getLocalPlayer()->getSelectedItem(), supplies->selectedHotbarSlot, supplies->selectedHotbarSlot);
-	//g_Data.getClientInstance()->loopbackPacketSender->sendToServer((C_Packet*)((uintptr_t)&a + 16)); // Crashes on certain servers
+	//g_Data.getClientInstance()->loopbackPacketSender->sendToServer((C_Packet*)((uintptr_t)&a + 16));
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
