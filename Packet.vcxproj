@@ -298,6 +298,7 @@
     <ClCompile Include="Packet\Module\Modules\CustomSky.cpp" />
     <ClCompile Include="Packet\Module\Modules\EntityControl.cpp" />
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
+    <ClCompile Include="Packet\Module\Modules\HackerDetector.cpp" />
     <ClCompile Include="Packet\Module\Modules\HudEditorMod.cpp" />
     <ClCompile Include="Packet\Module\Modules\ItemTP.cpp" />
     <ClCompile Include="Packet\Module\Modules\Notifications.cpp" />
@@ -478,6 +479,7 @@
     <ClInclude Include="Packet\Module\Modules\CustomSky.h" />
     <ClInclude Include="Packet\Module\Modules\EntityControl.h" />
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />
+    <ClInclude Include="Packet\Module\Modules\HackerDetector.h" />
     <ClInclude Include="Packet\Module\Modules\HudEditorMod.h" />
     <ClInclude Include="Packet\Module\Modules\ItemTP.h" />
     <ClInclude Include="Packet\Module\Modules\Notifications.h" />

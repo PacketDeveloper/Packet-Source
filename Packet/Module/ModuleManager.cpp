@@ -83,6 +83,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new SpawnTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ItemTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new BreadCrumbs()));
+		moduleList.push_back(std::shared_ptr<IModule>(new HackerDetector()));
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new HudEditorMod()));

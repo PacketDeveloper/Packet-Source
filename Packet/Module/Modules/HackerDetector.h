@@ -7,6 +7,10 @@ class HackerDetector : public IModule {
 public:
 	bool speedCheck = false;
 	bool flyCheck = false;
+	int range = 255;
+
+	bool speedFlag = false;
+	bool flyFlag = false;
 
 	HackerDetector();
 	~HackerDetector();

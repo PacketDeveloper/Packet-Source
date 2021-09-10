@@ -21,39 +21,6 @@ const char* TestModule::getModuleName() {
 
 // most of this code is old so thats why its messy
 
-static std::vector<C_Entity*> hackerDetector;
-
-void findHackerMan(C_Entity* currentEntity, bool isRegularEntity) {
-	//static auto killauraMod = moduleMgr->getModule<Killaura>();
-
-	if (currentEntity == nullptr)
-		return;
-
-	if (currentEntity == g_Data.getLocalPlayer())
-		return;
-
-	if (!g_Data.getLocalPlayer()->canAttack(currentEntity, false))
-		return;
-
-	if (!g_Data.getLocalPlayer()->isAlive())
-		return;
-
-	if (!currentEntity->isAlive())
-		return;
-
-	if (currentEntity->getEntityTypeId() == 69)  // XP
-		return;
-		if (!Target::isValidTarget(currentEntity))
-			return;
-
-	float dist = (*currentEntity->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
-
-
-	if (dist < 255) {
-		hackerDetector.push_back(currentEntity);
-	}
-}
-
 void TestModule::onEnable() {
 	auto blinkMod = moduleMgr->getModule<Blink>();
 	auto speed = moduleMgr->getModule<Speed>();

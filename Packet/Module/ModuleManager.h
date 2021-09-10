@@ -73,6 +73,7 @@
 #include "Modules/SpawnTP.h"
 #include "Modules/ItemTP.h"
 #include "Modules/BreadCrumbs.h"
+#include "Modules/HackerDetector.h"
 #include "Modules/Module.h"
 
 //#include "Modules/Waypoints.h" // Crashes

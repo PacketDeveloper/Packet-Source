@@ -963,7 +963,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 							xOffset + textPadding,
 							yOffset + textPadding);
 						vec4_t rectPos = vec4_t(
-							xOffset - 1.5,
+							xOffset - 2,
 							yOffset,
 							isOnSomeFuckingSide ? windowSize.x : textWidth + (textPadding * 2),
 							yOffset + textPadding * 2 + textHeight);
@@ -976,7 +976,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 							xOffset + textPadding + 1,
 							yOffset + textPadding + 1);
 						vec4_t barBG = vec4_t(
-							xOffset - 3.5,
+							xOffset - 4,
 							yOffset,
 							isOnSomeFuckingSide ? windowSize.x : textWidth + (textPadding * 2),
 							yOffset + textPadding * 2 + textHeight);
@@ -1004,7 +1004,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						currColor[3] = rcolors[3];
 						if (hudMod->color.getSelectedValue() == 0) {  // Rainbow
 							Utils::ColorConvertRGBtoHSV(rcolors[0], rcolors[2], rcolors[1], currColor[0], currColor[1], currColor[2]);
-							currColor[0] += 0.8f / a * c;
+							currColor[0] += 1 / rectPos.x * rectPos.y;
 							Utils::ColorConvertHSVtoRGB(currColor[0], currColor[2], currColor[3], currColor[0], currColor[1], currColor[2]);
 						}
 						if (hudMod->color.getSelectedValue() == 2) {  // Horion

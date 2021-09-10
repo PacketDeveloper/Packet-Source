@@ -78,9 +78,9 @@ struct CompareTargetEnArray {
 };
 
 void Killaura::onEnable() {
-	targetList.clear();
 	if (g_Data.getLocalPlayer() == nullptr)
 		setEnabled(false);
+	targetList.clear();
 	if (render)
 		renderStart++;
 	targethud = 0;
@@ -189,7 +189,7 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 				if (rotations && mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
 					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 					auto weewee = g_Data.getLocalPlayer();
-					//weewee->setRot(angle);
+					weewee->setRot(angle);
 				}
 				if (rotations && mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
 					vec2_t testRot = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
@@ -197,7 +197,7 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 					float prevyaw = rotation->yawUnused1;
 					float prevyaw2 = rotation->yaw;
 					float prevyaw3 = rotation->yaw2;
-					//rotation->setRot(testRot);
+					rotation->setRot(testRot);
 
 					// Head
 					rotation->yawUnused1 = testRot.y;
