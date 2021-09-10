@@ -198,10 +198,10 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 						windowSize.y - margin);
 
 					vec4_t LinePos = vec4_t(
-						windowSize.x - margin - nameLength - 15 - borderPadding * 2,
-						windowSize.y - margin - rectHeight + 20,
-						windowSize.x - margin + borderPadding - 2,
-						windowSize.y - margin - 20);
+						windowSize.x - margin - nameLength - 5 - borderPadding * 2,
+						windowSize.y - margin - rectHeight + 38,
+						windowSize.x - margin + borderPadding - 15,
+						windowSize.y - margin - 5);
 
 					vec2_t TextPos = vec2_t(rectPos.x + 2, rectPos.y + 5);
 					vec2_t TextPos2 = vec2_t(rectPos.x + 2, rectPos.y + 20);
