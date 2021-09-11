@@ -22,6 +22,7 @@ public:
 	float fpspos2 = 1.f;
 	float cpspos = 1.f;
 	float cpspos2 = 1.f;
+	float opacity = 0.3f;
 
 	HudModule();
 	~HudModule();

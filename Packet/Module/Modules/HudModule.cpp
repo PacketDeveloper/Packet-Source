@@ -19,8 +19,9 @@ HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
 	color.addEntry("Pink", 12);
 	registerBoolSetting("Keystrokes", &keystrokes, keystrokes);
 	registerBoolSetting("ArmorHUD", &displayArmor, displayArmor);
-	registerBoolSetting("Position", &coordinates, coordinates);
+	registerBoolSetting("Coords", &coordinates, coordinates);
 	registerBoolSetting("FPS", &fps, fps);
+	registerFloatSetting("Opacity", &opacity, opacity, 0.f, 1.f);
 	//registerBoolSetting("BPS", &bps, bps);
 	//registerBoolSetting("Always show", &alwaysShow, alwaysShow);
 }
@@ -57,16 +58,6 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		}
 	}
 
-	{  // Coordinates
-		if (!(g_Data.getLocalPlayer() == nullptr || !coordinates)) {
-			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
-
-			std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z)); // amazing code
-			float x = windowSize.x / 30.f + -16.f;
-			float y = windowSize.y - 12.1f;
-			DrawUtils::drawText(vec2_t(x, y), &position, MC_Color(255, 255, 255), scale);
-		}
-	}
 	{  // ArmorHUD
 		if (!(g_Data.getLocalPlayer() == nullptr || !displayArmor || !GameData::canUseMoveKeys())) {
 			static float constexpr scale = 1.f;
