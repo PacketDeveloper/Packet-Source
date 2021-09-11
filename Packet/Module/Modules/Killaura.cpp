@@ -92,9 +92,8 @@ void Killaura::onTick(C_GameMode* gm) {
 	auto player = g_Data.getLocalPlayer();
 	targetListEmpty = targetList.empty();
 
-	if (clickGUI->isEnabled()) {
+	if (clickGUI->isEnabled())
 		targetListEmpty = true;
-	}
 
 	targetList.clear();
 
