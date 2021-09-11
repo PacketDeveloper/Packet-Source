@@ -74,6 +74,7 @@
 #include "Modules/ItemTP.h"
 #include "Modules/BreadCrumbs.h"
 #include "Modules/HackerDetector.h"
+#include "Modules/Switcher.h"
 #include "Modules/Module.h"
 
 //#include "Modules/Waypoints.h" // Crashes
@@ -84,7 +85,6 @@
 #include "Modules/EntityControl.h"
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
-#include "Modules/Switcher.h"
 #include "Modules/NoSlow.h"
 // Broken
 #include "Modules/AutoArmor.h"

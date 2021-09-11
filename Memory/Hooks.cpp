@@ -275,6 +275,7 @@ void Hooks::Actor_baseTick(C_Entity* _this) {
 void Hooks::Actor_getRotation(C_Entity* _this, vec2_t& newAngle) {
 	static auto oFunc = g_Hooks.Actor_getRotationHook->GetFastcall<void, C_Entity*, vec2_t&>();
 	static auto killaura = moduleMgr->getModule<Killaura>();
+	static auto tpaura = moduleMgr->getModule<TPAura>();
 	static auto scaffold = moduleMgr->getModule<Scaffold>();
 	if (killaura->isEnabled() && !killaura->targetListEmpty && scaffold->useRot) {
 		if (g_Data.getLocalPlayer() != nullptr && killaura->rotations && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
@@ -283,6 +284,10 @@ void Hooks::Actor_getRotation(C_Entity* _this, vec2_t& newAngle) {
 	if (scaffold->isEnabled() && scaffold->towerMode) {
 		if (g_Data.getLocalPlayer() != nullptr && scaffold->isOnHive && scaffold->isHoldingSpace)
 			return oFunc(_this, scaffold->scaffoldRot);
+	}
+	if (tpaura->isEnabled() && !tpaura->targetListEmpty) {
+		if (g_Data.getLocalPlayer() != nullptr && tpaura->rotations && tpaura->mode.getSelectedValue() == 0 || tpaura->mode.getSelectedValue() == 1)
+			return oFunc(_this, tpaura->tpAuraRot);
 	}
 	oFunc(_this, newAngle);
 }
@@ -352,6 +357,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	static auto arraylistMod = moduleMgr->getModule<ArrayList>();
 	static auto watermark = moduleMgr->getModule<Watermark>();
 	static auto blinkMod = moduleMgr->getModule<Blink>();
+	static auto disabler = moduleMgr->getModule<Disabler>();
 	static auto clickGuiModule = moduleMgr->getModule<ClickGuiMod>();
 
 	HImGui.startFrame();
@@ -1533,6 +1539,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static auto sneakMod = moduleMgr->getModule<Sneak>();
 	static auto freecamMod = moduleMgr->getModule<Freecam>();
 	static auto flight = moduleMgr->getModule<Flight>();
+	static auto disabler = moduleMgr->getModule<Disabler>();
 	static auto freetpMod = moduleMgr->getModule<FreeTP>();
 	static auto blinkMod = moduleMgr->getModule<Blink>();
 	//static auto noPacketMod = moduleMgr->getModule<Packetsfbgh>();
@@ -1599,6 +1606,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			return;
 		}
 	}
+
 	if (flight->isEnabled() || blinkMod->isEnabled()) {
 		if (flight->blink) {
 			if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
@@ -1639,6 +1647,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			}
 		}
 	}
+
 	if (freetpMod->isEnabled() || blinkMod->isEnabled()) {
 		if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
 			if (blinkMod->isEnabled()) {
@@ -1672,6 +1681,40 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			}
 			blinkMod->getPlayerAuthInputPacketHolder()->clear();
 			return;
+		}
+
+		if (disabler->isEnabled() && disabler->mode.getSelectedValue() == 2 || blinkMod->isEnabled()) {
+			if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
+				if (blinkMod->isEnabled()) {
+					if (packet->isInstanceOf<C_MovePlayerPacket>()) {
+						C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
+						meme->onGround = true;                                                            //Don't take Fall Damages when turned off
+						blinkMod->getMovePlayerPacketHolder()->push_back(new C_MovePlayerPacket(*meme));  // Saving the packets
+					} else {
+						blinkMod->getPlayerAuthInputPacketHolder()->push_back(new PlayerAuthInputPacket(*reinterpret_cast<PlayerAuthInputPacket*>(packet)));
+					}
+				}
+				return;  // Dont call LoopbackPacketSender_sendToServer
+			}
+		} else if (!blinkMod->isEnabled()) {
+			if (blinkMod->getMovePlayerPacketHolder()->size() > 0) {
+				for (auto it : *blinkMod->getMovePlayerPacketHolder()) {
+					oFunc(a, (it));
+					delete it;
+					it = nullptr;
+				}
+				blinkMod->getMovePlayerPacketHolder()->clear();
+				return;
+			}
+			if (blinkMod->getPlayerAuthInputPacketHolder()->size() > 0) {
+				for (auto it : *blinkMod->getPlayerAuthInputPacketHolder()) {
+					oFunc(a, (it));
+					delete it;
+					it = nullptr;
+				}
+				blinkMod->getPlayerAuthInputPacketHolder()->clear();
+				return;
+			}
 		}
 	}
 

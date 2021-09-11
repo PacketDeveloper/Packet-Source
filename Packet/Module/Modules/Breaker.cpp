@@ -19,6 +19,8 @@ Breaker::~Breaker() {
 }
 
 const char* Breaker::getModuleName() {
+	//name = std::string("Breaker ") + std::string(GRAY) + std::to_string((int)range);
+	//return name.c_str();
 	return ("Breaker");
 }
 

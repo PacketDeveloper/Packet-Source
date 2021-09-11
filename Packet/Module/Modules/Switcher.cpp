@@ -1,10 +1,9 @@
 #include "Switcher.h"
 
 Switcher::Switcher() : IModule(0x0, Category::COMBAT, "Switches between hotbar slot(s) on attack (Meant for Pocketmine [PMMP] Servers)") {
-	registerIntSetting("Slots", &ternary, 1, 0, 8);
 	registerBoolSetting("AutoSwitch", &autos, autos);
-	registerBoolSetting("Double Switch", &ss, ss);
-	registerBoolSetting("[Old]Ownage", &ownage, ownage);
+	registerBoolSetting("DoubleSwitch", &ss, ss);
+	registerIntSetting("Slots", &ternary, 1, 0, 8);
 }
 
 Switcher::~Switcher() {

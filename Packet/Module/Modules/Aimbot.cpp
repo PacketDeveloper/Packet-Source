@@ -96,7 +96,7 @@ void Aimbot::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			appl.x = -appl.x;
 			if ((appl.x < rangeAm && appl.x > -rangeAm) && (appl.y < rangeAm && appl.y > -rangeAm) && GameData::canUseMoveKeys()) {
 				auto selectedItemId = localPlayer->getSelectedItemId();
-				if (sword && !(selectedItemId == 268 || selectedItemId == 267 || selectedItemId == 272 || selectedItemId == 276 || selectedItemId == 283 /*swords*/ || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
+				if (sword && !(selectedItemId == 268 || selectedItemId == 267 || selectedItemId == 272 || selectedItemId == 276 || selectedItemId == 283 || selectedItemId == 271 || selectedItemId == 275 || selectedItemId == 279 || selectedItemId == 286 || selectedItemId == 258 /*axes*/))
 					return;
 
 				if (click && !g_Data.isLeftClickDown())

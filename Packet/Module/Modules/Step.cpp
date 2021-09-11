@@ -9,16 +9,12 @@ Step::~Step() {
 }
 
 const char* Step::getModuleName() {
-		return ("Step");
+	//name = std::string("Step ") + std::string(GRAY) + std::to_string((int)height);
+	//return name.c_str();
+	return ("Step");
 }
 
 void Step::onTick(C_GameMode* gm) {
-	auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
-	if (clickGUI->isEnabled()) {
-		clickGUIE = true;
-	} else {
-		clickGUIE = false;
-	}
 	gm->player->stepHeight = height;
 	if (reverse) {
 		if (gm->player->onGround && !gm->player->isInWater() && !gm->player->isInLava()) {

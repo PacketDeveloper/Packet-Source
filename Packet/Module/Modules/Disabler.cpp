@@ -4,12 +4,10 @@
 #include "../ModuleManager.h"
 
 Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
-	registerEnumSetting("Mode", &this->mode, 0);
+	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Nethergames", 0);
 	mode.addEntry("Mineville", 1);
-#ifdef _DEBUG
 	mode.addEntry("Hive", 2);
-#endif
 }
 
 Disabler::~Disabler() {
@@ -37,9 +35,9 @@ void Disabler::onTick(C_GameMode* gm) {
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&Mineville);
 	}
 	//}
-#ifdef _DEBUG
 	if (mode.getSelectedValue() == 2) {
 		auto player = g_Data.getLocalPlayer();
+#ifdef _DEBUG
 		int timeEnabled = 0;
 		if (counter == 4) {
 			//setEnabled(false);
@@ -54,8 +52,8 @@ void Disabler::onTick(C_GameMode* gm) {
 			speed->setEnabled(false);
 		}
 		if (timeEnabled >= 10) setEnabled(false);
-	}
 #endif
+	}
 }
 
 void Disabler::onSendPacket(C_Packet* packet) {

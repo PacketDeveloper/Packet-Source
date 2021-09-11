@@ -9,6 +9,7 @@ public:
 
 	Step();
 	~Step();
+	std::string name = "Step";
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

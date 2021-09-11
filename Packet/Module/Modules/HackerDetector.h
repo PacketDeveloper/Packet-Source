@@ -9,8 +9,9 @@ public:
 	bool flyCheck = false;
 	int range = 255;
 
-	bool speedFlag = false;
-	bool flyFlag = false;
+	bool flag1 = false; // Speed
+	bool flag2 = false; // Fly
+	int time = 1;
 
 	HackerDetector();
 	~HackerDetector();

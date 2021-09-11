@@ -84,6 +84,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new ItemTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new BreadCrumbs()));
 		moduleList.push_back(std::shared_ptr<IModule>(new HackerDetector()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Switcher()));
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new HudEditorMod()));
@@ -91,7 +92,6 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
 		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
-		moduleList.push_back(std::shared_ptr<IModule>(new Switcher()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		// Broken
 		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));

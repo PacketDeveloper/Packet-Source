@@ -92,9 +92,7 @@ void Killaura::onTick(C_GameMode* gm) {
 	auto player = g_Data.getLocalPlayer();
 	targetListEmpty = targetList.empty();
 
-	if (clickGUI->isEnabled()) {
-		targetListEmpty = true;
-	}
+	if (clickGUI->isEnabled()) targetListEmpty = true;
 
 	targetList.clear();
 
@@ -170,8 +168,87 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 		if (hold && !g_Data.isLeftClickDown())
 			return;
 		auto scaffold = moduleMgr->getModule<Scaffold>();
-		if (render && scaffold->useRot) {
+		if (g_Data.isInGame() && targetList.size() == 1) {
+			if (targethud > 1) {
+				for (auto& i : targetList) {
+					if (render && scaffold->useRot && (i->getEntityTypeId() == 319)) {
+						vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+						static auto hudMod = moduleMgr->getModule<HudModule>();
+						vec3_t* pos = targetList[0]->getPos();
+						std::string namestr = "Name: ";
+						std::string name = namestr + targetList[0]->getNameTag()->getText();
+						std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z));
 
+						name = Utils::sanitize(name);
+
+						float margin = windowSize.x / 5;
+						constexpr float borderPadding = 1;
+						constexpr float unused = 5;
+						constexpr float idek = 5;
+
+						float nameLength = DrawUtils::getTextWidth(&name) + 20;
+
+						static const float rectHeight = (idek, unused) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
+
+						vec4_t rectPos = vec4_t(
+							windowSize.x - margin - nameLength - 15 - borderPadding * 2,
+							windowSize.y - margin - rectHeight + 10,
+							windowSize.x - margin + borderPadding - 2,
+							windowSize.y - margin + 11);
+
+						vec4_t LinePos = vec4_t(
+							windowSize.x - margin - nameLength - 6.5 - borderPadding * 2,
+							windowSize.y - margin - rectHeight + 49,
+							windowSize.x - margin + borderPadding - 10.5,
+							windowSize.y - margin + 7);
+
+						vec2_t TextPos = vec2_t(rectPos.x + 8, rectPos.y + 5);
+						vec2_t ArmorPos = vec2_t(rectPos.x + 5.5, rectPos.y + 24);
+						vec2_t TextPos2 = vec2_t(rectPos.x + 8, rectPos.y + 15);
+
+						if (targetList[0]->damageTime >= 1) {
+							vec2_t TextPosIdk = vec2_t(LinePos.x + 55, LinePos.y + 2);
+							std::string Health = " ";
+							DrawUtils::drawText(TextPosIdk, &Health, MC_Color(255, 255, 255), 0.67, 1, true);
+						}
+
+						if (targetList[0]->damageTime >= 1) {
+							DrawUtils::fillRectangle(LinePos, MC_Color(255, 0, 0), 0.5);
+							DrawUtils::drawRectangle(LinePos, MC_Color(255, 0, 0), 1);
+						} else {
+							DrawUtils::fillRectangle(LinePos, MC_Color(0, 255, 0), 0.5);
+							DrawUtils::drawRectangle(LinePos, MC_Color(0, 255, 0), 1);
+						}
+
+						DrawUtils::flush();
+
+						if (render && (i->getEntityTypeId() == 319)) {
+							static float constexpr opacity = 1;
+							float scale = 3 * 0.26f;
+							float spacing = scale + 15.f + 2;
+
+							auto* player = reinterpret_cast<C_Player*>(targetList[0]);
+
+							for (int t = 0; t < 4; t++) {
+								C_ItemStack* stack = player->getArmor(t);
+								if (stack->isValid()) {
+									DrawUtils::drawItem(stack, vec2_t(ArmorPos), 1, scale, false);  //* stack->isEnchanted() is run by the thing already, this bool is if it forces it to be enchanted or no
+									ArmorPos.x += scale * spacing;
+								}
+							}
+							C_PlayerInventoryProxy* supplies = player->getSupplies();
+							C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
+							if (item->isValid())
+								DrawUtils::drawItem(item, vec2_t(ArmorPos), opacity, scale, item->isEnchanted());
+						}
+
+						DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.3);
+						//DrawUtils::drawRectangle(rectPos, MC_Color(0, 0, 0), 0.35);
+						DrawUtils::drawText(TextPos2, &position, MC_Color(255, 255, 255), 1, 1, true);
+						DrawUtils::drawText(TextPos, &name, MC_Color(255, 255, 255), 1, 1, true);
+					}
+				}
+			}
 		}
 	}
 }
@@ -234,23 +311,6 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			}
 		}
 	}
-	auto player = g_Data.getLocalPlayer();
-	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-	float x = windowSize.x / 114 + 1;
-	float y = windowSize.y - 20;
-
-	float x2 = windowSize.x / 114 + 1;
-	float y2 = windowSize.y - 30;
-
-	float x3 = windowSize.x / 114 + 1;
-	float y3 = windowSize.y - 40;
-
-	std::string fpsText = "Player Pitch: " + std::to_string(player->pitch);
-	std::string fpsText2 = "Player Yaw: " + std::to_string(player->yaw);
-	std::string fpsText3 = "Body Yaw: " + std::to_string(player->bodyYaw);
-	DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), 1, 1, true);
-	DrawUtils::drawText(vec2_t(x2, y2), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
-	DrawUtils::drawText(vec2_t(x3, y3), &fpsText3, MC_Color(255, 255, 255), 1, 1, true);
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {

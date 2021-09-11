@@ -4,6 +4,7 @@
 
 class Breaker : public IModule {
 private:
+	std::string name = "Breaker";
 	bool switchSlot = false;
 	bool treasures = false;
 	bool chests = false;
