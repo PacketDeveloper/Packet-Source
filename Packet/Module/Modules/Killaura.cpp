@@ -176,6 +176,7 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 				static auto hudMod = moduleMgr->getModule<HudModule>();
 				vec3_t* pos = targetList[0]->getPos();
 				std::string namestr = "Name: ";
+				
 				std::string name = namestr + targetList[0]->getNameTag()->getText();
 				std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z));
 
@@ -187,7 +188,6 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 				constexpr float idek = 5;
 
 				float nameLength = DrawUtils::getTextWidth(&name) + 20;
-				//float fullTextLength = nameLength + DrawUtils::getTextWidth(&name);
 
 				static const float rectHeight = (idek, unused) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
 
@@ -198,13 +198,13 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 					windowSize.y - margin + 10);
 
 				vec4_t LinePos = vec4_t(
-					windowSize.x - margin - nameLength - 5 - borderPadding * 2,
-					windowSize.y - margin - rectHeight + 39,
-					windowSize.x - margin + borderPadding - 15,
-					windowSize.y - margin - 5);
+					windowSize.x - margin - nameLength - 6.5 - borderPadding * 2,
+					windowSize.y - margin - rectHeight + 49,
+					windowSize.x - margin + borderPadding - 13,
+					windowSize.y - margin + 7);
 
 				vec2_t TextPos = vec2_t(rectPos.x + 8, rectPos.y + 5);
-				vec2_t ArmorPos = vec2_t(rectPos.x + 20, rectPos.y + 38);
+				vec2_t ArmorPos = vec2_t(rectPos.x + 5.5, rectPos.y + 24);
 				vec2_t TextPos2 = vec2_t(rectPos.x + 8, rectPos.y + 15);
 
 				if (targetList[0]->damageTime >= 1) {
@@ -213,6 +213,12 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 				} else {
 					DrawUtils::fillRectangle(LinePos, MC_Color(0, 255, 0), 0.5);
 					DrawUtils::drawRectangle(LinePos, MC_Color(0, 255, 0), 1);
+				}
+
+				if (targetList[0]->damageTime >= 1) {
+					vec2_t TextPosIdk = vec2_t(LinePos.x + 55, LinePos.y + 2);
+					std::string Health = "HP: -1";
+					DrawUtils::drawText(TextPosIdk, &Health, MC_Color(255, 255, 255), 0.67, 1, true);
 				}
 
 				DrawUtils::flush();
