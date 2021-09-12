@@ -180,14 +180,7 @@ void Speed::onSendPacket(C_Packet* packet) {
 	auto player = g_Data.getLocalPlayer();
 	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3 && g_Data.isInGame()) {
 		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);//poggies
-		float myPitchq = player->pitch;
-		float myYawq = player->yaw;
-		float bodyYawq = player->bodyYaw;
-		//movePacket->pitch = myPitchq;
-		//movePacket->headYaw = myYawq;
-
 		C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-
 		if (input == nullptr)
 			return;
 
