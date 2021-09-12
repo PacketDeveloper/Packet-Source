@@ -1240,146 +1240,110 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	HImGui.endFrame();
 	DrawUtils::flush();
 
-		// Draw FPS
-	if (hudMod->isEnabled() && hudMod->fps && g_Data.canUseMoveKeys() && hudMod->displayArmor) {
-		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-		std::string fpsText = "FPS: " + std::to_string(g_Data.getFPS());
-
-		float startY = windowSize.y - 51;
-		float l = DrawUtils::getTextWidth(&fpsText, 1) + 6.5;
-
-		vec4_t rectPos = vec4_t(2.5, startY + 6, l, startY + 20);
-		vec2_t textPos = vec2_t(rectPos.x + 2, rectPos.y + 3);
-
-		DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), hudMod->opacity);
-
-		if (hudMod->color.getSelectedValue() != 1)  // Rainbowf
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(currColor), 1, 1, true);
-		if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(dynamic, dynamic, dynamic), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 4) {  // White
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 255, 255), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 0, 0), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 127, 0), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 255, 0), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(0, 255, 0), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(0, 170, 255), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(148, 0, 211), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 192, 203), 1, 1, true);
-		}
-	}
-
-	if (hudMod->isEnabled() && !hudMod->displayArmor && hudMod->fps && g_Data.canUseMoveKeys()) {
-		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-		std::string fpsText = "FPS: " + std::to_string(g_Data.getFPS());
-
-		float startY = windowSize.y - 37;
-		float l = DrawUtils::getTextWidth(&fpsText, 1) + 6.5;
-
-		vec4_t rectPos = vec4_t(2.5, startY + 6, l, startY + 20);
-		vec2_t textPos = vec2_t(rectPos.x + 2, rectPos.y + 3);
-
-		DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), hudMod->opacity);
-
-		if (hudMod->color.getSelectedValue() != 1)  // Rainbowf
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(currColor), 1, 1, true);
-		if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(dynamic, dynamic, dynamic), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 4) {  // White
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 255, 255), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 0, 0), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 127, 0), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 255, 0), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(0, 255, 0), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(0, 170, 255), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(148, 0, 211), 1, 1, true);
-		} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-			DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 192, 203), 1, 1, true);
-		}
-	}
-
-	// armor Hud
-	{
-		if (hudMod->displayArmor && !clickGuiModule->isEnabled()) {
+		// Draw HUD
+	if (g_Data.canUseMoveKeys() && hudMod->isEnabled()) {
+		
+		// FPS
+		if (hudMod->fps) {
 			vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-			static float constexpr opacity = 1;
-			float scale = 3 * 0.26f;
-			float spacing = scale + 15.f + 2;
-			std::string lenlol = "                         "; // add more spaces for longer rect lol
-			std::string armor = "Armor:";
-			float startY = windowSize.y - 37;
-			float l = DrawUtils::getTextWidth(&lenlol, 1) + 6.5;
-			vec4_t rectPos = vec4_t(2.5, startY + 6, l, startY + 20);
-			vec2_t textPos = vec2_t(rectPos.x + 35, rectPos.y + 1);
-			vec2_t textPos2 = vec2_t(rectPos.x + 2, rectPos.y + 3);
-			DrawUtils::drawText(textPos2, &armor, MC_Color(currColor), 1, 1, true);
-			DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), hudMod->opacity);
-			C_LocalPlayer* player = g_Data.getLocalPlayer();
+			std::string fpsText = "FPS: " + std::to_string(g_Data.getFPS());
 
-			for (int t = 0; t < 4; t++) {
-				C_ItemStack* stack = player->getArmor(t);
-				if (stack->isValid()) {
-					DrawUtils::drawItem(stack, vec2_t(textPos), 1, scale, false);
-					textPos.x += scale * spacing;
-				}
-			}
-			C_PlayerInventoryProxy* supplies = player->getSupplies();
-			C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
-			if (item->isValid())
-				DrawUtils::drawItem(item, vec2_t(textPos), opacity, scale, item->isEnchanted());
-		}
-	}
-
-
-	// pos
-	{
-		if (hudMod->coordinates && !clickGuiModule->isEnabled() && g_Data.canUseMoveKeys()) {
-			vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
-
-			std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z));
-
-			float startY =  windowSize.y - 23;
-			float l = DrawUtils::getTextWidth(&position, 1) + 6.5;
+			float startY = windowSize.y - 51;
+			float l = DrawUtils::getTextWidth(&fpsText, 1) + 6.5;
 
 			vec4_t rectPos = vec4_t(2.5, startY + 6, l, startY + 20);
 			vec2_t textPos = vec2_t(rectPos.x + 2, rectPos.y + 3);
-			
+
 			DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), hudMod->opacity);
 
 			if (hudMod->color.getSelectedValue() != 1)  // Rainbowf
-				DrawUtils::drawText(textPos, &position, MC_Color(currColor), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(currColor), 1, 1, true);
 			if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
-				DrawUtils::drawText(textPos, &position, MC_Color(dynamic, dynamic, dynamic), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(dynamic, dynamic, dynamic), 1, 1, true);
 			} else if (hudMod->color.getSelectedValue() == 4) {  // White
-				DrawUtils::drawText(textPos, &position, MC_Color(255, 255, 255), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 255, 255), 1, 1, true);
 			} else if (hudMod->color.getSelectedValue() == 5) {  // Red
-				DrawUtils::drawText(textPos, &position, MC_Color(255, 0, 0), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 0, 0), 1, 1, true);
 			} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
-				DrawUtils::drawText(textPos, &position, MC_Color(255, 127, 0), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 127, 0), 1, 1, true);
 			} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
-				DrawUtils::drawText(textPos, &position, MC_Color(255, 255, 0), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 255, 0), 1, 1, true);
 			} else if (hudMod->color.getSelectedValue() == 8) {  // Green
-				DrawUtils::drawText(textPos, &position, MC_Color(0, 255, 0), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(0, 255, 0), 1, 1, true);
 			} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
-				DrawUtils::drawText(textPos, &position, MC_Color(0, 170, 255), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(0, 170, 255), 1, 1, true);
 			} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
-				DrawUtils::drawText(textPos, &position, MC_Color(148, 0, 211), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(148, 0, 211), 1, 1, true);
 			} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
-				DrawUtils::drawText(textPos, &position, MC_Color(255, 192, 203), 1, 1, true);
+				DrawUtils::drawText(textPos, &fpsText, MC_Color(255, 192, 203), 1, 1, true);
+			}
+		}
+
+		// Armor
+		{
+			if (hudMod->displayArmor) {
+				vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+				static float constexpr opacity = 1;
+				float scale = 3 * 0.26f;
+				float spacing = scale + 15.f + 2;
+				std::string lenlol = "                      ";  // add more spaces for longer rect lol
+				std::string armor = "Armor:";
+				float startY = windowSize.y - 37;
+				float l = DrawUtils::getTextWidth(&lenlol, 1) + 6.5;
+				vec4_t rectPos = vec4_t(2.5, startY + 6, l, startY + 20);
+				vec2_t textPos = vec2_t(rectPos.x + 35, rectPos.y + 1);
+				vec2_t textPos2 = vec2_t(rectPos.x + 2, rectPos.y + 3);
+				DrawUtils::drawText(textPos2, &armor, MC_Color(currColor), 1, 1, true);
+				DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), hudMod->opacity);
+				C_LocalPlayer* player = g_Data.getLocalPlayer();
+
+				for (int t = 0; t < 4; t++) {
+					C_ItemStack* stack = player->getArmor(t);
+					if (stack->isValid()) {
+						DrawUtils::drawItem(stack, vec2_t(textPos), 1, scale, false);
+						textPos.x += scale * spacing;
+					}
+				}
+			}
+		}
+
+		// Coords
+		{
+			if (hudMod->coordinates) {
+				vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
+				vec3_t* pos = g_Data.getLocalPlayer()->getPos();
+
+				std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z));
+
+				float startY = windowSize.y - 23;
+				float l = DrawUtils::getTextWidth(&position, 1) + 6.5;
+
+				vec4_t rectPos = vec4_t(2.5, startY + 6, l, startY + 20);
+				vec2_t textPos = vec2_t(rectPos.x + 2, rectPos.y + 3);
+
+				DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), hudMod->opacity);
+
+				if (hudMod->color.getSelectedValue() != 1)  // Rainbowf
+					DrawUtils::drawText(textPos, &position, MC_Color(currColor), 1, 1, true);
+				if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+					DrawUtils::drawText(textPos, &position, MC_Color(dynamic, dynamic, dynamic), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 4) {  // White
+					DrawUtils::drawText(textPos, &position, MC_Color(255, 255, 255), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+					DrawUtils::drawText(textPos, &position, MC_Color(255, 0, 0), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+					DrawUtils::drawText(textPos, &position, MC_Color(255, 127, 0), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+					DrawUtils::drawText(textPos, &position, MC_Color(255, 255, 0), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+					DrawUtils::drawText(textPos, &position, MC_Color(0, 255, 0), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+					DrawUtils::drawText(textPos, &position, MC_Color(0, 170, 255), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+					DrawUtils::drawText(textPos, &position, MC_Color(148, 0, 211), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+					DrawUtils::drawText(textPos, &position, MC_Color(255, 192, 203), 1, 1, true);
+				}
 			}
 		}
 	}
