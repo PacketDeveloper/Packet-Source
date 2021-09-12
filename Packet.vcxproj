@@ -301,6 +301,7 @@
     <ClCompile Include="Packet\Module\Modules\HackerDetector.cpp" />
     <ClCompile Include="Packet\Module\Modules\HudEditorMod.cpp" />
     <ClCompile Include="Packet\Module\Modules\ItemTP.cpp" />
+    <ClCompile Include="Packet\Module\Modules\Jesus.cpp" />
     <ClCompile Include="Packet\Module\Modules\Notifications.cpp" />
     <ClCompile Include="Packet\Module\Modules\Sneak.cpp" />
     <ClCompile Include="Packet\Module\Modules\Spammer.cpp" />
@@ -482,6 +483,7 @@
     <ClInclude Include="Packet\Module\Modules\HackerDetector.h" />
     <ClInclude Include="Packet\Module\Modules\HudEditorMod.h" />
     <ClInclude Include="Packet\Module\Modules\ItemTP.h" />
+    <ClInclude Include="Packet\Module\Modules\Jesus.h" />
     <ClInclude Include="Packet\Module\Modules\Notifications.h" />
     <ClInclude Include="Packet\Module\Modules\Sneak.h" />
     <ClInclude Include="Packet\Module\Modules\Spammer.h" />

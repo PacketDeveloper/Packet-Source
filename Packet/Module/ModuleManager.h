@@ -75,6 +75,7 @@
 #include "Modules/BreadCrumbs.h"
 #include "Modules/HackerDetector.h"
 #include "Modules/Switcher.h"
+#include "Modules/Jesus.h"
 #include "Modules/Module.h"
 
 //#include "Modules/Waypoints.h" // Crashes

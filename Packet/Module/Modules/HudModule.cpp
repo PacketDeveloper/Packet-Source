@@ -17,10 +17,11 @@ HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
 	color.addEntry("Blue", 9);
 	color.addEntry("Purple", 11);
 	color.addEntry("Pink", 12);
-	registerBoolSetting("Keystrokes", &keystrokes, keystrokes);
-	registerBoolSetting("ArmorHUD", &displayArmor, displayArmor);
-	registerBoolSetting("Position", &coordinates, coordinates);
 	registerBoolSetting("FPS", &fps, fps);
+	registerBoolSetting("Coords", &coordinates, coordinates);
+	registerBoolSetting("ArmorHUD", &displayArmor, displayArmor);
+	registerBoolSetting("Keystrokes", &keystrokes, keystrokes);
+	registerFloatSetting("Opacity", &opacity, opacity, 0.f, 1.f);
 	//registerBoolSetting("BPS", &bps, bps);
 	//registerBoolSetting("Always show", &alwaysShow, alwaysShow);
 }
@@ -54,39 +55,6 @@ void HudModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			vec2_t textPos = vec2_t(rectPos.x * cpspos2, rectPos.y * cpspos);  //CPS Location
 			DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.f);
 			DrawUtils::drawText(textPos, &cpsText, MC_Color(255, 255, 255), scale);
-		}
-	}
-
-	{  // Coordinates
-		if (!(g_Data.getLocalPlayer() == nullptr || !coordinates)) {
-			vec3_t* pos = g_Data.getLocalPlayer()->getPos();
-
-			std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z)); // amazing code
-			float x = windowSize.x / 30.f + -16.f;
-			float y = windowSize.y - 12.1f;
-			DrawUtils::drawText(vec2_t(x, y), &position, MC_Color(255, 255, 255), scale);
-		}
-	}
-	{  // ArmorHUD
-		if (!(g_Data.getLocalPlayer() == nullptr || !displayArmor || !GameData::canUseMoveKeys())) {
-			static float constexpr scale = 1.f;
-			static float constexpr opacity = 0.25f;
-			static float constexpr spacing = scale + 15.f;
-			C_LocalPlayer* player = g_Data.getLocalPlayer();
-			float x = windowSize.x / 2.f + 5.f;
-			float y = windowSize.y - 57.5f;
-			for (int i = 0; i < 4; i++) {
-				C_ItemStack* stack = player->getArmor(i);
-				if (stack->isValid()) {
-					DrawUtils::drawItem(stack, vec2_t(x, y), opacity, scale, false); //* stack->isEnchanted() is run by the thing already, this bool is if it forces it to be enchanted or no
-					x += scale * spacing;
-				}
-			}
-			C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-			C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
-			//x += scale * spacing;
-			if (item->isValid())
-				DrawUtils::drawItem(item, vec2_t(x, y), opacity, scale, item->isEnchanted());
 		}
 	}
 	{  // Keystrokes

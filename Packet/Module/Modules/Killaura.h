@@ -9,7 +9,6 @@ private:
 	bool test = false;
 
 public:
-	std::string name = "Killaura";
 	bool distanceCheck = false;
 	bool useSprint = true;
 	bool multi = true;

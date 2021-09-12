@@ -1,4 +1,4 @@
-#include "Killaura.h"
+﻿#include "Killaura.h"
 
 Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entites") {
 	registerEnumSetting("Rotations", &mode, 0);
