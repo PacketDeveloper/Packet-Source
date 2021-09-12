@@ -192,7 +192,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 	// Get max width of all text
 
 	for (auto& it : ModuleList) {
-		std::string label = it->getModuleName();
+		std::string label = it->getRawModuleName();
 		windowSize->x = fmax(windowSize->x, DrawUtils::getTextWidth(&label, textSize, Fonts::SMOOTH));
 	}
 
@@ -216,7 +216,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 				if (stopurphat)
 					continue;
 
-				std::string t = ModuleList[j]->getModuleName();
+				std::string t = ModuleList[j]->getRawModuleName();
 				float textWidthRn = DrawUtils::getTextWidth(&t, textSize, Fonts::SMOOTH);
 				if (textWidthRn > bestWidth) {
 					bestWidth = textWidthRn;
@@ -288,7 +288,7 @@ void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundA
 				break;
 			}
 
-			std::string textStr = mod->getModuleName();
+			std::string textStr = mod->getRawModuleName();
 
 			vec2_t textPos = vec2_t(
 				currentXOffset + textPadding + 1.18f,

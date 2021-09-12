@@ -216,15 +216,15 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 		const char* textToDraw = textStr->c_str();
 		int colorPos = -1;
 		while (*textToDraw != '\0') {
-			if (*textToDraw == (char)194 && textToDraw[1] != 0 && textToDraw[1] == (char)194 && textToDraw[2] != 0 && textToDraw[2] == '7') {
+			if (*textToDraw == (char)194 && textToDraw[1] != 0 && textToDraw[1] == (char)167 && textToDraw[2] != 0 && textToDraw[2] == '7') {
 				colorPos = (textToDraw - textStr->c_str()) / sizeof(char) + 2;
 				break;
 			}
 			textToDraw++;
 		}
-		if (colorPos != -1) (*textStr)[colorPos] = 8;
+		if (colorPos != -1) text.getText()[colorPos] = '8';
 		renderCtx->drawText(fontPtr, posF2, &text, colorr, alpha, 0, &textMeasure, &caretMeasureData);
-		if (colorPos != -1) (*textStr)[colorPos] = 7;
+		if (colorPos != -1) text.getText()[colorPos] = '7';
 	}
 	renderCtx->drawText(fontPtr, posF, &text, color.arr, alpha, 0, &textMeasure, &caretMeasureData);
 }

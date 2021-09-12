@@ -8,9 +8,12 @@ Step::Step() : IModule(0, Category::MOVEMENT, "Increases your step height") {
 Step::~Step() {
 }
 
+const char* Step::getRawModuleName() {
+	return "Step";
+}
 const char* Step::getModuleName() {
-	//name = std::string("Step ") + std::string(GRAY) + std::to_string((int)height);
-	//return name.c_str();
+	name = std::string("Step ") + std::string(GRAY) + std::to_string((int)height) + std::string(".") + std::to_string((int)(height*10) - ((int)height * 10));
+	return name.c_str();
 	return ("Step");
 }
 
