@@ -10,8 +10,14 @@ Velocity::Velocity() : IModule(0, Category::MOVEMENT, "AntiKB Module") {
 Velocity::~Velocity() {
 }
 
+const char* Velocity::getRawModuleName() {
+	return "Velocity";
+}
+
 const char* Velocity::getModuleName() {
-	return ("Velocity");
+	name = std::string("Velocity ") + std::string(GRAY) + std::to_string((int)xModifier) + std::string(".") + std::to_string((int)(xModifier * 10) - ((int)xModifier * 10));
+	fullname = name + std::string(", ") + std::to_string((int)yModifier) + std::string(".") + std::to_string((int)(yModifier * 10) - ((int)yModifier * 10));
+	return fullname.c_str();
 }
 
 void Velocity::onTick(C_GameMode* gm) {
