@@ -8,10 +8,10 @@ TestModule::TestModule() : IModule(0, Category::MISC, "Description") {
 	registerBoolSetting("Damage", &dmgMode, dmgMode);
 	registerBoolSetting("Blink", &blink, blink);
 	registerBoolSetting("Test", &test, test);
-	registerBoolSetting("Kow", &kowBool, kowBool);
 	registerBoolSetting("AutoDisable", &autoDisable, autoDisable);
 	registerFloatSetting("SliderX", &sliderX, sliderX, -800, 100);
 	registerFloatSetting("SliderY", &sliderY, sliderY, -1000, 1000);
+	registerBoolSetting("Kow", &kowBool, kowBool);
 	registerFloatSetting("KowFloat", &kowFloat, kowFloat, 0.2f, 10.f);
 }
 
