@@ -11,10 +11,10 @@ Step::~Step() {
 const char* Step::getRawModuleName() {
 	return "Step";
 }
+
 const char* Step::getModuleName() {
-	name = std::string("Step ") + std::string(GRAY) + std::to_string((int)height) + std::string(".") + std::to_string((int)(height*10) - ((int)height * 10));
+	name = std::string("Step ") + std::string(GRAY) + std::to_string((int)height) + std::string(".") + std::to_string((int)(height * 10) - ((int)height * 10));
 	return name.c_str();
-	return ("Step");
 }
 
 void Step::onTick(C_GameMode* gm) {

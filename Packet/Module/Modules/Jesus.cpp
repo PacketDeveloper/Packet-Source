@@ -51,14 +51,16 @@ bool Jesus::tryJesus(vec3_t blockBelow) {
 			i++;
 		}
 		if (foundWater) {
-			if (mode.getSelectedValue() == 0 && !GameData::isKeyDown(*input->sneakKey)) {  // Solid
-				if (smthwateridk) {
-					player->velocity.y = 0.0f;
-					player->onGround = true;
+			if (!GameData::isKeyDown(*input->sneakKey)) {
+				if (mode.getSelectedValue() == 0) {  // Solid
+					if (smthwateridk) {
+						player->velocity.y = 0.0f;
+						player->onGround = true;
+					}
 				}
-			} 
-			if (mode.getSelectedValue() == 1 && !GameData::isKeyDown(*input->sneakKey)) { // Bouncy boi
-				player->velocity.y = height;
+				if (mode.getSelectedValue() == 1) {  // Bouncy boi
+					player->velocity.y = height;
+				}
 			}
 			return true;
 		}

@@ -12,8 +12,8 @@ public:
 	std::string name = "Step";
 
 	// Inherited via IModule
-	virtual const char* getModuleName() override;
 	virtual const char* getRawModuleName() override;
+	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onDisable() override;
 };
