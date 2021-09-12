@@ -9,11 +9,12 @@ public:
 
 	Velocity();
 	~Velocity();
+
 	std::string name = "Velocity";
 	std::string fullname = "Velocity";
 
 	// Inherited via IModule
-	virtual const char* getRawModuleName() override;
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
+	virtual const char* getRawModuleName() override;
 };

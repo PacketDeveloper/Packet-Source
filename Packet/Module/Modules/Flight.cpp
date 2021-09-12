@@ -10,7 +10,6 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "yes") {
 	mode.addEntry("BlockFly", 2);
 	mode.addEntry("Teleport", 3);
 	mode.addEntry("Jetpack", 4);
-	mode.addEntry("AirJump", 5);
 	//mode.addEntry("Hive", 6);
 	//registerIntSetting("PlaceDelay", &placeDelay, placeDelay, 2, 20);
 	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
@@ -24,12 +23,31 @@ Flight::~Flight() {
 	}
 }
 
-const char* Flight::getModuleName() {
-	return ("Flight");
-}
-
 const char* Flight::getRawModuleName() {
 	return "Flight";
+}
+
+const char* Flight::getModuleName() {
+	if (mode.getSelectedValue() == 0) {
+		name = std::string("Flight ") + std::string(GRAY) + std::string("Vanilla");
+		return name.c_str();
+	}
+	if (mode.getSelectedValue() == 1) {
+		name = std::string("Flight ") + std::string(GRAY) + std::string("Boost");
+		return name.c_str();
+	}
+	if (mode.getSelectedValue() == 2) {
+		name = std::string("Flight ") + std::string(GRAY) + std::string("BlockFly");
+		return name.c_str();
+	}
+	if (mode.getSelectedValue() == 3) {
+		name = std::string("Flight ") + std::string(GRAY) + std::string("TP");
+		return name.c_str();
+	}
+	if (mode.getSelectedValue() == 4) {
+		name = std::string("Flight ") + std::string(GRAY) + std::string("Jetpack");
+		return name.c_str();
+	}
 }
 
 void Flight::onEnable() {
@@ -212,19 +230,8 @@ void Flight::onTick(C_GameMode* gm) {
 				}
 			}
 		}
-	} else if (mode.getSelectedValue() == 5) {  // AirJump
-		if (input == nullptr)
-			return;
+	} else if (mode.getSelectedValue() == 5) {  // Hive
 
-		int hasJumped = 0;
-		if (GameData::isKeyDown(*input->spaceBarKey) && hasJumped == 0) {
-			gm->player->onGround = true;
-			hasJumped = 1;
-		} else if (!GameData::isKeyDown(*input->spaceBarKey)) {
-			hasJumped = 0;
-		}
-	}
-	if (mode.getSelectedValue() == 6) {  // Hive
 	}
 }
 

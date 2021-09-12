@@ -4,15 +4,26 @@
 Jesus::Jesus() : IModule(0, Category::MOVEMENT, "Automatically jesuses for you") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Solid", 0);
-	mode.addEntry("Bouncy", 1);
+	mode.addEntry("Bounce", 1);
 	registerFloatSetting("Height", &height, height, 0.1, 3);
 }
 
 Jesus::~Jesus() {
 }
 
-const char* Jesus::getModuleName() {
+const char* Jesus::getRawModuleName() {
 	return "Jesus";
+}
+
+const char* Jesus::getModuleName() {
+	if (mode.getSelectedValue() == 0) { // Solid
+		name = std::string("Jesus ") + std::string(GRAY) + std::string("Solid");
+		return name.c_str();
+	}
+	if (mode.getSelectedValue() == 1) {  // BouncY
+		name = std::string("Jesus ") + std::string(GRAY) + std::string("Bounce");
+		return name.c_str();
+	}
 }
 
 bool Jesus::tryJesus(vec3_t blockBelow) {

@@ -6,9 +6,10 @@ public:
 	ArrayList();
 	~ArrayList();
 
+	bool modes = true;
 	bool arraylist = true;
 	bool arraylistBackground = true;
-	float bgOp = 0.65f;
+	float bgOp = 0.6;
 	bool clickToggle = false;
 	bool keybinds = false;
 	bool alwaysShow = false;

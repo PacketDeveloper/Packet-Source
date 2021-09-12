@@ -874,19 +874,19 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						bool shouldRender = true;
 
 						IModuleContainer(std::shared_ptr<IModule> mod) {
-							const char* moduleNameChr = mod->getModuleName();
+							auto arrayList = moduleMgr->getModule<ArrayList>();
+							if (arrayList->modes) {
+								const char* moduleNameChr = mod->getModuleName();
+								moduleName = moduleNameChr;
+							} else {
+								const char* moduleNameChr = mod->getRawModuleName();
+								moduleName = moduleNameChr;
+							}
+
 							this->enabled = mod->isEnabled();
 							this->keybind = mod->getKeybind();
 							this->backingModule = mod;
 							this->pos = mod->getPos();
-
-							if (keybind == 0x0)
-								moduleName = moduleNameChr;
-							else {
-								char text[50];
-								sprintf_s(text, 50, "%s%s", moduleNameChr, arraylistMod->keybinds ? std::string(" [" + std::string(Utils::getKeybindName(keybind)) + "]").c_str() : "");
-								moduleName = text;
-							}
 
 							if (!this->enabled && *this->pos == vec2_t(0.f, 0.f))
 								this->shouldRender = false;

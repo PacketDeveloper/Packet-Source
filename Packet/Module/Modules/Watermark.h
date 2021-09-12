@@ -8,7 +8,7 @@ public:
 	std::string message = "Packet Client";
 	inline std::string& getMessage() { return message; };
 	bool firstLetter = false;
-	float opacity = 0.2f;
+	float opacity = 0.6f;
 
 	Watermark();
 	~Watermark();

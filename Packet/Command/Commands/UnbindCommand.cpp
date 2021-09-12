@@ -38,6 +38,6 @@ bool UnbindCommand::execute(std::vector<std::string>* args) {
 
 	auto mod = modOpt.value();
 	mod->setKeybind(0x0);
-	clientMessageF("%sSuccessfully unbound %s!", GREEN, mod->getModuleName());
+	clientMessageF("%sSuccessfully unbound %s!", GREEN, mod->getRawModuleName());
 	return true;
 }

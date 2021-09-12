@@ -13,7 +13,7 @@ ESP::~ESP() {
 }
 
 const char* ESP::getModuleName() {
-	return ("PlayerESP");
+	return ("ESP");
 }
 
 static float rcolors[4];

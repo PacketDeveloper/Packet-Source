@@ -13,8 +13,23 @@ Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
 Disabler::~Disabler() {
 }
 
-const char* Disabler::getModuleName() {
+const char* Disabler::getRawModuleName() {
 	return "Disabler";
+}
+
+const char* Disabler::getModuleName() {
+	if (mode.getSelectedValue() == 0) {
+		name = std::string("Disabler ") + std::string(GRAY) + std::string("NG");
+		return name.c_str();
+	}
+	if (mode.getSelectedValue() == 1) {
+		name = std::string("Disabler ") + std::string(GRAY) + std::string("Mineville");
+		return name.c_str();
+	}
+	if (mode.getSelectedValue() == 2) {
+		name = std::string("Disabler ") + std::string(GRAY) + std::string("Hive");
+		return name.c_str();
+	}
 }
 
 void Disabler::onEnable() {

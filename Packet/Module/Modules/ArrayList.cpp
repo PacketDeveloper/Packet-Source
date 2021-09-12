@@ -10,7 +10,7 @@ ArrayList::ArrayList() : IModule(0, Category::VISUAL, "Displays ArrayList") {
 	mode.addEntry("Bar", 2);
 	//mode.addEntry("Old", 3);
 	mode.addEntry("None", 4);
-	registerBoolSetting("Keybinds", &keybinds, keybinds);
+	registerBoolSetting("Modes", &modes, modes);
 	registerFloatSetting("Opacity", &bgOp, bgOp, 0.f, 1.f);
 }
 

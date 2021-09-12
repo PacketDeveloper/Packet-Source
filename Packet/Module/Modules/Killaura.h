@@ -9,7 +9,6 @@ private:
 	bool test = false;
 
 public:
-	std::string name = "Killaura";
 	bool distanceCheck = false;
 	bool useSprint = true;
 	bool multi = true;
@@ -28,6 +27,7 @@ public:
 	bool rotations = true;
 	vec2_t testRot;
 
+	std::string name = "Killaura";
 	SettingEnum mode = this;
 
 	Killaura();
@@ -38,9 +38,9 @@ public:
 	virtual void onEnable() override;
 	virtual void onDisable() override;
 	virtual void onLevelRender() override;
-	virtual const char* getRawModuleName() override;
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
+	virtual const char* getRawModuleName() override;
 	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

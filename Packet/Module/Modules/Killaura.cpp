@@ -1,4 +1,4 @@
-#include "Killaura.h"
+﻿#include "Killaura.h"
 
 Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entites") {
 	registerEnumSetting("Rotations", &mode, 0);
@@ -14,7 +14,7 @@ Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entit
 	registerBoolSetting("Click", &click, click);
 	registerBoolSetting("Hold", &hold, hold);
 	registerFloatSetting("range", &range, range, 3.f, 8.f);
-	registerIntSetting("delay", &delay, delay, 0, 50);
+	registerIntSetting("delay", &delay, delay, 0, 10);
 #ifdef _DEBUG
 	registerBoolSetting("TestMode", &test, test);
 #endif
@@ -89,9 +89,9 @@ struct CompareTargetEnArray {
 };
 
 void Killaura::onEnable() {
-	targetList.clear();
 	if (g_Data.getLocalPlayer() == nullptr)
 		setEnabled(false);
+	targetList.clear();
 	if (render)
 		renderStart++;
 	targethud = 0;
@@ -103,9 +103,7 @@ void Killaura::onTick(C_GameMode* gm) {
 	auto player = g_Data.getLocalPlayer();
 	targetListEmpty = targetList.empty();
 
-	if (clickGUI->isEnabled()) {
-		targetListEmpty = true;
-	}
+	if (clickGUI->isEnabled()) targetListEmpty = true;
 
 	targetList.clear();
 
@@ -324,23 +322,6 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			}
 		}
 	}
-	/*auto player = g_Data.getLocalPlayer();
-	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-	float x = windowSize.x / 114 + 1;
-	float y = windowSize.y - 20;
-
-	float x2 = windowSize.x / 114 + 1;
-	float y2 = windowSize.y - 30;
-
-	float x3 = windowSize.x / 114 + 1;
-	float y3 = windowSize.y - 40;
-
-	std::string fpsText = "Player Pitch: " + std::to_string(player->pitch);
-	std::string fpsText2 = "Player Yaw: " + std::to_string(player->yaw);
-	std::string fpsText3 = "Body Yaw: " + std::to_string(player->bodyYaw);
-	DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), 1, 1, true);
-	DrawUtils::drawText(vec2_t(x2, y2), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
-	DrawUtils::drawText(vec2_t(x3, y3), &fpsText3, MC_Color(255, 255, 255), 1, 1, true);*/
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {

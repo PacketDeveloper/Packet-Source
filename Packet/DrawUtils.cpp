@@ -203,10 +203,10 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 
 	if (hasShadow) {
 		float colorr[4];
-		colorr[0] = color.r / 5.f;
-		colorr[1] = color.g / 5.f;
-		colorr[2] = color.b / 5.f;
-		colorr[3] = color.a / 5.f;
+		colorr[0] = color.r / 6.f;
+		colorr[1] = color.g / 6.f;
+		colorr[2] = color.b / 6.f;
+		colorr[3] = color.a / 6.f;
 		float posF2[4];
 		posF2[0] = posF[0] + 1.0f * textSize;
 		posF2[1] = posF[1];
@@ -222,7 +222,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 			}
 			textToDraw++;
 		}
-		if (colorPos != -1) text.getText()[colorPos] = '8';
+		if (colorPos != -1) text.getText()[colorPos] = '0';
 		renderCtx->drawText(fontPtr, posF2, &text, colorr, alpha, 0, &textMeasure, &caretMeasureData);
 		if (colorPos != -1) text.getText()[colorPos] = '7';
 	}

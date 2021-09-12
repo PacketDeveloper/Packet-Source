@@ -26,7 +26,7 @@ bool ToggleCommand::execute(std::vector<std::string>* args) {
 		clientMessageF("%sModule cannot be toggled!", RED);
 	else {
 		mod->toggle();
-		clientMessageF("%s%s is now %s", GREEN, mod->getModuleName(), mod->isEnabled() ? "enabled" : "disabled");
+		clientMessageF("%s%s is now %s", GREEN, mod->getRawModuleName(), mod->isEnabled() ? "enabled" : "disabled");
 	}
 		
 	return true;

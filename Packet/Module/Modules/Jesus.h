@@ -10,9 +10,11 @@ public:
 	Jesus();
 	~Jesus();
 
-			SettingEnum mode = this;
+	SettingEnum mode = this;
+	std::string name = "Jesus";
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
+	virtual const char* getRawModuleName() override;
 };

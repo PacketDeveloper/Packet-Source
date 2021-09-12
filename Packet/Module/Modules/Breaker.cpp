@@ -18,10 +18,13 @@ Breaker::Breaker() : IModule(0, Category::MISC, "Destroys Beds, Eggs, Treasures 
 Breaker::~Breaker() {
 }
 
+const char* Breaker::getRawModuleName() {
+	return "Breaker";
+}
+
 const char* Breaker::getModuleName() {
-	//name = std::string("Breaker ") + std::string(GRAY) + std::to_string((int)range);
-	//return name.c_str();
-	return ("Breaker");
+	name = std::string("Breaker ") + std::string(GRAY) + std::to_string((int)range);
+	return name.c_str();
 }
 
 void Breaker::onTick(C_GameMode* gm) {

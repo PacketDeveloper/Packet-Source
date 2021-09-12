@@ -4,7 +4,6 @@
 
 class Breaker : public IModule {
 private:
-	std::string name = "Breaker";
 	bool switchSlot = false;
 	bool treasures = false;
 	bool chests = false;
@@ -25,8 +24,11 @@ public:
 	Breaker();
 	~Breaker();
 
+	std::string name = "Breaker";
+
 	// Inherited via IModule
 	virtual void onDisable() override;
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
+	virtual const char* getRawModuleName() override;
 };

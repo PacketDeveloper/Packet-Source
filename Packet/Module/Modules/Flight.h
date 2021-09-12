@@ -32,6 +32,7 @@ public:
 	int hiveC = 0;
 	int timeEnabled = 0;
 
+		std::string name = "Flight";
 		C_MovePlayerPacket* jetpack = nullptr;
 		SettingEnum mode = this;
 

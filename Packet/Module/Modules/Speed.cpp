@@ -12,8 +12,23 @@ Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
 Speed::~Speed() {
 }
 
+const char* Speed::getRawModuleName() {
+	return "Speed";
+}
+
 const char* Speed::getModuleName() {
-	return ("Speed");
+	if (mode.getSelectedValue() == 0) {  // Vanilla
+		name = std::string("Speed ") + std::string(GRAY) + std::string("Vanilla");
+		return name.c_str();
+	}
+	if (mode.getSelectedValue() == 1) {  // Hive
+		name = std::string("Speed ") + std::string(GRAY) + std::string("Hive");
+		return name.c_str();
+	}
+	if (mode.getSelectedValue() == 3) {  // Kow
+		name = std::string("Speed ") + std::string(GRAY) + std::string("Kow");
+		return name.c_str();
+	}
 }
 
 void Speed::onEnable() {
