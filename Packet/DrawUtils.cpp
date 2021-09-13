@@ -427,6 +427,25 @@ void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
 		AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
 		render.upper.y += 0.1;
 		drawBox(render.lower, render.upper, lineWidth, true);
+vec4_t rectPos;
+		vec2_t textPos;
+		vec3_t* start2 = ent->getPosOld();
+		vec3_t* end2 = ent->getPos();
+		std::string text = ("wtf                        ");
+		float textWidth = getTextWidth(&text, 1);
+		float textHeight = ent->height + start2->y;
+		// rly weird fill esp 
+		/*if (refdef->OWorldToScreen(origin, ent->eyePos0.add(0, 0.5f, 0), textPos, fov, screenSize)) {
+			textPos.y -= textHeight;
+			textPos.x -= textWidth / 2.f;
+			rectPos.x = textPos.x - 1.f * 1;
+			rectPos.y = textPos.y - 1.f * 1;
+			rectPos.z = textPos.x + textWidth + 1.f * 1;
+			rectPos.w = textPos.y + textHeight + 2.f * 1;
+			vec4_t subRectPos = rectPos;
+			subRectPos.y = subRectPos.w - 1.f * 1;
+			fillRectangle(rectPos, MC_Color(255, 255, 255), 1);
+		}*/
 	}
 }
 
