@@ -74,7 +74,6 @@ void Flight::onEnable() {
 		g_Data.getLocalPlayer()->setPos(pos);
 	}
 	if (mode.getSelectedValue() == 5) {
-		//auto freeTP = moduleMgr->getModule<FreeTP>();
 		auto speed = moduleMgr->getModule<Speed>();
 		speed->setEnabled(true);
 		//freeTP->setEnabled(true);
@@ -226,17 +225,25 @@ void Flight::onTick(C_GameMode* gm) {
 			}
 		}
 	} else if (mode.getSelectedValue() == 5) {  // Hive
-		gm->player->velocity = vec3_t(0, 0, 0);
+		//gm->player->velocity = vec3_t(0, 0, 0);
 		if (input == nullptr) return;
-		if (hiveC == 10) {
+		player->velocity.y = -0.0f;
+		player->onGround = true;
+		blink = true;
+
+		if (hiveC == INFINITY) {
 			hiveC = 1;
 		} else {
 			hiveC++;
 		}
-		if (hiveC == 5) {
-			blink = true;
-		} else {
-			blink = false;
+
+		switch (hiveC) {
+		case 2:
+			*g_Data.getClientInstance()->minecraft->timer = 130;
+			clientMessageF("130");
+		case 33:
+			*g_Data.getClientInstance()->minecraft->timer = 50;
+			clientMessageF("50");
 		}
 	}
 }
@@ -315,8 +322,8 @@ void Flight::onMove(C_MoveInputHandler* input) {
 		moveVec.y = -0.0f;
 		moveVec.z = moveVec2d.y * speed;
 		player->setPos(pos.add(vec3_t(moveVec.x, moveVec.y, moveVec.z)));
-	} else if (mode.getSelectedValue() == 5) { // Hive
-		if (player->onGround && pressed)
+	} else if (mode.getSelectedValue() == 5) {  // Hive
+		/*if (player->onGround && pressed)
 			player->jumpFromGround();
 		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
 		bool pressed = moveVec2d.magnitude() > 0.01f;
@@ -330,9 +337,7 @@ void Flight::onMove(C_MoveInputHandler* input) {
 		moveVec.x = moveVec2d.x * speed;
 		moveVec.y = -0.0f;
 		moveVec.z = moveVec2d.y * speed;
-		if (hiveC == 5) {
-			player->setPos(pos.add(vec3_t(moveVec.x, moveVec.y, moveVec.z)));
-		}
+		player->setPos(pos.add(vec3_t(moveVec.x, moveVec.y, moveVec.z)));*/
 	}
 }
 
@@ -405,15 +410,11 @@ void Flight::onDisable() {
 		C_MobEquipmentPacket a(id, *g_Data.getLocalPlayer()->getSelectedItem(), supplies->selectedHotbarSlot, supplies->selectedHotbarSlot);
 		g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
 	}
-	if (mode.getSelectedValue() == 6) { // Hive
+	if (mode.getSelectedValue() == 5) { // Hive
 		auto freeTP = moduleMgr->getModule<FreeTP>();
 		auto freecam = moduleMgr->getModule<Freecam>();
 		*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		blink = false;
-		freeze = false;
-		blink2 = false;
-		auto speed = moduleMgr->getModule<Speed>();
-		speed->setEnabled(false);
 		//freeTP->setEnabled(false);
 		//freecam->setEnabled(false);
 	}

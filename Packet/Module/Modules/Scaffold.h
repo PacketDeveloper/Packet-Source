@@ -22,7 +22,6 @@ private:
 
 public:
 	std::vector<vec3_t> blockBeloww;
-	bool foundCandidate2 = false;
 	bool isHoldingSpace = false;
 	bool isOnHive = false;
 	bool towerMode = false;

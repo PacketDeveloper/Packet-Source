@@ -8,7 +8,7 @@ TPAura::TPAura() : IModule(0, Category::COMBAT, "TP Into The Closest Entity") {
 	registerBoolSetting("MultiAura", &multi, multi);
 	registerBoolSetting("Attack", &attack, attack);
 	registerBoolSetting("Silent", &silent, silent);
-	//registerBoolSetting("Hive", &hive, hive);r
+	//registerBoolSetting("Hive", &hive, hive);
 	registerIntSetting("Delay", &delay, delay, 0, 50);
 	registerFloatSetting("Range", &range, range, 5, 250);
 }

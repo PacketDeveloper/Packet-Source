@@ -708,7 +708,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						}
 					}
 				}
-
 			}
 		}
 	}
@@ -729,7 +728,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
 					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 						if (pk->params[0] != 1) {  // Dialog Canceled, reset geo
-							auto box = g_Data.addInfoBox ("Scripting: Invalid Folder");
+							auto box = g_Data.addInfoBox("Scripting: Invalid Folder");
 							box->closeTimer = 1;
 							return;
 						}
@@ -775,7 +774,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 						json parsed = json::parse(jsonDataStr);
 						if (parsed["path"].is_string()) {
-							auto box = g_Data.addInfoBox ("Importing Skin, Please wait...");
+							auto box = g_Data.addInfoBox("Importing Skin, Please wait...");
 							std::thread gamer([parsed, box]() {
 								SkinUtil::importGeo(Utils::stringToWstring(parsed["path"].get<std::string>()));
 								box->fadeTarget = 0;
@@ -865,7 +864,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					float textPadding = 0.6f * textSize;
 					float textHeight = 10.0f * textSize;
 					float smoothness = 2;
-					
+
 					struct IModuleContainer {
 						// Struct used to Sort IModules in a std::set
 						std::shared_ptr<IModule> backingModule;
@@ -952,7 +951,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						float xOffset = windowSize.x - it->pos->x;
 						float barOffset = windowSize.x;
 						float barSize = windowSize.x;
-
 
 						it->pos->x += smoothness;
 
@@ -1054,9 +1052,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						// ArrayList Modes
 						// Outline
 						if (arraylistMod->mode.getSelectedValue() == 0) {
-							if (hudMod->color.getSelectedValue() != 1) // Rainbow
+							if (hudMod->color.getSelectedValue() != 1)  // Rainbow
 								DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);
-								DrawUtils::fillRectangle(underline, MC_Color(currColor), 1.f);
+							DrawUtils::fillRectangle(underline, MC_Color(currColor), 1.f);
 							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
 								DrawUtils::fillRectangle(leftRect, MC_Color(dynamic, dynamic, dynamic), 1.f);
 								DrawUtils::fillRectangle(underline, MC_Color(dynamic, dynamic, dynamic), 1.f);
@@ -1089,7 +1087,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 						// Split
 						if (arraylistMod->mode.getSelectedValue() == 1) {
-							if (hudMod->color.getSelectedValue() != 1)    // Rainbow
+							if (hudMod->color.getSelectedValue() != 1)  // Rainbow
 								DrawUtils::fillRectangle(leftRect, MC_Color(currColor), 1.f);
 							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
 								DrawUtils::fillRectangle(leftRect, MC_Color(dynamic, dynamic, dynamic), 1.f);
@@ -1114,13 +1112,14 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 						// Bar
 						if (arraylistMod->mode.getSelectedValue() == 2) {
-							if (hudMod->color.getSelectedValue() != 1)   // Rainbow
+							if (hudMod->color.getSelectedValue() != 1)  // Rainbow
 								DrawUtils::fillRectangle(bar, MC_Color(currColor), 1.f);
-							 if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
 								DrawUtils::fillRectangle(bar, MC_Color(dynamic, dynamic, dynamic), 1.f);
 							} else if (hudMod->color.getSelectedValue() == 4) {  // White
 								DrawUtils::fillRectangle(bar, MC_Color(255, 255, 255), 1.f);
-							} if (hudMod->color.getSelectedValue() == 5) {  // Red
+							}
+							if (hudMod->color.getSelectedValue() == 5) {  // Red
 								DrawUtils::fillRectangle(bar, MC_Color(255, 0, 0), 1.f);
 							} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
 								DrawUtils::fillRectangle(bar, MC_Color(255, 127, 0), 1.f);
@@ -1151,7 +1150,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						}
 
 						if (arraylistMod->mode.getSelectedValue() == 2) {  // Bar
-							if (hudMod->color.getSelectedValue() != 1)   // currColor
+							if (hudMod->color.getSelectedValue() != 1)     // currColor
 								DrawUtils::drawText(vec2_t(barTextPos), &textStr, MC_Color(currColor), textSize, 1, true);
 							if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
 								DrawUtils::drawText(barTextPos, &textStr, MC_Color(dynamic, dynamic, dynamic), textSize, 1, true);
@@ -2122,7 +2121,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-			/*char* str;  // Obj text
+				  /*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);
