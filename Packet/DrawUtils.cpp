@@ -413,15 +413,21 @@ void DrawUtils::drawNameTags(C_Entity* ent, float textSize, bool drawHealth, boo
 }
 
 void DrawUtils::drawEntityBox(C_Entity* ent, float lineWidth) {
+	static auto esp = moduleMgr->getModule<ESP>();
 	vec3_t* start = ent->getPosOld();
 	vec3_t* end = ent->getPos();
 
 	vec3_t lerped = start->lerp(end, lerpT);
 
-	AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
-	render.upper.y += 0.1f;
-
-	drawBox(render.lower, render.upper, lineWidth, true);
+	if (esp->mode.getSelectedValue() == 1) {
+		AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
+		render.upper.y;
+		drawBox(render.lower, render.upper, lineWidth, false);
+	} else {
+		AABB render(lerped, ent->width, ent->height, end->y - ent->aabb.lower.y);
+		render.upper.y += 0.1;
+		drawBox(render.lower, render.upper, lineWidth, true);
+	}
 }
 
 void DrawUtils::draw2D(C_Entity* ent, float lineWidth) {

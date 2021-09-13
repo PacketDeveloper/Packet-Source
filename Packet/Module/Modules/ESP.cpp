@@ -5,15 +5,27 @@
 #include "../../DrawUtils.h"
 
 ESP::ESP() : IModule(0, Category::VISUAL, "Outlines a players hitbox") {
-	this->registerBoolSetting("Tracers", &this->tracerMode, this->tracerMode);
-	//this->registerBoolSetting("2d", &this->is2d, this->is2d);
+	registerEnumSetting("Mode", &mode, 0);
+	mode.addEntry("Normal", 0);
+	mode.addEntry("Hitbox", 1);
+	registerBoolSetting("Tracers", &tracerMode, tracerMode);
 }
 
 ESP::~ESP() {
 }
 
+const char* ESP::getRawModuleName() {
+	return "ESP";
+}
+
 const char* ESP::getModuleName() {
-	return ("ESP");
+	if (mode.getSelectedValue() == 0) {
+		return "ESP";
+	}
+	if (mode.getSelectedValue() == 1) {
+		name = std::string("ESP ") + std::string(GRAY) + std::string("Hitbox");
+		return name.c_str();
+	}
 }
 
 static float rcolors[4];
@@ -52,13 +64,13 @@ void ESP::onLevelRender() {
 	if (tracerMode) {
 		if (!g_Data.getLocalPlayer()) return;
 		/*auto cameraMgr = g_Data.getClientInstance()->getCameraManager();
-	if(cameraMgr == nullptr)
-		return;
-	auto cam = cameraMgr->getCameraOrDebugCamera();
-	if(cam == nullptr)
-		return;
-	vec3_t forward{};
-	cam->getForwardVector(&forward);*/
+    if(cameraMgr == nullptr)
+        return;
+    auto cam = cameraMgr->getCameraOrDebugCamera();
+    if(cam == nullptr)
+        return;
+    vec3_t forward{};
+    cam->getForwardVector(&forward);*/
 		//idk how to find that, too lazy to update soooooooo lets do it like jetpack
 
 		float calcYaw = (g_Data.getLocalPlayer()->yaw + 90) * (PI / 180);

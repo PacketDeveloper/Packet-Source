@@ -3,13 +3,12 @@
 TPAura::TPAura() : IModule(0, Category::COMBAT, "TP Into The Closest Entity") {
 	registerEnumSetting("Rotations", &mode, 0);
 	mode.addEntry("Normal", 0);
-	mode.addEntry("Smooth", 1);
-	mode.addEntry("Old", 2);
+	mode.addEntry("Old", 1);
+	mode.addEntry("None", 2);
 	registerBoolSetting("MultiAura", &multi, multi);
 	registerBoolSetting("Attack", &attack, attack);
 	registerBoolSetting("Silent", &silent, silent);
-	registerBoolSetting("Hive", &hive, hive);
-	registerFloatSetting("Height", &teleportY, teleportY, 0, 10);
+	//registerBoolSetting("Hive", &hive, hive);r
 	registerIntSetting("Delay", &delay, delay, 0, 50);
 	registerFloatSetting("Range", &range, range, 5, 250);
 }
@@ -44,6 +43,12 @@ void findPlayer2(C_Entity* currentEntity, bool isRegularEntity) {
 	if (currentEntity->getEntityTypeId() == 69)  // XP
 		return;
 
+	if (currentEntity->getEntityTypeId() == 80)  // Arrows
+		return;
+
+	if (currentEntity->getEntityTypeId() == 51)  // NPC
+		return;
+
 	if (!Target::isValidTarget(currentEntity))
 		return;
 
@@ -57,12 +62,6 @@ void findPlayer2(C_Entity* currentEntity, bool isRegularEntity) {
 void TPAura::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		setEnabled(false);
-	targetList.clear();
-	if (hive) {
-		auto player = g_Data.getLocalPlayer();
-		prevPos = *player->getPos();
-		range = 255;
-	}
 }
 
 struct CompareTargetEnArray {
@@ -98,32 +97,9 @@ void TPAura::onTick(C_GameMode* gm) {
 			if (multi) {
 				for (auto& i : targetList) {
 					if (!(i->damageTime > 1 && hurttime) && attack) {
-						if (hive) {
-							*g_Data.getClientInstance()->minecraft->timer = 18;
-							C_LocalPlayer* player = g_Data.getLocalPlayer();
-							player->velocity.y = -0.0;
-							if (tpBack == 50) {
-								player->setPos(prevPos);
-								tpBack = 1;
-							} else {
-								tpBack++;
-							}
-							if (gm->player->damageTime >= 1) {
-								player->setPos(prevPos);
-							} else if (tpBack == 8) {
-								if (targetList[0]->onGround) {
-									std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-									C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-									g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
-									//player->setPos(pos);
-									player->setPos(vec3_t(pos.x + teleportX, pos.y + teleportY, pos.z + teleportZ));
-									range = 15;
-								}
-							}
-							if (targetList.empty()) {
-								//targetList.clear();
-								range = 255;
-							}
+						if (attack) {
+							g_Data.getLocalPlayer()->swing();
+							gm->attack(i);
 						}
 						if (silent) {
 							for (int i = 0; i < targetList.size(); i++) {
@@ -134,7 +110,7 @@ void TPAura::onTick(C_GameMode* gm) {
 								teleportPacket2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 								g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&teleportPacket2);
 							}
-						} else if (!hive) {
+						} else {
 							C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 							g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 							C_LocalPlayer* player = g_Data.getLocalPlayer();
@@ -142,16 +118,16 @@ void TPAura::onTick(C_GameMode* gm) {
 							player->setPos(vec3_t(pos.x + teleportX, pos.y + teleportY, pos.z + teleportZ));
 							//gm->player->velocity.y = -0.1;
 						}
-						if (attack) {
-							g_Data.getLocalPlayer()->swing();
-							gm->attack(i);
-						}
 						targethud++;
 					} else
 						targethud = 0;
 				}
 			} else {
 				if (!(targetList[0]->damageTime > 1 && hurttime)) {
+					if (attack) {
+						g_Data.getLocalPlayer()->swing();
+						gm->attack(targetList[0]);
+					}
 					if (silent) {
 						vec3_t pos = *targetList[0]->getPos();
 						teleportPacket2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), vec3_t(pos.x - teleportX2, pos.y, pos.z - teleportZ2));
@@ -165,10 +141,6 @@ void TPAura::onTick(C_GameMode* gm) {
 						C_LocalPlayer* player = g_Data.getLocalPlayer();
 						player->setPos(pos);
 						player->setPos(vec3_t(pos.x + teleportX, pos.y + teleportY, pos.z + teleportZ));
-					}
-					if (attack) {
-						g_Data.getLocalPlayer()->swing();
-						gm->attack(targetList[0]);
 					}
 					targethud++;
 				} else
@@ -283,11 +255,11 @@ void TPAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
 void TPAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
-	if (GameData::canUseMoveKeys() && !hive) {
+	if (GameData::canUseMoveKeys()) {
 		for (auto& i : targetList) {
 			if (g_Data.getLocalPlayer() == nullptr)
 				return;
-			if (rotations && mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
+			if (rotations && mode.getSelectedValue() == 0 && !targetList.empty()) {
 				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 				auto weewee = g_Data.getLocalPlayer();
 				weewee->setRot(angle);
@@ -313,7 +285,7 @@ void TPAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 					rotation->yawUnused2 = prevyaw2;
 				}
 			}
-			if (rotations && mode.getSelectedValue() == 2 && !targetList.empty()) {
+			if (rotations && mode.getSelectedValue() == 1 && !targetList.empty()) {
 				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 				auto rotation = g_Data.getLocalPlayer();
 				float prevyaw = rotation->yawUnused1;
@@ -338,8 +310,4 @@ void TPAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 
 void TPAura::onDisable() {
 	auto player = g_Data.getLocalPlayer();
-	if (hive) {
-		*g_Data.getClientInstance()->minecraft->timer = 20;
-		player->setPos(prevPos);
-	}
 }

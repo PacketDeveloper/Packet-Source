@@ -12,8 +12,12 @@ public:
 	ESP();
 	~ESP();
 
+	std::string name = "ESP";
+	SettingEnum mode = this;
+
 	// Inherited via IModule
 	void onLevelRender() override;
 	virtual const char* getModuleName() override;
+	virtual const char* getRawModuleName() override;
 	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

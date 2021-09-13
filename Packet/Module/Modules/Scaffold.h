@@ -8,7 +8,7 @@ private:
 	bool staircase = true;
 	bool airplace = false;
 	bool spoof = false;
-	int towerSpeed = 20;
+	float towerSpeed = 0.4;
 	int prevSlot = 0;
 	int expand = 1;
 
@@ -42,11 +42,14 @@ public:
 	Scaffold();
 	~Scaffold();
 
+	std::string name = ("Scaffold");
+
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 	virtual void onEnable() override;
 	virtual void onDisable() override;
+	virtual const char* getRawModuleName() override;
 	virtual void onMove(C_MoveInputHandler* input) override;
 	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

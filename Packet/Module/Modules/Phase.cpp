@@ -1,15 +1,24 @@
 #include "../../Module/ModuleManager.h"
 #include "Phase.h"
 
-Phase::Phase() : IModule(0, Category::EXPLOIT, "Walk through walls") {
+Phase::Phase() : IModule(0, Category::EXPLOIT, "Walk through blocks") {
 	registerBoolSetting("Vertical", &vertMode, vertMode);
 }
 
 Phase::~Phase() {
 }
 
+const char* Phase::getRawModuleName() {
+	return "Phase";
+}
+
 const char* Phase::getModuleName() {
-	return ("Phase");
+	if (vertMode) {
+		name = std::string("Phase ") + std::string(GRAY) + std::string("Vertical");
+		return name.c_str();
+	} else if (!vertMode) {
+		return "Phase";
+	}
 }
 
 void Phase::onTick(C_GameMode* gm) {

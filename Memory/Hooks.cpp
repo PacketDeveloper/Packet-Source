@@ -161,6 +161,9 @@ void Hooks::Init() {
 
 		void* getRotation = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80"));
         g_Hooks.Actor_getRotationHook = std::make_unique<FuncHook>(getRotation, Hooks::Actor_getRotation);
+
+		void* getRot = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80"));
+        g_Hooks.RotHook = std::make_unique<FuncHook>(getRot, Hooks::Actor_getRotation);
 		
 		//bad
 		//void* ConnectionRequest__create = reinterpret_cast<void*>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 C7 45 ?? FE FF FF FF 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 49 8B D9 4D 8B F8"));
@@ -2079,8 +2082,13 @@ float Hooks::GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3) {
 
 	if (g_Data.getLocalPlayer() != nullptr) {
 		static auto blockreachMod = moduleMgr->getModule<BlockReach>();
+		static auto clickTP = moduleMgr->getModule<ClickTP>();
+
 		if (blockreachMod->isEnabled())
-			return 25500.f;
+			return 250;
+
+		if (clickTP->isEnabled())
+			return 255;
 	}
 
 	return oFunc(_this, a2, a3);

@@ -9,7 +9,11 @@ public:
 	Phase();
 	~Phase();
 
+	std::string name = "Phase";
+	SettingEnum mode = this;
+
+	virtual void onDisable() override;
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
-	virtual void onDisable() override;
+	virtual const char* getRawModuleName() override;
 };

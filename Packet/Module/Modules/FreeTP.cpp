@@ -82,8 +82,6 @@ void FreeTP::onMove(C_MoveInputHandler* input) {
 
 void FreeTP::onDisable() {
 	auto player = g_Data.getLocalPlayer();
-	if (g_Data.getLocalPlayer()->gamemode != 1)
-		g_Data.getLocalPlayer()->setGameModeType(0);
 	player->velocity = vec3_t(0, 0, 0);
 	if (g_Data.getLocalPlayer() != nullptr) {
 		g_Data.getLocalPlayer()->aabb.upper.y += 1.8f;

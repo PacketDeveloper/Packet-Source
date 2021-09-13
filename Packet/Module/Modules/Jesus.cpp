@@ -1,7 +1,8 @@
+#include "../../Module/ModuleManager.h"
 #include "../../../Utils/Logger.h"
 #include "Jesus.h"
 
-Jesus::Jesus() : IModule(0, Category::MOVEMENT, "Automatically jesuses for you") {
+Jesus::Jesus() : IModule(0, Category::MOVEMENT, "Allows you to walk on Liquids") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Solid", 0);
 	mode.addEntry("Bounce", 1);
@@ -19,8 +20,7 @@ const char* Jesus::getModuleName() {
 	if (mode.getSelectedValue() == 0) { // Solid
 		name = std::string("Jesus ") + std::string(GRAY) + std::string("Solid");
 		return name.c_str();
-	}
-	if (mode.getSelectedValue() == 1) {  // BouncY
+	} else if (mode.getSelectedValue() == 1) {  // BouncY
 		name = std::string("Jesus ") + std::string(GRAY) + std::string("Bounce");
 		return name.c_str();
 	}
@@ -54,7 +54,6 @@ bool Jesus::tryJesus(vec3_t blockBelow) {
 			vec3_ti calc = blok.sub(*current);
 			bool Y = ((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isLiquid;
 			if (!((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isLiquid) {
-				// Found a solid water ???
 				foundWater = true;
 				blok = calc;
 				break;
@@ -81,8 +80,13 @@ bool Jesus::tryJesus(vec3_t blockBelow) {
 
 void Jesus::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+	auto freeTP = moduleMgr->getModule<FreeTP>();
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
+
+	if (freeTP->isEnabled())
+		return;
+
 	if (!GameData::isKeyDown(*input->sneakKey)) {
 		if (gm->player->isInWater() || gm->player->isInLava()) {
 			smthwateridk = false;
@@ -102,7 +106,6 @@ void Jesus::onTick(C_GameMode* gm) {
 	blockBelow.y -= 0.0;
 
 	if (!tryJesus(blockBelow)) {
-		//clientMessageF("water moment");
 		if (speed > 0.05f) {  // Are we actually walking?
 			blockBelow.z -= vel.z * 0.4f;
 			if (!tryJesus(blockBelow)) {

@@ -12,6 +12,7 @@
 #include "../Packet/Menu/TabGui.h"
 #include "../Packet/Module/ModuleManager.h"
 #include "../SDK/CBlockLegacy.h"
+#include "../SDK/CCamera.h"
 #include "../SDK/CChestBlockActor.h"
 #include "../SDK/CGameMode.h"
 #include "../SDK/CMinecraftUIRenderContext.h"
@@ -19,19 +20,19 @@
 #include "../SDK/CRakNetInstance.h"
 #include "../SDK/CUIScene.h"
 #include "../SDK/TextHolder.h"
-#include "../SDK/CCamera.h"
-#include "../Utils/TextFormat.h"
 #include "../Utils/SkinUtil.h"
+#include "../Utils/TextFormat.h"
 #include "../resource.h"
 #include "GameData.h"
 #include "MinHook.h"
 //#include "../Packet/Game/Game.h"
 
-#include <intrin.h>
-#include <thread>
-#include <dxgi.h>
 #include <d3d11.h>
 #include <d3dcompiler.h>
+#include <dxgi.h>
+#include <intrin.h>
+
+#include <thread>
 
 #include "../include/d3dx11async.h"
 
@@ -42,12 +43,12 @@ struct CoolSkinData {
 	TextHolder unknown;
 	TextHolder unknown2;
 	TextHolder skinResourcePatch;  // 0x040
-	TextHolder geometryName; // 0x060 "geometry.humanoid.custom"
+	TextHolder geometryName;       // 0x060 "geometry.humanoid.custom"
 	unsigned char gap2[0x40];      // 0x080
 	void* startAnimatedFrames;     // 0x0C0
 	void* endAnimatedFrames;       // 0x0C8
-	unsigned char gap3[0x8];      // 0x0D0
-	TextHolder geometryData;		// 0x0D8
+	unsigned char gap3[0x8];       // 0x0D0
+	TextHolder geometryData;       // 0x0D8
 	TextHolder skinAnimationData;  // 0x0F8
 	unsigned char gap4[0x20];      // 0x118
 	bool isPremiumSkin;            // 0x138
@@ -66,7 +67,7 @@ private:
 	bool shouldRender = true;
 	//bool shouldRenderAura = true;
 	char currentScreenName[100];
-		 
+
 public:
 	std::vector<std::shared_ptr<FuncHook>> lambdaHooks;
 
@@ -112,8 +113,8 @@ private:
 	static __int64 prepFeaturedServersFirstTime(__int64 a1, __int64 a2);
 	static void LocalPlayer__updateFromCamera(__int64 a1, C_Camera* a2);
 	static bool Mob__isImmobile(C_Entity*);
-	static void InventoryTransactionManager__addAction(C_InventoryTransactionManager*, C_InventoryAction &);
-	static void LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2,TextHolder* name, __int64 a4);
+	static void InventoryTransactionManager__addAction(C_InventoryTransactionManager*, C_InventoryAction&);
+	static void LevelRendererPlayer__renderNameTags(__int64 a1, __int64 a2, TextHolder* name, __int64 a4);
 
 	std::unique_ptr<FuncHook> Actor__baseTick;
 	std::unique_ptr<FuncHook> Actor_getRotationHook;
@@ -153,6 +154,7 @@ private:
 	std::unique_ptr<FuncHook> prepFeaturedServersFirstTimeHook;
 	std::unique_ptr<FuncHook> LocalPlayer__updateFromCameraHook;
 	std::unique_ptr<FuncHook> Mob__isImmobileHook;
+	std::unique_ptr<FuncHook> RotHook;
 	std::unique_ptr<FuncHook> InventoryTransactionManager__addActionHook;
 	std::unique_ptr<FuncHook> LevelRendererPlayer__renderNameTagsHook;
 };
@@ -187,9 +189,8 @@ public:
 			int ret = enable ? MH_EnableHook(funcPtr) : MH_DisableHook(funcPtr);
 			if (ret != MH_OK)
 				logF("MH_EnableHook = %i", ret);
-		}else
+		} else
 			logF("enableHook() called with nullptr func!");
-		
 	}
 
 	~FuncHook() {

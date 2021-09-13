@@ -19,10 +19,19 @@ Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
 Scaffold::~Scaffold() {
 }
 
-const char* Scaffold::getModuleName() {
-	return "Scaffold";
+const char* Scaffold::getRawModuleName() {
+    return "Scaffold";
 }
 
+const char* Scaffold::getModuleName() {
+    if (spoof) {
+        name = std::string("Scaffold ") + std::string(GRAY) + std::string("Spoof");
+        return name.c_str();
+    } 
+    if (!spoof) {
+		return "Scaffold";
+    }
+}
 void Scaffold::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
@@ -199,8 +208,6 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 	}
 	if (towerMode && isOnHive && isHoldingSpace) {
 		auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
-		//*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->towerSpeed);
-		//*g_Data.getClientInstance()->minecraft->timer = 20;
 		if (foundCandidate2 && !clickGUI->isEnabled()) {
 			vec2_t movement = {input->forwardMovement, -input->sideMovement};
 			bool pressed = movement.magnitude() > 0.f;
@@ -299,42 +306,55 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 		if (blockLegacy->material->isReplaceable) {
 			vec3_ti blok(blockBelow);
 
-			// Find neighbour
-			static std::vector<vec3_ti*> checklist;
-			if (checklist.empty()) {
-				checklist.push_back(new vec3_ti(0, -1, 0));
-				checklist.push_back(new vec3_ti(0, 1, 0));
-
-				checklist.push_back(new vec3_ti(0, 0, -1));
-				checklist.push_back(new vec3_ti(0, 0, 1));
-
-				checklist.push_back(new vec3_ti(-1, 0, 0));
-				checklist.push_back(new vec3_ti(1, 0, 0));
-			}
-			bool foundCandidate = false;
 			int i = 0;
-			for (auto current : checklist) {
-				vec3_ti calc = blok.sub(*current);
-				if (!((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
-					// Found a solid block to click
-					foundCandidate = true;
-					blok = calc;
-					break;
-				}
-				i++;
-			}
-			foundCandidate2 = foundCandidate;
-			if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
-				vec3_t moveVec2;
-				moveVec2.x = g_Data.getLocalPlayer()->velocity.x;
-				if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") != 0) {
+			vec3_t moveVec2;
+			moveVec2.x = g_Data.getLocalPlayer()->velocity.x;
+			moveVec2.z = g_Data.getLocalPlayer()->velocity.z;
+			if (airplace) {
+				if (GameData::isKeyDown(*input->spaceBarKey) && !isOnHive) {
 					moveVec2.y = towerSpeed;
+					g_Data.getLocalPlayer()->lerpMotion(moveVec2);
+					g_Data.getCGameMode()->buildBlock(&blok, i);
+					if (spoof) {
+						player->getSupplies()->selectedHotbarSlot = prevSlot;
+					}
 				}
-				moveVec2.z = g_Data.getLocalPlayer()->velocity.z;
-				g_Data.getLocalPlayer()->lerpMotion(moveVec2);
-				g_Data.getCGameMode()->buildBlock(&blok, i);
+			} else {
+				// Find neighbour
+				static std::vector<vec3_ti*> checklist;
+				if (checklist.empty()) {
+					checklist.push_back(new vec3_ti(0, -1, 0));
+					checklist.push_back(new vec3_ti(0, 1, 0));
 
-				return true;
+					checklist.push_back(new vec3_ti(0, 0, -1));
+					checklist.push_back(new vec3_ti(0, 0, 1));
+
+					checklist.push_back(new vec3_ti(-1, 0, 0));
+					checklist.push_back(new vec3_ti(1, 0, 0));
+				}
+				bool foundCandidate = false;
+				for (auto current : checklist) {
+					vec3_ti calc = blok.sub(*current);
+					if (!((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
+						// Found a solid block to click
+						foundCandidate = true;
+						blok = calc;
+						break;
+					}
+					i++;
+				}
+				foundCandidate2 = foundCandidate;
+				if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
+					if (!isOnHive) {
+						moveVec2.y = towerSpeed;
+					}
+					g_Data.getLocalPlayer()->lerpMotion(moveVec2);
+					g_Data.getCGameMode()->buildBlock(&blok, i);
+					if (spoof) {
+						player->getSupplies()->selectedHotbarSlot = prevSlot;
+					}
+					return true;
+				}
 			}
 		}
 		return false;

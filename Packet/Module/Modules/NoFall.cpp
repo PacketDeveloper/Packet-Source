@@ -1,16 +1,28 @@
 #include "NoFall.h"
 
-NoFall::NoFall() : IModule(0, Category::EXPLOIT, "NoFuK") {
+NoFall::NoFall() : IModule(0, Category::EXPLOIT, "Prevent you from taking fall damage") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Packet", 0);
 	mode.addEntry("Motion", 1);
 	mode.addEntry("Hive", 2);
-	mode.addEntry("Breakfall", 3);
 	registerIntSetting("Distance", &dist, dist, 3, 8);
 }
 
-const char* NoFall::getModuleName() {
+const char* NoFall::getRawModuleName() {
 	return "NoFall";
+}
+
+const char* NoFall::getModuleName() {
+	if (mode.getSelectedValue() == 0) {
+		name = std::string("NoFall ") + std::string(GRAY) + std::string("Packet");
+		return name.c_str();
+	} else if (mode.getSelectedValue() == 1) {
+		name = std::string("NoFall ") + std::string(GRAY) + std::string("Motion");
+		return name.c_str();
+	} else if (mode.getSelectedValue() == 2) {
+		name = std::string("NoFall ") + std::string(GRAY) + std::string("Hive");
+		return name.c_str();
+	}
 }
 
 void NoFall::onTick(C_GameMode* gm) {

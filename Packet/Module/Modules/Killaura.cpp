@@ -61,6 +61,12 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if (currentEntity->getEntityTypeId() == 69)  // XP
 		return;
 
+	if (currentEntity->getEntityTypeId() == 80)  // Arrows
+		return;
+
+	if (currentEntity->getEntityTypeId() == 51)  // NPC
+		return;
+
 	if (killauraMod->mobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
 			return;
@@ -68,6 +74,7 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 			return;
 		if (currentEntity->getEntityTypeId() == 64)  //item
 			return;
+
 
 	} else {
 		if (!Target::isValidTarget(currentEntity))

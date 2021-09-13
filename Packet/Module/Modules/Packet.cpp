@@ -1,6 +1,6 @@
 #include "Packet.h"
 
-Packet::Packet() : IModule(0, Category::EXPLOIT, "Multiply All Actions, Server Sided") {
+Packet::Packet() : IModule(0, Category::EXPLOIT, "Multiply / Cancel all actions server sided") {
 	registerBoolSetting("NoPacket", &noPacket, noPacket);
 	registerBoolSetting("Multiply", &multiply, multiply);
 	//registerBoolSetting("Multiply4x", &fourx, fourx);
@@ -9,8 +9,17 @@ Packet::Packet() : IModule(0, Category::EXPLOIT, "Multiply All Actions, Server S
 Packet::~Packet() {
 }
 
+const char* Packet::getRawModuleName() {
+	return "Packet";
+}
+
 const char* Packet::getModuleName() {
-	return ("Packet");
+	if (multiply) {
+		name = std::string("Packet ") + std::string(GRAY) + std::string("Multiply");
+		return name.c_str();
+	} else if (!multiply) {
+		return "Packet";
+	}
 }
 
 bool Packet::allowAutoStart() {

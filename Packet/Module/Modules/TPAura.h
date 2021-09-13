@@ -32,6 +32,7 @@ public:
 	TPAura();
 	~TPAura();
 
+		//std::string name = "TPAura";
 		SettingEnum mode = this;
 
 	// Inherited via IModule
@@ -39,6 +40,7 @@ public:
 	virtual void onDisable() override;
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
+	//virtual const char* getRawModuleName() override;
 	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx) override;
 	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

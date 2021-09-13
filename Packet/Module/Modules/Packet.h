@@ -3,14 +3,18 @@
 class Packet : public IModule {
 
 public:
-	Packet();
-	~Packet();
 	bool fourx = false;
 	bool multiply = false;
 	bool noPacket = false;
+
+	Packet();
+	~Packet();
+
+	std::string name = "Packet";
 
 	// Inherited via IModule
 	void onEnable() override;
 	bool allowAutoStart() override;
 	virtual const char* getModuleName() override;
+	virtual const char* getRawModuleName() override;
 };

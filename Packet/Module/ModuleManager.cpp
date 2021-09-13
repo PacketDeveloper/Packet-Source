@@ -83,8 +83,9 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new SpawnTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ItemTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new BreadCrumbs()));
-		moduleList.push_back(std::shared_ptr<IModule>(new HackerDetector()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new HackerDetector()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Switcher()));
+		moduleList.push_back(std::shared_ptr<IModule>(new ClickTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Jesus()));
 
 #ifdef _DEBUG
