@@ -27,7 +27,7 @@ public:
 	// Rotations
 	bool targetListEmpty = true;
 	bool rotations = true;
-	vec2_t tpAuraRot;
+	vec4_t tpAuraRot;
 
 	TPAura();
 	~TPAura();

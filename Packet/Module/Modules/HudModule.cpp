@@ -20,8 +20,9 @@ HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
 	registerBoolSetting("FPS", &fps, fps);
 	registerBoolSetting("Coords", &coordinates, coordinates);
 	registerBoolSetting("ArmorHUD", &displayArmor, displayArmor);
-	registerBoolSetting("Keystrokes", &keystrokes, keystrokes);
+	//registerBoolSetting("Keystrokes", &keystrokes, keystrokes);
 	registerFloatSetting("Opacity", &opacity, opacity, 0.f, 1.f);
+	//registerFloatSetting("Scale", &scale, scale, 0.5f, 1.5f);
 	//registerBoolSetting("BPS", &bps, bps);
 	//registerBoolSetting("Always show", &alwaysShow, alwaysShow);
 }

@@ -25,7 +25,7 @@ public:
 	// Rotations
 	bool targetListEmpty = true;
 	bool rotations = true;
-	vec2_t testRot;
+	vec4_t testRot;
 
 	std::string name = "Killaura";
 	SettingEnum mode = this;

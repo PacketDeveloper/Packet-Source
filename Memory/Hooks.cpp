@@ -275,8 +275,8 @@ void Hooks::Actor_baseTick(C_Entity* _this) {
 		moduleMgr->onTick(gm);
 }
 
-void Hooks::Actor_getRotation(C_Entity* _this, vec2_t& newAngle) {
-	static auto oFunc = g_Hooks.Actor_getRotationHook->GetFastcall<void, C_Entity*, vec2_t&>();
+void Hooks::Actor_getRotation(C_Entity* _this, vec4_t& newAngle) {
+	static auto oFunc = g_Hooks.Actor_getRotationHook->GetFastcall<void, C_Entity*, vec4_t&>();
 	static auto killaura = moduleMgr->getModule<Killaura>();
 	static auto tpaura = moduleMgr->getModule<TPAura>();
 	static auto scaffold = moduleMgr->getModule<Scaffold>();

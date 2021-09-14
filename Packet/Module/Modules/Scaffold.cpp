@@ -13,24 +13,25 @@ Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
 	registerBoolSetting("Spoof", &spoof, spoof);
 	registerIntSetting("TimerBoost", &timer, timer, 20, 80);
 	registerIntSetting("Extend", &expand, expand, 0, 7);
-	//registerIntSetting("Tower Speed", &towerSpeed, towerSpeed, 20, 80);
 }
 
 Scaffold::~Scaffold() {
 }
 
 const char* Scaffold::getRawModuleName() {
-    return "Scaffold";
+	return "Scaffold";
 }
 
 const char* Scaffold::getModuleName() {
-    if (spoof) {
-        name = std::string("Scaffold ") + std::string(GRAY) + std::string("Spoof");
-        return name.c_str();
-    } else if (!spoof) {
-		return "Scaffold";
-    }
+	if (spoof) {
+		name = std::string("Scaffold ") + std::string(GRAY) + std::string("Spoof");
+		return name.c_str();
+	} else if (!spoof) {
+		name = std::string("Scaffold");
+		return name.c_str();
+	}
 }
+
 void Scaffold::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
@@ -205,6 +206,23 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 			backwards = false;
 		}
 	}
+	if (towerMode && isOnHive && isHoldingSpace) {
+		auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
+		if (foundCandidate2 && !clickGUI->isEnabled()) {
+			vec2_t movement = {input->forwardMovement, -input->sideMovement};
+			bool pressed = movement.magnitude() > 0.f;
+			float calcYaw = (player->yaw + 90) * (PI / 180);
+			vec3_t moveVec;
+			float c = cos(calcYaw);
+			float s = sin(calcYaw);
+
+			movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
+			player->jumpFromGround();
+			moveVec.y = player->velocity.y;
+			player->velocity.x = 0;
+			player->velocity.z = 0;
+		}
+	}
 	if (isOnHive) {
 		if (isHoldingSpace) {
 			useRot = false;
@@ -279,78 +297,66 @@ bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
 		if (input == nullptr)
 			return false;
 
-					vec3_ti blok(blockBelow);
-		int i = 0;
-		// Find neighbour
-		static std::vector<vec3_ti*> checklist;
-		if (checklist.empty()) {
-			checklist.push_back(new vec3_ti(0, -1, 0));
-			checklist.push_back(new vec3_ti(0, 1, 0));
+		blockBelow = blockBelow.floor();
 
-			checklist.push_back(new vec3_ti(0, 0, -1));
-			checklist.push_back(new vec3_ti(0, 0, 1));
+		DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(0), 0.f);
 
-			checklist.push_back(new vec3_ti(-1, 0, 0));
-			checklist.push_back(new vec3_ti(1, 0, 0));
-		}
-		bool foundCandidate = false;
-		for (auto current : checklist) {
-			vec3_ti calc = blok.sub(*current);
-			if (!((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
-				// Found a solid block to click
-				foundCandidate = true;
-				blok = calc;
-				break;
+		C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
+		C_BlockLegacy* blockLegacy = (block->blockLegacy);
+		if (blockLegacy->material->isReplaceable) {
+			vec3_ti blok(blockBelow);
+
+			// Find neighbour
+			static std::vector<vec3_ti*> checklist;
+			if (checklist.empty()) {
+				checklist.push_back(new vec3_ti(0, -1, 0));
+				checklist.push_back(new vec3_ti(0, 1, 0));
+
+				checklist.push_back(new vec3_ti(0, 0, -1));
+				checklist.push_back(new vec3_ti(0, 0, 1));
+
+				checklist.push_back(new vec3_ti(-1, 0, 0));
+				checklist.push_back(new vec3_ti(1, 0, 0));
 			}
-			i++;
-		}
-
-		if (isOnHive) {
-			auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
-			if (foundCandidate && !clickGUI->isEnabled() && isHoldingSpace) {
-				float calcYaw = (player->yaw + 90) * (PI / 180);
-				vec3_t upMove;
-				float c = cos(calcYaw);
-				float s = sin(calcYaw);
-
-				player->jumpFromGround();
-				upMove.y = player->velocity.y;
-				player->velocity.x = 0;
-				player->velocity.z = 0;
-				g_Data.getCGameMode()->buildBlock(&blok, i);
+			bool foundCandidate = false;
+			int i = 0;
+			for (auto current : checklist) {
+				vec3_ti calc = blok.sub(*current);
+				if (!((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
+					// Found a solid block to click
+					foundCandidate = true;
+					blok = calc;
+					break;
+				}
+				i++;
 			}
-		} else {
-			C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
-			C_BlockLegacy* blockLegacy = (block->blockLegacy);
-			if (blockLegacy->material->isReplaceable) {
+			foundCandidate2 = foundCandidate;
+			if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
 				vec3_t moveVec2;
 				moveVec2.x = g_Data.getLocalPlayer()->velocity.x;
-				moveVec2.z = g_Data.getLocalPlayer()->velocity.z;
-				if (airplace) {
-					if (GameData::isKeyDown(*input->spaceBarKey)) {
-						moveVec2.y = towerSpeed;
-						g_Data.getLocalPlayer()->lerpMotion(moveVec2);
-						g_Data.getCGameMode()->buildBlock(&blok, i);
-						if (spoof) {
-							player->getSupplies()->selectedHotbarSlot = prevSlot;
-						}
-					}
-				} else {
-					if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
-						moveVec2.y = towerSpeed;
-						g_Data.getLocalPlayer()->lerpMotion(moveVec2);
-						g_Data.getCGameMode()->buildBlock(&blok, i);
-						if (spoof) {
-							player->getSupplies()->selectedHotbarSlot = prevSlot;
-						}
-						return true;
-					}
+				if (!isOnHive) {
+					moveVec2.y = 0.4;
 				}
+				moveVec2.z = g_Data.getLocalPlayer()->velocity.z;
+				g_Data.getLocalPlayer()->lerpMotion(moveVec2);
+				g_Data.getCGameMode()->buildBlock(&blok, i);
+
+				return true;
 			}
-			return false;
+			if (airplace && !isOnHive && isHoldingSpace) {
+				vec3_t moveVec2;
+				moveVec2.x = g_Data.getLocalPlayer()->velocity.x;
+				moveVec2.y = 0.4;
+				moveVec2.z = g_Data.getLocalPlayer()->velocity.z;
+				g_Data.getLocalPlayer()->lerpMotion(moveVec2);
+				g_Data.getCGameMode()->buildBlock(&blok, i);
+
+				return true;
+			}
 		}
 		return false;
 	}
+	return false;
 }
 
 void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
@@ -430,7 +436,7 @@ bool Scaffold::findBlock() {
 	for (int n = 0; n < 9; n++) {
 		C_ItemStack* stack = inv->getItemStack(n);
 		if (stack->item != nullptr) {
-			if ((*stack->item)->isBlock() && (*stack->item)->itemId != 0) {
+			if ((*stack->item)->isBlock() && (*stack->item)->itemId != 0 && (*stack->item)->itemId != 46) {
 				C_MobEquipmentPacket a(id, *stack, n, n);
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
 				return true;

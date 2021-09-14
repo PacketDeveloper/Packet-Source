@@ -77,6 +77,7 @@
 #include "Modules/Switcher.h"
 #include "Modules/ClickTP.h"
 #include "Modules/Jesus.h"
+#include "Modules/PlayerList.h"
 #include "Modules/Module.h"
 
 //#include "Modules/Waypoints.h" // Crashes

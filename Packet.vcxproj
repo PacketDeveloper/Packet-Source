@@ -304,6 +304,7 @@
     <ClCompile Include="Packet\Module\Modules\ItemTP.cpp" />
     <ClCompile Include="Packet\Module\Modules\Jesus.cpp" />
     <ClCompile Include="Packet\Module\Modules\Notifications.cpp" />
+    <ClCompile Include="Packet\Module\Modules\PlayerList.cpp" />
     <ClCompile Include="Packet\Module\Modules\Sneak.cpp" />
     <ClCompile Include="Packet\Module\Modules\Spammer.cpp" />
     <ClCompile Include="Packet\Module\Modules\SpawnTP.cpp" />
@@ -487,6 +488,7 @@
     <ClInclude Include="Packet\Module\Modules\ItemTP.h" />
     <ClInclude Include="Packet\Module\Modules\Jesus.h" />
     <ClInclude Include="Packet\Module\Modules\Notifications.h" />
+    <ClInclude Include="Packet\Module\Modules\PlayerList.h" />
     <ClInclude Include="Packet\Module\Modules\Sneak.h" />
     <ClInclude Include="Packet\Module\Modules\Spammer.h" />
     <ClInclude Include="Packet\Module\Modules\SpawnTP.h" />

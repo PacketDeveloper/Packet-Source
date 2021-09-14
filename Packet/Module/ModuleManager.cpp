@@ -87,6 +87,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Switcher()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ClickTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Jesus()));
+		moduleList.push_back(std::shared_ptr<IModule>(new PlayerList()));
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new HudEditorMod()));
