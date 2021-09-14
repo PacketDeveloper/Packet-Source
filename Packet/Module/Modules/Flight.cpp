@@ -331,9 +331,9 @@ void Flight::onMove(C_MoveInputHandler* input) {
 		float c = cos(calcYaw);
 		float s = sin(calcYaw);
 		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
-		moveVec.x = moveVec2d.x * speed;
+		moveVec.x = moveVec2d.x * 1.3;
 		moveVec.y = player->velocity.y;
-		moveVec.z = moveVec2d.y * speed;
+		moveVec.z = moveVec2d.y * 1.3;
 		if (pressed) player->lerpMotion(moveVec);
 	}
 }
@@ -384,7 +384,9 @@ void Flight::onSendPacket(C_Packet* packet) {
 
 
 void Flight::onDisable() {
-	// re-enable modules
+	if (mode.getSelectedValue() != 5) {
+		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
+	}
 	auto scaffold = moduleMgr->getModule<Scaffold>();
 	auto speed = moduleMgr->getModule<Speed>();
 	if (speedWasEnabled == true) {
@@ -396,9 +398,6 @@ void Flight::onDisable() {
 		scfWasEnabled = false;
 	}
 	*g_Data.getClientInstance()->minecraft->timer = 20.f;
-	if (mode.getSelectedValue() != 2 || mode.getSelectedValue() != 5 || mode.getSelectedValue() != 6) {
-		g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
-	}
 	if (mode.getSelectedValue() == 2) {  // BlockFly
 		if (g_Data.getLocalPlayer() == nullptr)
 			return;
@@ -408,8 +407,6 @@ void Flight::onDisable() {
 		g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
 	}
 	if (mode.getSelectedValue() == 5) { // Hive
-		auto player = g_Data.getLocalPlayer();
-		player->onGround = false;
 		*g_Data.getClientInstance()->minecraft->timer = 20.f;
 		blink = false;
 		//freeTP->setEnabled(false);

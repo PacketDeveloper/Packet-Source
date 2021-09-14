@@ -80,11 +80,15 @@ bool Jesus::tryJesus(vec3_t blockBelow) {
 
 void Jesus::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+	auto freecam = moduleMgr->getModule<Freecam>();
 	auto freeTP = moduleMgr->getModule<FreeTP>();
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 
 	if (freeTP->isEnabled())
+		return;
+
+	if (freecam->isEnabled())
 		return;
 
 	if (!GameData::isKeyDown(*input->sneakKey)) {

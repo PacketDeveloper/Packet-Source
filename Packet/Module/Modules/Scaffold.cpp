@@ -26,9 +26,8 @@ const char* Scaffold::getModuleName() {
 	if (spoof) {
 		name = std::string("Scaffold ") + std::string(GRAY) + std::string("Spoof");
 		return name.c_str();
-	} else if (!spoof) {
-		name = std::string("Scaffold");
-		return name.c_str();
+	} else {
+		return "Scaffold";
 	}
 }
 
@@ -209,6 +208,7 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 	if (towerMode && isOnHive && isHoldingSpace) {
 		auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
 		if (foundCandidate2 && !clickGUI->isEnabled()) {
+			*g_Data.getClientInstance()->minecraft->timer = 21.f;
 			vec2_t movement = {input->forwardMovement, -input->sideMovement};
 			bool pressed = movement.magnitude() > 0.f;
 			float calcYaw = (player->yaw + 90) * (PI / 180);

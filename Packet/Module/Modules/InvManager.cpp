@@ -20,8 +20,17 @@ InvManager::InvManager() : IModule(0, Category::PLAYER, "Automatintory YEP") {
 InvManager::~InvManager() {
 }
 
+const char* InvManager::getRawModuleName() {
+	return "InvManager";
+}
+
 const char* InvManager::getModuleName() {
-	return ("InvManager");
+	if (clean) {
+		name = std::string("InvManager ") + std::string(GRAY) + std::string("Clean");
+		return name.c_str();
+	} else {
+		return "InvManager";
+	}
 }
 
 void InvManager::onTick(C_GameMode* gm) {

@@ -31,7 +31,7 @@ unsigned int focusedElement = -1;
 bool isFocused = false;
 
 static constexpr float textPadding = 1.f;
-static constexpr float textSize = 0.95;
+static constexpr float textSize = 1;
 static constexpr float textHeight = textSize * 9.5f;
 static constexpr float categoryMargin = 0.5f;
 static constexpr float paddingRight = 13.5f;

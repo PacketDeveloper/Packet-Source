@@ -24,7 +24,6 @@ public:
 
 	// Rotations
 	bool targetListEmpty = true;
-	bool rotations = true;
 	vec4_t testRot;
 
 	std::string name = "Killaura";

@@ -22,10 +22,14 @@ private:
 public:
 	bool stackIsUseful(C_ItemStack* itemStack);
 	bool autoDisable = false;
+
 	InvManager();
 	~InvManager();
+
+		std::string name = "InvManager";
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
+	virtual const char* getRawModuleName() override;
 };

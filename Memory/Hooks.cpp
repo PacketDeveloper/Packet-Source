@@ -281,7 +281,7 @@ void Hooks::Actor_getRotation(C_Entity* _this, vec4_t& newAngle) {
 	static auto tpaura = moduleMgr->getModule<TPAura>();
 	static auto scaffold = moduleMgr->getModule<Scaffold>();
 	if (killaura->isEnabled() && !killaura->targetListEmpty && scaffold->useRot) {
-		if (g_Data.getLocalPlayer() != nullptr && killaura->rotations && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
+		if (g_Data.getLocalPlayer() != nullptr && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
 			return oFunc(_this, killaura->testRot);
 	}
 	if (scaffold->isEnabled() && scaffold->towerMode) {
