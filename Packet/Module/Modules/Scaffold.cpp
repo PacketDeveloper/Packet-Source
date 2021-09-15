@@ -219,8 +219,8 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 			movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
 			player->jumpFromGround();
 			moveVec.y = player->velocity.y;
-			player->velocity.x = 0;
-			player->velocity.z = 0;
+			player->velocity.x *= 0;
+			player->velocity.z *= 0;
 		}
 	}
 	if (isOnHive) {

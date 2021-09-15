@@ -81,31 +81,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		if (pressed) player->lerpMotion(moveVec);
 	}
 	if (mode.getSelectedValue() == 1) {  // Hive
+		isOnGround = player->onGround;
 		auto player = g_Data.getLocalPlayer();
-		/*vec2_t movement = {input->forwardMovement, -input->sideMovement};
-		bool pressed = movement.magnitude() > 0.f;
-		float calcYaw = (player->yaw + 90) * (PI / 180);
-		vec3_t moveVec;
-		float c = cos(calcYaw);
-		float s = sin(calcYaw);
-		movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
-		if (player->onGround && pressed) player->jumpFromGround();
-		if (!pressed && player->damageTime == 0) {
-			player->velocity.x = 0;
-			player->velocity.z = 0;
-		}
-		moveVec.x = movement.x *= 0.315;
-		moveVec.y = player->velocity.y;
-		moveVec.z = movement.y *= 0.315; // 0.315
-		if (pressed) player->lerpMotion(moveVec);
-		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
-			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 5.f, 0.f, moveVec.z / 5.f)));
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
-			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
-		}*/
-		//auto player = g_Data.getLocalPlayer();
-		//auto player = g_Data.getLocalPlayer();
 		vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;
 		float calcYaw = (player->yaw + 90) * (PI / 180);
@@ -117,22 +94,11 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			//input->isJumping = true;
 			player->jumpFromGround();
 		}
-		if (input->isJumping) {
-			moveVec.x = movement.x * speed;
-			moveVec.y = player->velocity.y;
-			moveVec.z = movement.y * speed;
-			if (pressed && player->onGround) player->lerpMotion(moveVec);
-		} else {
+		if (!isOnGround) {
 			moveVec.x = movement.x * 0.315;
 			moveVec.y = player->velocity.y;
 			moveVec.z = movement.y * 0.315;
 			if (pressed) player->lerpMotion(moveVec);
-		}
-		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
-			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 1.3f, 0.f, moveVec.z / 1.3f)));
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
-			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 3.13f, 0.f, player->velocity.z / 2.3f)));
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
 		}
 	}
 	if (mode.getSelectedValue() == 3 && g_Data.isInGame()) {
@@ -143,8 +109,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 
 		if (player->onGround && pressed) {
 			player->jumpFromGround();
-			player->velocity.y = -0.1f;
-			player->velocity.y = 0.23;
+			//player->velocity.y = -0.1f;
+			//player->velocity.y = 0.23;
 		}
 
 		if (player->onGround) {
@@ -172,7 +138,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
 		}
 
-		if (player->fallDistance >= 3 && !preventKick) {
+		if (player->fallDistance >= 5 && !preventKick) {
 			player->velocity = vec3_t(0, -1, 0);
 			player->fallDistance = 0;
 			preventKick = true;
@@ -194,7 +160,7 @@ void Speed::onDisable() {
 void Speed::onSendPacket(C_Packet* packet) {
 	auto player = g_Data.getLocalPlayer();
 	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3 && g_Data.isInGame()) {
-		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);//poggies
+		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);  //poggies
 		C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 		if (input == nullptr)
 			return;

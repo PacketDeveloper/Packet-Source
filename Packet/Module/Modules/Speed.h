@@ -4,7 +4,6 @@
 
 class Speed : public IModule {
 private:
-	bool jumpMode = true;
 	float height = 0.40f;
 	int counter = 1;
 
@@ -15,6 +14,7 @@ public:
 	float speed = 0.325f;
 
 	// Hive
+	bool isOnGround = false;
 	float hSpeed = 0.315;
 	int hiveC = 1;
 
@@ -32,4 +32,8 @@ public:
 	virtual const char* getRawModuleName() override;
 	virtual void onSendPacket(C_Packet* packet) override;
 	virtual void onMove(C_MoveInputHandler* input) override;
+	std::vector<C_MovePlayerPacket*> MovePlayerPacketHolder;
+	std::vector<PlayerAuthInputPacket*> PlayerAuthInputPacketHolder;
+	inline std::vector<C_MovePlayerPacket*>* getMovePlayerPacketHolder() { return &MovePlayerPacketHolder; };
+	inline std::vector<PlayerAuthInputPacket*>* getPlayerAuthInputPacketHolder() { return &PlayerAuthInputPacketHolder; };
 };

@@ -200,8 +200,7 @@ void Hooks::Init() {
 
 		static auto bobViewHookF = [](__int64 _this, glm::mat4& matrix, float lerpT) {
 			static auto origFunc = g_Hooks.lambdaHooks.at(lambda_counter)->GetFastcall<void, __int64, glm::mat4&, float>();
-			static auto testModule = moduleMgr->getModule<TestModule>();
-			static auto testMod = moduleMgr->getModule<Animations>();
+						static auto animations = moduleMgr->getModule<Animations>();
 			static auto killaura = moduleMgr->getModule<Killaura>();
             auto p = g_Data.getLocalPlayer();
             float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
@@ -212,27 +211,14 @@ void Hooks::Init() {
             glm::mat4 View = matrix;
 
             matrix = View;
-						if (testMod->isEnabled() && killaura->isEnabled()) {
-				if (testMod->mode.getSelectedValue() == 1 && !killaura->targetListEmpty) {
+
+			// AutoBlock
+			if (animations->isEnabled() && killaura->isEnabled()) {
+				if (animations->mode.getSelectedValue() == 1 && !killaura->targetListEmpty) {
 					matrix = glm::translate<float>(matrix, glm::vec3(5.54, 0.85, -2.00));
 					matrix = glm::scale<float>(matrix, glm::vec3(2, 2, 2));
 				}
-			}
-           //matrix = glm::rotate<float>(matrix, glm::radians<float>(degrees), glm::vec3(0, 0, 1));
-            if (testMod->isEnabled()) { // testMod->mode.getSelectedValue() == 0
-                if (testMod->doTranslate)
-                    matrix = glm::translate<float>(matrix, glm::vec3(testMod->xTrans, testMod->yTrans, testMod->zTrans)); // X Y Z
-
-                if (testMod->doScale)
-                    matrix = glm::scale<float>(matrix, glm::vec3(testMod->xMod, testMod->yMod, testMod->zMod)); // SCALE
-
-                if (testMod->doRotate)
-                    matrix = glm::rotate<float>(matrix, degrees, glm::vec3(testMod->xRotate, testMod->yRotate, testMod->zRotate)); // idk
-            }
-			if (testMod->isEnabled() && killaura->isEnabled()) {
-				if (testMod->mode.getSelectedValue() == 1 && !killaura->targetListEmpty) {
-
-					auto p = g_Data.getLocalPlayer();
+				if (animations->mode.getSelectedValue() == 1 && !killaura->targetListEmpty) {
 					float degrees = 13;
 					degrees *= 180 / 4;
 
@@ -247,19 +233,31 @@ void Hooks::Init() {
 					matrix = glm::translate<float>(matrix, glm::vec3(0.5, 0.4, 0.4));
 				}
 			}
-							auto aniMod = moduleMgr->getModule<Animations>(); {
-			if (aniMod->isEnabled() && aniMod->aroundWorld) {
-			auto p = g_Data.getLocalPlayer();
-			float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
-			degrees *= 180 / 2.5f;
 
-			auto pos = g_Data.getClientInstance()->levelRenderer->origin;
+			// Custom settings
+            if (animations->isEnabled() && animations->mode.getSelectedValue() == 0) {
+                if (animations->doTranslate)
+                    matrix = glm::translate<float>(matrix, glm::vec3(animations->xTrans, animations->yTrans, animations->zTrans)); // X Y Z
+
+                if (animations->doScale)
+                    matrix = glm::scale<float>(matrix, glm::vec3(animations->xMod, animations->yMod, animations->zMod)); // SCALE
+
+                if (animations->doRotate)
+                    matrix = glm::rotate<float>(matrix, degrees, glm::vec3(animations->xRotate, animations->yRotate, animations->zRotate)); // idk
+            }
+
+			// Spin
+			if (animations->isEnabled() && animations->aroundWorld && animations->mode.getSelectedValue() == 0) {
+				auto p = g_Data.getLocalPlayer();
+				float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
+				degrees *= 180 / 2.5f;
+
+				auto pos = g_Data.getClientInstance()->levelRenderer->origin;
 			
-			glm::mat4 View = matrix;
+				glm::mat4 View = matrix;
 			
-			matrix = View;
-			matrix = glm::rotate<float>(matrix, glm::radians<float>(degrees), glm::vec3(0, 0, 1));
-			}
+				matrix = View;
+				matrix = glm::rotate<float>(matrix, glm::radians<float>(degrees), glm::vec3(0, 0, 1));
 			}
 			return origFunc(_this, matrix, lerpT);
 		};
@@ -1639,6 +1637,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static auto oFunc = g_Hooks.LoopbackPacketSender_sendToServerHook->GetFastcall<void, C_LoopbackPacketSender*, C_Packet*>();
 
 	static auto sneakMod = moduleMgr->getModule<Sneak>();
+	static auto speed = moduleMgr->getModule<Speed>();
 	static auto freecamMod = moduleMgr->getModule<Freecam>();
 	static auto flight = moduleMgr->getModule<Flight>();
 	static auto disabler = moduleMgr->getModule<Disabler>();
@@ -1818,6 +1817,8 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 				return;
 			}
 		}
+	}
+	if (speed->mode.getSelectedValue() == 1 && speed->isEnabled() && !speed->isOnGround && g_Data.isInGame()) {
 	}
 
 	moduleMgr->onSendPacket(packet);
@@ -2145,7 +2146,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-				  /*char* str;  // Obj text
+			/*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);

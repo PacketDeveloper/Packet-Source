@@ -13,8 +13,9 @@
 #include "../../../Utils/Logger.h"
 #include "../../DrawUtils.h"
 #include "Animations.h"
+
 static std::vector<C_Entity> targList;
-Animations::Animations() : IModule(0, Category::VISUAL, "Custom item view model") {
+Animations::Animations() : IModule(0, Category::VISUAL, "looks like ass TM") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("None", 0);
 	mode.addEntry("1.7", 1);
