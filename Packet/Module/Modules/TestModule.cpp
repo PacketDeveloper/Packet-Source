@@ -9,8 +9,9 @@ TestModule::TestModule() : IModule(0, Category::MISC, "Description") {
 	registerBoolSetting("Blink", &blink, blink);
 	registerBoolSetting("Test", &test, test);
 	registerBoolSetting("AutoDisable", &autoDisable, autoDisable);
-	registerFloatSetting("SliderX", &sliderX, sliderX, -800, 100);
-	registerFloatSetting("SliderY", &sliderY, sliderY, -1000, 1000);
+	registerFloatSetting("SliderX", &sliderX, sliderX, -20, 20);
+	registerFloatSetting("SliderY", &sliderY, sliderY, -20, 20);
+	registerFloatSetting("SliderZ", &sliderZ, sliderZ, -20, 20);
 	registerBoolSetting("Kow", &kowBool, kowBool);
 	registerFloatSetting("KowFloat", &kowFloat, kowFloat, 0.2f, 10.f);
 }

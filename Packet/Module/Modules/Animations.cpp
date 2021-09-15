@@ -15,8 +15,11 @@
 #include "Animations.h"
 static std::vector<C_Entity> targList;
 Animations::Animations() : IModule(0, Category::VISUAL, "Custom item view model") {
+	registerEnumSetting("Mode", &mode, 0);
+	mode.addEntry("None", 0);
+	mode.addEntry("1.7", 1);
 	registerBoolSetting("Spin", &aroundWorld, aroundWorld);
-	registerFloatSetting("X", &xTrans, 0.f, -2.f, 2.f);
+	registerFloatSetting("X", &xTrans, 0.f, -2.f, 10.f);
 	registerFloatSetting("Y", &yTrans, 0.f, -2.f, 2.f);
 	registerFloatSetting("Z", &zTrans, 0.f, -2.f, 2.f);
 	registerFloatSetting("ScaleX", &xMod, 1.f, 0.f, 2.f);
@@ -26,6 +29,19 @@ Animations::Animations() : IModule(0, Category::VISUAL, "Custom item view model"
 }
 
 Animations::~Animations() {
+}
+
+const char* Animations::getRawModuleName() {
+	return "Animations";
+}
+
+const char* Animations::getModuleName() {
+	if (mode.getSelectedValue() == 1) {
+		name = std::string("Animations ") + std::string(GRAY) + std::string("1.7");
+		return name.c_str();
+	} else {
+		return "Animations";
+	}
 }
 
 void Animations::onTick(C_GameMode* gm) {
@@ -44,8 +60,4 @@ void Animations::onTick(C_GameMode* gm) {
 		zRotate = 0.f;
 		reset = false;
 	}
-}
-
-const char* Animations::getModuleName() {
-	return ("Animations");
 }

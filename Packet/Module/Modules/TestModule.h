@@ -34,6 +34,7 @@ public:
 	// testing
 	float sliderX = 0.f;
 	float sliderY = 0.f;
+	float sliderZ = 0.f;
 
 	TestModule();
 	virtual const char* getModuleName();

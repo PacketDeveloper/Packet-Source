@@ -27,8 +27,12 @@ public:
 	Animations();
 	~Animations();
 
-	virtual void onTick(C_GameMode* gm) override;
+	std::string name = "Animations";
+	SettingEnum mode = this;
+
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
+	virtual void onTick(C_GameMode* gm) override;
+	virtual const char* getRawModuleName() override;
 };
