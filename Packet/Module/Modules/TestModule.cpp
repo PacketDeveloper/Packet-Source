@@ -148,16 +148,7 @@ void TestModule::onTick(C_GameMode* gm) {
 		//pos.z = 0.f + pPos.z;
 
 		//g_Data.getLocalPlayer()->setPos(pos);
-		bool disable = false;
-		if (player->damageTime >= 1) {
-			player->velocity.x = 0.1;
-			player->velocity.z = 0.4;
-			player->velocity.y = 0.8;
-			disable = true;
-		}
-		if (disable) {
-			setEnabled(false);
-		}
+		
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();

@@ -8,9 +8,27 @@ Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
 	mode.addEntry("Nethergames", 0);
 	mode.addEntry("Mineville", 1);
 	mode.addEntry("Hive", 2);
+#ifdef _DEBUG
+	mode.addEntry("Hive2", 3);
+#endif
 }
 
 Disabler::~Disabler() {
+}
+
+static std::vector<C_Entity*> disableList;
+
+void disableAC(C_Entity* currentEntity, bool isRegularEntity) {
+	if (currentEntity == nullptr)
+		return;
+
+	if (!Target::isValidTarget(currentEntity))
+		return;
+
+	if (currentEntity->getEntityTypeId() != 319)
+		return;
+
+	disableList.push_back(currentEntity);
 }
 
 const char* Disabler::getRawModuleName() {
@@ -26,15 +44,18 @@ const char* Disabler::getModuleName() {
 		name = std::string("Disabler ") + std::string(GRAY) + std::string("Mineville");
 		return name.c_str();
 	}
-	if (mode.getSelectedValue() == 2) {
+	if (mode.getSelectedValue() == 2 || mode.getSelectedValue() == 3) {
 		name = std::string("Disabler ") + std::string(GRAY) + std::string("Hive");
 		return name.c_str();
 	}
 }
 
 void Disabler::onEnable() {
-	if (mode.getSelectedValue() == 3)
+	if (mode.getSelectedValue() == 3) {
 		counter = 1;
+		shouldDisable = false;
+		c2 = 1;
+	}
 }
 
 void Disabler::onTick(C_GameMode* gm) {
@@ -49,24 +70,38 @@ void Disabler::onTick(C_GameMode* gm) {
 		C_MovePlayerPacket Mineville(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&Mineville);
 	}
-	//}
-	if (mode.getSelectedValue() == 2) {
-		auto player = g_Data.getLocalPlayer();
+	if (mode.getSelectedValue() == 3) {  // Hive private
 #ifdef _DEBUG
-		int timeEnabled = 0;
-		if (counter == 4) {
-			//setEnabled(false);
+		auto player = g_Data.getLocalPlayer();
+		disableList.clear();
+		g_Data.forEachEntity(disableAC);
+
+		if (counter == 3) {
 			counter = 1;
 		} else {
-			timeEnabled++;
 			counter++;
 		}
-		if (gm->player->damageTime >= 1 && counter == 3) {
-			speed->setEnabled(true);
+		if (c2 == INFINITY) {
+			c2 = 1;
 		} else {
-			speed->setEnabled(false);
+			c2++;
 		}
-		if (timeEnabled >= 10) setEnabled(false);
+
+		if (player->damageTime >= 1) {
+			if (counter == 2) {
+				speed->setEnabled(true);
+			} else {
+				speed->setEnabled(false);
+			}
+			if (c2 >= 28 && !disableList.empty()) {
+				player->knockback(disableList[0], 1, 0.5f, 0.6f, 0.5f, 0.9f, 0.9f);
+				clientMessageF("kb");
+			}
+			shouldDisable = true;
+		} else if (shouldDisable) {
+			speed->setEnabled(false);
+			setEnabled(false);
+		}
 #endif
 	}
 }

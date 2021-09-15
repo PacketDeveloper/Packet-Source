@@ -30,9 +30,9 @@ bool PlayerList::isFlashMode() {
 }
 
 void PlayerList::onTick(C_GameMode* gm) {
+	auto player = g_Data.getLocalPlayer();
 	playerList.clear();
 	g_Data.forEachEntity(findPlayers);
-	playerList[0]->pushEntitys();
 }
 
 void PlayerList::onPostRender(C_MinecraftUIRenderContext* renderCtx) {

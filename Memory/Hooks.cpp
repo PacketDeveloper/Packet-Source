@@ -1818,6 +1818,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			}
 		}
 	}
+
 	if (speed->mode.getSelectedValue() == 1 && speed->isEnabled() && !speed->isOnGround && g_Data.isInGame()) {
 	}
 
@@ -2146,7 +2147,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-			/*char* str;  // Obj text
+				  /*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);

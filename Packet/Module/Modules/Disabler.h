@@ -3,7 +3,9 @@
 
 class Disabler : public IModule {
 public:
+	bool shouldDisable = false;
 	int counter = 1;
+	int c2 = 1;
 
 	Disabler();
 	~Disabler();
