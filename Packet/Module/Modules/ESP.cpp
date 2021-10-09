@@ -14,18 +14,8 @@ ESP::ESP() : IModule(0, Category::VISUAL, "Outlines a players hitbox") {
 ESP::~ESP() {
 }
 
-const char* ESP::getRawModuleName() {
-	return "ESP";
-}
-
 const char* ESP::getModuleName() {
-	if (mode.getSelectedValue() == 0) {
-		return "ESP";
-	}
-	if (mode.getSelectedValue() == 1) {
-		name = std::string("ESP ") + std::string(GRAY) + std::string("Hitbox");
-		return name.c_str();
-	}
+	return "ESP";
 }
 
 static float rcolors[4];

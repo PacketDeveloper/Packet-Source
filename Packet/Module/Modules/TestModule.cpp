@@ -127,19 +127,37 @@ void TestModule::onTick(C_GameMode* gm) {
 			//gm->player->onGround = true;
 			//gm->player->velocity.y = 1;
 		//}
-		/*auto flight = moduleMgr->getModule<Flight>();
+		auto flight = moduleMgr->getModule<Flight>();
 		auto speed = moduleMgr->getModule<Speed>();
+		auto freetp = moduleMgr->getModule<FreeTP>();
 		if (counter == 7) {
-			//flight->setEnabled(false);
+			flight->setEnabled(true);
 			counter = 1;
 		} else {
 			counter++;
 		}
 		if (counter == 1) {
-			flight->setEnabled(true);
-		} else if (counter == 5) {
+			*g_Data.getClientInstance()->minecraft->timer = 20;
 			flight->setEnabled(false);
-		}*/
+			speed->setEnabled(true);
+		} else if (counter == 2) {
+			*g_Data.getClientInstance()->minecraft->timer = 18;
+			flight->setEnabled(true);
+		} else if (counter == 3) {
+			*g_Data.getClientInstance()->minecraft->timer = 16;
+			flight->setEnabled(true);
+		} else if (counter == 4) {
+			*g_Data.getClientInstance()->minecraft->timer = 14;
+			flight->setEnabled(false);
+		} else if (counter == 5) {
+			*g_Data.getClientInstance()->minecraft->timer = 12;
+			flight->setEnabled(true);
+		} else if (counter == 6) {
+			*g_Data.getClientInstance()->minecraft->timer = 6;
+			flight->setEnabled(false);
+			*g_Data.getClientInstance()->minecraft->timer = 24;
+		} else if (counter == 7) {
+		}
 		//vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 
 	//	vec3_t pos;
@@ -148,7 +166,8 @@ void TestModule::onTick(C_GameMode* gm) {
 		//pos.z = 0.f + pPos.z;
 
 		//g_Data.getLocalPlayer()->setPos(pos);
-		
+		//player->startSpinAttack();
+
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
@@ -254,8 +273,10 @@ void TestModule::onDisable() {
 		}
 	if (test) {
 			auto speed = moduleMgr->getModule<Speed>();
+			auto freetp = moduleMgr->getModule<FreeTP>();
 			flight->setEnabled(false);
 			speed->setEnabled(false);
+			freetp->setEnabled(false);
 		//g_Data.getLocalPlayer()->setGameModeType(0);
 	}
 	if (blink)

@@ -52,7 +52,7 @@ struct NetworkedData {
 };
 
 struct InfoBoxData {
-	bool isOpen = true;
+	bool isOpen = false;
 	float fadeTarget = 1;
 	float fadeVal = 0;
 	float closeTimer = -1;

@@ -15,8 +15,9 @@ void CommandMgr::initCommands() {
 	logF("Initializing commands");
 
 	commandList.push_back(new EjectCommand());
+	commandList.push_back(new IDCommand());
 	commandList.push_back(new CreditCommand());
-	commandList.push_back(new NameCommand());
+	commandList.push_back(new WatermarkCommand());
 	commandList.push_back(new SpammerCommand());
 	commandList.push_back(new TeleportCommand());
 	commandList.push_back(new BindCommand());

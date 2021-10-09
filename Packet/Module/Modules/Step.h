@@ -3,9 +3,9 @@
 #include "Module.h"
 class Step : public IModule {
 public:
-	bool clickGUIE = false;
 	bool reverse = false;
 	float height = 1.5f;
+	int time = 0;
 
 	Step();
 	~Step();

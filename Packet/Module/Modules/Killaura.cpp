@@ -63,9 +63,6 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 	if (currentEntity->getEntityTypeId() == 80)  // Arrows
 		return;
 
-	if (currentEntity->getEntityTypeId() == 51)  // NPC
-		return;
-
 	if (killauraMod->mobAura) {
 		if (currentEntity->getNameTag()->getTextLength() <= 1 && currentEntity->getEntityTypeId() == 63)
 			return;
@@ -74,9 +71,14 @@ void findEntity(C_Entity* currentEntity, bool isRegularEntity) {
 		if (currentEntity->getEntityTypeId() == 64)  //item
 			return;
 
-
 	} else {
 		if (!Target::isValidTarget(currentEntity))
+			return;
+
+		if (currentEntity->getEntityTypeId() == 1677999)  // Villager
+			return;
+
+		if (currentEntity->getEntityTypeId() == 51)  // NPC
 			return;
 	}
 
@@ -108,13 +110,13 @@ void Killaura::onTick(C_GameMode* gm) {
 	auto scaffold = moduleMgr->getModule<Scaffold>();
 	auto player = g_Data.getLocalPlayer();
 	targetListEmpty = targetList.empty();
-
 	if (clickGUI->isEnabled()) targetListEmpty = true;
+	if (g_Data.getLocalPlayer() != nullptr) holdingWeapon = false;
 
 	targetList.clear();
 
 	g_Data.forEachEntity(findEntity);
-	
+
 	if (renderStart >= 1)
 		renderStart++;
 	if (renderStart >= 5)
@@ -132,8 +134,9 @@ void Killaura::onTick(C_GameMode* gm) {
 				// Attack all entitys in targetList
 				if (multi) {
 					for (auto& i : targetList) {
+						if (!moduleMgr->getModule<NoSwing>()->isEnabled())
+							player->swingArm();
 						if (!(i->damageTime > 1 && hurttime)) {
-							g_Data.getLocalPlayer()->swing();
 							gm->attack(i);
 							targethud++;
 						} else
@@ -141,7 +144,6 @@ void Killaura::onTick(C_GameMode* gm) {
 					}
 				} else {  // Switch
 					if (!(targetList[0]->damageTime > 1 && hurttime)) {
-						g_Data.getLocalPlayer()->swing();
 						gm->attack(targetList[0]);
 						targethud++;
 					} else
@@ -149,21 +151,11 @@ void Killaura::onTick(C_GameMode* gm) {
 				}
 				Odelay = 0;
 			}
-#ifdef _DEBUG
-			//fake auto block using texture pack
-			if (test) {
-				if (targetList.empty()) {
-					targethud = 0;
-					useSprint = true;
-				} else {
-					gm->player->setSprinting(false);
-					useSprint = false;
-				}
-			}
-#endif
 			for (auto& i : targetList) {
 				C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 				PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
+				if (!moduleMgr->getModule<NoSwing>()->isEnabled())
+					player->swingArm();
 				Odelay++;
 
 				if (click && !targetList.empty()) {
@@ -177,6 +169,12 @@ void Killaura::onTick(C_GameMode* gm) {
 		}
 	} else {
 		targetListEmpty = true;
+	}
+	if (g_Data.getLocalPlayer() != nullptr) {
+		auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
+		if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isWeapon()))
+			return;
+		holdingWeapon = true;
 	}
 }
 
@@ -220,7 +218,7 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 							windowSize.y - margin + 7);
 
 						vec2_t TextPos = vec2_t(rectPos.x + 8, rectPos.y + 5);
-						vec2_t ArmorPos = vec2_t(rectPos.x + 5.5, rectPos.y + 24);
+						vec2_t armorPos = vec2_t(rectPos.x + 5.5, rectPos.y + 24);
 						vec2_t TextPos2 = vec2_t(rectPos.x + 8, rectPos.y + 15);
 
 						if (targetList[0]->damageTime >= 1) {
@@ -249,14 +247,13 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 							for (int t = 0; t < 4; t++) {
 								C_ItemStack* stack = player->getArmor(t);
 								if (stack->isValid()) {
-									DrawUtils::drawItem(stack, vec2_t(ArmorPos), 1, scale, false);  //* stack->isEnchanted() is run by the thing already, this bool is if it forces it to be enchanted or no
-									ArmorPos.x += scale * spacing;
+									DrawUtils::drawItem(stack, vec2_t(armorPos), 1, scale, false);
+									armorPos.x += scale * spacing;
 								}
 							}
 							C_PlayerInventoryProxy* supplies = player->getSupplies();
 							C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
-							if (item->isValid())
-								DrawUtils::drawItem(item, vec2_t(ArmorPos), opacity, scale, item->isEnchanted());
+							if (item->isValid()) DrawUtils::drawItem(item, vec2_t(armorPos), opacity, scale, item->isEnchanted());
 						}
 
 						DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.3);
@@ -331,15 +328,17 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 }
 
 void Killaura::onSendPacket(C_Packet* packet) {
+	if (GameData::canUseMoveKeys()) {
 	auto scaffold = moduleMgr->getModule<Scaffold>();
-	if (scaffold->useRot) {
-		if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3) {
-			if (!targetList.empty()) {
-				auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
-				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
-				movePacket->pitch = angle.x;
-				movePacket->headYaw = angle.y;
-				movePacket->yaw = angle.y;
+		if (scaffold->useRot) {
+			if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3) {
+				if (!targetList.empty()) {
+					auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
+					movePacket->pitch = angle.x;
+					movePacket->headYaw = angle.y;
+					movePacket->yaw = angle.y;
+				}
 			}
 		}
 	}

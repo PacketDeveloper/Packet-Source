@@ -202,6 +202,7 @@ void Hooks::Init() {
 			static auto origFunc = g_Hooks.lambdaHooks.at(lambda_counter)->GetFastcall<void, __int64, glm::mat4&, float>();
 						static auto animations = moduleMgr->getModule<Animations>();
 			static auto killaura = moduleMgr->getModule<Killaura>();
+			//static auto test = moduleMgr->getModule<TestModule>();
             auto p = g_Data.getLocalPlayer();
             float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
             degrees *= 180 / 2.5f;
@@ -213,12 +214,12 @@ void Hooks::Init() {
             matrix = View;
 
 			// AutoBlock
-			if (animations->isEnabled() && killaura->isEnabled()) {
+			if (animations->isEnabled() && killaura->isEnabled() && killaura->holdingWeapon && g_Data.isInGame()) {
 				if (animations->mode.getSelectedValue() == 1 && !killaura->targetListEmpty) {
 					matrix = glm::translate<float>(matrix, glm::vec3(5.54, 0.85, -2.00));
 					matrix = glm::scale<float>(matrix, glm::vec3(2, 2, 2));
 				}
-				if (animations->mode.getSelectedValue() == 1 && !killaura->targetListEmpty) {
+				if (animations->mode.getSelectedValue() == 1 && !killaura->targetListEmpty && killaura->holdingWeapon && g_Data.isInGame()) {
 					float degrees = 13;
 					degrees *= 180 / 4;
 
@@ -306,7 +307,7 @@ void Hooks::Actor_getRotation(C_Entity* _this, vec4_t& newAngle) {
 		if (g_Data.getLocalPlayer() != nullptr && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
 			return oFunc(_this, killaura->testRot);
 	}
-	if (scaffold->isEnabled() && scaffold->towerMode) {
+	if (scaffold->isEnabled() && scaffold->tower) {
 		if (g_Data.getLocalPlayer() != nullptr && scaffold->isOnHive && scaffold->isHoldingSpace)
 			return oFunc(_this, scaffold->scaffoldRot);
 	}
@@ -342,12 +343,18 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	}
 
 	if (!g_Hooks.shouldRender) {
-		g_Hooks.shouldRender = (strcmp(alloc.getText(), "start_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0);
+		g_Hooks.shouldRender = (strcmp(alloc.getText(), "start_screen") == 0 || strcmp(alloc.getText(), "hud_screen") == 0 || strcmp(alloc.getText(), "inventory_screen") == 0);
 	}
-	static auto invManager = moduleMgr->getModule<InvManager>();
 	static auto chestStealer = moduleMgr->getModule<ChestStealer>();
+	static auto invManager = moduleMgr->getModule<InvManager>();
+	static auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
 	static auto scaffold = moduleMgr->getModule<Scaffold>();
 	std::string screenName(g_Hooks.currentScreenName);
+
+	if (clickGUI->isEnabled() && strcmp(alloc.getText(), "pause_screen") == 0) {
+		clickGUI->setEnabled(false);
+	}
+
 	if (invManager->autoDisable && strcmp(screenName.c_str(), "start_screen") == 0) {
 		//auto box = g_Data.addInfoBox("InvManager: Disabled");
 		//box->closeTimer = 14;
@@ -1302,7 +1309,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			}
 		}
 
-		// Armor
+		// Armor HUD
 		{
 			if (hudMod->displayArmor) {
 				vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
@@ -1316,9 +1323,30 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				vec4_t rectPos = vec4_t(2.5, startY + 6, l, startY + 20);
 				vec2_t textPos = vec2_t(rectPos.x + 35, rectPos.y + 1);
 				vec2_t textPos2 = vec2_t(rectPos.x + 2, rectPos.y + 3);
-				DrawUtils::drawText(textPos2, &armor, MC_Color(currColor), 1, 1, true);
 				DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), hudMod->opacity);
 				C_LocalPlayer* player = g_Data.getLocalPlayer();
+
+				if (hudMod->color.getSelectedValue() != 1)  // Rainbow
+					DrawUtils::drawText(textPos2, &armor, MC_Color(currColor), 1, 1, true);
+				if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
+					DrawUtils::drawText(textPos2, &armor, MC_Color(dynamic, dynamic, dynamic), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 4) {  // White
+					DrawUtils::drawText(textPos2, &armor, MC_Color(255, 255, 255), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 5) {  // Red
+					DrawUtils::drawText(textPos2, &armor, MC_Color(255, 0, 0), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 6) {  // Orange
+					DrawUtils::drawText(textPos2, &armor, MC_Color(255, 127, 0), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 7) {  // Yellow
+					DrawUtils::drawText(textPos2, &armor, MC_Color(255, 255, 0), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 8) {  // Green
+					DrawUtils::drawText(textPos2, &armor, MC_Color(0, 255, 0), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 9) {  // Blue
+					DrawUtils::drawText(textPos2, &armor, MC_Color(0, 170, 255), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 11) {  // Purple
+					DrawUtils::drawText(textPos2, &armor, MC_Color(148, 0, 211), 1, 1, true);
+				} else if (hudMod->color.getSelectedValue() == 12) {  // Pink
+					DrawUtils::drawText(textPos2, &armor, MC_Color(255, 192, 203), 1, 1, true);
+				}
 
 				for (int t = 0; t < 4; t++) {
 					C_ItemStack* stack = player->getArmor(t);
@@ -1346,7 +1374,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 				DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), hudMod->opacity);
 
-				if (hudMod->color.getSelectedValue() != 1)  // Rainbowf
+				if (hudMod->color.getSelectedValue() != 1)  // Rainbow
 					DrawUtils::drawText(textPos, &position, MC_Color(currColor), 1, 1, true);
 				if (hudMod->color.getSelectedValue() == 1) {  // Dynamic
 					DrawUtils::drawText(textPos, &position, MC_Color(dynamic, dynamic, dynamic), 1, 1, true);

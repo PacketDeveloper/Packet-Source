@@ -12,11 +12,10 @@ const char* Sprint::getModuleName() {
 }
 
 void Sprint::onTick(C_GameMode* gm) {
-	auto killaura = moduleMgr->getModule<Killaura>();
-	if (killaura->useSprint) {
+	if (useSprint) {
 		if (!gm->player->isSprinting() && gm->player->velocity.magnitudexz() > 0.01f) {
 			C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-			if (alldirections || GameData::isKeyDown(*input->forwardKey))
+			if (omniSprint || GameData::isKeyDown(*input->forwardKey))
 				gm->player->setSprinting(true);
 		}
 	}

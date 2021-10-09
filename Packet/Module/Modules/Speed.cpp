@@ -50,7 +50,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 	auto player = g_Data.getLocalPlayer();
 	if (mode.getSelectedValue() == 0) {  // Vanilla
 		static bool velocity = false;
-		if (height >= 0.385) { // very stupid code - yes
+		if (height >= 0.385) {
 			if (player->onGround && pressed) player->jumpFromGround();
 			velocity = false;
 		} else {
@@ -60,10 +60,6 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			player->velocity.y += height;
 			velocity = false;
 		}
-		//if (height >= 0.385 || height <= 0.04) {
-			//clientMessageF("velocity = true");
-			//velocity = true;
-		//}
 		if (player->onGround && pressed && !input->isJumping && velocity)
 			player->velocity.y = height;
 		if (!pressed && player->damageTime == 0) {
@@ -94,12 +90,10 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			//input->isJumping = true;
 			player->jumpFromGround();
 		}
-		if (!isOnGround) {
-			moveVec.x = movement.x * 0.315;
-			moveVec.y = player->velocity.y;
-			moveVec.z = movement.y * 0.315;
-			if (pressed) player->lerpMotion(moveVec);
-		}
+		moveVec.x = movement.x * 0.305;
+		moveVec.y = player->velocity.y;
+		moveVec.z = movement.y * 0.305;
+		if (pressed) player->lerpMotion(moveVec);
 	}
 	if (mode.getSelectedValue() == 3 && g_Data.isInGame()) {
 		if (player == nullptr) return;
@@ -160,7 +154,7 @@ void Speed::onDisable() {
 void Speed::onSendPacket(C_Packet* packet) {
 	auto player = g_Data.getLocalPlayer();
 	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3 && g_Data.isInGame()) {
-		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);  //poggies
+		auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 		C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 		if (input == nullptr)
 			return;

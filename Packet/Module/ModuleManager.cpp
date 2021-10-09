@@ -87,17 +87,18 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Switcher()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ClickTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Jesus()));
-		moduleList.push_back(std::shared_ptr<IModule>(new PlayerList()));
 
 #ifdef _DEBUG
+		moduleList.push_back(std::shared_ptr<IModule>(new InPvPFucker()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new PlayerList()));
 		moduleList.push_back(std::shared_ptr<IModule>(new HudEditorMod()));
 		//moduleList.push_back(std::shared_ptr<IModule>(new EntityControl()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
-		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new HiveFly())); // patched
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
-		moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		// Broken
-		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
 		moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
 #endif

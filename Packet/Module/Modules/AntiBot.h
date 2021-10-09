@@ -12,11 +12,14 @@ public:
 	AntiBot();
 	~AntiBot();
 
+	std::string name = ("AntiBot");
+	SettingEnum mode = this;
+
 	bool isHitboxCheckEnabled() {
 		return hitboxCheck && this->isEnabled();
 	}
 	bool isNameCheckEnabled() {
-		return false && this->isEnabled();
+		return nameCheck && this->isEnabled();
 	}
 	bool isInvisibleCheckEnabled() {
 		return invisibleCheck && this->isEnabled();
@@ -33,4 +36,5 @@ public:
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;
+	virtual const char* getRawModuleName() override;
 };

@@ -10,6 +10,7 @@ private:
 
 public:
 	bool distanceCheck = false;
+	bool holdingWeapon = false;
 	bool useSprint = true;
 	bool multi = true;
 	bool click = false;

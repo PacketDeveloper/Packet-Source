@@ -35,7 +35,7 @@ void Phase::onDisable() {
 		vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 		vec3_t pos;
 		pos.x = 0.f + pPos.x;
-		pos.y = 0.000001f + pPos.y; // This makes vertical phase disable properly
+		pos.y = 0.000001f + pPos.y;
 		pos.z = 0.f + pPos.z;
 		g_Data.getLocalPlayer()->setPos(pos);
 	}

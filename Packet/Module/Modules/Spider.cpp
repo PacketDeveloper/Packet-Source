@@ -21,7 +21,7 @@ void Spider::onMove(C_MoveInputHandler* input) {
 
 	if (player->isSneaking())
 		return;
-	
+
 	std::vector<vec3_ti> sideBlocks;
 	sideBlocks.reserve(8);
 
@@ -67,7 +67,7 @@ void Spider::onMove(C_MoveInputHandler* input) {
 			if (!blockLegacy->getCollisionShape(&collisionVec, block, player->region, &side, player))
 				continue;
 			bool intersects = ignoreYcoll ? collisionVec.intersectsXZ(player->aabb.expandedXZ(0.1f)) : collisionVec.intersects(player->aabb.expandedXZ(0.1f));
-			
+
 			if (intersects) {
 				if (obstructingBlock != nullptr)
 					*obstructingBlock = collisionVec;
@@ -79,12 +79,10 @@ void Spider::onMove(C_MoveInputHandler* input) {
 
 	AABB lowerObsVec, upperObsVec;
 	bool upperObstructed = isObstructed(1, &upperObsVec);
-	
+
 	bool lowerObstructed = isObstructed(0, &lowerObsVec);
 	float targetSpeed = speed;
 	if (stop && (lowerObstructed || upperObstructed)) {
-		
-		// simulate because im too lazy to do the math
 		const auto distanceError = [](float yVel, float distance) {
 			int t = 0;
 			constexpr int numIter = 60;
@@ -103,10 +101,9 @@ void Spider::onMove(C_MoveInputHandler* input) {
 		{
 			if (upperObstructed)
 				getOver = std::max(getOver, upperObsVec.upper.y);
-			// max dist that can be reached with our speed
-			
+
 			const int numIterations = (int)ceil(std::max(5.f, -std::get<0>(distanceError(speed, 0)) + 2));
-			
+
 			bool lastObstructed = upperObstructed;
 			for (int iter = 2; iter < numIterations; iter++) {
 				if (isObstructed(iter, &upperObsVec, true)) {
@@ -120,24 +117,20 @@ void Spider::onMove(C_MoveInputHandler* input) {
 				}
 			}
 		}
-			
+
 		float targetDist = getOver - pPos.y + 0.02f;
 		if (targetDist <= 0)
 			return;
 
 		auto [curDist, curYVel, curT] = distanceError(player->velocity.y, targetDist);
-		
-		//this->clientMessageF("current trajectory error=%.3f t=%i vel=%.3f total=%.2f", curDist, curT, curYVel, targetDist);
-		if (curDist <= 0.01f) 
-			return;  // We will already get on top of the block
+
+		if (curDist <= 0.01f)
+			return;
 
 		if (player->velocity.y < speed) {
-			// do another simulation to determine whether we would overshoot on the next iteration
 			auto secondTrajectory = distanceError(speed, targetDist);
-			//this->clientMessageF("secondTrajectory: error=%.3f t=%i vel=%.2f", std::get<0>(secondTrajectory), std::get<2>(secondTrajectory), std::get<1>(secondTrajectory));
-			if (std::get<0>(secondTrajectory) <= 0) {// we are overshooting if we give the player our target speed
-				
-				// use secant method to approximate perfect start speed
+			if (std::get<0>(secondTrajectory) <= 0) {
+
 				float error = curDist;
 				float startSpeed = player->velocity.y;
 
@@ -145,9 +138,9 @@ void Spider::onMove(C_MoveInputHandler* input) {
 				float startSpeed2 = speed;
 				int i = 0;
 				for (; i < 16; i++) {
-					if (error > -0.05f && error <= 0.001f) 
-						break; // its better to slightly overshoot than to undershoot
-						
+					if (error > -0.05f && error <= 0.001f)
+						break;
+
 					float newSpeed = (startSpeed2 * error - startSpeed * error2) / (error - error2);
 					startSpeed2 = startSpeed;
 					startSpeed = newSpeed;
@@ -155,7 +148,6 @@ void Spider::onMove(C_MoveInputHandler* input) {
 					error2 = error;
 					error = std::get<0>(distanceError(newSpeed, targetDist));
 				}
-				//this->clientMessageF("Secant method finished with error=%.3f speed=%.3f at t=%i", error, startSpeed, i);
 				targetSpeed = startSpeed;
 			}
 		}

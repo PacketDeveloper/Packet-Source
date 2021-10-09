@@ -2,11 +2,11 @@
 #include "Module.h"
 class Flight : public IModule {
 private:
-	float glideModEffective = 0;
-	float glideMod = 0.00f;
+	float effectiveValue = 0;
+	float value = 0.00f;
 	bool hiveMode = false;
 	bool damage = false;
-	bool endzone = false;
+	bool boost = false;
 	bool speedWasEnabled = false;
 	bool scfWasEnabled = false;
 
@@ -25,6 +25,7 @@ public:
 	int prevSlot = 0;
 
 	// Hive
+	bool fly = false;
 	int testTimer = 0;
 	bool blink2 = true;
 	bool blink = false;

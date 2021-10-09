@@ -77,12 +77,11 @@
 #include "Modules/Switcher.h"
 #include "Modules/ClickTP.h"
 #include "Modules/Jesus.h"
-#include "Modules/PlayerList.h"
 #include "Modules/Module.h"
 
-//#include "Modules/Waypoints.h" // Crashes
-
 #ifdef _DEBUG
+#include "Modules/InPvPFucker.h"
+#include "Modules/PlayerList.h"
 #include "Modules/HudEditorMod.h"
 #include "Modules/TestModule.h"
 #include "Modules/EntityControl.h"

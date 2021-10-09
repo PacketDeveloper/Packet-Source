@@ -1,10 +1,10 @@
 #pragma once
 #include "Module.h"
 class Sprint : public IModule {
-private:
-	bool alldirections = false;
-
 public:
+	bool omniSprint = false;
+	bool useSprint = true;
+
 	Sprint();
 	~Sprint();
 

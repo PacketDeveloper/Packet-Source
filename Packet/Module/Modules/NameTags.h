@@ -7,7 +7,7 @@ public:
 	std::set<std::string> nameTags;
 	bool displayArmor = true;
 	bool underline = true;
-	float opacity = 0.2f;
+	float opacity = 0.5f;
 	NameTags();
 	~NameTags();
 

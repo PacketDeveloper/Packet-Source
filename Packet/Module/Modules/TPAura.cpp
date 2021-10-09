@@ -9,6 +9,7 @@ TPAura::TPAura() : IModule(0, Category::COMBAT, "TP Into The Closest Entity") {
 	registerBoolSetting("Attack", &attack, attack);
 	registerBoolSetting("Silent", &silent, silent);
 	//registerBoolSetting("Hive", &hive, hive);
+	registerFloatSetting("Height", &teleportY, teleportY, 0, 10);
 	registerIntSetting("Delay", &delay, delay, 0, 50);
 	registerFloatSetting("Range", &range, range, 5, 250);
 }
@@ -135,7 +136,7 @@ void TPAura::onTick(C_GameMode* gm) {
 						gm->attack(targetList[0]);
 						teleportPacket2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 						g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&teleportPacket2);
-					} else if (!hive) {
+					} else {
 						C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 						g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 						C_LocalPlayer* player = g_Data.getLocalPlayer();

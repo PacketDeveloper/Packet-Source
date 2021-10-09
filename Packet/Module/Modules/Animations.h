@@ -7,6 +7,7 @@ private:
 	int delay = 0;
 
 public:
+	bool rightClickDown = false;
 	bool doTranslate = true;
 	bool aroundWorld = false;
 	bool doScale = true;

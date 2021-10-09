@@ -7,7 +7,7 @@ Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Nethergames", 0);
 	mode.addEntry("Mineville", 1);
-	mode.addEntry("Hive", 2);
+	//mode.addEntry("Hive", 2);
 #ifdef _DEBUG
 	mode.addEntry("Hive2", 3);
 #endif
@@ -94,8 +94,8 @@ void Disabler::onTick(C_GameMode* gm) {
 				speed->setEnabled(false);
 			}
 			if (c2 >= 28 && !disableList.empty()) {
-				player->knockback(disableList[0], 1, 0.5f, 0.6f, 0.5f, 0.9f, 0.9f);
-				clientMessageF("kb");
+				player->knockback(player, 0, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f);
+				//clientMessageF("kb");
 			}
 			shouldDisable = true;
 		} else if (shouldDisable) {
@@ -108,15 +108,14 @@ void Disabler::onTick(C_GameMode* gm) {
 
 void Disabler::onSendPacket(C_Packet* packet) {
 	//if (g_Data.canUseMoveKeys()) {
+	auto player = g_Data.getLocalPlayer();
 	if (packet->isInstanceOf<C_MovePlayerPacket>()) {
-		auto player = g_Data.getLocalPlayer();
 		if (mode.getSelectedValue() == 1 && !player->onGround) {
 			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			movePacket->onGround = true;
 		}
 	}
 	if (packet->isInstanceOf<C_MovePlayerPacket>()) {
-		auto player = g_Data.getLocalPlayer();
 		if (mode.getSelectedValue() == 1 && !player->onGround) {
 			C_MovePlayerPacket* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			if (g_Data.canUseMoveKeys()) {

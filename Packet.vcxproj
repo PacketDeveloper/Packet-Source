@@ -237,7 +237,6 @@
   <ItemGroup>
     <ClCompile Include="Packet\Command\CommandMgr.cpp" />
     <ClCompile Include="Packet\Command\Commands\BindCommand.cpp" />
-    <ClCompile Include="Packet\Command\Commands\BruhCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\CommandBlockExploitCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\ConfigCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\CoordsCommand.cpp" />
@@ -253,8 +252,9 @@
     <ClCompile Include="Packet\Command\Commands\HelpCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\HideCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\ICommand.cpp" />
+    <ClCompile Include="Packet\Command\Commands\IDCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\ModulesCommand.cpp" />
-    <ClCompile Include="Packet\Command\Commands\NameCommand.cpp" />
+    <ClCompile Include="Packet\Command\Commands\WatermarkCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\NameSpoofCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\NbtCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\OutlineCommand.cpp" />
@@ -301,6 +301,7 @@
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
     <ClCompile Include="Packet\Module\Modules\HackerDetector.cpp" />
     <ClCompile Include="Packet\Module\Modules\HudEditorMod.cpp" />
+    <ClCompile Include="Packet\Module\Modules\InPvPFucker.cpp" />
     <ClCompile Include="Packet\Module\Modules\ItemTP.cpp" />
     <ClCompile Include="Packet\Module\Modules\Jesus.cpp" />
     <ClCompile Include="Packet\Module\Modules\Notifications.cpp" />
@@ -421,7 +422,6 @@
   <ItemGroup>
     <ClInclude Include="Packet\Command\CommandMgr.h" />
     <ClInclude Include="Packet\Command\Commands\BindCommand.h" />
-    <ClInclude Include="Packet\Command\Commands\BruhCommand.h" />
     <ClInclude Include="Packet\Command\Commands\CommandBlockExploitCommand.h" />
     <ClInclude Include="Packet\Command\Commands\ConfigCommand.h" />
     <ClInclude Include="Packet\Command\Commands\CoordsCommand.h" />
@@ -437,8 +437,9 @@
     <ClInclude Include="Packet\Command\Commands\HelpCommand.h" />
     <ClInclude Include="Packet\Command\Commands\HideCommand.h" />
     <ClInclude Include="Packet\Command\Commands\ICommand.h" />
+    <ClInclude Include="Packet\Command\Commands\IDCommand.h" />
     <ClInclude Include="Packet\Command\Commands\ModulesCommand.h" />
-    <ClInclude Include="Packet\Command\Commands\NameCommand.h" />
+    <ClInclude Include="Packet\Command\Commands\WatermarkCommand.h" />
     <ClInclude Include="Packet\Command\Commands\NameSpoofCommand.h" />
     <ClInclude Include="Packet\Command\Commands\NbtCommand.h" />
     <ClInclude Include="Packet\Command\Commands\OutlineCommand.h" />
@@ -485,6 +486,7 @@
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />
     <ClInclude Include="Packet\Module\Modules\HackerDetector.h" />
     <ClInclude Include="Packet\Module\Modules\HudEditorMod.h" />
+    <ClInclude Include="Packet\Module\Modules\InPvPFucker.h" />
     <ClInclude Include="Packet\Module\Modules\ItemTP.h" />
     <ClInclude Include="Packet\Module\Modules\Jesus.h" />
     <ClInclude Include="Packet\Module\Modules\Notifications.h" />
