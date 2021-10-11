@@ -2365,7 +2365,7 @@ void prepCoolBean() {
 			t->pathToServerIcon.setText("");
 			t->serverName.setText("Packet Server");
 			t->serverName2.setText("Packet Server");  // This is the one actually displayed
-			t->domain.setText(".packetbeta.massivecock");
+			t->domain.setText(".packetnbeta.club");
 			t->serverAddress.setText("mc.packetbeta.wtf");
 			start[0] = std::shared_ptr<ThirdPartyServer>(t);
 		}

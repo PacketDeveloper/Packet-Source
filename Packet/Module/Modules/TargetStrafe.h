@@ -5,37 +5,33 @@
 
 class TargetStrafe : public IModule {
 private:
-	bool test = true;
-	bool circleRender = false;
-	bool jump = false;
-	bool flyMode = false;
+	bool edgeCheck = true;
+	bool drawCircle = true;
 	bool testMode = true;
-	bool goback = false;
+	bool control = false;
+	bool collide = true;
+	bool test = false;
+	bool onKey = true;
+
 	bool clockwise = false;
 	int intersectingTimer = 0;
 	int intersectingTimer2 = 0;
-	bool avoidvoid = true;
-	bool collide = true;
-	bool onKey = true;
-	bool control = false;
-
 	bool initRender = false;
 	int renderTimer = 0;
+	bool useVel = false;
 
 public:
-	float StrafeDistance = 3.f;
-	float speedMod = 0.44f;
-	bool packetMode = false;
-	bool speedCheck = true;
-	bool spacekeyMode = true;
-	bool isMobAura = false;
+	bool targetListEmpty = true;
+	float radius = 2.5f;
+	float speed = 0.5f;
 	float range = 6;
-	int gayTimer = 0;
 
 	vec3_t playerVel;
 
 	TargetStrafe();
 	~TargetStrafe();
+
+		SettingEnum mode = this;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

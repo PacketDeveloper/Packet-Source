@@ -4,6 +4,9 @@
 
 class FastStop : public IModule {
 private:
+	bool icey = false;
+	int counter = 1;
+
 public:
 	FastStop();
 	~FastStop();

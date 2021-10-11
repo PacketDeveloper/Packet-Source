@@ -12,9 +12,8 @@ const char* InstaBreak::getModuleName() {
 }
 
 void InstaBreak::onTick(C_GameMode* gm) {
-	bool hold = true;
-	if (g_Data.canUseMoveKeys() && breakBlocks) {
-		if (hold && !g_Data.isLeftClickDown())
+	if (g_Data.canUseMoveKeys()) {
+		if (breakBlocks && !g_Data.isLeftClickDown())
 			return;
 		PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
 		gm->destroyBlock(&pointing->block, pointing->blockSide);

@@ -25,13 +25,14 @@ public:
 	int prevSlot = 0;
 
 	// Hive
+	bool lg = false;
 	bool fly = false;
 	int testTimer = 0;
 	bool blink2 = true;
 	bool blink = false;
-	bool freeze = true;
+	int hiveC2 = 0;
 	int hiveC = 0;
-	int timeEnabled = 0;
+	int timing = 1;
 
 		std::string name = "Flight";
 		C_MovePlayerPacket* jetpack = nullptr;

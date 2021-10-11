@@ -60,7 +60,6 @@ void Disabler::onEnable() {
 
 void Disabler::onTick(C_GameMode* gm) {
 	auto speed = moduleMgr->getModule<Speed>();
-	auto d = moduleMgr->getModule<Disabler>();
 	//if (g_Data.canUseMoveKeys()) {
 	if (mode.getSelectedValue() == 0 && !gm->player->onGround) {
 		C_MovePlayerPacket pNether(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());

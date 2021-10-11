@@ -28,10 +28,10 @@ const char* Scaffold::getRawModuleName() {
 
 const char* Scaffold::getModuleName() {
 	//if (isOnHive) {
-		//name = std::string("Scaffold ") + std::string(GRAY) + std::string("Hive");
-		//return name.c_str();
+	//name = std::string("Scaffold ") + std::string(GRAY) + std::string("Hive");
+	//return name.c_str();
 	//} else {
-		return "Scaffold";
+	return "Scaffold";
 	//}
 }
 
@@ -83,7 +83,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 	// Adjustment by velocity
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
-	vel = vel.normalize();  // Only use values from 0 - 1
+	//vel = vel.normalize();  // Only use values from 0 - 1
 
 	if (extendOut) {
 		if (tower && GameData::isKeyDown(*input->spaceBarKey))
@@ -114,34 +114,33 @@ void Scaffold::onTick(C_GameMode* gm) {
 
 	if (staircase && GameData::isKeyDown(*input->sneakKey)) {
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
-			blockBelow.y -= g_Data.getLocalPlayer()->height;
-			blockBelow.y -= 2.f;
+		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
+		blockBelow.y -= g_Data.getLocalPlayer()->height;
+		blockBelow.y -= 2.f;
 
-			vec3_t blockBelowBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 2 blocks below the player
-			blockBelowBelow.y -= g_Data.getLocalPlayer()->height;
-			blockBelowBelow.y -= 3.f;
+		vec3_t blockBelowBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 2 blocks below the player
+		blockBelowBelow.y -= g_Data.getLocalPlayer()->height;
+		blockBelowBelow.y -= 3.f;
 
-			if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
-				if (speed > 0.05f) {  // Are we actually walking?
-					blockBelow.z -= vel.z;
-					blockBelowBelow.z -= vel.z;
-					if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
-						blockBelow.x -= vel.x;
-						blockBelowBelow.x -= vel.x;
-						if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-							blockBelow.z += vel.z;
-							blockBelow.x += vel.x;
-							blockBelowBelow.z += vel.z;
-							blockBelowBelow.x += vel.x;
-							tryScaffold(blockBelow);
-							tryScaffold(blockBelowBelow);
-						}
+		if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
+			if (speed > 0.05f) {  // Are we actually walking?
+				blockBelow.z -= vel.z;
+				blockBelowBelow.z -= vel.z;
+				if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
+					blockBelow.x -= vel.x;
+					blockBelowBelow.x -= vel.x;
+					if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow) && g_Data.getLocalPlayer()->isSprinting()) {
+						blockBelow.z += vel.z;
+						blockBelow.x += vel.x;
+						blockBelowBelow.z += vel.z;
+						blockBelowBelow.x += vel.x;
+						tryScaffold(blockBelow);
+						tryScaffold(blockBelowBelow);
 					}
 				}
-				if (isOnHive) {
-
-				}
+			}
+			if (isOnHive) {
+			}
 			//}
 		}
 	} else {
@@ -167,8 +166,8 @@ void Scaffold::onTick(C_GameMode* gm) {
 	}
 	if (isOnHive) {
 		auto sprint = moduleMgr->getModule<Sprint>();
-			sprint->useSprint = false;
-			gm->player->setSprinting(true);
+		sprint->useSprint = false;
+		gm->player->setSprinting(true);
 	}
 	if (rotations) {
 		auto player = g_Data.getLocalPlayer();
@@ -213,9 +212,9 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()))  // Block in hand?
 		return;
 
-	if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {			
+	if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
 		if (speed > 0.05f) {
-				player->bodyYaw = player->yaw - 200;
+			player->bodyYaw = player->yaw - 200;
 			left = input->left;
 			right = input->right;
 		} else {
@@ -223,7 +222,7 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 			right = false;
 		}
 	}
-	
+
 	if (isOnHive) {
 		if (tower && isHoldingSpace) {
 			auto clickGUI = moduleMgr->getModule<ClickGuiMod>();

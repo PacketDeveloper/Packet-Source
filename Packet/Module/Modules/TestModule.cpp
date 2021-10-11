@@ -20,8 +20,6 @@ const char* TestModule::getModuleName() {
 	return "TestModule";
 }
 
-// most of this code is old so thats why its messy
-
 void TestModule::onEnable() {
 	auto blinkMod = moduleMgr->getModule<Blink>();
 	auto speed = moduleMgr->getModule<Speed>();
@@ -130,33 +128,24 @@ void TestModule::onTick(C_GameMode* gm) {
 		auto flight = moduleMgr->getModule<Flight>();
 		auto speed = moduleMgr->getModule<Speed>();
 		auto freetp = moduleMgr->getModule<FreeTP>();
-		if (counter == 7) {
-			flight->setEnabled(true);
-			counter = 1;
-		} else {
-			counter++;
-		}
-		if (counter == 1) {
-			*g_Data.getClientInstance()->minecraft->timer = 20;
-			flight->setEnabled(false);
-			speed->setEnabled(true);
-		} else if (counter == 2) {
-			*g_Data.getClientInstance()->minecraft->timer = 18;
-			flight->setEnabled(true);
-		} else if (counter == 3) {
-			*g_Data.getClientInstance()->minecraft->timer = 16;
-			flight->setEnabled(true);
-		} else if (counter == 4) {
-			*g_Data.getClientInstance()->minecraft->timer = 14;
-			flight->setEnabled(false);
-		} else if (counter == 5) {
-			*g_Data.getClientInstance()->minecraft->timer = 12;
-			flight->setEnabled(true);
-		} else if (counter == 6) {
-			*g_Data.getClientInstance()->minecraft->timer = 6;
-			flight->setEnabled(false);
-			*g_Data.getClientInstance()->minecraft->timer = 24;
-		} else if (counter == 7) {
+		auto longjump = moduleMgr->getModule<LongJump>();
+		for (int i = 0; i < 50; i++) {
+			if (counter == 8) {
+				counter = 1;
+			} else {
+				counter++;
+			}
+
+			if (counter == 2) {
+				flight->setEnabled(true);
+			} else if (counter == 3) {
+				flight->setEnabled(false);
+			} else if (counter == 5) {
+				longjump->setEnabled(true);
+			} else if (counter == 7) {
+				longjump->setEnabled(false);
+			}
+			//clientMessageF("hi");
 		}
 		//vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 
@@ -167,7 +156,8 @@ void TestModule::onTick(C_GameMode* gm) {
 
 		//g_Data.getLocalPlayer()->setPos(pos);
 		//player->startSpinAttack();
-
+		//player->actuallyHurt(1, player, true);
+		//C_LocalPlayer* localHost = g_Data.getLocalPlayer();
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
@@ -334,6 +324,6 @@ void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		std::string fpsText3 = "Body Yaw: " + std::to_string(player->bodyYaw);
 		DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), 1, 1, true);
 		DrawUtils::drawText(vec2_t(x2, y2), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
-		DrawUtils::drawText(vec2_t(x3, y3), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
+		DrawUtils::drawText(vec2_t(x3, y3), &fpsText3, MC_Color(255, 255, 255), 1, 1, true);
 	}
 }

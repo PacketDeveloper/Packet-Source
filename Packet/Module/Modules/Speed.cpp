@@ -44,8 +44,8 @@ void Speed::onTick(C_GameMode* gm) {
 }
 
 void Speed::onMove(C_MoveInputHandler* input) {
+	auto targetStrafe = moduleMgr->getModule<TargetStrafe>();
 	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
-	//auto targetstrafe = moduleMgr->getModule<TargetStrafeOld>();
 	bool pressed = moveVec2d.magnitude() > 0.f;
 	auto player = g_Data.getLocalPlayer();
 	if (mode.getSelectedValue() == 0) {  // Vanilla
@@ -62,10 +62,6 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		}
 		if (player->onGround && pressed && !input->isJumping && velocity)
 			player->velocity.y = height;
-		if (!pressed && player->damageTime == 0) {
-			player->velocity.x *= 0;
-			player->velocity.z *= 0;
-		}
 		float calcYaw = (player->yaw + 90) * (PI / 180);
 		vec3_t moveVec;
 		float c = cos(calcYaw);
@@ -74,6 +70,12 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		moveVec.x = moveVec2d.x * speed;
 		moveVec.y = player->velocity.y;
 		moveVec.z = moveVec2d.y * speed;
+		if (targetStrafe->isEnabled() && targetStrafe->mode.getSelectedValue() == 1 && !targetStrafe->targetListEmpty)
+			return;
+		if (!pressed && player->damageTime == 0) {
+			player->velocity.x *= 0;
+			player->velocity.z *= 0;
+		}
 		if (pressed) player->lerpMotion(moveVec);
 	}
 	if (mode.getSelectedValue() == 1) {  // Hive
@@ -93,6 +95,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		moveVec.x = movement.x * 0.305;
 		moveVec.y = player->velocity.y;
 		moveVec.z = movement.y * 0.305;
+		if (targetStrafe->isEnabled() && targetStrafe->mode.getSelectedValue() == 1 && !targetStrafe->targetListEmpty)
+			return;
 		if (pressed) player->lerpMotion(moveVec);
 	}
 	if (mode.getSelectedValue() == 3 && g_Data.isInGame()) {

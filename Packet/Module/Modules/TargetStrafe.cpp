@@ -1,13 +1,16 @@
 #include "TargetStrafe.h"
 
 TargetStrafe::TargetStrafe() : IModule(0, Category::MOVEMENT, "Strafe around the target") {
+	registerEnumSetting("Support", &mode, 0);
+	mode.addEntry("None", 0);
+	mode.addEntry("Speed", 1);
 	registerBoolSetting("Controllable", &control, control);
-	registerBoolSetting("DrawCircle", &circleRender, circleRender);
-	registerBoolSetting("EdgeCheck", &avoidvoid, avoidvoid);
+	registerBoolSetting("DrawCircle", &drawCircle, drawCircle);
+	registerBoolSetting("EdgeCheck", &edgeCheck, edgeCheck);
 	registerBoolSetting("OnKey", &onKey, onKey);
-	//registerBoolSetting("Test", &test, test);
-	registerFloatSetting("Radius", &StrafeDistance, StrafeDistance, 1, 5);
-	registerFloatSetting("Speed", &speedMod, speedMod, 0.2, 1); // might remove eventually or use if controllable disabled
+	//registerBoolSetting("SetRot", &test, test);
+	registerFloatSetting("Radius", &radius, radius, 1, 4.5);
+	registerFloatSetting("Speed", &speed, speed, 0.2, 1);
 }
 
 TargetStrafe::~TargetStrafe() {
@@ -15,9 +18,6 @@ TargetStrafe::~TargetStrafe() {
 
 const char* TargetStrafe::getModuleName() {
 	return ("TargetStrafe");
-}
-
-void TargetStrafe::onMove(C_MoveInputHandler* input) {
 }
 
 static std::vector<C_Entity*> taregtList69420;
@@ -76,18 +76,26 @@ struct CompareTargetEnArray {
 	}
 };
 
+void TargetStrafe::onEnable() {
+	if (g_Data.getLocalPlayer() == nullptr)
+		setEnabled(false);
+	initRender = true;
+}
+
 void TargetStrafe::onTick(C_GameMode* gm) {
+	targetListEmpty = taregtList69420.empty();
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	float speedXZ = g_Data.getLocalPlayer()->velocity.magnitudexz();
-	auto speed = moduleMgr->getModule<Speed>();
-	if (speedXZ > 0.05f) {
-		if (onKey && gm->player->onGround && GameData::isKeyDown(*input->spaceBarKey))
-			gm->player->jumpFromGround();
-	}
+	auto speedMod = moduleMgr->getModule<Speed>();
 	taregtList69420.clear();
 	g_Data.forEachEntity(findEntityTSS);
 	playerVel = gm->player->velocity;
-	if (input == nullptr) return;
+	if (input == nullptr || !g_Data.canUseMoveKeys()) return;
+	if (mode.getSelectedValue() == 1 && !speedMod->isEnabled())
+		return;
+	if (onKey && !GameData::isKeyDown(*input->spaceBarKey))
+		return;
+
 	if (initRender) {
 		renderTimer++;
 		if (renderTimer >= 200) renderTimer = 200;
@@ -149,13 +157,11 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 			intersectingTimer++;
 		if ((upperObstructed || lowerObstructed)) {
 			if (clockwise && intersectingTimer >= 1) {
-				//clientMessageF("changed");
 				intersectingTimer = 0;
 				clockwise = false;
 			}
 			if (!clockwise && intersectingTimer >= 1) {
 				clockwise = true;
-				//clientMessageF("changed-2");
 				intersectingTimer = 0;
 			}
 		}
@@ -168,104 +174,102 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 			vec2_t angle = getAngles34(*gm->player->getPos(), *taregtList69420[0]->getPos());
 			C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
-			if (testMode) {
-				float distance = 99;
-				float distanc = 999;
-				vec3_t myPos = *gm->player->getPos();
-				vec3_t EntPos = *i->getPos();
-				if (distanc > distance) {
-					distance = i->getPos()->dist(myPos);
-					distanc = distance;
-				}
+			float distance = 99;
+			float distanc = 999;
+			vec3_t playerPos = *gm->player->getPos();
+			vec3_t entPos = *i->getPos();
+			if (distanc > distance) {
+				distance = i->getPos()->dist(playerPos);
+				distanc = distance;
+			}
 
-				if (control && !onKey) {
-					if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
-						clockwise = false;
-					} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
-						clockwise = true;
-					}
-				} else if (control && onKey && GameData::isKeyDown(*input->spaceBarKey)) {
-					if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
-						clockwise = false;
-					} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
-						clockwise = true;
-					}
+			if (control) {
+				if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+					clockwise = false;
+				} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+					clockwise = true;
 				}
+			}
 
-				C_LocalPlayer* player = g_Data.getLocalPlayer();
-				vec2_t CalcRot = getAngles34(*player->getPos(), EntPos);
-				if (clockwise) {
-					CalcRot.y += 90.0f;
-					if (distanc > StrafeDistance) CalcRot.y -= 45.0f;
-				} else {
-					CalcRot.y -= 90.0f;
-					if (distanc > StrafeDistance) CalcRot.y += 45.0f;
-				}
+			C_LocalPlayer* player = g_Data.getLocalPlayer();
+			vec2_t CalcRot = getAngles34(*player->getPos(), entPos);
+			if (clockwise) {
+				CalcRot.y += 90.0f;
+				if (distanc > radius) CalcRot.y -= 45.0f;
+			} else {
+				CalcRot.y -= 90.0f;
+				if (distanc > radius) CalcRot.y += 45.0f;
+			}
 
-				if (avoidvoid) {
-					bool onvoid = false;
-					if (player->region->getBlock(vec3_t{myPos.x, myPos.y - 3, myPos.z})->toLegacy()->blockId == 0) {
+			if (edgeCheck) {
+				bool onvoid = false;
+				vec3_t* pos = gm->player->getPos();
+				auto player = g_Data.getLocalPlayer();
+				vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
+				blockBelow.y -= g_Data.getLocalPlayer()->height;
+				blockBelow.y -= 2.f; // the block its checking
+				for (int y = (int)pos->y - 3; y < pos->y + 0; y++) {
+					if (player->region->getBlock(vec3_t{blockBelow})->toLegacy()->blockId == 0) {
 						onvoid = true;
 						intersectingTimer2++;
 					}
-					if (onvoid) {
-						if (clockwise && intersectingTimer2 >= 5) {
-							clockwise = false;
-							intersectingTimer2 = 0;
-						}
-						if (!clockwise && intersectingTimer2 >= 5) {
-							clockwise = true;
-							intersectingTimer2 = 0;
-						}
-					}
 				}
 
-				if (g_Data.canUseMoveKeys() && !test) {
-					vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
-					if (control && !onKey) {
-						player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
-					} else if (control && onKey) {
-						if (GameData::isKeyDown(*input->spaceBarKey))
-							player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
-					} else {
-						player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speedMod, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speedMod);
+				if (onvoid) {
+					//g_Data.getClientInstance()->getMoveTurnInput()->forward = true; // sometimes very annoying
+					clientMessageF("edge");
+					if (clockwise && intersectingTimer2 >= 5) {
+						clockwise = false;
+						intersectingTimer2 = 0;
 					}
-
-				}
+					if (!clockwise && intersectingTimer2 >= 5) {
+						clockwise = true;
+						intersectingTimer2 = 0;
+					}
+					onvoid = false;
+				} else {
+				} 
 			}
-		}
-		if (test && !taregtList69420.empty()) {
-			int dist2 = (int)(*taregtList69420[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
-			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-			auto player = g_Data.getLocalPlayer();
-			if (onKey) {
-				if (GameData::isKeyDown(*input->spaceBarKey)) {
-					player->setRot(angle);
+
+			if (test) {
+				if (taregtList69420.empty())
+					return;
+				int dist2 = (int)(*taregtList69420[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
+				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+				auto player = g_Data.getLocalPlayer();
+
+				player->setRot(angle);
+				if (dist2 >= radius) {
+					g_Data.getClientInstance()->getMoveTurnInput()->forward = true;
+				} else {
+					g_Data.getClientInstance()->getMoveTurnInput()->forward = false;
 				}
 			} else {
-				player->setRot(angle);
-			}
-			if (dist2 >= StrafeDistance) {
-				if (onKey) {
-					if (GameData::isKeyDown(*input->spaceBarKey)) {
-						// move towards targetlist while holding down A or D
-					}
+				vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+				if (mode.getSelectedValue() == 1) { // Support: Speed
+					player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speed, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speed);
 				} else {
-					// move towards targetlist while holding down A or D
+					player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speed, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speed);
 				}
-				//clientMessageF("(>= distance) blocks away");
 			}
 		}
 	}
 }
 
-void TargetStrafe::onEnable() {
-	if (g_Data.getLocalPlayer() == nullptr)
-		setEnabled(false);
-	initRender = true;
+void TargetStrafe::onMove(C_MoveInputHandler* input) {
+	auto player = g_Data.getLocalPlayer();
+	auto speedd = moduleMgr->getModule<Speed>();
+	if (mode.getSelectedValue() == 1 && !speedd->isEnabled() || !g_Data.canUseMoveKeys())
+		return;
+	if (onKey && !input->isJumping)
+		return;
+	if (mode.getSelectedValue() == 1 && !targetListEmpty && player->onGround) {
+		player->jumpFromGround();
+	}
 }
 
 void TargetStrafe::onDisable() {
+	g_Data.getClientInstance()->getMoveTurnInput()->forward = false;
 	initRender = false;
 	renderTimer = 0;
 }
@@ -275,7 +279,7 @@ void TargetStrafe::onSendPacket(C_Packet* packet) {
 
 float ttt = 0;
 void TargetStrafe::onLevelRender() {
-	if (renderTimer >= 4 && circleRender && !taregtList69420.empty()) {
+	if (renderTimer >= 4 && !taregtList69420.empty()) {
 		std::sort(taregtList69420.begin(), taregtList69420.end(), CompareTargetEnArray());
 		ttt++;
 		DrawUtils::setColor(1, 1, 1, 0.9f);
@@ -285,7 +289,7 @@ void TargetStrafe::onLevelRender() {
 			permutations[i] = {sinf((i * 10.f) / (180 / PI)), 0.f, cosf((i * 10.f) / (180 / PI))};
 		}
 
-		const float coolAnim = 0.9f + 0.9f * sin((ttt / 60) * PI * 2);
+		const float coolAnim = 0.9f + 0.9f * sin((ttt / 60) * PI * 1);
 
 		vec3_t* start = taregtList69420[0]->getPosOld();
 		vec3_t* end = taregtList69420[0]->getPos();
@@ -295,7 +299,7 @@ void TargetStrafe::onLevelRender() {
 
 		auto yPos = pos.y;
 		yPos -= 1.6f;
-		//yPos += coolAnim;
+		yPos += coolAnim;
 
 		std::vector<vec3_t> posList;
 		posList.reserve(56);

@@ -100,8 +100,6 @@ void Killaura::onEnable() {
 	if (g_Data.getLocalPlayer() == nullptr)
 		setEnabled(false);
 	targetList.clear();
-	if (render)
-		renderStart++;
 	targethud = 0;
 }
 
@@ -116,11 +114,6 @@ void Killaura::onTick(C_GameMode* gm) {
 	targetList.clear();
 
 	g_Data.forEachEntity(findEntity);
-
-	if (renderStart >= 1)
-		renderStart++;
-	if (renderStart >= 5)
-		renderStart = 5;
 
 	if (GameData::canUseMoveKeys()) {
 		if (hold && !g_Data.isLeftClickDown())
@@ -238,7 +231,7 @@ void Killaura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 						DrawUtils::flush();
 
 						if (render && (i->getEntityTypeId() == 319)) {
-							static float constexpr opacity = 1;
+							static float constexpr opacity = 10;
 							float scale = 3 * 0.26f;
 							float spacing = scale + 15.f + 2;
 
@@ -329,7 +322,7 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 
 void Killaura::onSendPacket(C_Packet* packet) {
 	if (GameData::canUseMoveKeys()) {
-	auto scaffold = moduleMgr->getModule<Scaffold>();
+		auto scaffold = moduleMgr->getModule<Scaffold>();
 		if (scaffold->useRot) {
 			if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3) {
 				if (!targetList.empty()) {
@@ -344,51 +337,46 @@ void Killaura::onSendPacket(C_Packet* packet) {
 	}
 }
 
+float tttt = 0;
 void Killaura::onLevelRender() {
-	if (GameData::canUseMoveKeys()) {
-		if (hold && !g_Data.isLeftClickDown())
-			return;
-		float t = 0;
-		DrawUtils::setColor(1, 1, 1, 1);
-		if (distanceCheck)
-			std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+	auto targetStrafe = moduleMgr->getModule<TargetStrafe>();
+	if (targetStrafe->isEnabled())
+		return;
+	if (!targetList.empty()) {
+		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+		tttt++;
+		DrawUtils::setColor(1, 1, 1, 0.9f);
 
-		if (render && !targetList.empty()) {
-			t++;
-
-			vec3_t permutations[56];
-			for (int i = 0; i < 56; i++)
-				permutations[i] = {sinf((i * 10.f) / (180 / PI)), 0.f, cosf((i * 10.f) / (180 / PI))};
-
-			const float coolAnim = 0.9f + 0.9f * sin((t / 60) * PI * 2);
-
-			if (targetList[0]->damageTime >= 1) {
-				vec3_t* start = targetList[0]->getPosOld();
-				vec3_t* end = targetList[0]->getPos();
-
-				auto te = DrawUtils::getLerpTime();
-				vec3_t pos = start->lerp(end, te);
-
-				auto yPos = pos.y;
-				yPos -= 1.62f;
-				yPos += coolAnim;
-
-				std::vector<vec3_t> posList;
-				posList.reserve(56);
-				for (auto& perm : permutations) {
-					vec3_t curPos(pos.x, yPos, pos.z);
-					posList.push_back(curPos.add(perm));
-				}
-
-				DrawUtils::drawLinestrip3d(posList);
-			}
+		vec3_t permutations[56];
+		for (int i = 0; i < 56; i++) {
+			permutations[i] = {sinf((i * 10.f) / (180 / PI)), 0.f, cosf((i * 10.f) / (180 / PI))};
 		}
+
+		const float coolAnim = 0.9f + 0.9f * sin((tttt / 60) * PI * 1);
+
+		vec3_t* start = targetList[0]->getPosOld();
+		vec3_t* end = targetList[0]->getPos();
+
+		auto te = DrawUtils::getLerpTime();
+		vec3_t pos = start->lerp(end, te);
+
+		auto yPos = pos.y;
+		yPos -= 1.6f;
+		yPos += coolAnim;
+
+		std::vector<vec3_t> posList;
+		posList.reserve(56);
+		for (auto& perm : permutations) {
+			vec3_t curPos(pos.x, yPos, pos.z);
+			posList.push_back(curPos.add(perm));
+		}
+
+		DrawUtils::drawLinestrip3d(posList);
 	}
 }
 
 void Killaura::onDisable() {
 	useSprint = true;
 	targethud = 0;
-	renderStart = 0;
 	targetList.clear();
 }

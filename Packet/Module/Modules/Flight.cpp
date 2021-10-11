@@ -9,15 +9,17 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "allows you to fly wow!") {
 	mode.addEntry("Teleport", 2);
 	mode.addEntry("Jetpack", 3);
 	mode.addEntry("Hive", 5);
+	mode.addEntry("HiveTNT", 6);
 	//mode.addEntry("BlockFly", 4);
 	registerBoolSetting("Damage", &damage, damage);
 	registerBoolSetting("Boost", &boost, boost);
 	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
 	registerFloatSetting("value", &value, value, -0.15f, 0.00);
+	registerIntSetting("HiveMS", &timing, timing, 3, 6);
 }
 
 Flight::~Flight() {
-	if (mode.getSelectedValue() == 1) {
+	if (mode.getSelectedValue() == 5 || mode.getSelectedValue() == 6) {
 		getMovePlayerPacketHolder()->clear();
 		getPlayerAuthInputPacketHolder()->clear();
 	}
@@ -43,7 +45,7 @@ const char* Flight::getModuleName() {
 	} else if (mode.getSelectedValue() == 4) {
 		name = std::string("Flight ") + std::string(GRAY) + std::string("BlockFly");
 		return name.c_str();
-	} else if (mode.getSelectedValue() == 5) {
+	} else if (mode.getSelectedValue() == 5 || mode.getSelectedValue() == 6) {
 		name = std::string("Flight ") + std::string(GRAY) + std::string("Hive");
 		return name.c_str();
 	}
@@ -73,6 +75,10 @@ void Flight::onEnable() {
 		pos.z = 0.f + pPos.z;
 		g_Data.getLocalPlayer()->setPos(pos);
 	}
+	if (mode.getSelectedValue() == 5) {
+		hiveC = 0;
+		hiveC2 = 0;
+	}
 }
 
 bool Flight::isFlashMode() {
@@ -95,7 +101,7 @@ void Flight::onTick(C_GameMode* gm) {
 	speedMod->setEnabled(false);
 
 	if (input == nullptr) return;
-	if (GameData::isKeyDown(*input->sneakKey) && (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 || mode.getSelectedValue() == 2 || mode.getSelectedValue() == 3 || mode.getSelectedValue() == 5))
+	if (GameData::isKeyDown(*input->sneakKey) && (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 || mode.getSelectedValue() == 2 || mode.getSelectedValue() == 3 || mode.getSelectedValue() == 5 || mode.getSelectedValue() == 6))
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
 
 	if (mode.getSelectedValue() == 0) {  // Vanilla
@@ -141,7 +147,7 @@ void Flight::onTick(C_GameMode* gm) {
 		moveVec.z = sin(calcYaw) * cos(calcPitch) * speed;
 
 		gm->player->lerpMotion(moveVec);
-	} else if (mode.getSelectedValue() == 4) {  // BlockFly 
+	} else if (mode.getSelectedValue() == 4) {  // BlockFly
 		static auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
 		if (!player->onGround) {
 			auto box = g_Data.addInfoBox("Flight: You must be on the ground");
@@ -211,7 +217,38 @@ void Flight::onTick(C_GameMode* gm) {
 				}
 			}
 		}
-	} else if (mode.getSelectedValue() == 5) {
+	} else if (mode.getSelectedValue() == 5) {  // Hive
+		boost = false;
+		bool fly2 = false;
+		for (int i = 0; i < 50; i++) {
+			if (hiveC == 8) {
+				hiveC = 1;
+			} else {
+				hiveC++;
+			}
+			if (hiveC == 2) {
+				fly2 = true;
+			} else if (hiveC == timing) {
+				player->onGround = false;
+				fly2 = false;
+			} else if (hiveC == 5) {
+				lg = true;
+			} else if (hiveC == 7) {
+				lg = false;
+			}
+		}
+		if (fly2) {
+			if (!speedMod->isEnabled() && !GameData::isKeyDown(*input->spaceBarKey)) {
+				player->onGround = true;
+			}
+			gm->player->velocity.y = effectiveValue;
+			effectiveValue = value;
+		}
+		if (lg) {
+			if (!gm->player->onGround)
+				hiveC2++;
+		}
+	} else if (mode.getSelectedValue() == 6) {  // Hive TNT
 		if (player->damageTime >= 1) fly = true;
 		if (fly) {
 			gm->player->velocity = vec3_t(0, 0, 0);
@@ -296,6 +333,34 @@ void Flight::onMove(C_MoveInputHandler* input) {
 			moveVec.z = moveVec2d.y * speed;
 			if (pressed) player->lerpMotion(moveVec);
 		}
+	} else if (mode.getSelectedValue() == 5) {  // Hive
+		if (lg) {
+			auto player = g_Data.getLocalPlayer();
+			if (player == nullptr) return;
+			vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+			bool pressed = moveVec2d.magnitude() > 0.01f;
+
+			float calcYaw = (player->yaw + 90) * (PI / 180);
+			vec3_t moveVec;
+			float c = cos(calcYaw);
+			float s = sin(calcYaw);
+			moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+			*g_Data.getClientInstance()->minecraft->timer = 20.f;
+			if (player->onGround && pressed) {
+				player->jumpFromGround();
+				player->velocity.y = 0.20000000298023224;
+			}
+			moveVec.x = moveVec2d.x * speed;
+			moveVec.y = player->velocity.y;
+			moveVec.z = moveVec2d.y * speed;
+			if (pressed) player->lerpMotion(moveVec);
+
+			if (hiveC2 >= 3 && player->onGround) {
+				hiveC2 = 0;
+				setEnabled(false);
+				player->velocity = vec3_t(0, 0, 0);
+			}
+		}
 	}
 }
 
@@ -329,7 +394,7 @@ bool Flight::selectBlock() {
 
 void Flight::onSendPacket(C_Packet* packet) {
 	auto player = g_Data.getLocalPlayer();
-	if (mode.getSelectedValue() == 5) {  // Hive
+	if (mode.getSelectedValue() == 6) {  // Hive TNT
 		if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr) {
 			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*g_Data.getLocalPlayer()->getPos());
@@ -358,7 +423,8 @@ void Flight::onDisable() {
 		scaffold->setEnabled(true);
 		scfWasEnabled = false;
 	}
-	if (mode.getSelectedValue() == 5 || mode.getSelectedValue() == 1) {
+	if (mode.getSelectedValue() == 5 || mode.getSelectedValue() == 6 || mode.getSelectedValue() == 1) { // Hive and Airwalk
+		hiveC2 = 0;
 		player->onGround = false;
 	}
 	if (mode.getSelectedValue() == 1)

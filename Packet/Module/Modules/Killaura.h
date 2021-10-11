@@ -5,7 +5,6 @@
 
 class Killaura : public IModule {
 private:
-	int renderStart = 0;
 	bool test = false;
 
 public:
