@@ -22,8 +22,8 @@ public:
 	Speed();
 	~Speed();
 
-		std::string name = "Speed";
-		SettingEnum mode = this;
+	std::string name = "Speed";
+	SettingEnum mode = this;
 
 	// Inherited via IModule
 	virtual void onEnable() override;

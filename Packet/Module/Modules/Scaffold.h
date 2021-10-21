@@ -13,7 +13,6 @@ private:
 	int expand = 1;
 
 	bool tryScaffold(vec3_t blockBelow);
-	bool tryTower(vec3_t blockBelow);
 	bool selectBlock();
 	vec3_t initialPos;
 

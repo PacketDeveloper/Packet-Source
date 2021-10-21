@@ -17,8 +17,7 @@ Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
 }
 
 Scaffold::~Scaffold() {
-	if (isOnHive)
-		getPlayerAuthInputPacketHolder()->reserve(500);
+	if (isOnHive) getPlayerAuthInputPacketHolder()->reserve(500); // not sure if this even does anything lol
 }
 
 const char* Scaffold::getRawModuleName() {
@@ -138,9 +137,6 @@ void Scaffold::onTick(C_GameMode* gm) {
 					}
 				}
 			}
-			if (isOnHive) {
-			}
-			//}
 		}
 	} else {
 		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
@@ -160,9 +156,8 @@ void Scaffold::onTick(C_GameMode* gm) {
 		}
 	}
 
-	if (spoof)
-		gm->player->getSupplies()->selectedHotbarSlot = prevSlot;
-	if (isOnHive) {
+	if (spoof) gm->player->getSupplies()->selectedHotbarSlot = prevSlot;
+	if (noSprint) {
 		auto sprint = moduleMgr->getModule<Sprint>();
 		sprint->useSprint = false;
 		gm->player->setSprinting(true);
@@ -221,24 +216,22 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 		}
 	}
 
-	if (isOnHive) {
-		if (tower && isHoldingSpace) {
-			auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
-			if (foundCandidate2 && !clickGUI->isEnabled()) {
-				*g_Data.getClientInstance()->minecraft->timer = 20;
-				vec2_t movement = {input->forwardMovement, -input->sideMovement};
-				bool pressed = movement.magnitude() > 0.f;
-				float calcYaw = (player->yaw + 90) * (PI / 180);
-				vec3_t moveVec;
-				float c = cos(calcYaw);
-				float s = sin(calcYaw);
+	if (tower && isHoldingSpace) {
+		auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
+		if (foundCandidate2 && !clickGUI->isEnabled()) {
+			*g_Data.getClientInstance()->minecraft->timer = 20;
+			vec2_t movement = {input->forwardMovement, -input->sideMovement};
+			bool pressed = movement.magnitude() > 0.f;
+			float calcYaw = (player->yaw + 90) * (PI / 180);
+			vec3_t moveVec;
+			float c = cos(calcYaw);
+			float s = sin(calcYaw);
 
-				movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
-				player->jumpFromGround();
-				moveVec.y = player->velocity.y;
-				player->velocity.x *= 0;
-				player->velocity.z *= 0;
-			}
+			movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
+			player->jumpFromGround();
+			moveVec.y = player->velocity.y;
+			player->velocity.x *= 0;
+			player->velocity.z *= 0;
 		}
 	}
 }
@@ -296,75 +289,6 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 	return false;
 }
 
-bool Scaffold::tryTower(vec3_t blockBelow) {  // Tower
-	auto player = g_Data.getLocalPlayer();
-	if (tower) {
-		C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-
-		if (input == nullptr)
-			return false;
-
-		blockBelow = blockBelow.floor();
-
-		DrawUtils::drawBox(blockBelow, vec3_t(blockBelow).add(0), 0.f);
-
-		C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
-		C_BlockLegacy* blockLegacy = (block->blockLegacy);
-		if (blockLegacy->material->isReplaceable) {
-			vec3_ti blok(blockBelow);
-
-			// Find neighbour
-			static std::vector<vec3_ti*> checklist;
-			if (checklist.empty()) {
-				checklist.push_back(new vec3_ti(0, -1, 0));
-				checklist.push_back(new vec3_ti(0, 1, 0));
-
-				checklist.push_back(new vec3_ti(0, 0, -1));
-				checklist.push_back(new vec3_ti(0, 0, 1));
-
-				checklist.push_back(new vec3_ti(-1, 0, 0));
-				checklist.push_back(new vec3_ti(1, 0, 0));
-			}
-			bool foundCandidate = false;
-			int i = 0;
-			for (auto current : checklist) {
-				vec3_ti calc = blok.sub(*current);
-				if (!((g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy))->material->isReplaceable) {
-					foundCandidate = true;
-					blok = calc;
-					break;
-				}
-				i++;
-			}
-			foundCandidate2 = foundCandidate;
-			if (foundCandidate && GameData::isKeyDown(*input->spaceBarKey)) {
-				vec3_t moveVec2;
-				moveVec2.x = g_Data.getLocalPlayer()->velocity.x;
-				if (!isOnHive) {
-					moveVec2.y = 0.4;
-				}
-				moveVec2.z = g_Data.getLocalPlayer()->velocity.z;
-				g_Data.getLocalPlayer()->lerpMotion(moveVec2);
-				g_Data.getCGameMode()->buildBlock(&blok, i);
-
-				return true;
-			}
-			if (airplace && !isOnHive && isHoldingSpace) {
-				vec3_t moveVec2;
-				moveVec2.x = g_Data.getLocalPlayer()->velocity.x;
-				moveVec2.y = 0.4;
-				moveVec2.z = g_Data.getLocalPlayer()->velocity.z;
-				g_Data.getLocalPlayer()->lerpMotion(moveVec2);
-				g_Data.getCGameMode()->buildBlock(&blok, i);
-
-				return true;
-			}
-		}
-		return false;
-	}
-	return false;
-}
-
 void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	float speedY = g_Data.getLocalPlayer()->velocity.magnitudexy();
@@ -387,20 +311,6 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		// Adjustment by velocity
 		vec3_t vel = g_Data.getLocalPlayer()->velocity;
 		vel.normalize();  // Only use values from 0 - 1
-
-		if (!tryTower(blockBelow)) {
-			if (speedY > 0.05f) {
-				blockBelow.z -= vel.z * 0.4f;
-				if (!tryTower(blockBelow)) {
-					blockBelow.x -= vel.x * 0.4f;
-					if (!tryTower(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-						blockBelow.z += vel.z;
-						blockBelow.x += vel.x;
-						tryTower(blockBelow);
-					}
-				}
-			}
-		}
 		if (isHoldingSpace && isOnHive) {  // look down
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
 			auto weewee = g_Data.getLocalPlayer();

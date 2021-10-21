@@ -41,7 +41,6 @@ void Speed::onEnable() {
 		auto box = g_Data.addInfoBox("Speed: Gamer Mode Enabled!");
 		box->closeTimer = 5;
 	}
-
 }
 
 void Speed::onTick(C_GameMode* gm) {
@@ -134,7 +133,6 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			preventKick = false;
 			groundTimer++;
 		}
-			
 
 		float calcYaw = (player->yaw + 90) * (PI / 180);
 		vec3_t moveVec;
