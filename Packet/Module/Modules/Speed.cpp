@@ -4,6 +4,7 @@ Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
 	mode.addEntry("KowSpecial", 3);
+	mode.addEntry("Inviscow", 4);
 	registerIntSetting("TimerBoost", &timer, timer, 20, 35);
 	registerFloatSetting("Height", &height, height, 0.000001f, 0.40f);
 	registerFloatSetting("Speed", &speed, speed, 0.2f, 2.f);
@@ -29,6 +30,10 @@ const char* Speed::getModuleName() {
 		name = std::string("Speed ") + std::string(GRAY) + std::string("Kow");
 		return name.c_str();
 	}
+	if (mode.getSelectedValue() == 4) {  // Inviscow
+		name = std::string("Speed ") + std::string(GRAY) + std::string("Inviscow");
+		return name.c_str();
+	}
 }
 
 void Speed::onEnable() {
@@ -41,6 +46,18 @@ void Speed::onEnable() {
 
 void Speed::onTick(C_GameMode* gm) {
 	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
+	if (mode.getSelectedValue() == 4) {
+		if (gm->player->onGround) {
+			lhtick++;
+			if (lhtick >= 3)
+				lhtick = 0;
+			if (g_Data.getLocalPlayer()->velocity.squaredxzlen() >= 0.200 && lhtick == 0) {
+				gm->player->velocity.x *= .387f;
+				gm->player->velocity.z *= .387f;
+			} else if (g_Data.getLocalPlayer()->velocity.squaredxzlen() <= 0.1 && lhtick == 0)
+				return;
+		}
+	}
 }
 
 void Speed::onMove(C_MoveInputHandler* input) {
@@ -105,15 +122,17 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
 		bool pressed = moveVec2d.magnitude() > 0.01f;
 
-		if (player->onGround && pressed) {
+		if (player->onGround && pressed && groundTimer >= 2) {
 			player->jumpFromGround();
-			//player->velocity.y = -0.1f;
-			//player->velocity.y = 0.23;
+			player->velocity.y = -0.1f;
+			player->velocity.y = 0.23;
+			groundTimer = 0;
 		}
 
 		if (player->onGround) {
 			player->fallDistance = 0;
 			preventKick = false;
+			groundTimer++;
 		}
 			
 

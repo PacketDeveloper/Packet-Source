@@ -6,8 +6,9 @@ class Speed : public IModule {
 private:
 	float height = 0.40f;
 	int counter = 1;
-
+	int lhtick = 0;
 	bool preventKick = false;
+	int groundTimer = 0;
 
 public:
 	int timer = 20;

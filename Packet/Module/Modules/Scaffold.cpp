@@ -17,9 +17,8 @@ Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
 }
 
 Scaffold::~Scaffold() {
-	if (isOnHive) {
+	if (isOnHive)
 		getPlayerAuthInputPacketHolder()->reserve(500);
-	}
 }
 
 const char* Scaffold::getRawModuleName() {
@@ -161,9 +160,8 @@ void Scaffold::onTick(C_GameMode* gm) {
 		}
 	}
 
-	if (spoof) {
+	if (spoof)
 		gm->player->getSupplies()->selectedHotbarSlot = prevSlot;
-	}
 	if (isOnHive) {
 		auto sprint = moduleMgr->getModule<Sprint>();
 		sprint->useSprint = false;
