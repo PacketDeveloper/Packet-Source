@@ -83,10 +83,11 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new SpawnTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ItemTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new BreadCrumbs()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new HackerDetector()));
+		moduleList.push_back(std::shared_ptr<IModule>(new HackerDetector()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Switcher()));
 		moduleList.push_back(std::shared_ptr<IModule>(new ClickTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Jesus()));
+		moduleList.push_back(std::shared_ptr<IModule>(new AntiVoid()));
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new InPvPFucker()));
@@ -94,7 +95,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new HudEditorMod()));
 		//moduleList.push_back(std::shared_ptr<IModule>(new EntityControl()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TestModule()));
-		//moduleList.push_back(std::shared_ptr<IModule>(new HiveFly())); // patched
+		moduleList.push_back(std::shared_ptr<IModule>(new HiveFly()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		//moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		// Broken

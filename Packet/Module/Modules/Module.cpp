@@ -425,7 +425,7 @@ void IModule::clientMessageF(const char* fmt, ...) {
 	char message[300];
 	vsprintf_s(message, 300, fmt, arg);
 
-	GameData::log("[%s]: %s", this->getModuleName(), message);
+	GameData::log("%s", message);
 
 	va_end(arg);
 }

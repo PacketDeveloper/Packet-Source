@@ -37,9 +37,6 @@ void C_LocalPlayer::setGameModeType(int gma) {
 	this->setPlayerGameType(gma);
 }
 
-
-
-
 bool PointingStruct::hasEntity() {
 	return rayHitType == 1;
 }

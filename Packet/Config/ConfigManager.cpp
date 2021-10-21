@@ -41,7 +41,6 @@ ConfigManager::~ConfigManager() {
 }
 
 void ConfigManager::loadConfig(std::string name, bool create) {
-	
 	size_t allocSize = name.size() + roamingFolder.size() + 20;  // std::wstring::size() can be wierd so lets make sure this actually fits
 	char* fullPath = new char[allocSize];
 	sprintf_s(fullPath, allocSize, "%S\\%s.h", roamingFolder.c_str(), name.c_str());

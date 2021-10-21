@@ -77,6 +77,7 @@
 #include "Modules/Switcher.h"
 #include "Modules/ClickTP.h"
 #include "Modules/Jesus.h"
+#include "Modules/AntiVoid.h"
 #include "Modules/Module.h"
 
 #ifdef _DEBUG

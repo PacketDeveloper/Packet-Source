@@ -33,6 +33,7 @@ public:
 	int hiveC2 = 0;
 	int hiveC = 0;
 	int timing = 1;
+	bool fly2 = false;
 
 		std::string name = "Flight";
 		C_MovePlayerPacket* jetpack = nullptr;

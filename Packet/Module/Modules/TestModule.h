@@ -4,6 +4,7 @@
 
 class TestModule : public IModule {
 private:
+	float speed = 0.f;
 	float glideModEffective = -0;
 	int counter = 1;
 	int testCounter = 0;

@@ -4,14 +4,17 @@
 
 class AntiVoid : public IModule {
 private:
+	bool foundVoid = false;
+	bool voidCheck = true;
 	int distance = 7;
-	bool hiveMode = false;
-	vec3_t savepos;
+	vec3_t savedPos;
 
 public:
-	C_MoveInputHandler* inputHandler = nullptr;
 	AntiVoid();
 	~AntiVoid();
+
+	C_MoveInputHandler* inputHandler = nullptr;
+	SettingEnum mode = this;
 
 	// Inherited via IModule
 	virtual const char* getModuleName() override;

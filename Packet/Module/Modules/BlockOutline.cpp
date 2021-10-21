@@ -29,6 +29,6 @@ void BlockOutline::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		if (!rainbow) {
 			DrawUtils::setColor(red, green, blue, 1);
 		}
-		DrawUtils::drawBox(block, outline, width, 1);
+		DrawUtils::drawBox(block, outline, width, 1, false);
 	}
 }

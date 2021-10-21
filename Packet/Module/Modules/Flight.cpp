@@ -15,7 +15,7 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "allows you to fly wow!") {
 	registerBoolSetting("Boost", &boost, boost);
 	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
 	registerFloatSetting("value", &value, value, -0.15f, 0.00);
-	registerIntSetting("HiveMS", &timing, timing, 3, 6);
+	registerIntSetting("HiveMS", &timing, timing, 0, 10);
 }
 
 Flight::~Flight() {
@@ -118,7 +118,9 @@ void Flight::onTick(C_GameMode* gm) {
 		gm->player->velocity.y = effectiveValue;
 		effectiveValue = value;
 	} else if (mode.getSelectedValue() == 1) {  // Airwalk
-		if (!speedMod->isEnabled() && !GameData::isKeyDown(*input->spaceBarKey)) {
+		if (speedMod->isEnabled() || GameData::isKeyDown(*input->spaceBarKey)) {
+			player->onGround = false;
+		} else {
 			player->onGround = true;
 		}
 		gm->player->velocity.y = effectiveValue;
@@ -218,35 +220,44 @@ void Flight::onTick(C_GameMode* gm) {
 			}
 		}
 	} else if (mode.getSelectedValue() == 5) {  // Hive
-		boost = false;
-		bool fly2 = false;
 		for (int i = 0; i < 50; i++) {
 			if (hiveC == 8) {
 				hiveC = 1;
 			} else {
 				hiveC++;
 			}
-			if (hiveC == 2) {
+			if (hiveC == 1) {
 				fly2 = true;
 			} else if (hiveC == timing) {
 				player->onGround = false;
 				fly2 = false;
 			} else if (hiveC == 5) {
 				lg = true;
-			} else if (hiveC == 7) {
+			} else if (hiveC == 8) {
 				lg = false;
 			}
 		}
 		if (fly2) {
+			/*if (!speedMod->isEnabled() && !GameData::isKeyDown(*input->spaceBarKey)) {
+				player->onGround = true;
+			}
+			gm->player->velocity.y = effectiveValue;
+			effectiveValue = value;
+		}*/
+			if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
+				gm->player->velocity = vec3_t(0, 0, 0);
+			}
+			gm->player->velocity.y = effectiveValue;
+			effectiveValue = value;
+		if (lg) {
+			//if (!gm->player->onGround)
+				//hiveC2++;
 			if (!speedMod->isEnabled() && !GameData::isKeyDown(*input->spaceBarKey)) {
 				player->onGround = true;
 			}
 			gm->player->velocity.y = effectiveValue;
 			effectiveValue = value;
 		}
-		if (lg) {
-			if (!gm->player->onGround)
-				hiveC2++;
 		}
 	} else if (mode.getSelectedValue() == 6) {  // Hive TNT
 		if (player->damageTime >= 1) fly = true;
@@ -334,7 +345,7 @@ void Flight::onMove(C_MoveInputHandler* input) {
 			if (pressed) player->lerpMotion(moveVec);
 		}
 	} else if (mode.getSelectedValue() == 5) {  // Hive
-		if (lg) {
+		/*if (lg) {
 			auto player = g_Data.getLocalPlayer();
 			if (player == nullptr) return;
 			vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
@@ -360,6 +371,23 @@ void Flight::onMove(C_MoveInputHandler* input) {
 				setEnabled(false);
 				player->velocity = vec3_t(0, 0, 0);
 			}
+		}*/
+		if (fly2) {
+			auto player = g_Data.getLocalPlayer();
+			if (player == nullptr) return;
+
+			vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
+			bool pressed = moveVec2d.magnitude() > 0.01f;
+
+			float calcYaw = (player->yaw + 90) * (PI / 180);
+			vec3_t moveVec;
+			float c = cos(calcYaw);
+			float s = sin(calcYaw);
+			moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
+			moveVec.x = moveVec2d.x * speed;
+			moveVec.y = player->velocity.y;
+			moveVec.z = moveVec2d.y * speed;
+			if (pressed) player->lerpMotion(moveVec);
 		}
 	}
 }

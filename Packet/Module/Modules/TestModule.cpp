@@ -125,7 +125,7 @@ void TestModule::onTick(C_GameMode* gm) {
 			//gm->player->onGround = true;
 			//gm->player->velocity.y = 1;
 		//}
-		auto flight = moduleMgr->getModule<Flight>();
+		/*auto flight = moduleMgr->getModule<Flight>();
 		auto speed = moduleMgr->getModule<Speed>();
 		auto freetp = moduleMgr->getModule<FreeTP>();
 		auto longjump = moduleMgr->getModule<LongJump>();
@@ -146,7 +146,7 @@ void TestModule::onTick(C_GameMode* gm) {
 				longjump->setEnabled(false);
 			}
 			//clientMessageF("hi");
-		}
+		}*/
 		//vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 
 	//	vec3_t pos;
@@ -158,6 +158,7 @@ void TestModule::onTick(C_GameMode* gm) {
 		//player->startSpinAttack();
 		//player->actuallyHurt(1, player, true);
 		//C_LocalPlayer* localHost = g_Data.getLocalPlayer();
+		//g_Data.getLocalPlayer()->setGameModeType(1);
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
@@ -322,8 +323,12 @@ void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		std::string fpsText = "Player Pitch: " + std::to_string(player->pitch);
 		std::string fpsText2 = "Player Yaw: " + std::to_string(player->yaw);
 		std::string fpsText3 = "Body Yaw: " + std::to_string(player->bodyYaw);
-		DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), 1, 1, true);
+		//DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), 1, 1, true);
 		DrawUtils::drawText(vec2_t(x2, y2), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
 		DrawUtils::drawText(vec2_t(x3, y3), &fpsText3, MC_Color(255, 255, 255), 1, 1, true);
+
+		std::string BpsText = "Speed: " + std::string(std::to_string((float)speed));
+
+		DrawUtils::drawText(vec2_t(x, y), &BpsText, MC_Color(255, 255, 255), 1);
 	}
 }

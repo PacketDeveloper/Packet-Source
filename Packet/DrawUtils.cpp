@@ -229,7 +229,7 @@ void DrawUtils::drawText(vec2_t pos, std::string* textStr, MC_Color color, float
 	renderCtx->drawText(fontPtr, posF, &text, color.arr, alpha, 0, &textMeasure, &caretMeasureData);
 }
 
-void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth, bool outline) {
+void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth, bool outline, bool fill) {
 	vec3_t diff;
 	diff.x = upper.x - lower.x;
 	diff.y = upper.y - lower.y;
@@ -255,6 +255,10 @@ void DrawUtils::drawBox(vec3_t lower, vec3_t upper, float lineWidth, bool outlin
 	}
 	if (screenCords.size() < 2)
 		return;  // No lines possible
+
+	if (fill) {
+		DrawUtils::drawQuad({diff.x, diff.y}, {lower.y, lower.y}, {upper.x, upper.x}, {upper.y, upper.y});
+	}
 
 	if (!outline) {
 		for (auto it = screenCords.begin(); it != screenCords.end(); it++) {
