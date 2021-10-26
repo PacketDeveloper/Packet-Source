@@ -26,11 +26,11 @@ bool WatermarkCommand::execute(std::vector<std::string>* args) {
 		}
 		std::string text = os.str().substr(1);
 		watermark->getMessage() = text;
-		clientMessageF("%sName set to %s%s%s!", GREEN, GRAY, text.c_str(), GREEN);
+		clientMessageF("[Packet] %sName set to %s%s%s!", GREEN, GRAY, text.c_str(), GREEN);
 		return true;
 	} else if (args->at(1) == "reset") {
 		watermark->getMessage() = "Packet Client";
-		clientMessageF("[%sPacket%s] %sReset!", GRAY, WHITE, GREEN);
+		clientMessageF("[Packet] %sReset!", GREEN);
 		return true;
 	}
 	return false;

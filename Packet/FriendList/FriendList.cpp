@@ -1,3 +1,4 @@
+#include "../Module/ModuleManager.h"
 #include "FriendList.h"
 
 FriendList g_friend;
@@ -17,6 +18,7 @@ std::vector<std::string> FriendList::getList() {
 }
 
 bool FriendList::findPlayer(std::string name) {
+	name = Utils::sanitize(name);
 	//std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 	for (std::vector<std::string>::iterator it = g_friend.List.begin(); it != g_friend.List.end(); ++it) {
 		//std::string copy = *it;

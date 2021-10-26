@@ -1,4 +1,5 @@
 #include "PlayerTeleportCommand.h"
+
 #include "../../../Utils/Utils.h"
 
 PlayerTeleportCommand::PlayerTeleportCommand() : IMCCommand("playertp", "Teleports to players coordinates", "<NameOfThePlayer>") {
@@ -25,31 +26,31 @@ bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
 	}
 	std::string playerName;
 	//Loop through all our players and retrieve their information
-	//for (size_t i = 0; i < listSize; i++) {
-		//C_Entity* currentEntity = entList->get(i);
+	for (size_t i = 0; i < listSize; i++) {
+		C_Entity* currentEntity = entList->get(i);
 
-		//std::string name(currentEntity->getNameTag()->getText());
+		std::string name(currentEntity->getNameTag()->getText());
 
-		//std::transform(name.begin(), name.end(), name.begin(), ::tolower);
+		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 
-		//if (currentEntity == 0)
-			//break;
+		if (currentEntity == 0)
+			break;
 
-		//if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
-			//continue;
+		if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
+			continue;
 
-		//if (name.find(nameOfPlayerLower) == std::string::npos)
-			//continue;
+		if (name.find(nameOfPlayerLower) == std::string::npos)
+			continue;
 
-		//pos = *currentEntity->getPos();
-		//playerName = currentEntity->getNameTag()->getText();
-		//break;
-	//}
-	//if (pos.iszero()) {
-		//clientMessageF("[%sPacket%s] %sCouldn't find player: %s!", GRAY, WHITE, RED, nameOfPlayer.c_str());
-		//return true;
-	//}
+		pos = *currentEntity->getPos();
+		playerName = currentEntity->getNameTag()->getText();
+		break;
+	}
+	if (pos.iszero()) {
+		clientMessageF("[Packet] %sCouldn't find player: %s!", RED, nameOfPlayer.c_str());
+		return true;
+	}
 	g_Data.getLocalPlayer()->setPos(pos);
-	clientMessageF("[%sPacket%s] %sSuccessfully invited %s", GRAY, WHITE, GREEN, playerName.c_str());
+	clientMessageF("[Packet] %sTeleported to %s", GREEN, playerName.c_str());
 	return true;
 }

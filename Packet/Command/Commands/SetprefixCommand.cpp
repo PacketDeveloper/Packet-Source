@@ -12,6 +12,6 @@ bool SetprefixCommand::execute(std::vector<std::string>* args) {
 	assertTrue(args->at(1).length() == 1);
 	char prefix = args->at(1).at(0);
 	cmdMgr->prefix = prefix;
-	clientMessageF("[%sPacket%s] %sSet prefix to %s%c", GOLD, WHITE, GREEN, GRAY, prefix);
+	clientMessageF("[Packet] %sSet prefix to %s%c", GREEN, GRAY, prefix);
 	return true;
 }

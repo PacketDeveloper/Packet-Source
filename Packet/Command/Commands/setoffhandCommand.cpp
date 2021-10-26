@@ -34,7 +34,7 @@ bool setoffhandCommand::execute(std::vector<std::string>* args) {
 		TextHolder tempText(args->at(1));
 		C_Item*** cStack = ItemRegistry::lookUpByName(ItemPtr, idk, tempText);
 		if (*cStack == nullptr) {
-			clientMessageF("%sInvalid item name!", RED);
+			clientMessageF("[Packet] %sInvalid item name!", RED);
 			return true;
 		}
 		yot = new C_ItemStack(***cStack, count, itemData);
@@ -44,7 +44,7 @@ bool setoffhandCommand::execute(std::vector<std::string>* args) {
 		void* ItemPtr = malloc(0x8);
 		C_Item*** cStack =	ItemRegistry::getItemFromId(ItemPtr, itemId);
 		if (**cStack == NULL) {
-			clientMessageF("%sInvalid item ID!", RED);
+			clientMessageF("[Packet] %sInvalid item ID!", RED);
 			return true;
 		}
 		yot = new C_ItemStack(***cStack, count, itemData);
@@ -55,6 +55,6 @@ bool setoffhandCommand::execute(std::vector<std::string>* args) {
 		yot->count = count;
 
 	g_Data.getLocalPlayer()->setOffhandSlot(yot);
-	clientMessageF("%sSet item as offhand!", BLUE);
+	clientMessageF("[Packet] %sSet item as offhand!", BLUE);
 	return true;
 }

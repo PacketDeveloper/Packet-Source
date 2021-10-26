@@ -257,7 +257,6 @@
     <ClCompile Include="Packet\Command\Commands\WatermarkCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\NameSpoofCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\NbtCommand.cpp" />
-    <ClCompile Include="Packet\Command\Commands\OutlineCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\PanicCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\PlayerTeleportCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\RelativeTeleportCommand.cpp" />
@@ -298,6 +297,7 @@
     <ClCompile Include="Packet\Module\Modules\ClickTP.cpp" />
     <ClCompile Include="Packet\Module\Modules\CustomSky.cpp" />
     <ClCompile Include="Packet\Module\Modules\EntityControl.cpp" />
+    <ClCompile Include="Packet\Module\Modules\FastPlace.cpp" />
     <ClCompile Include="Packet\Module\Modules\FastStop.cpp" />
     <ClCompile Include="Packet\Module\Modules\HackerDetector.cpp" />
     <ClCompile Include="Packet\Module\Modules\HudEditorMod.cpp" />
@@ -442,7 +442,6 @@
     <ClInclude Include="Packet\Command\Commands\WatermarkCommand.h" />
     <ClInclude Include="Packet\Command\Commands\NameSpoofCommand.h" />
     <ClInclude Include="Packet\Command\Commands\NbtCommand.h" />
-    <ClInclude Include="Packet\Command\Commands\OutlineCommand.h" />
     <ClInclude Include="Packet\Command\Commands\PanicCommand.h" />
     <ClInclude Include="Packet\Command\Commands\PlayerTeleportCommand.h" />
     <ClInclude Include="Packet\Command\Commands\RelativeTeleportCommand.h" />
@@ -483,6 +482,7 @@
     <ClInclude Include="Packet\Module\Modules\ClickTP.h" />
     <ClInclude Include="Packet\Module\Modules\CustomSky.h" />
     <ClInclude Include="Packet\Module\Modules\EntityControl.h" />
+    <ClInclude Include="Packet\Module\Modules\FastPlace.h" />
     <ClInclude Include="Packet\Module\Modules\FastStop.h" />
     <ClInclude Include="Packet\Module\Modules\HackerDetector.h" />
     <ClInclude Include="Packet\Module\Modules\HudEditorMod.h" />

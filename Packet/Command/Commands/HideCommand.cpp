@@ -9,9 +9,9 @@ HideCommand::~HideCommand() {
 bool HideCommand::execute(std::vector<std::string>* args) {
 	GameData::hide();
 	if (GameData::shouldHide()) {
-		clientMessageF("[%sPacket%s] %sHidden.", GRAY, WHITE, GREEN);
+		clientMessageF("[Packet] %sHidden.", GREEN);
 	} else {
-		clientMessageF("[%sPacket%s] %sClient is now visible.", GRAY, WHITE, GREEN);
+		clientMessageF("[Packet] %sClient is now visible.", GREEN);
 	}
 	return true;
 }

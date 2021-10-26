@@ -54,7 +54,6 @@ void CommandMgr::initCommands() {
 	//commandList.push_back(new PathCommand());
 
 #ifdef _DEBUG
-	commandList.push_back(new OutlineCommand());
 	commandList.push_back(new TestCommand());
 #endif
 }

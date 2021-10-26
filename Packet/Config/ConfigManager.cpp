@@ -76,7 +76,7 @@ void ConfigManager::loadConfig(std::string name, bool create) {
 
 		if (g_Data.getLocalPlayer() != nullptr) {
 			static bool helpedUser = false;
-			g_Data.getGuiData()->displayClientMessageF("[%sPacket%s] %sSuccessfully %s config %s%s%s!", GRAY, WHITE, GREEN, !configExists ? "created" : "loaded", GRAY, name.c_str(), GREEN);
+			g_Data.getGuiData()->displayClientMessageF("[Packet] %sSuccessfully %s config %s%s%s!", GREEN, !configExists ? "created" : "loaded", GRAY, name.c_str(), GREEN);
 			if (!helpedUser && name != "PacketClient") {
 				helpedUser = true;
 				//g_Data.getGuiData()->displayClientMessageF("[%sPacket%s] %sEnter \"%s%cconfig load default%s\" to load your old config!", GRAY, WHITE, GRAY, WHITE, cmdMgr->prefix, GRAY);
@@ -84,7 +84,7 @@ void ConfigManager::loadConfig(std::string name, bool create) {
 		}
 	} else {
 		if (g_Data.getLocalPlayer() != nullptr) 
-			g_Data.getGuiData()->displayClientMessageF("[%sPacket%s] %sCould not load config %s%s%s!", GRAY, WHITE, RED, GRAY, name.c_str(), RED);
+			g_Data.getGuiData()->displayClientMessageF("[Packet] %sCould not load config %s%s%s!", RED, GRAY, name.c_str(), RED);
 	}
 
 	delete[] fullPath;

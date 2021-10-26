@@ -12,12 +12,11 @@ Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
 	registerBoolSetting("Tower", &tower, tower);
 	registerBoolSetting("LockY", &lockY, lockY);
 	registerBoolSetting("Spoof", &spoof, spoof);
-	registerIntSetting("TimerBoost", &timer, timer, 20, 80);
+	registerIntSetting("Timer", &timer, timer, 20, 80);
 	registerIntSetting("Extend", &expand, expand, 0, 7);
 }
 
 Scaffold::~Scaffold() {
-	if (isOnHive) getPlayerAuthInputPacketHolder()->reserve(500); // not sure if this even does anything lol
 }
 
 const char* Scaffold::getRawModuleName() {
@@ -25,12 +24,7 @@ const char* Scaffold::getRawModuleName() {
 }
 
 const char* Scaffold::getModuleName() {
-	//if (isOnHive) {
-	//name = std::string("Scaffold ") + std::string(GRAY) + std::string("Hive");
-	//return name.c_str();
-	//} else {
 	return "Scaffold";
-	//}
 }
 
 void Scaffold::onEnable() {
@@ -43,7 +37,7 @@ void Scaffold::onEnable() {
 void Scaffold::onTick(C_GameMode* gm) {
 	isOnHive = strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0;
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(this->timer);
+	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
 	auto breakerMod = moduleMgr->getModule<Breaker>();
 	auto speedMod = moduleMgr->getModule<Speed>();
 	auto scMod = moduleMgr->getModule<Scaffold>();
@@ -66,7 +60,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 	restored = false;
 
 	isHoldingSpace = GameData::isKeyDown(*input->spaceBarKey);
-	isCrouching = GameData::isKeyDown(*input->sneakKey);
+	isSneaking = GameData::isKeyDown(*input->sneakKey);
 
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()))  // Block in hand?
@@ -81,99 +75,92 @@ void Scaffold::onTick(C_GameMode* gm) {
 	// Adjustment by velocity
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
-	//vel = vel.normalize();  // Only use values from 0 - 1
+	vel = vel.normalize();  // Only use values from 0 - 1
+
+	vec3_t blockBelow05 = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
+	blockBelow05.y -= g_Data.getLocalPlayer()->height;
+	blockBelow05.y -= 0.5;
+
+	vec3_t blockBelow15 = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
+	blockBelow15.y -= g_Data.getLocalPlayer()->height;
+	blockBelow15.y -= 1.5f;
+
+	vec3_t blockBelow2 = g_Data.getLocalPlayer()->eyePos0;  // Block 2 blocks below the player
+	blockBelow2.y -= g_Data.getLocalPlayer()->height;
+	blockBelow2.y -= 2.0f;
 
 	if (extendOut) {
-		if (tower && GameData::isKeyDown(*input->spaceBarKey))
-			return;
-		if (!GameData::isKeyDown(*input->sneakKey)) {
-			float cal = (gm->player->yaw + 90) * (PI / 180);
+		float cal = (gm->player->yaw + 90) * (PI / 180);
 
-			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
-			blockBelow.y -= g_Data.getLocalPlayer()->height;
-			blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block 1 ahead the player X
-			blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block 1 ahead the player Z
-			if (!tryScaffold(blockBelow)) {
-				if (speed > 0.05f) {  // Are we actually walking?
-					blockBelow.z -= vel.z;
-					if (!tryScaffold(blockBelow)) {
-						blockBelow.x -= vel.x;
+		if (tower && speed == 0) {
+			if (!isHoldingSpace) {
+				blockBelow05.x = blockBelow05.x += cos(cal) * expand;  // Block(s) ahead the player X
+				blockBelow05.z = blockBelow05.z += sin(cal) * expand;  // Block(s) ahead the player Z
+			}
+		} else {
+			blockBelow05.x = blockBelow05.x += cos(cal) * expand;  // Block(s) ahead the player X
+			blockBelow05.z = blockBelow05.z += sin(cal) * expand;  // Block(s) ahead the player Z
+		}
+		if (!tryScaffold(blockBelow05)) {
+			if (speed > 0.05f) {  // Are we actually walking?
+				blockBelow05.z -= vel.z;
+				if (!tryScaffold(blockBelow05)) {
+					blockBelow05.x -= vel.x;
 
-						if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-							blockBelow.z += vel.z;
-							blockBelow.x += vel.x;
-							tryScaffold(blockBelow);
-						}
+					if (!tryScaffold(blockBelow05) && g_Data.getLocalPlayer()->isSprinting()) {
+						blockBelow05.z += vel.z;
+						blockBelow05.x += vel.x;
+						tryScaffold(blockBelow05);
 					}
 				}
 			}
 		}
 	}
 
-	if (staircase && GameData::isKeyDown(*input->sneakKey)) {
+	if (staircase && isSneaking) {
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
-		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
-		blockBelow.y -= g_Data.getLocalPlayer()->height;
-		blockBelow.y -= 2.f;
 
-		vec3_t blockBelowBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 2 blocks below the player
-		blockBelowBelow.y -= g_Data.getLocalPlayer()->height;
-		blockBelowBelow.y -= 3.f;
-
-		if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
-			if (speed > 0.05f) {  // Are we actually walking?
-				blockBelow.z -= vel.z;
-				blockBelowBelow.z -= vel.z;
-				if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow)) {
-					blockBelow.x -= vel.x;
-					blockBelowBelow.x -= vel.x;
-					if (!tryScaffold(blockBelow) && !tryScaffold(blockBelowBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-						blockBelow.z += vel.z;
-						blockBelow.x += vel.x;
-						blockBelowBelow.z += vel.z;
-						blockBelowBelow.x += vel.x;
-						tryScaffold(blockBelow);
-						tryScaffold(blockBelowBelow);
+		if (!tryScaffold(blockBelow15) && !tryScaffold(blockBelow2)) {
+			if (speed > 0.05f) {
+				blockBelow15.z -= vel.z;
+				blockBelow2.z -= vel.z;
+				if (!tryScaffold(blockBelow15) && !tryScaffold(blockBelow2)) {
+					blockBelow15.x -= vel.x;
+					blockBelow2.x -= vel.x;
+					if (!tryScaffold(blockBelow15) && !tryScaffold(blockBelow2) && g_Data.getLocalPlayer()->isSprinting()) {
+						blockBelow15.z += vel.z;
+						blockBelow15.x += vel.x;
+						blockBelow2.z += vel.z;
+						blockBelow2.x += vel.x;
+						tryScaffold(blockBelow15);
+						tryScaffold(blockBelow2);
 					}
 				}
 			}
 		}
 	} else {
-		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block below the player
-		blockBelow.y -= g_Data.getLocalPlayer()->height;
-		blockBelow.y -= 0.5f;
-
-		if (!tryScaffold(blockBelow)) {
-			blockBelow.z -= vel.z * 0.4f;
-			if (!tryScaffold(blockBelow)) {
-				blockBelow.x -= vel.x * 0.4f;
-				if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-					blockBelow.z += vel.z;
-					blockBelow.x += vel.x;
-					tryScaffold(blockBelow);
+		if (!tryScaffold(blockBelow05)) {
+			blockBelow05.z -= vel.z * 0.4f;
+			if (!tryScaffold(blockBelow05)) {
+				blockBelow05.x -= vel.x * 0.4f;
+				if (!tryScaffold(blockBelow05) && g_Data.getLocalPlayer()->isSprinting()) {
+					blockBelow05.z += vel.z;
+					blockBelow05.x += vel.x;
+					tryScaffold(blockBelow05);
 				}
 			}
 		}
 	}
 
 	if (spoof) gm->player->getSupplies()->selectedHotbarSlot = prevSlot;
-	if (noSprint) {
-		auto sprint = moduleMgr->getModule<Sprint>();
-		sprint->useSprint = false;
-		gm->player->setSprinting(true);
-	}
+
 	if (rotations) {
 		auto player = g_Data.getLocalPlayer();
-		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
-		blockBelow.y -= g_Data.getLocalPlayer()->height;
-		blockBelow.y -= 0.5f;
-		vec3_t eyePos = player->eyePos0;
-		eyePos.y = eyePos.y - 1.5;
-		blockBelow2.push_back(eyePos);
+		vec3_t blockBelow05 = g_Data.getLocalPlayer()->eyePos0;
+		blockBelow05.y -= g_Data.getLocalPlayer()->height;
+		blockBelow05.y -= 0.5f;
 		if (speed >= 0.05) {
-			if (isHoldingSpace)
-				return;
-			vec2_t angleBelow = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
+			vec2_t angleBelow = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow05);
 			auto rotation = g_Data.getLocalPlayer();
 			float prevyaw = rotation->yawUnused1;
 			float prevyaw2 = rotation->yaw;
@@ -193,32 +180,32 @@ void Scaffold::onTick(C_GameMode* gm) {
 
 void Scaffold::onMove(C_MoveInputHandler* input) {
 	C_GameSettingsInput* inpute = g_Data.getClientInstance()->getGameSettingsInput();
+	auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
+
 	if (inpute == nullptr) return;
 	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 	if (!g_Data.canUseMoveKeys())
 		return;
+
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	auto player = g_Data.getLocalPlayer();
 
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
-	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock()))  // Block in hand?
+	if (!selectedItem->isValid() || !(*selectedItem->item)->isBlock())
 		return;
 
 	if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
+		auto test = moduleMgr->getModule<TestModule>();
 		if (speed > 0.05f) {
-			player->bodyYaw = player->yaw - 200;
-			left = input->left;
-			right = input->right;
-		} else {
-			left = false;
-			right = false;
+			player->bodyYaw = test->sliderX;
 		}
 	}
 
-	if (tower && isHoldingSpace) {
-		auto clickGUI = moduleMgr->getModule<ClickGuiMod>();
-		if (foundCandidate2 && !clickGUI->isEnabled()) {
+	// Tower
+	if (tower && isHoldingSpace && !clickGUI->isEnabled() && speed == 0) {
+		float trueStop = 1000 - 1 + NULL;
+		if (foundBlock) {
 			*g_Data.getClientInstance()->minecraft->timer = 20;
 			vec2_t movement = {input->forwardMovement, -input->sideMovement};
 			bool pressed = movement.magnitude() > 0.f;
@@ -230,22 +217,20 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 			movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
 			player->jumpFromGround();
 			moveVec.y = player->velocity.y;
-			player->velocity.x *= 0;
-			player->velocity.z *= 0;
 		}
 	}
 }
 
-bool Scaffold::tryScaffold(vec3_t blockBelow) {
+bool Scaffold::tryScaffold(vec3_t blockBelow05) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	static std::vector<vec3_ti*> checklist;
-	blockBelow = blockBelow.floor();
+	blockBelow05 = blockBelow05.floor();
 	int i = 0;
 
-	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow));
+	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(vec3_ti(blockBelow05));
 	C_BlockLegacy* blockLegacy = (block->blockLegacy);
 	if (blockLegacy->material->isReplaceable) {
-		vec3_ti blok(blockBelow);
+		vec3_ti blok(blockBelow05);
 		if (lockY) {
 			if (!GameData::isKeyDown(*input->spaceBarKey)) {
 				if (g_Data.getLocalPlayer()->onGround)
@@ -255,7 +240,6 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 			}
 		}
 
-		bool foundBlock = false;
 		if (airplace) {
 			g_Data.getCGameMode()->buildBlock(&blok, i);
 			return true;
@@ -270,7 +254,7 @@ bool Scaffold::tryScaffold(vec3_t blockBelow) {
 				checklist.push_back(new vec3_ti(-1, 0, 0));
 				checklist.push_back(new vec3_ti(1, 0, 0));
 			}
-
+			foundBlock = false;
 			for (auto current : checklist) {
 				vec3_ti calc = blok.sub(*current);
 				if (!g_Data.getLocalPlayer()->region->getBlock(calc)->blockLegacy->material->isReplaceable) {
@@ -301,21 +285,21 @@ void Scaffold::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 	if (!selectedItem->isValid() || selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr || !selectedItem->getItem()->isBlock())
 		return;
-	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
-	blockBelow.y -= g_Data.getLocalPlayer()->height;
-	blockBelow.y -= 0.5f;
+	vec3_t blockBelow05 = g_Data.getLocalPlayer()->eyePos0;
+	blockBelow05.y -= g_Data.getLocalPlayer()->height;
+	blockBelow05.y -= 0.5f;
 	vec3_t eyePos = player->eyePos0;
 	eyePos.y = eyePos.y - 1.5;
 	blockBelow2.push_back(eyePos);
+
+	if (speed >= 0.f)
+		return;
 	if (tower) {
-		// Adjustment by velocity
-		vec3_t vel = g_Data.getLocalPlayer()->velocity;
-		vel.normalize();  // Only use values from 0 - 1
-		if (isHoldingSpace && isOnHive) {  // look down
-			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
+		if (isHoldingSpace && speed == 0) {  // look down
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow05);
 			auto weewee = g_Data.getLocalPlayer();
 			weewee->setRot(angle);
-			vec2_t angleBelow = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
+			vec2_t angleBelow = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow05);
 			auto rotation = g_Data.getLocalPlayer();
 			float prevyaw = rotation->yawUnused1;
 			float prevyaw2 = rotation->yaw;
@@ -347,24 +331,25 @@ bool Scaffold::selectBlock() {
 void Scaffold::onSendPacket(C_Packet* packet) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	auto player = g_Data.getLocalPlayer();
-	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
-	blockBelow.y -= g_Data.getLocalPlayer()->height;
-	blockBelow.y -= 0.5f;
-	vec3_t eyePos = player->eyePos0;
-	eyePos.y = eyePos.y - 1.5;
-	blockBelow2.push_back(eyePos);
+	vec3_t blockBelow05 = g_Data.getLocalPlayer()->eyePos0;
+	blockBelow05.y -= g_Data.getLocalPlayer()->height;
+	blockBelow05.y -= 0.5f;
 
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
 		if (g_Data.getLocalPlayer() != nullptr && g_Data.canUseMoveKeys()) {
 			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 			if (rotations && speed >= 0.05 || GameData::isKeyDown(*input->spaceBarKey)) {
-				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
+				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow05);
 				movePacket->pitch = angle.x;
 				movePacket->headYaw = angle.y;
 				movePacket->yaw = angle.y;
 			}
 		}
+	}
+
+	if (strcmp(packet->getName()->getText(), "PlayerAuthInputPacket") != 0) {
+		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s", packet->getName()->getText());
 	}
 }
 

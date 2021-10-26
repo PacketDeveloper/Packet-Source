@@ -1,8 +1,11 @@
 #include "Derp.h"
 
 Derp::Derp() : IModule(0, Category::MISC, "lol you stupid") {
-	this->registerBoolSetting("Helicopter", &this->epicStroke, this->epicStroke);
-	this->registerBoolSetting("packet", &this->packetMode, this->packetMode);
+	registerBoolSetting("Headless", &headless, headless);
+	registerBoolSetting("Twerk", &twerk, twerk);
+	registerBoolSetting("Spin", &spin, spin);
+	registerBoolSetting("Silent", &silent, silent);
+	registerFloatSetting("Delay", &delay, delay, 0.f, 10.f);
 }
 
 Derp::~Derp() {
@@ -12,29 +15,47 @@ const char* Derp::getModuleName() {
 	return "Derp";
 }
 
+void Derp::onEnable() {
+
+}
+
 void Derp::onTick(C_GameMode* gm) {
-	if (packetMode) {
-		C_MovePlayerPacket p(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-		if (epicStroke) {
-			p.pitch = (float)(rand() % 10000);
-			p.yaw = (float)(rand() % -1864);
-		} else {
-			p.pitch = (float)(counter % 546980567);
-			p.yaw = (float)(counter % 3564760);
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+	auto player = g_Data.getLocalPlayer();
+
+	if (silent)
+		return;
+
+	Odelay++;
+	if (Odelay > delay) {
+		if (headless) {
+			gm->player->pitch = -180;
 		}
-		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
-	} else {
-		if (epicStroke) {
-			gm->player->pitch = (float)(rand() % 1000);
-			gm->player->bodyYaw = (float)(rand() % -1000);
+		if (twerk) {
+			g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = true;
 		} else {
-			gm->player->pitch = (float)(counter % 31110);
-			gm->player->bodyYaw = (float)(counter % 3452660);
+			g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
+		}
+		if (spin) {
+
 		}
 	}
+	Odelay = 0;
+}
 
-	if (counter < 360)
-		counter++;
-	else
-		counter = 0;
+void Derp::onSendPacket(C_Packet* packet) {
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+	auto player = g_Data.getLocalPlayer();
+	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
+	blockBelow.y -= g_Data.getLocalPlayer()->height;
+	blockBelow.y -= 0.5f;
+
+	auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+	auto* authPacket = reinterpret_cast<PlayerAuthInputPacket*>(packet);
+	if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
+		if (g_Data.getLocalPlayer() != nullptr && g_Data.canUseMoveKeys() && silent) {
+			if (headless) movePacket->pitch = -180;
+			if (headless) authPacket->pitch = -180;
+		}
+	}
 }

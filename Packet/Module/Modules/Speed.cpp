@@ -4,7 +4,7 @@ Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
 	mode.addEntry("KowSpecial", 3);
-	mode.addEntry("Inviscow", 4);
+	//mode.addEntry("Inviscow", 4); // temp removed
 	registerIntSetting("TimerBoost", &timer, timer, 20, 35);
 	registerFloatSetting("Height", &height, height, 0.000001f, 0.40f);
 	registerFloatSetting("Speed", &speed, speed, 0.2f, 2.f);
@@ -44,8 +44,12 @@ void Speed::onEnable() {
 }
 
 void Speed::onTick(C_GameMode* gm) {
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+	if (g_Data.getLocalPlayer() == nullptr)
+		return;
+
 	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
-	if (mode.getSelectedValue() == 4) {
+	if (mode.getSelectedValue() == 1) {
 		if (gm->player->onGround) {
 			lhtick++;
 			if (lhtick >= 3)
@@ -57,6 +61,67 @@ void Speed::onTick(C_GameMode* gm) {
 				return;
 		}
 	}
+	if (mode.getSelectedValue() == 1) {
+		std::vector<vec3_ti> sideBlocks;
+		sideBlocks.reserve(8);
+
+		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
+		vec3_t moveVec;
+		float c = cos(calcYaw);
+		float s = sin(calcYaw);
+
+		for (int x = -1; x <= 1; x++) {
+			for (int z = -1; z <= 1; z++) {
+				if (x == 0 && z == 0)
+					continue;
+
+				sideBlocks.push_back(vec3_ti(x, 0, z));
+			}
+		}
+
+		auto pPos = *gm->player->getPos();
+		pPos.y = gm->player->aabb.lower.y;
+		auto pPosI = vec3_ti(pPos.floor());
+
+		auto isObstructed = [&](int yOff, AABB* obstructingBlock = nullptr, bool ignoreYcoll = false) {
+			for (const auto& current : sideBlocks) {
+				vec3_ti side = pPosI.add(0, yOff, 0).add(current);
+				if (side.y < 0 || side.y >= 256)
+					break;
+				auto block = gm->player->region->getBlock(side);
+				if (block == nullptr || block->blockLegacy == nullptr)
+					continue;
+				C_BlockLegacy* blockLegacy = block->toLegacy();
+				if (blockLegacy == nullptr)
+					continue;
+				AABB collisionVec;
+				if (!blockLegacy->getCollisionShape(&collisionVec, block, gm->player->region, &side, gm->player))
+					continue;
+				bool intersects = ignoreYcoll ? collisionVec.intersectsXZ(gm->player->aabb.expandedXZ(0.3f)) : collisionVec.intersects(gm->player->aabb.expandedXZ(0.3f));
+
+				if (intersects) {
+					if (obstructingBlock != nullptr)
+						*obstructingBlock = collisionVec;
+					return true;
+				}
+			}
+			return false;
+		};
+
+		AABB lowerObsVec, upperObsVec;
+		bool upperObstructed = isObstructed(1, &upperObsVec);
+
+		bool lowerObstructed = isObstructed(0, &lowerObsVec);
+		if (lowerObstructed || upperObstructed) intersect = true;
+		else intersect = false;
+
+		auto player = g_Data.getLocalPlayer();
+		float yaw = player->yaw;
+		if (input->spaceBarKey) {
+			if (input->forwardKey && input->backKey && input->rightKey && input->leftKey) {
+			}
+		}
+	}
 }
 
 void Speed::onMove(C_MoveInputHandler* input) {
@@ -64,6 +129,12 @@ void Speed::onMove(C_MoveInputHandler* input) {
 	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
 	bool pressed = moveVec2d.magnitude() > 0.f;
 	auto player = g_Data.getLocalPlayer();
+
+	if (g_Data.getLocalPlayer() == nullptr)
+		return;
+	if (!g_Data.canUseMoveKeys())
+		return;
+
 	if (mode.getSelectedValue() == 0) {  // Vanilla
 		static bool velocity = false;
 		if (height >= 0.385) {
@@ -95,7 +166,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		if (pressed) player->lerpMotion(moveVec);
 	}
 	if (mode.getSelectedValue() == 1) {  // Hive
-		isOnGround = player->onGround;
+		/*isOnGround = player->onGround;
 		auto player = g_Data.getLocalPlayer();
 		vec2_t movement = {input->forwardMovement, -input->sideMovement};
 		bool pressed = movement.magnitude() > 0.f;
@@ -113,7 +184,43 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		moveVec.z = movement.y * 0.305;
 		if (targetStrafe->isEnabled() && targetStrafe->mode.getSelectedValue() == 1 && !targetStrafe->targetListEmpty)
 			return;
-		if (pressed) player->lerpMotion(moveVec);
+		if (pressed) player->lerpMotion(moveVec);*/
+		vec2_t movement = {input->forwardMovement, -input->sideMovement};
+		bool pressed = movement.magnitude() > 0.f;
+		float calcYaw = (player->yaw + 90) * (PI / 180);
+		vec3_t moveVec;
+		float c = cos(calcYaw);
+		float s = sin(calcYaw);
+		movement = {movement.x * c - movement.y * s, movement.x * s + movement.y * c};
+		if (pressed && player->onGround) {
+			//input->isJumping = true;
+			player->jumpFromGround();
+		}
+		if (input->isJumping) {
+			moveVec.x = movement.x * speed;
+			moveVec.y = player->velocity.y;
+			moveVec.z = movement.y * speed;
+			if (!player->onGround) {
+				if (intersect) *g_Data.getClientInstance()->minecraft->timer = 17;
+				else *g_Data.getClientInstance()->minecraft->timer = 27;
+			} else {
+				player->velocity.x *= 0;
+				player->velocity.z *= 0;
+				*g_Data.getClientInstance()->minecraft->timer = 16;
+				if (pressed) player->lerpMotion(moveVec);
+			}
+		} else {
+			moveVec.x = movement.x * 0.315;
+			moveVec.y = player->velocity.y;
+			moveVec.z = movement.y * 0.315;
+			if (pressed) player->lerpMotion(moveVec);
+		}
+		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
+			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 1.3f, 0.f, moveVec.z / 1.3f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
+			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 3.13f, 0.f, player->velocity.z / 2.3f)));
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
+		}
 	}
 	if (mode.getSelectedValue() == 3 && g_Data.isInGame()) {
 		if (player == nullptr) return;

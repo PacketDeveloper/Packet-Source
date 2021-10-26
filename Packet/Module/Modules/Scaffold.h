@@ -2,7 +2,7 @@
 #include "Module.h"
 class Scaffold : public IModule {
 private:
-	bool timerBoost = true;
+	bool foundBlock = false;
 	bool switchMode = true;
 	bool noSprint = false;
 	bool extendOut = true;
@@ -22,7 +22,7 @@ public:
 	std::vector<vec3_t> blockBelow2;
 	bool foundCandidate2 = false;
 	bool isHoldingSpace = false;
-	bool isCrouching = false;
+	bool isSneaking = false;
 	bool isOnHive = false;
 	bool rotations = true;
 	bool tower = false;

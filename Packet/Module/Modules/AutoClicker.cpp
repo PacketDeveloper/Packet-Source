@@ -1,8 +1,6 @@
 #include "AutoClicker.h"
 
-AutoClicker::AutoClicker() : IModule(0, Category::COMBAT, "A simple autoclicker, automatically clicks for you.") {
-	registerBoolSetting("RightClick", &rightclick, rightclick);
-	//registerBoolSetting("only weapons", &weapons, weapons);
+AutoClicker::AutoClicker() : IModule(0, Category::COMBAT, "Automatically clicks for you") {
 	registerIntSetting("delay", &delay, delay, 0, 10);
 }
 
@@ -39,18 +37,6 @@ void AutoClicker::onTick(C_GameMode* gm) {
 					gm->destroyBlock(&pointing->block, 0);
 			}
 			Odelay = 0;
-		}
-	}
-
-	if (rightclick) {
-		if ((GameData::isRightClickDown() || !hold) && GameData::canUseMoveKeys()) {
-			PointingStruct* pstruct = g_Data.getClientInstance()->getPointerStruct();
-			Odelay++;
-			if (Odelay >= delay) {
-				g_Data.rightclickCount++;
-				gm->buildBlock(new vec3_ti(pstruct->block), pstruct->blockSide);
-				Odelay = 0;
-			}
 		}
 	}
 }

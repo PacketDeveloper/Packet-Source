@@ -9,9 +9,9 @@ TestModule::TestModule() : IModule(0, Category::MISC, "Description") {
 	registerBoolSetting("Blink", &blink, blink);
 	registerBoolSetting("Test", &test, test);
 	registerBoolSetting("AutoDisable", &autoDisable, autoDisable);
-	registerFloatSetting("SliderX", &sliderX, sliderX, -20, 20);
-	registerFloatSetting("SliderY", &sliderY, sliderY, -20, 20);
-	registerFloatSetting("SliderZ", &sliderZ, sliderZ, -20, 20);
+	registerFloatSetting("SliderX", &sliderX, sliderX, -400, 400);
+	registerFloatSetting("SliderY", &sliderY, sliderY, -400, 400);
+	registerFloatSetting("SliderZ", &sliderZ, sliderZ,  -400, 400);
 	registerBoolSetting("Kow", &kowBool, kowBool);
 	registerFloatSetting("KowFloat", &kowFloat, kowFloat, 0.2f, 10.f);
 }
@@ -159,6 +159,40 @@ void TestModule::onTick(C_GameMode* gm) {
 		//player->actuallyHurt(1, player, true);
 		//C_LocalPlayer* localHost = g_Data.getLocalPlayer();
 		//g_Data.getLocalPlayer()->setGameModeType(1);
+		//if (legacyMode) {
+			//gm->player->onGround = true;
+			//return;
+		//}
+		/*C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
+		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
+
+		counter++;
+
+		vec3_t pos = *g_Data.getLocalPlayer()->getPos();
+		pos.y += 0.1f;
+		C_MovePlayerPacket a(g_Data.getLocalPlayer(), pos);
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a);
+		pos.y -= 0.1f;
+		C_MovePlayerPacket a2(g_Data.getLocalPlayer(), pos);
+		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&a2);
+
+			static auto flight = moduleMgr->getModule<Flight>();
+		vec3_t moveVec;
+			moveVec.x = cos(calcYaw) * 0.0001;
+		moveVec.z = sin(calcYaw) * 0.0001;
+
+		gm->player->lerpMotion(moveVec);
+
+		if (counter >= 3) {
+			counter = 0;
+			float yaw = gm->player->yaw * (PI / 180);
+			float length = 0.f;
+
+			float x = -sin(yaw) * length;
+			float z = cos(yaw) * length;
+
+			gm->player->setPos(pos.add(vec3_t(x, 1.f, z)));
+		}*/
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
@@ -330,5 +364,13 @@ void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		std::string BpsText = "Speed: " + std::string(std::to_string((float)speed));
 
 		DrawUtils::drawText(vec2_t(x, y), &BpsText, MC_Color(255, 255, 255), 1);
+
+		for (int i = 0; i < 1; i++) {
+			player->bodyYaw = sliderX;
+			player->pitch = sliderY;
+			player->pitch2 = sliderY;
+			player->viewAngles2;
+			player->viewAngles;
+		}
 	}
 }

@@ -33,6 +33,6 @@ bool DupeCommand::execute(std::vector<std::string>* args) {
 	}
 	if (args->size() > 1)
 		item->count = count;
-	clientMessageF("%sSuccessfully duplicated the item!", GREEN);
+	clientMessageF("[Packet] %sSuccessfully duplicated the item!", GREEN);
 	return true;
 }

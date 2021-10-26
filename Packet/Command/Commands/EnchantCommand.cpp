@@ -62,7 +62,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			else
 				enchantId = assertInt(args->at(1));
 		} catch (int) {
-			clientMessageF("exception while trying to get enchant string");
+			clientMessageF("[Packet] Exception while trying to get enchant string");
 			enchantId = assertInt(args->at(1));
 		}
 	}
@@ -134,7 +134,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			}
 			free(EnchantData);
 		}
-		clientMessageF("%sEnchant successful!", GREEN);
+		clientMessageF("[Packet] %sEnchant successful!", GREEN);
 	} else {
 		void* EnchantData = malloc(0x60);
 		if (EnchantData != nullptr)
@@ -154,9 +154,9 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 					item);  // Player::selectItem
 
 			//g_Data.getLocalPlayer()->sendInventory();
-			clientMessageF("%sEnchant successful!", GREEN);
+			clientMessageF("[Packet] %sEnchant successful!", GREEN);
 		} else
-			clientMessageF("%sEnchantment failed", RED);
+			clientMessageF("[Packet] %sEnchantment failed", RED);
 
 		free(EnchantData);
 	}

@@ -37,7 +37,6 @@
 #include "Commands/ScriptCommand.h"
 
 #ifdef _DEBUG
-#include "Commands/OutlineCommand.h"
 #include "Commands/TestCommand.h"
 #endif
 

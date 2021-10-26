@@ -88,6 +88,8 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new ClickTP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Jesus()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AntiVoid()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Derp()));
+		moduleList.push_back(std::shared_ptr<IModule>(new FastPlace()));
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new InPvPFucker()));

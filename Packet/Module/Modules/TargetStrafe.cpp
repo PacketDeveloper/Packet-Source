@@ -217,7 +217,6 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 
 				if (onvoid) {
 					//g_Data.getClientInstance()->getMoveTurnInput()->forward = true; // sometimes very annoying
-					clientMessageF("edge");
 					if (clockwise && intersectingTimer2 >= 5) {
 						clockwise = false;
 						intersectingTimer2 = 0;

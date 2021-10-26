@@ -307,10 +307,10 @@ void Hooks::Actor_getRotation(C_Entity* _this, vec4_t& newAngle) {
 		if (g_Data.getLocalPlayer() != nullptr && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
 			return oFunc(_this, killaura->testRot);
 	}
-	if (scaffold->isEnabled() && scaffold->tower) {
+	/*if (scaffold->isEnabled() && scaffold->tower) {
 		if (g_Data.getLocalPlayer() != nullptr && scaffold->isOnHive && scaffold->isHoldingSpace)
 			return oFunc(_this, scaffold->scaffoldRot);
-	}
+	}*/
 	if (tpaura->isEnabled() && !tpaura->targetListEmpty) {
 		if (g_Data.getLocalPlayer() != nullptr && tpaura->rotations && tpaura->mode.getSelectedValue() == 0 || tpaura->mode.getSelectedValue() == 1)
 			return oFunc(_this, tpaura->tpAuraRot);
@@ -2175,7 +2175,7 @@ __int64 Hooks::ConnectionRequest_create(__int64 _this, __int64 privateKeyManager
 			auto overrideGeo = std::get<1>(geoOverride);
 			newGeometryData = new TextHolder(*overrideGeo.get());
 		} else {  // Default Skin
-				  /*char* str;  // Obj text
+			/*char* str;  // Obj text
 			{
 				auto hResourceObj = FindResourceA(g_Data.getDllModule(), MAKEINTRESOURCEA(IDR_OBJ), "TEXT");
 				auto hMemoryObj = LoadResource(g_Data.getDllModule(), hResourceObj);

@@ -13,10 +13,10 @@ bool GameModeCommand::execute(std::vector<std::string>* args) {
 	int gamemode = assertInt(args->at(1));
 	if (gamemode >= 0 && gamemode <= 2) {
 		g_Data.getLocalPlayer()->setGameModeType(gamemode);
-		clientMessageF("[%sPacket%s] %sGameMode changed!", GOLD, WHITE, GREEN);
+		clientMessageF("[Packet] %sGameMode changed!", GREEN);
 		return true;
 	}
 
-	clientMessageF("[%sPacket%s] %sInvalid GameMode!", GOLD, WHITE, RED);
+	clientMessageF("[Packet] %sInvalid GameMode!", RED);
 	return true;
 }

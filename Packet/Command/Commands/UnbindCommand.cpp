@@ -22,22 +22,22 @@ bool UnbindCommand::execute(std::vector<std::string>* args) {
 				auto mod = *it;
 				mod->setKeybind(0x0);
 			}
-			clientMessageF("%sUnbound all modules!", YELLOW);
+			clientMessageF("[Packet] %sUnbound all modules!", GREEN);
 		} else {
-			clientMessageF("%sAre you sure? This will unbind %sALL%s%s modules!", RED, BOLD, RESET, RED);
-			clientMessageF("%sUse %s.unbind all force%s to unbind all modules", RED, WHITE, RED);
+			clientMessageF("[Packet] %sAre you sure? This will unbind %sALL%s%s modules!", RED, BOLD, RESET, RED);
+			clientMessageF("[Packet] %sUse %s.unbind all force%s to unbind all modules", RED, WHITE, RED);
 		}
 		return true;
 	}
 
 	auto modOpt = moduleMgr->getModuleByName(moduleName);
 	if (!modOpt.has_value()) {
-		clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
+		clientMessageF("[Packet] %sCould not find module with name: %s", RED, moduleName.c_str());
 		return true;
 	} 
 
 	auto mod = modOpt.value();
 	mod->setKeybind(0x0);
-	clientMessageF("%sSuccessfully unbound %s!", GREEN, mod->getRawModuleName());
+	clientMessageF("[Packet] %sSuccessfully unbound %s!", GREEN, mod->getRawModuleName());
 	return true;
 }

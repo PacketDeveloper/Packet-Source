@@ -9,10 +9,10 @@ CreditCommand::~CreditCommand() {
 }
 
 bool CreditCommand::execute(std::vector<std::string>* args) {
-	clientMessageF("==========");
+	clientMessageF("-------------------");
 	clientMessageF("%sPacket Client Credits:", GRAY);
 	clientMessageF("%sTurakan: Original TargetHUD & LowHop", WHITE);
 	//clientMessageF("%sLittle Kow: TargetStrafe and other stuff", WHITE);
-	clientMessageF("==========");
+	clientMessageF("-------------------");
 	return true;
 }

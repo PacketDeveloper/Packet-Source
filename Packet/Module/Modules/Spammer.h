@@ -7,7 +7,7 @@ private:
 	bool bypass = true;
 	int delay = 2;
 	int length = 8;
-	std::string message = "Packet Client - The best client for MCBE | discord.gg/packet";
+	std::string message = "Packet Client - The best client for MCBE | discord.gg/J3vUwUWRVq";
 
 public:
 	Spammer();

@@ -7,6 +7,8 @@ private:
 	std::vector<int> findStackableItems();
 	std::vector<int> findUselessItems();
 	bool isLastItem(C_Item* item);
+	int Odelay = 0;
+	int delay = 0;
 
 	bool openInv = false;
 	bool autoSort = true;

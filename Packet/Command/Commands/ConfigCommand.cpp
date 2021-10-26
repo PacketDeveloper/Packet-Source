@@ -20,7 +20,7 @@ bool ConfigCommand::execute(std::vector<std::string>* args) {
 		return true;
 	} else if (args->at(1) == "save") {
 		configMgr->saveConfig();
-		clientMessageF("[%sPacket%s] %sSuccessfully saved config %s%s%s!", GRAY, WHITE, GREEN, GRAY, configMgr->currentConfig.c_str(), GREEN);
+		clientMessageF("[Packet] %sSuccessfully saved config %s%s%s!", GREEN, GRAY, configMgr->currentConfig.c_str(), GREEN);
 		return true;
 	}
 	return false;

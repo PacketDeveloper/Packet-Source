@@ -47,6 +47,6 @@ bool SayCommand::execute(std::vector<std::string>* args) {
 	textPacket.messageType = 69;
 	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&textPacket);
 
-	clientMessageF("[%sPacket%s] %sSent Message", GRAY, WHITE, GREEN);
+	clientMessageF("[Packet] %sSent Message", GREEN);
 	return true;
 }

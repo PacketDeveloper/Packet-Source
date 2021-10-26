@@ -16,7 +16,7 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 
 	auto modOpt = moduleMgr->getModuleByName(moduleName);
 	if (!modOpt.has_value()) {
-		clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
+		clientMessageF("[Packet] %sCould not find module with name: %s", RED, moduleName.c_str());
 		return true;
 	}
 	auto mod = modOpt.value();
@@ -32,7 +32,7 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 
 			if (key == "none") {
 				mod->setKeybind(0x0);
-				clientMessageF("%sSuccessfully unbound %s!", GREEN, mod->getRawModuleName());
+				clientMessageF("[Packet] %sSuccessfully unbound %s!", GREEN, mod->getRawModuleName());
 				return true;
 			}
 
@@ -45,13 +45,13 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 
 				if (strcmp(needle, haystackLowercase) == 0) {
 					mod->setKeybind(i);
-					clientMessageF("%sThe keybind of %s is now '%s'", GREEN, mod->getRawModuleName(), haystack);
+					clientMessageF("[Packet] %sThe keybind of %s is now '%s'", GREEN, mod->getRawModuleName(), haystack);
 					delete[] haystackLowercase;
 					return true;
 				}
 				delete[] haystackLowercase;
 			}
-			clientMessageF("%sInvalid key!", RED);
+			clientMessageF("[Packet] %sInvalid key!", RED);
 			return true;
 		}
 
@@ -62,17 +62,17 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 		if (keyCode >= 0x30 && keyCode <= 0x5A) {
 			auto modOpt = moduleMgr->getModuleByName(moduleName);
 			if (!modOpt.has_value()) {
-				clientMessageF("%sCould not find module with name: %s", RED, moduleName.c_str());
+				clientMessageF("[Packet] %sCould not find module with name: %s", RED, moduleName.c_str());
 			} else {
 				modOpt.value()->setKeybind(keyCode);
-				clientMessageF("%sThe Keybind of %s is now '%c'", GREEN, mod->getRawModuleName(), keyCode);
+				clientMessageF("[Packet] %sThe Keybind of %s is now '%c'", GREEN, mod->getRawModuleName(), keyCode);
 			}
 		} else {
-			clientMessageF("%sInvalid Key! Outside of ascii range: %X", RED, keyCode);
+			clientMessageF("[Packet] %sInvalid Key! Outside of ascii range: %X", RED, keyCode);
 		}
 		return true;
 	} else {
-		clientMessageF("%s%s is currently bound to %s", RED, mod->getRawModuleName(), Utils::getKeybindName(mod->getKeybind()));
+		clientMessageF("[Packet] %s%s is currently bound to %s", RED, mod->getRawModuleName(), Utils::getKeybindName(mod->getKeybind()));
 		return true;
 	}
 	

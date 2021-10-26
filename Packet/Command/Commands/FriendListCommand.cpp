@@ -44,20 +44,20 @@ bool FriendListCommand::execute(std::vector<std::string>* args) {
 		break;
 	}
 	if (playerName.size() <= 1) {
-		clientMessageF("[%sPacket%s] %sCouldn't find player: %s!", GRAY, WHITE, RED, searchedName.c_str());
+		clientMessageF("[Packet] %sCouldn't find player: %s!", RED, searchedName.c_str());
 		return true;
 	}
 	if (subcommand == "add") {
 		FriendList::addPlayerToList(playerName);
-		clientMessageF("[%sPacket%s] %s%s is now your friend!", GRAY, WHITE, GREEN, playerName.c_str());
+		clientMessageF("[Packet] %s%s is now your friend!", GREEN, playerName.c_str());
 		return true;
 
 	} else if (subcommand == "remove") {
 		if (FriendList::removePlayer(searchedName)) {
-			clientMessageF("[%sPacket%s] %s%s has been removed from your friendlist!", GRAY, WHITE, GREEN, searchedName.c_str());
+			clientMessageF("[Packet] %s%s has been removed from your friendlist!", GREEN, searchedName.c_str());
 			return true;
 		} else {
-			clientMessageF("[%sPacket%s] %s%s was not in your friendlist!", GRAY, WHITE, GREEN, searchedName.c_str());
+			clientMessageF("[Packet] %s%s was not in your friendlist!", GREEN, searchedName.c_str());
 			return true;
 		}
 	}

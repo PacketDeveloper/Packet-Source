@@ -15,6 +15,7 @@ InvManager::InvManager() : IModule(0, Category::PLAYER, "Automatintory YEP") {
 	//registerIntSetting("Axe", &axeSlot, axeSlot, 0, 9);
 	//registerIntSetting("Blocks", &blockSlot, blockSlot, 0, 9);
 	registerBoolSetting("AutoDisable", &autoDisable, autoDisable);
+	registerIntSetting("Delay", &delay, delay, 0, 30);
 }
 
 InvManager::~InvManager() {
@@ -40,12 +41,19 @@ void InvManager::onTick(C_GameMode* gm) {
 
 	// Drop items
 	if (clean) {
-	std::vector<int> dropSlots = findUselessItems();
-		if (!dropSlots.empty()) {
-			for (int i : dropSlots) {
-				g_Data.getLocalPlayer()->getSupplies()->inventory->dropSlot(i);
-				dropSlots.push_back(i);
+		std::vector<int> dropSlots = findUselessItems();
+		Odelay++;
+		if (Odelay > delay) {
+			if (!dropSlots.empty()) {
+				for (int i : dropSlots) {
+					Odelay++;
+					if (Odelay > delay) {
+						g_Data.getLocalPlayer()->getSupplies()->inventory->dropSlot(i);
+						dropSlots.push_back(i);
+					}
+				}
 			}
+			Odelay = 0;
 		}
 	}
 
@@ -108,7 +116,7 @@ std::vector<int> InvManager::findUselessItems() {
 	std::vector<C_ItemStack*> items;
 
 	{
-		for (int i = 0; i < 36; i++) {
+		for (int i = 0; i < 36; i++) { // 36
 			C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
 			if (itemStack->item != nullptr) {
 				if (!stackIsUseful(itemStack)) {
@@ -142,7 +150,7 @@ std::vector<int> InvManager::findUselessItems() {
 		bool hadTheBestItem = false;
 		C_ItemStack* bestItem = items.at(0);
 
-		for (int i = 0; i < 36; i++) {
+		for (int i = 0; i < 36; i++) { // 36
 			if (std::find(uselessItems.begin(), uselessItems.end(), i) != uselessItems.end())
 				continue;
 			C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);
@@ -220,7 +228,7 @@ std::vector<int> InvManager::findUselessItems() {
 			}
 		}
 
-		for (int i = 0; i < 36; i++) {
+		for (int i = 0; i < 36; i++) { // 36
 			if (std::find(uselessItems.begin(), uselessItems.end(), i) != uselessItems.end())
 				continue;  // item already useless
 			C_ItemStack* itemStack = g_Data.getLocalPlayer()->getSupplies()->inventory->getItemStack(i);

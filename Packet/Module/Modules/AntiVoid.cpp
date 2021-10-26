@@ -3,7 +3,7 @@
 AntiVoid::AntiVoid() : IModule(0, Category::MOVEMENT, "Teleports you back up if you fall in the void") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Lagback", 0);
-	mode.addEntry("Up", 1);
+	mode.addEntry("Push", 1);
 	registerBoolSetting("VoidCheck", &voidCheck, voidCheck);
 	registerIntSetting("Distance", &distance, distance, 3, 10);
 }
@@ -15,35 +15,33 @@ const char* AntiVoid::getModuleName() {
 	return ("AntiVoid");
 }
 
+void AntiVoid::onEnable() {
+	tick = 0;
+}
+
 void AntiVoid::onTick(C_GameMode* gm) {
-	C_LocalPlayer* player = g_Data.getLocalPlayer();
-	vec3_t blockBelow = player->eyePos0;
-	blockBelow.y -= player->height;
-	blockBelow.y -= 0.5;
+	auto player = g_Data.getLocalPlayer();
+	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
+	blockBelow.y -= g_Data.getLocalPlayer()->height;
+	blockBelow.y -= 0.5f;
 
-	if (player->onGround && ((player->region->getBlock(blockBelow)->blockLegacy))->blockId != 0) {
-		savedPos = blockBelow;
-		savedPos.y += player->height;
-	}		savedPos.y += 0.5f;
-
-    /*if (voidCheck) {
-		vec3_t* pos = gm->player->getPos();
-			for (int y = (int)pos->y - 255; y < pos->y; y++) {
-			if (((player->region->getBlock(vec3_t{blockBelow})->blockLegacy))->blockId == 0) {
-				foundVoid = true;
-			} else {
-				foundVoid = false;
-			}
+	for (int i = 0; i < 40; i++) {
+		if (player->onGround  && player->region->getBlock(blockBelow)->blockLegacy->blockId != 0) {
+			savedPos = blockBelow;
+			savedPos.y += player->height;
+			savedPos.y += 0.5f;
 		}
 	}
-	if (foundVoid) {
-		//clientMessageF("found void");
-	}*/
-
 	if (player->fallDistance >= distance) {
-		//if (voidCheck && foundVoid)
-			//return;
-		if (mode.getSelectedValue() == 0) player->setPos(savedPos); // Lagback
+		tick++;
+		if (!player->onGround && tick >= 5) { // fail safe
+			player->velocity.y += 0.056;
+		}
+
+		vec3_t pos = savedPos;
+		float dist2 = gm->player->getPos()->dist(pos);
+		if (mode.getSelectedValue() == 0) player->setPos(savedPos);  // lagback
+		if (mode.getSelectedValue() == 1) player->lerpTo(pos, vec2_t(1, 1), (int)fmax((int)dist2 * 0.1, 1)); // push
 	}
 }
 

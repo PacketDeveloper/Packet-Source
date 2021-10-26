@@ -50,8 +50,8 @@ public:
 		struct {
 			float pitch2;
 			float yaw2;
-		};
-		vec2_t viewAngles2;  
+		};  
+		vec2_t viewAngles2;
 	};
 
 private:

@@ -263,20 +263,17 @@ void Flight::onTick(C_GameMode* gm) {
 		if (player->damageTime >= 1) fly = true;
 		if (fly) {
 			gm->player->velocity = vec3_t(0, 0, 0);
-			*g_Data.getClientInstance()->minecraft->timer = 600;
+			*g_Data.getClientInstance()->minecraft->timer = 530;
 			if (!speedMod->isEnabled() && !GameData::isKeyDown(*input->spaceBarKey)) {
 				player->onGround = true;
 			}
 			gm->player->velocity.y = effectiveValue;
 			effectiveValue = value;
-			blink = true;
 		} else {
-			if (!player->onGround) {
 				blink = true;
-			}
 			*g_Data.getClientInstance()->minecraft->timer = 20;
 			float trueStop = 1000 - 1 + NULL;
-			gm->player->velocity = vec3_t(trueStop, 0.f, trueStop);
+			gm->player->velocity = vec3_t(trueStop, trueStop);
 		}
 	} else {
 		blink = false;

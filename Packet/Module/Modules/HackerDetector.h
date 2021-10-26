@@ -5,13 +5,11 @@
 
 class HackerDetector : public IModule {
 public:
+	std::string str = "A Message";
 	std::string name = "Player";
-	bool speedCheck = false;
-	bool flyCheck = false;
-	int sensitivity = 2;
+	int sensitivity = 0;
 	int Odelay = 0;
 
-	// Checks (kinda stupid having 3 diff bools for it)
 	// Speed
 	bool failedSpeedA = false;
 	bool failedSpeedB = false;
@@ -23,6 +21,9 @@ public:
 	bool failedFlyB = false;
 	bool failedFly = false;
 	int time = 0;
+
+	// Derp
+	bool failedDerp = false;
 
 	HackerDetector();
 	~HackerDetector();

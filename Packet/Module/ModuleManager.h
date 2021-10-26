@@ -78,6 +78,8 @@
 #include "Modules/ClickTP.h"
 #include "Modules/Jesus.h"
 #include "Modules/AntiVoid.h"
+#include "Modules/Derp.h"
+#include "Modules/FastPlace.h"
 #include "Modules/Module.h"
 
 #ifdef _DEBUG

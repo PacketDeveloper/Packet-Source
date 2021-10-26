@@ -18,11 +18,11 @@ bool NameSpoofCommand::execute(std::vector<std::string>* args) {
 		}
 		TextHolder* name = new TextHolder(os.str());
 		g_Data.setFakeName(name);
-		clientMessageF("[%sPacket%s] %sSet fakename to %s%s%s, please reconnect!", GRAY, WHITE, GREEN, GRAY, name->getText(), GREEN);
+		clientMessageF("[Packet] %sSet fakename to %s%s%s, please reconnect!", GREEN, GRAY, name->getText(), GREEN);
 		return true;
 	} else if (args->at(1) == "reset") {
 		g_Data.setFakeName(NULL);
-		clientMessageF("[%sPacket%s] %sReset fakename!", GRAY, WHITE, GREEN);
+		clientMessageF("[Packet] %sReset fakename!", GREEN);
 		return true;
 	}
 	return false;

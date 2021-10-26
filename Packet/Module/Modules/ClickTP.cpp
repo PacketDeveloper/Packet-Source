@@ -31,6 +31,7 @@ void ClickTP::onTick(C_GameMode* gm) {
 
 		position.y += (gm->player->getPos()->y - gm->player->getAABB()->lower.y) + 1;  // eye height + 1
 		gm->player->setPos(position);
+		//gm->player->chorusFruitTeleport(position);
 	}
 	if (!GameData::isRightClickDown())
 		hasClicked = false;

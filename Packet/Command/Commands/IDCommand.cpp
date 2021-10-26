@@ -1,6 +1,6 @@
 #include "IDCommand.h"
 
-IDCommand::IDCommand() : IMCCommand("id", "Get item/block/entity IDS", "<pointing/holding/entity>") {
+IDCommand::IDCommand() : IMCCommand("id", "Get item/block/entity IDS", "<pointing/holding>") {
 }
 
 IDCommand::~IDCommand() {
@@ -14,20 +14,25 @@ bool IDCommand::execute(std::vector<std::string>* args) {
 	if (args->at(1) == "pointing") {
 		PointingStruct* pointingStruct = g_Data.getClientInstance()->getPointerStruct();
 		C_Block* block = g_Data.getLocalPlayer()->region->getBlock(pointingStruct->block);
-		int id = (int)block->toLegacy()->blockId;
-		char* name = block->toLegacy()->name.getText();
-		clientMessageF("%sPacket: %sBlock Name: %s", GRAY, WHITE, name);
-		clientMessageF("%sPacket: %sBlock ID: %d", GRAY, WHITE, id);
+		int blockID = (int)block->toLegacy()->blockId;
+		char* blockName = block->toLegacy()->name.getText();
+
+		if (g_Data.getClientInstance()->getPointerStruct()->hasEntity()) {
+			C_Entity* entity = g_Data.getClientInstance()->getPointerStruct()->getEntity();
+			if (entity != nullptr) {
+				std::string entityName = entity->getNameTag()->getText();
+				std::string entityID = std::to_string(entity->getEntityTypeId());
+				clientMessageF("[Packet] %sEntity Name: %s", entityName.c_str());
+				clientMessageF("[Packet] %sEntity ID: %d", entityID.c_str());
+			}
+		} else {
+			clientMessageF("[Packet] Block Name: %s", blockName);
+			clientMessageF("[Packet] Block ID: %d", blockID);
+		}
 		return true;
 	} else if (args->at(1) == "holding") {
-		clientMessageF("%sPacket: %sBlock ID: none", GRAY, WHITE);
+		clientMessageF("[Packet] ID: s");
 		return true;
-	} else if (args->at(1) == "entity") {
-		//int id = ent->getEntityTypeId();
-		//char* name = ent->getNameTag()->getText();
-		//clientMessageF("%sPacket: %Entity Name: %s", GRAY, WHITE, name);
-		//clientMessageF("%sPacket: %Entity ID: %d", GRAY, WHITE, id);
-		//return true;
 	}
 	return false;
 }

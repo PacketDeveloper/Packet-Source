@@ -9,6 +9,7 @@ private:
 	int lhtick = 0;
 	bool preventKick = false;
 	int groundTimer = 0;
+	bool intersect = false;
 
 public:
 	int timer = 20;

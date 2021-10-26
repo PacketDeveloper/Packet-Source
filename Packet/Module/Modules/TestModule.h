@@ -21,6 +21,7 @@ private:
 	float tpSpeed = 3288.50f;
 	bool randomThing = false;
 	int testTimer = 0;
+	int hasJumped = 0;
 
 	float speedDetector = 0;
 	bool detectedSpeed = false;

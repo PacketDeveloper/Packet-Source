@@ -1,3 +1,5 @@
+#include "../../../Utils/Target.h"
+#include "../ModuleManager.h"
 #include "MidClick.h"
 
 MidClick::MidClick() : IModule(0, Category::MISC, "Click a player with your mouse wheel to add as friend") {
@@ -18,6 +20,7 @@ void MidClick::onTick(C_GameMode* gm) {
 	std::string name = entity->getNameTag()->getText();
 
 	if (GameData::isWheelDown() && !hasClicked) {
+		name = Utils::sanitize(name);
 		if (!FriendList::findPlayer(name)) {
 			FriendList::addPlayerToList(name);
 			g_Data.getGuiData()->displayClientMessageF("%sSuccessfully added %s %sto your friendlist.", GREEN, name.c_str(), GREEN);
