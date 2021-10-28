@@ -988,8 +988,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 						}
 						if (!it->enabled) {
 							xOffset += it->pos->y;
-							it->pos->y +=
-								smoothness;
+							it->pos->y += smoothness;
 						}
 						if (xOffset >= windowSize.x && !it->enabled) {
 							it->pos->x = 0.f;
@@ -1668,6 +1667,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	static auto speed = moduleMgr->getModule<Speed>();
 	static auto freecamMod = moduleMgr->getModule<Freecam>();
 	static auto flight = moduleMgr->getModule<Flight>();
+	static auto antiVoid = moduleMgr->getModule<AntiVoid>();
 	static auto disabler = moduleMgr->getModule<Disabler>();
 	static auto freetpMod = moduleMgr->getModule<FreeTP>();
 	static auto blinkMod = moduleMgr->getModule<Blink>();
@@ -1699,6 +1699,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		}
 	}
 
+	// Freecam
 	if (freecamMod->isEnabled() || blinkMod->isEnabled()) {
 		if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
 			if (blinkMod->isEnabled()) {
@@ -1736,6 +1737,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		}
 	}
 
+	// flight-blink
 	if (flight->isEnabled() || blinkMod->isEnabled()) {
 		if (flight->blink) {
 			if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
@@ -1777,6 +1779,49 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		}
 	}
 
+	// AntiVoid-blink
+	if (antiVoid->isEnabled() || blinkMod->isEnabled()) {
+		if (antiVoid->blink) {
+			if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
+				if (blinkMod->isEnabled()) {
+					if (packet->isInstanceOf<C_MovePlayerPacket>()) {
+						C_MovePlayerPacket* meme = reinterpret_cast<C_MovePlayerPacket*>(packet);
+						meme->onGround = true;                                                            //Don't take Fall Damages when turned off
+						blinkMod->getMovePlayerPacketHolder()->push_back(new C_MovePlayerPacket(*meme));  // Saving the packets
+					} else {
+						char* npacket = new char[sizeof(PlayerAuthInputPacket)];
+						memcpy(npacket, packet, sizeof(PlayerAuthInputPacket));
+						blinkMod->getPlayerAuthInputPacketHolder()->push_back((PlayerAuthInputPacket*)npacket);
+					}
+				}
+				return;  // Dont call LoopbackPacketSender_sendToServer
+			}
+		}
+	} else if (!blinkMod->isEnabled()) {
+		if (antiVoid->blink) {
+			if (blinkMod->getMovePlayerPacketHolder()->size() > 0) {
+				for (auto it : *blinkMod->getMovePlayerPacketHolder()) {
+					oFunc(a, (it));
+					delete it;
+					it = nullptr;
+				}
+				blinkMod->getMovePlayerPacketHolder()->clear();
+				return;
+			}
+			if (blinkMod->getPlayerAuthInputPacketHolder()->size() > 0) {
+				for (PlayerAuthInputPacket* it : *blinkMod->getPlayerAuthInputPacketHolder()) {
+					memset((int*)&it->yawUnused + 2, 0, 0x5C);
+					oFunc(a, (it));
+					delete it;
+					it = nullptr;
+				}
+				blinkMod->getPlayerAuthInputPacketHolder()->clear();
+				return;
+			}
+		}
+	}
+
+	// FreeTP
 	if (freetpMod->isEnabled() || blinkMod->isEnabled()) {
 		if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
 			if (blinkMod->isEnabled()) {
@@ -1812,6 +1857,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 			return;
 		}
 
+		// Disabler-blink
 		if (disabler->isEnabled() && disabler->mode.getSelectedValue() == 2 || blinkMod->isEnabled()) {
 			if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
 				if (blinkMod->isEnabled()) {

@@ -3,7 +3,7 @@
 AntiVoid::AntiVoid() : IModule(0, Category::MOVEMENT, "Teleports you back up if you fall in the void") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Lagback", 0);
-	mode.addEntry("Push", 1);
+	mode.addEntry("Hive", 1);
 	registerBoolSetting("VoidCheck", &voidCheck, voidCheck);
 	registerIntSetting("Distance", &distance, distance, 3, 10);
 }
@@ -16,6 +16,8 @@ const char* AntiVoid::getModuleName() {
 }
 
 void AntiVoid::onEnable() {
+	auto player = g_Data.getLocalPlayer();
+	savedPos = *player->getPos();
 	tick = 0;
 }
 
@@ -32,6 +34,7 @@ void AntiVoid::onTick(C_GameMode* gm) {
 			savedPos.y += 0.5f;
 		}
 	}
+
 	if (player->fallDistance >= distance) {
 		tick++;
 		if (!player->onGround && tick >= 5) { // fail safe
@@ -40,8 +43,15 @@ void AntiVoid::onTick(C_GameMode* gm) {
 
 		vec3_t pos = savedPos;
 		float dist2 = gm->player->getPos()->dist(pos);
-		if (mode.getSelectedValue() == 0) player->setPos(savedPos);  // lagback
-		if (mode.getSelectedValue() == 1) player->lerpTo(pos, vec2_t(1, 1), (int)fmax((int)dist2 * 0.1, 1)); // push
+		if (mode.getSelectedValue() == 0) player->setPos(savedPos);  // Lagback
+		if (mode.getSelectedValue() == 1) { // Hive
+			player->lerpTo(pos, vec2_t(1, 1), (int)fmax((int)dist2 * 0.1, 1));
+			*g_Data.getClientInstance()->minecraft->timer = 5.f;
+			blink = true;
+		}
+	} else {
+		*g_Data.getClientInstance()->minecraft->timer = 20.f;
+		blink = false;
 	}
 }
 

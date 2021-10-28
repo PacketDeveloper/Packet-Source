@@ -9,13 +9,13 @@ Flight::Flight() : IModule(0, Category::MOVEMENT, "allows you to fly wow!") {
 	mode.addEntry("Teleport", 2);
 	mode.addEntry("Jetpack", 3);
 	mode.addEntry("Hive", 5);
-	mode.addEntry("HiveTNT", 6);
+	//mode.addEntry("HiveTNT", 6);
 	//mode.addEntry("BlockFly", 4);
 	registerBoolSetting("Damage", &damage, damage);
 	registerBoolSetting("Boost", &boost, boost);
 	registerFloatSetting("Speed", &speed, speed, 0.3f, 4.f);
 	registerFloatSetting("value", &value, value, -0.15f, 0.00);
-	registerIntSetting("HiveMS", &timing, timing, 0, 10);
+	//registerIntSetting("HiveMS", &timing, timing, 0, 10);
 }
 
 Flight::~Flight() {
@@ -220,6 +220,8 @@ void Flight::onTick(C_GameMode* gm) {
 			}
 		}
 	} else if (mode.getSelectedValue() == 5) {  // Hive
+		if (speed >= 0.60f) timing = 3;
+		if (speed <= 0.50f) timing = 6;
 		for (int i = 0; i < 50; i++) {
 			if (hiveC == 8) {
 				hiveC = 1;
@@ -263,7 +265,7 @@ void Flight::onTick(C_GameMode* gm) {
 		if (player->damageTime >= 1) fly = true;
 		if (fly) {
 			gm->player->velocity = vec3_t(0, 0, 0);
-			*g_Data.getClientInstance()->minecraft->timer = 530;
+			*g_Data.getClientInstance()->minecraft->timer = 450;
 			if (!speedMod->isEnabled() && !GameData::isKeyDown(*input->spaceBarKey)) {
 				player->onGround = true;
 			}
@@ -272,7 +274,7 @@ void Flight::onTick(C_GameMode* gm) {
 		} else {
 				blink = true;
 			*g_Data.getClientInstance()->minecraft->timer = 20;
-			float trueStop = 1000 - 1 + NULL;
+			float trueStop = 1005 - 1 + NULL;
 			gm->player->velocity = vec3_t(trueStop, trueStop);
 		}
 	} else {

@@ -196,9 +196,7 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 		return;
 
 	if (rotations && g_Data.canUseMoveKeys() && g_Data.getLocalPlayer() != nullptr && g_Data.isInGame()) {
-		auto test = moduleMgr->getModule<TestModule>();
 		if (speed > 0.05f) {
-			player->bodyYaw = test->sliderX;
 		}
 	}
 
@@ -346,10 +344,6 @@ void Scaffold::onSendPacket(C_Packet* packet) {
 				movePacket->yaw = angle.y;
 			}
 		}
-	}
-
-	if (strcmp(packet->getName()->getText(), "PlayerAuthInputPacket") != 0) {
-		g_Data.getClientInstance()->getGuiData()->displayClientMessageF("%s", packet->getName()->getText());
 	}
 }
 

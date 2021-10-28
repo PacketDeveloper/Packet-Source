@@ -7,10 +7,11 @@
 #include "TextHolder.h"
 
 class Minecraft {
-private:
+public:
 	char pad_0x0000[0xD0];  //0x0000
 public:
 	float* timer;  //0x00D0
+	;  //0x00D0
 };
 
 class Tessellator;
@@ -18,14 +19,14 @@ class C_Block;
 
 class BlockTessellator;
 class ResourceLocation {
-private:
+public:
 	char pad[0x28];
 	__int64 hashCode; // 0x28
 	char pad2[8];
 };
 
 class HashedString {
-private:
+public:
 	unsigned __int64 hash;
 	TextHolder text; // 0x0008
 
@@ -67,7 +68,7 @@ namespace mce {
 		}
 	};
 	class TexturePtr {
-	private:
+	public:
 		__int64* clientTexture;
 		char pad[0x8];
 		ResourceLocation resourceLocation; // 0x10
@@ -78,7 +79,7 @@ namespace mce {
 		}
 	};
 	class MaterialPtr {
-	private:
+	public:
 		std::shared_ptr<void> materialPtr;
 
 	public:
@@ -102,7 +103,7 @@ struct C_FontRepository_FontList_FontEntry {
 public:
 	C_Font* font;
 
-private:
+public:
 	void* sharedFontPtr;
 };
 
@@ -112,7 +113,7 @@ public:
 };
 
 struct C_FontRepository {
-private:
+public:
 	uintptr_t* font_repository_vtable;  // 0x0000
 	__int64 pad;                        // 0x0008
 	void* ptrToSelf;                    // 0x0010
@@ -127,11 +128,11 @@ class MinecraftGame {
 	char pad_0000[256];  //0x0000
 public:
 	struct C_FontRepository* fontRepository;  //0x0100
-private:
+public:
 	char pad_0118[496];  //0x0118
 public:
 	bool canMoveCamera;  //0x02F8
-private:
+public:
 	char pad_02F9[783];  //0x02F9
 public:
 	class TextHolder xuid;  //0x0608
@@ -152,7 +153,7 @@ public:
 };
 
 class C_GuiData {
-private:
+public:
 	char pad_0x0000[0x18];  //0x0000
 public:
 	union {
@@ -181,21 +182,21 @@ public:
 };
 
 struct PtrToGameSettings3 {
-private:
+public:
 	char pad_0x0000[0x18];  //0x0000
 public:
 	C_GameSettingsInput* settingsInput;
 };
 
 struct PtrToGameSettings2 {
-private:
+public:
 	char pad_0x0000[0x148];  //0x0000
 public:
 	PtrToGameSettings3* ptr;
 };
 
 struct PtrToGameSettings1 {
-private:
+public:
 	char pad_0x0000[0x18];  //0x0000
 public:
 	PtrToGameSettings2* ptr;
@@ -205,36 +206,36 @@ class C_MoveInputHandler;
 class C_CameraManager;
 
 class C_ClientInstance {
-private:
+public:
 	char firstPad[0x90];  //0x0008
 public:
 	MinecraftGame* minecraftGame;  //0x0098
-private:
+public:
 	MinecraftGame* N0000080C;  //0x00A0
 	MinecraftGame* N0000080D;  //0x00A8
 public:
 	Minecraft* minecraft;  //0x00B0
-private:
+public:
 	char pad_0x0068[0x8];  //0x00B8
 public:
 	LevelRenderer* levelRenderer;  //0x00C0
-private:
+public:
 	char pad_0x0078[0x8];  //0x00C8
 public:
 	C_LoopbackPacketSender* loopbackPacketSender;  //0x00D0
-private:
+public:
 	char pad_0x0088[0x18];  //0x00D8
 public:
 	PtrToGameSettings1* ptr;  //0x00F0
-private:
+public:
 	char pad_0x00B0[0x8];  //0x00F8
 public:
 	HitDetectSystem* hitDetectSystem;  //0x0100
-private:
+public:
 	char pad_0x00B8[0x30];  //0x0108
 public:
 	C_LocalPlayer* localPlayer;  //0x0138
-private:
+public:
 	char pad[0x388]; // 0x0140
 public:
 	struct {
@@ -245,7 +246,7 @@ public:
 		} entityLineMaterial;
 	} *itemInHandRenderer; // 0x04C8
 
-private:
+public:
 	virtual __int64 destructorClientInstance();
 	// Duplicate destructor
 	virtual __int64 onInitMinecraftGame(void);
@@ -263,7 +264,7 @@ public:
 	virtual bool isLeaveGameDone(void) const;
 	virtual void setupPlayScreenForLeaveGame(void);
 
-private:
+public:
 	virtual __int64 resetPrimaryClient(void);
 	virtual __int64 resetGameSession(void);
 	virtual __int64 tick(void);
@@ -275,7 +276,7 @@ private:
 public:
 	virtual void setupClientGame(__int64&&, bool);
 
-private:
+public:
 	virtual __int64 sub_1400C5D00(void) const;
 	virtual __int64 getLocalC_Player(void);
 	virtual __int64 getLocalC_Player(void) const;
@@ -284,7 +285,7 @@ private:
 public:
 	virtual void setCameraEntity(C_Entity*);
 
-private:
+public:
 	virtual __int64 getCameraTargetEntity(void) const;
 
 public:
@@ -292,7 +293,7 @@ public:
 	virtual bool isLeavingGame(void) const;
 	virtual bool isDestroyingGame(void) const;
 
-private:
+public:
 	virtual __int64 sub_1400C98E0(void) const;
 	virtual __int64 useLowFrequencyUIRender(void) const;
 
@@ -314,7 +315,7 @@ public:
 	virtual bool hasCommands(void) const;
 	virtual bool isScriptingEnabled(void) const;
 
-private:
+public:
 	virtual __int64 getHoloviewerScale(void) const;
 	virtual __int64 getSplitScreenCount(void) const;
 
@@ -325,7 +326,7 @@ public:
 	virtual bool isValidCrossPlatformSkin(void) const;
 	virtual __int64 sub_1400C9B70(void);
 
-private:
+public:
 	virtual __int64 getSplitScreenInfo(void) const;
 	virtual __int64 getCurrentMaxGUIScaleIndex(void) const;
 	virtual __int64 getRealityModeFrameFactor(void) const;
@@ -333,38 +334,38 @@ private:
 public:
 	virtual void setRealityModeFrameFactor(float const&);
 
-private:
+public:
 	virtual __int64 getRealityModeToggleTriggered(void) const;
 
 public:
 	virtual void setRealityModeToggleTriggered(bool);
 
-private:
+public:
 	virtual bool sub_1400C9C50(void);
 
 public:
 	virtual void setOpenControllerDisconnectScreen(bool);
 
-private:
+public:
 	virtual __int64 getClientPlayMode(void) const;
 
 public:
 	virtual void setClientPlayMode(__int64 const&);
 
-private:
+public:
 	virtual __int64 getLivingRoomForCredits(void) const;
 
 public:
 	virtual void setLivingRoomForCredits(bool);
 
-private:
+public:
 	virtual __int64 getCreditsCallback(void);
 
 public:
 	virtual void setCreditsCallback(__int64);
 	virtual void setupTransitionForCredits(__int64);
 
-private:
+public:
 	virtual __int64 refreshScreenSizeData(void);
 	virtual __int64 onScreenSizeChanged(int, int, float);
 	virtual __int64 onGuiScaleOffsetChanged(void);
@@ -374,7 +375,7 @@ private:
 public:
 	virtual __int64 getMinecraftGame(void) const;
 
-private:
+public:
 	virtual __int64 getAutomationClient(void) const;
 	virtual __int64 getScreenshotStreamer(void) const;
 	virtual __int64 getEventing(void) const;
@@ -405,7 +406,7 @@ public:
 	virtual bool isPrimaryLevelMultiplayer(void) const;
 	virtual bool isAdhocEnabled(void) const;
 
-private:
+public:
 	virtual __int64 linkToOffer(std::string const&, bool, std::string const&, __int64);
 	virtual __int64 linkToAllOffers(std::string const&, std::string const&, bool, std::string const&, bool);
 	virtual __int64 navigateToBrazeScreen(std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&, std::string const&);
@@ -422,7 +423,7 @@ private:
 public:
 	virtual bool isReadyToRender(void) const;
 
-private:
+public:
 	virtual __int64 onDimensionChanged(void);
 	virtual __int64 onGameEventNotification(__int64);
 
@@ -430,7 +431,7 @@ public:
 	virtual TextHolder getTopScreenName(void) const;
 	virtual void setLeaveGameInProgressAsReadyToContinue(void);
 
-private:
+public:
 	virtual __int64 stopDestroying(void);
 	virtual __int64 onClientCreatedLevel(__int64);
 	virtual __int64 getClientRandomId(void) const;
@@ -446,7 +447,7 @@ private:
 public:
 	virtual bool isHoloCursorNeeded(void) const;
 
-private:
+public:
 	virtual __int64 useController(void) const;
 	virtual __int64 useTouchscreen(void) const;
 
@@ -455,7 +456,7 @@ public:
 	virtual __int64 currentInputModeIsMouseAndKeyboard(void) const;
 	virtual bool getMouseGrabbed(void) const;
 
-private:
+public:
 	virtual __int64 getForceMonoscopic(void) const;
 	virtual __int64 allowPicking(void) const;
 
@@ -468,7 +469,7 @@ public:
 	virtual bool isInGame(void) const;
 	virtual bool isInRealm(void);
 
-private:
+public:
 	virtual __int64 readyForShutdown(void) const;
 
 public:
@@ -476,7 +477,7 @@ public:
 	virtual bool isEduMode(void) const;
 	virtual bool isGamepadCursorEnabled(void) const;
 
-private:
+public:
 	virtual Minecraft* getServerData(void);
 	virtual Minecraft* getServerData(void) const;
 
@@ -499,7 +500,7 @@ public:
 	virtual __int64 getLevelRendererCameraProxy(void) const;
 public:
 	virtual C_CameraManager* getCameraManager(void) const;
-private:
+public:
 	virtual __int64 sub_1400CCC08(void) const;
 
 public:
@@ -508,26 +509,26 @@ public:
 public:
 	virtual void setupLevelRendering(__int64&, C_Entity&);
 
-private:
+public:
 	virtual __int64 getViewportInfo(void) const;
 
 public:
 	virtual void setViewportInfo(__int64 const&);
 
-private:
+public:
 	virtual __int64 getNormalizedViewportSize(void) const;
 	virtual __int64 updateChunkRadius(void);
 
 public:
 	virtual void setUITexture(__int64*);
 
-private:
+public:
 	virtual __int64 getUITexture(void);
 
 public:
 	virtual void setLevelTexture(__int64*);
 
-private:
+public:
 	virtual __int64 getLevelTexture(void);
 
 public:
@@ -549,14 +550,14 @@ public:
 public:
 	virtual void setGuiScaleOffset(int);
 
-private:
+public:
 	virtual __int64 renderEditorGui(__int64&, bool);
 
 public:
 	virtual C_GuiData* getGuiData(void);
 	virtual C_GuiData* getGuiData(void) const;
 
-private:
+public:
 	virtual __int64 getGuidedFlowManager(void);
 	virtual __int64 getDpadScale(void) const;
 	virtual __int64 getDateManager(void) const;
@@ -583,7 +584,7 @@ private:
 public:
 	virtual TextHolder getScreenName(void) const;
 
-private:
+public:
 	virtual __int64 getScreenTelemetry(void) const;
 	virtual __int64 getTopSceneType(void) const;
 	virtual __int64 getMobEffectsLayout(void);
@@ -594,7 +595,7 @@ private:
 public:
 	virtual void setUISizeAndScale(int, int, float);
 
-private:
+public:
 	virtual __int64 forEachVisibleScreen(__int64, bool);
 	virtual __int64 forEachScreen(__int64, bool);
 	virtual __int64 forEachScreenConst(__int64, bool) const;
@@ -607,13 +608,13 @@ private:
 public:
 	virtual bool isTouchGameplayAllowed(void) const;
 
-private:
+public:
 	virtual __int64 getMinecraftInput(void) const;
 
 public:
 	virtual void setHoloInput(__int64);
 
-private:
+public:
 	virtual __int64 getHoloInput(void) const;
 	virtual __int64 getVoiceSystem(void) const;
 	virtual __int64 getKeyboardManager(void);
@@ -622,7 +623,7 @@ public:
 	virtual void setVoiceSystem(__int64);
 	virtual void setLastPointerLocation(float, float, float);
 
-private:
+public:
 	virtual __int64 getLastPointerLocation(void);
 	virtual __int64 shouldUseLastPointerLocationOnFocusChange(void);
 	virtual __int64 adjustGazeCursorByMouse(float, float);
@@ -642,21 +643,21 @@ public:
 public:
 	virtual void setupPersistentControls(__int64);
 
-private:
+public:
 	virtual __int64 resetC_PlayerMovement(void);
 	virtual __int64 onClientInputInitComplete(void);
 
 public:
 	virtual void setClientInputHandler(__int64);
 
-private:
+public:
 	virtual __int64 getInput(void) const;
 	virtual __int64 getControllerId(void) const;
 
 public:
 	virtual bool hasConnectedController(void) const;
 
-private:
+public:
 	virtual __int64 getClientSubId(void) const;
 
 public:
@@ -674,7 +675,7 @@ public:
 	virtual void releaseMouse(void);
 	virtual void refocusMouse(void);
 
-private:
+public:
 	virtual __int64 resetBai(int);
 	virtual __int64 clearInProgressBAI(void);
 	virtual __int64 tickBuildAction(void);
@@ -690,13 +691,13 @@ private:
 public:
 	virtual bool isFullVanillaPackOnStack(void) const;
 
-private:
+public:
 	virtual __int64 onPlayerLoaded(C_Player&);
 
 public:
 	virtual void setClientGameMode(__int64);
 
-private:
+public:
 	virtual __int64 resetToDefaultGameMode(void);
 	virtual __int64 connectToThirdParyServer(std::string const&, std::string const&, int);
 	virtual __int64 startExternalNetworkWorld(__int64, std::string const&, bool);
@@ -708,7 +709,7 @@ public:
 	virtual void setBehaviorCommandCallback(__int64);
 	virtual void setBehaviorCommandStatus(std::string, __int64);
 
-private:
+public:
 	virtual __int64 requestScreenshot(__int64&);
 	virtual void sub_1400BE0A0(char a2);
 	virtual __int64 getDevConsoleLogger(void) const;
@@ -740,7 +741,7 @@ private:
 public:
 	virtual void setServerPingTime(unsigned int);
 
-private:
+public:
 	virtual __int64 getServerPingTime(void) const;
 
 public:
@@ -748,7 +749,7 @@ public:
 	virtual void setClientInstanceState(__int64 const&);
 	virtual void setUIEventCoordinator(__int64&&);
 
-private:
+public:
 	virtual __int64 getUIEventCoordinator(void);
 	virtual __int64 getEventCoordinator(void);
 	virtual __int64 computeScreenCoordsFromScreenNormCoords(float, float, short&, short&);
@@ -760,7 +761,7 @@ public:
 	virtual void setNewDictationString(bool);
 	virtual void setGameModule(__int64);
 
-private:
+public:
 	virtual __int64 getGameModule(void);
 	virtual __int64 getGameCallbacks(void);
 	virtual __int64 getStorageAreaStateListener(void);
@@ -771,7 +772,7 @@ private:
 public:
 	virtual bool isPlaying(void) const;
 
-private:
+public:
 	virtual __int64 getLatencyGraphDisplay(void) const;
 	virtual __int64 createSkin(void);
 	virtual __int64 onExtendDiskSpace(bool, __int64&, unsigned long long const&, __int64);

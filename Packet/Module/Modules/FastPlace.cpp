@@ -1,6 +1,6 @@
 #include "FastPlace.h"
 
-FastPlace::FastPlace() : IModule(0, Category::COMBAT, "Places blocks fast") {
+FastPlace::FastPlace() : IModule(0, Category::PLAYER, "Places blocks fast") {
 	registerIntSetting("delay", &delay, delay, 0, 10);
 }
 

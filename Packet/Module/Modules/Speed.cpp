@@ -201,8 +201,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			moveVec.y = player->velocity.y;
 			moveVec.z = movement.y * speed;
 			if (!player->onGround) {
-				if (intersect) *g_Data.getClientInstance()->minecraft->timer = 17;
-				else *g_Data.getClientInstance()->minecraft->timer = 27;
+				if (intersect) *g_Data.getClientInstance()->minecraft->timer = 16;
+				else *g_Data.getClientInstance()->minecraft->timer = 26;
 			} else {
 				player->velocity.x *= 0;
 				player->velocity.z *= 0;

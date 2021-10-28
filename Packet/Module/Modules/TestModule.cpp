@@ -1,5 +1,6 @@
 #include "../../Module/ModuleManager.h"
 #include "TestModule.h"
+//#include "../../../assets/images/logo.png"
 
 TestModule::TestModule() : IModule(0, Category::MISC, "Description") {
 	registerBoolSetting("AlertBox", &alertBox, alertBox);
@@ -77,6 +78,7 @@ void TestModule::onEnable() {
 		}
 		if (test) {
 			counter = 0;
+			sliderX = -5;
 		}
 }
 
@@ -111,19 +113,19 @@ void TestModule::onTick(C_GameMode* gm) {
 	if (test) {
 		//g_Data.getLocalPlayer()->setGameModeType(3);
 		//auto player = g_Data.getLocalPlayer();
-				//player->velocity.x = 6.f;
-				//player->velocity.y = 7.f;
+		//player->velocity.x = 6.f;
+		//player->velocity.y = 7.f;
 		//*g_Data.getClientInstance()->minecraft->timer = 20.f;
-				//player->velocity.z = 5.f;
+		//player->velocity.z = 5.f;
 		//player->animateHurt();
 		//player->setSleeping(true);
 		//player->setSleeping(true);
 		//player->updateWalkAnim();
 		//player->getAttackAnim(1);
 		//player->setSize(300, 0);
-		 //if (player->isInWater()) {
-			//gm->player->onGround = true;
-			//gm->player->velocity.y = 1;
+		//if (player->isInWater()) {
+		//gm->player->onGround = true;
+		//gm->player->velocity.y = 1;
 		//}
 		/*auto flight = moduleMgr->getModule<Flight>();
 		auto speed = moduleMgr->getModule<Speed>();
@@ -149,7 +151,7 @@ void TestModule::onTick(C_GameMode* gm) {
 		}*/
 		//vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
 
-	//	vec3_t pos;
+		//	vec3_t pos;
 		//pos.x = 0.f + pPos.x;
 		//pos.y = 300.f + pPos.y;
 		//pos.z = 0.f + pPos.z;
@@ -160,8 +162,8 @@ void TestModule::onTick(C_GameMode* gm) {
 		//C_LocalPlayer* localHost = g_Data.getLocalPlayer();
 		//g_Data.getLocalPlayer()->setGameModeType(1);
 		//if (legacyMode) {
-			//gm->player->onGround = true;
-			//return;
+		//gm->player->onGround = true;
+		//return;
 		//}
 		/*C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
@@ -193,6 +195,10 @@ void TestModule::onTick(C_GameMode* gm) {
 
 			gm->player->setPos(pos.add(vec3_t(x, 1.f, z)));
 		}*/
+		std::string msg = "AAAAAAAAA fuck";
+			if (!(sliderX >= 400)) sliderX++;
+		//for (float x = sliderX; x++; sliderX++) {
+		//}
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
@@ -346,31 +352,47 @@ void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	auto player = g_Data.getLocalPlayer();
 	if (test) {
 		float x = windowSize.x / 114 + 1;
+		float x2 = windowSize.x / sliderX + 1;
 		float y = windowSize.y - 20;
-
-		float x2 = windowSize.x / 114 + 1;
 		float y2 = windowSize.y - 30;
-
-		float x3 = windowSize.x / 114 + 1;
 		float y3 = windowSize.y - 40;
+		float y4 = windowSize.y - sliderY;
 
-		std::string fpsText = "Player Pitch: " + std::to_string(player->pitch);
-		std::string fpsText2 = "Player Yaw: " + std::to_string(player->yaw);
-		std::string fpsText3 = "Body Yaw: " + std::to_string(player->bodyYaw);
+		auto hudMod = moduleMgr->getModule<HudModule>();
+
+		std::string textStr = "Animation test";
+		float startY = hudMod->tabgui ? 10 * 15 : 145;
+		float l = DrawUtils::getTextWidth(&textStr, 1.064) + 10.f;
+		vec4_t rectPos = vec4_t(sliderX, startY + 4.f * 1, l, startY + 20.f * 1);
+		vec2_t textPos = vec2_t(rectPos.x + 15, rectPos.y + 10.f);
+		vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
+
+		float animationPos = -5;
+		animationPos++;
+		float xpos = windowSize.x / animationPos + 1;
+		DrawUtils::drawText(vec2_t(pPos), &textStr, MC_Color(255, 255, 255), 1, 1, true);
+		DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.5);
+
+
+		//std::string fpsText = "Player Pitch: " + std::to_string(player->pitch);
+		//std::string fpsText2 = "Player Yaw: " + std::to_string(player->yaw);
+		//std::string fpsText3 = "Body Yaw: " + std::to_string(player->bodyYaw);
 		//DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), 1, 1, true);
-		DrawUtils::drawText(vec2_t(x2, y2), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
-		DrawUtils::drawText(vec2_t(x3, y3), &fpsText3, MC_Color(255, 255, 255), 1, 1, true);
+		//DrawUtils::drawText(vec2_t(x, y2), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
 
-		std::string BpsText = "Speed: " + std::string(std::to_string((float)speed));
+		DrawUtils::drawText(vec2_t(x2, y4), &textStr, MC_Color(255, 255, 255), 1, 1, true);
+		DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.5);
 
-		DrawUtils::drawText(vec2_t(x, y), &BpsText, MC_Color(255, 255, 255), 1);
+		//std::string filePath = "../../../assets/images/logo.png";
+		//DrawUtils::drawImage(filePath, vec2_t(x2, y4), vec2_t(755, 175), vec2_t(0, 0));
+		//DrawUtils::drawText(vec2_t(x, y), &BpsText, MC_Color(255, 255, 255), 1);
 
-		for (int i = 0; i < 1; i++) {
+		/*for (int i = 0; i < 1; i++) {
 			player->bodyYaw = sliderX;
 			player->pitch = sliderY;
 			player->pitch2 = sliderY;
 			player->viewAngles2;
 			player->viewAngles;
-		}
+		}*/
 	}
 }

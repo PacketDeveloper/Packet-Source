@@ -12,6 +12,8 @@ private:
 	int tick = 0;
 
 public:
+	bool blink = false;
+
 	AntiVoid();
 	~AntiVoid();
 

@@ -5,7 +5,7 @@ Derp::Derp() : IModule(0, Category::MISC, "lol you stupid") {
 	registerBoolSetting("Twerk", &twerk, twerk);
 	registerBoolSetting("Spin", &spin, spin);
 	registerBoolSetting("Silent", &silent, silent);
-	registerFloatSetting("Delay", &delay, delay, 0.f, 10.f);
+	registerIntSetting("Delay", &delay, delay, 0, 10);
 }
 
 Derp::~Derp() {
@@ -16,31 +16,35 @@ const char* Derp::getModuleName() {
 }
 
 void Derp::onEnable() {
-
+	tick = -2;
 }
 
 void Derp::onTick(C_GameMode* gm) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	auto player = g_Data.getLocalPlayer();
-
-	if (silent)
-		return;
-
-	Odelay++;
-	if (Odelay > delay) {
-		if (headless) {
-			gm->player->pitch = -180;
-		}
-		if (twerk) {
+	if (headless && !silent) {
+		gm->player->pitch = -180;
+	}
+	if (twerk) {
+		tick++;
+		if (tick >= delay) {
 			g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = true;
+			tick = -2;
 		} else {
 			g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
 		}
-		if (spin) {
-
-		}
 	}
-	Odelay = 0;
+}
+
+void Derp::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
+	auto player = g_Data.getLocalPlayer();
+	float prevyaw = player->yawUnused1;
+	float prevyaw2 = player->yaw;
+	float prevyaw3 = player->yaw2;
+	if (spin && !silent) {
+		player->bodyYaw = (float)(rand() % 360);
+		player->yawUnused2 = (float)(rand() % 360);
+	}
 }
 
 void Derp::onSendPacket(C_Packet* packet) {
@@ -53,9 +57,28 @@ void Derp::onSendPacket(C_Packet* packet) {
 	auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 	auto* authPacket = reinterpret_cast<PlayerAuthInputPacket*>(packet);
 	if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
-		if (g_Data.getLocalPlayer() != nullptr && g_Data.canUseMoveKeys() && silent) {
-			if (headless) movePacket->pitch = -180;
-			if (headless) authPacket->pitch = -180;
+		if (g_Data.isInGame() && g_Data.canUseMoveKeys()) {
+			if (silent) {
+				if (headless) {
+					movePacket->pitch = -180;
+					authPacket->pitch = -180;
+				}
+				if (spin) {
+					movePacket->headYaw = (float)(rand() % 360);
+					movePacket->yaw = (float)(rand() % 360);
+					movePacket->headYaw = movePacket->yaw;
+					movePacket->yaw = movePacket->headYaw;
+				}
+			} else if (spin) {
+				movePacket->headYaw = (float)(rand() % 360);
+				movePacket->yaw = (float)(rand() % 360);
+				movePacket->headYaw = movePacket->yaw;
+				movePacket->yaw = movePacket->headYaw;
+			}
 		}
 	}
+}
+
+void Derp::onDisable() {
+	if (twerk) g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
 }
