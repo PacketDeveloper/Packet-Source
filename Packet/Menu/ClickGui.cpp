@@ -105,8 +105,10 @@ void ClickGui::renderLabel(const char* text) {
 
 void ClickGui::renderTooltip(std::string* text) {
 	vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-	vec2_t currentTooltipPos = vec2_t(5.f, windowSize.y - 15.f);
+	vec2_t mousePos = *g_Data.getClientInstance()->getMousePos();
+	vec2_t currentTooltipPos = vec2_t(5.f, mousePos.y - 15.f);
 	float textWidth = DrawUtils::getTextWidth(text, textSize);
+
 	vec2_t textPos = vec2_t(
 		currentTooltipPos.x + textPadding,
 		currentTooltipPos.y);
@@ -115,9 +117,11 @@ void ClickGui::renderTooltip(std::string* text) {
 		currentTooltipPos.y - 2.f,
 		currentTooltipPos.x + (textPadding * 2) + textWidth + 2.f,
 		currentTooltipPos.y + textHeight + 2.f);
+
 	DrawUtils::fillRectangle(rectPos, MC_Color(32, 32, 32), 1.0f);
 	DrawUtils::drawRectangle(rectPos, MC_Color(32, 32, 32), 1.f, 0.5f);
-	DrawUtils::drawText(textPos, text, MC_Color(255, 255, 255), textSize);
+	//DrawUtils::drawText(mousePos, text, MC_Color(255, 255, 255), textSize, 1);
+	DrawUtils::drawText(vec2_t(textPos), text, MC_Color(255, 255, 255), 1);
 }
 
 void ClickGui::renderCategory(Category category, bool Rainbow, float backgroundAlpha) {

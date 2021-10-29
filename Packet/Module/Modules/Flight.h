@@ -8,7 +8,6 @@ private:
 	bool damage = false;
 	bool boost = false;
 	bool speedWasEnabled = false;
-	bool scfWasEnabled = false;
 
 public:
 	int counter = 1;
@@ -34,6 +33,7 @@ public:
 	int hiveC = 0;
 	int timing = 1;
 	bool fly2 = false;
+	vec3_t curPos;
 
 		std::string name = "Flight";
 		C_MovePlayerPacket* jetpack = nullptr;

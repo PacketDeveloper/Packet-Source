@@ -6,6 +6,7 @@ class Breaker : public IModule {
 private:
 	bool switchSlot = false;
 	bool treasures = false;
+	bool destroy = false;
 	bool chests = false;
 	bool cakes = false;
 	bool beds = false;
@@ -21,6 +22,9 @@ private:
 	int slot = 1;
 
 public:
+	bool rotations = false;
+	vec3_t blockPos;
+
 	Breaker();
 	~Breaker();
 
@@ -31,4 +35,6 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 	virtual const char* getRawModuleName() override;
+	virtual void onSendPacket(C_Packet* packet) override;
+	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };

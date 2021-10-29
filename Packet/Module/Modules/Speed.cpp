@@ -204,8 +204,6 @@ void Speed::onMove(C_MoveInputHandler* input) {
 				if (intersect) *g_Data.getClientInstance()->minecraft->timer = 16;
 				else *g_Data.getClientInstance()->minecraft->timer = 26;
 			} else {
-				player->velocity.x *= 0;
-				player->velocity.z *= 0;
 				*g_Data.getClientInstance()->minecraft->timer = 16;
 				if (pressed) player->lerpMotion(moveVec);
 			}

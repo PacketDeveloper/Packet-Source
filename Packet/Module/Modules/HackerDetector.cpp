@@ -76,6 +76,11 @@ void HackerDetector::onTick(C_GameMode* gm) {
 			} else {  // off ground
 				if (speed >= 45) failedSpeedB = true;
 			}
+			if (speed <= 30) { // reset to prevent bug
+				failedSpeedA = false;
+				failedSpeedB = false;
+			}
+
 			if (failedSpeedA || failedSpeedB) failedSpeed = true;
 			else failedSpeed = false;
 
@@ -90,6 +95,14 @@ void HackerDetector::onTick(C_GameMode* gm) {
 			// Derp check lol
 			if (playerList[0]->pitch >= 90 || playerList[0]->pitch <= -90) failedDerp = true;
 			else failedDerp = false;
+
+			//NoWeb check
+			vec3_t* pos = playerList[0]->getPos();
+			vec3_t blockBelow = playerList[0]->eyePos0;
+			blockBelow.y -= playerList[0]->height;
+			for (int y = (int)pos->y - 3; y < pos->y + 0; y++) {
+				if (playerList[0]->region->getBlock(vec3_t{blockBelow})->toLegacy()->blockId == 30 && speed >= 10) failedNoWeb = true;
+			}
 		}
 
 		Odelay++;
@@ -97,20 +110,22 @@ void HackerDetector::onTick(C_GameMode* gm) {
 			for (auto& i : playerList) {
 				if (failedSpeed && speed <= 40)
 					return;
+				std::string speedAmount = std::string(std::to_string((int)speed));
+				std::string pitch = std::string(std::to_string(playerList[0]->pitch));
 				if (mode.getSelectedValue() == 0) {  // client
-					char* charName = playerList[0]->getNameTag()->getText();
 					char* speedAB = failedSpeedA ? "A" : "B";
 					char* flyAB = failedFlyA ? "A" : "B";
-					std::string pitch = std::string(std::to_string(playerList[0]->pitch));
-					if (failedSpeed) clientMessageF("[Packet] %s%s%s has failed %sSpeed-%s (x%s.0)", GRAY, charName, WHITE, GRAY, speedAB, std::string(std::to_string((int)speed)).c_str());
-					if (failedDerp) clientMessageF("[Packet] %s%s%s has failed %sDerp (%s)", GRAY, charName, WHITE, GRAY, pitch.c_str());
-					if (failedFly) clientMessageF("[Packet] %s%s%s has failed %sFly-%s (xVel)", GRAY, charName, WHITE, GRAY, flyAB);
+					if (failedSpeed) clientMessageF("[Packet] %s%s%s has failed %sSpeed-%s (x%s.0)", GRAY, name.c_str(), WHITE, GRAY, speedAB, speedAmount.c_str());
+					if (failedFly) clientMessageF("[Packet] %s%s%s has failed %sFly-%s (xVel)", GRAY, name.c_str(), WHITE, GRAY, flyAB);
+					if (failedDerp) clientMessageF("[Packet] %s%s%s has failed %sDerp (%s)", GRAY, name.c_str(), WHITE, GRAY, pitch.c_str());
+					if (failedDerp) clientMessageF("[Packet] %s%s%s has failed %sNoWeb (%s.0)", GRAY, name.c_str(), WHITE, GRAY, speedAmount.c_str());
 				}
 				if (mode.getSelectedValue() == 1) {  // server
 					if (failedSpeed || failedFly || failedDerp) {
-						if (failedSpeed) str = "[Packet] " + name + " has failed Speed-" + std::string(failedSpeedA ? "A" : "B") + " (x" + std::string(std::to_string((int)speed)) + ".0)";
-						if (failedDerp) str = "[Packet] " + name + " has failed Derp" + " (" + std::string(std::to_string(playerList[0]->pitch)) + ")";
+						if (failedSpeed) str = "[Packet] " + name + " has failed Speed-" + std::string(failedSpeedA ? "A" : "B") + " (x" + speedAmount + ".0)";
 						if (failedFly) str = "[Packet] " + name + " has failed Fly-" + std::string(failedFlyA ? "A" : "B");
+						if (failedDerp) str = "[Packet] " + name + " has failed Derp" + " (" + pitch + ")";
+						if (failedNoWeb) str = "[Packet] " + name + " has failed NoWeb" + " (" + speedAmount + ")";
 						textPacket.message.setText(str);
 						textPacket.sourceName.setText(g_Data.getLocalPlayer()->getNameTag()->getText());
 						textPacket.messageType = 69;

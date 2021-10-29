@@ -301,8 +301,10 @@ void Hooks::Actor_baseTick(C_Entity* _this) {
 void Hooks::Actor_getRotation(C_Entity* _this, vec4_t& newAngle) {
 	static auto oFunc = g_Hooks.Actor_getRotationHook->GetFastcall<void, C_Entity*, vec4_t&>();
 	static auto killaura = moduleMgr->getModule<Killaura>();
-	static auto tpaura = moduleMgr->getModule<TPAura>();
 	static auto scaffold = moduleMgr->getModule<Scaffold>();
+	static auto breaker = moduleMgr->getModule<Breaker>();
+	static auto tpaura = moduleMgr->getModule<TPAura>();
+
 	if (killaura->isEnabled() && !killaura->targetListEmpty && scaffold->useRot) {
 		if (g_Data.getLocalPlayer() != nullptr && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
 			return oFunc(_this, killaura->testRot);
@@ -311,10 +313,10 @@ void Hooks::Actor_getRotation(C_Entity* _this, vec4_t& newAngle) {
 		if (g_Data.getLocalPlayer() != nullptr && scaffold->isOnHive && scaffold->isHoldingSpace)
 			return oFunc(_this, scaffold->scaffoldRot);
 	}*/
-	if (tpaura->isEnabled() && !tpaura->targetListEmpty) {
+	/*if (tpaura->isEnabled() && !tpaura->targetListEmpty) {
 		if (g_Data.getLocalPlayer() != nullptr && tpaura->rotations && tpaura->mode.getSelectedValue() == 0 || tpaura->mode.getSelectedValue() == 1)
 			return oFunc(_this, tpaura->tpAuraRot);
-	}
+	}*/
 	oFunc(_this, newAngle);
 }
 

@@ -25,6 +25,9 @@ public:
 	// Derp
 	bool failedDerp = false;
 
+	// NoWeb
+	bool failedNoWeb = false;
+
 	HackerDetector();
 	~HackerDetector();
 

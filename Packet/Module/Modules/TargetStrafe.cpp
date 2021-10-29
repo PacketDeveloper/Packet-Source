@@ -69,6 +69,7 @@ vec2_t getAngles34(vec3_t PlayerPosition, vec3_t EntityPosition) {
 	Angles.y = (float)(atan2(dZ, dX) * 180.0f / PI) + 90.0f;
 	return Angles;
 };
+
 struct CompareTargetEnArray {
 	bool operator()(C_Entity* lhs, C_Entity* rhs) {
 		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
@@ -167,89 +168,87 @@ void TargetStrafe::onTick(C_GameMode* gm) {
 		}
 	}
 
+	std::sort(taregtList69420.begin(), taregtList69420.end(), CompareTargetEnArray());
 	for (auto& i : taregtList69420) {
-		if (!taregtList69420.empty()) {
-			std::sort(taregtList69420.begin(), taregtList69420.end(), CompareTargetEnArray());
-			vec2_t angle2 = g_Data.getLocalPlayer()->getPos()->CalcAngle(*taregtList69420[0]->getPos());
-			vec2_t angle = getAngles34(*gm->player->getPos(), *taregtList69420[0]->getPos());
-			C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
+		vec2_t angle2 = g_Data.getLocalPlayer()->getPos()->CalcAngle(*taregtList69420[0]->getPos());
+		vec2_t angle = getAngles34(*gm->player->getPos(), *taregtList69420[0]->getPos());
+		C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
 
-			float distance = 99;
-			float distanc = 999;
-			vec3_t playerPos = *gm->player->getPos();
-			vec3_t entPos = *i->getPos();
-			if (distanc > distance) {
-				distance = i->getPos()->dist(playerPos);
-				distanc = distance;
+		float distance = 99;
+		float distanc = 999;
+		vec3_t playerPos = *gm->player->getPos();
+		vec3_t entPos = *i->getPos();
+		if (distanc > distance) {
+			distance = i->getPos()->dist(playerPos);
+			distanc = distance;
+		}
+
+		if (control) {
+			if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+				clockwise = false;
+			} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+				clockwise = true;
+			}
+		}
+
+		C_LocalPlayer* player = g_Data.getLocalPlayer();
+		vec2_t CalcRot = getAngles34(*player->getPos(), entPos);
+		if (clockwise) {
+			CalcRot.y += 90.0f;
+			if (distanc > radius) CalcRot.y -= 45.0f;
+		} else {
+			CalcRot.y -= 90.0f;
+			if (distanc > radius) CalcRot.y += 45.0f;
+		}
+
+		if (edgeCheck) {
+			bool onvoid = false;
+			vec3_t* pos = gm->player->getPos();
+			auto player = g_Data.getLocalPlayer();
+			vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
+			blockBelow.y -= g_Data.getLocalPlayer()->height;
+			blockBelow.y -= 2.f;  // the block its checking
+			for (int y = (int)pos->y - 3; y < pos->y + 0; y++) {
+				if (player->region->getBlock(vec3_t{blockBelow})->toLegacy()->blockId == 0) {
+					onvoid = true;
+					intersectingTimer2++;
+				}
 			}
 
-			if (control) {
-				if (GameData::isKeyDown(*input->leftKey) && !GameData::isKeyDown(*input->rightKey)) {
+			if (onvoid) {
+				//g_Data.getClientInstance()->getMoveTurnInput()->forward = true; // sometimes very annoying
+				if (clockwise && intersectingTimer2 >= 5) {
 					clockwise = false;
-				} else if (GameData::isKeyDown(*input->rightKey) && !GameData::isKeyDown(*input->leftKey)) {
+					intersectingTimer2 = 0;
+				}
+				if (!clockwise && intersectingTimer2 >= 5) {
 					clockwise = true;
+					intersectingTimer2 = 0;
 				}
-			}
-
-			C_LocalPlayer* player = g_Data.getLocalPlayer();
-			vec2_t CalcRot = getAngles34(*player->getPos(), entPos);
-			if (clockwise) {
-				CalcRot.y += 90.0f;
-				if (distanc > radius) CalcRot.y -= 45.0f;
+				onvoid = false;
 			} else {
-				CalcRot.y -= 90.0f;
-				if (distanc > radius) CalcRot.y += 45.0f;
 			}
+		}
 
-			if (edgeCheck) {
-				bool onvoid = false;
-				vec3_t* pos = gm->player->getPos();
-				auto player = g_Data.getLocalPlayer();
-				vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
-				blockBelow.y -= g_Data.getLocalPlayer()->height;
-				blockBelow.y -= 2.f; // the block its checking
-				for (int y = (int)pos->y - 3; y < pos->y + 0; y++) {
-					if (player->region->getBlock(vec3_t{blockBelow})->toLegacy()->blockId == 0) {
-						onvoid = true;
-						intersectingTimer2++;
-					}
-				}
+		if (test) {
+			if (taregtList69420.empty())
+				return;
+			int dist2 = (int)(*taregtList69420[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+			auto player = g_Data.getLocalPlayer();
 
-				if (onvoid) {
-					//g_Data.getClientInstance()->getMoveTurnInput()->forward = true; // sometimes very annoying
-					if (clockwise && intersectingTimer2 >= 5) {
-						clockwise = false;
-						intersectingTimer2 = 0;
-					}
-					if (!clockwise && intersectingTimer2 >= 5) {
-						clockwise = true;
-						intersectingTimer2 = 0;
-					}
-					onvoid = false;
-				} else {
-				} 
-			}
-
-			if (test) {
-				if (taregtList69420.empty())
-					return;
-				int dist2 = (int)(*taregtList69420[0]->getPos()).dist(*g_Data.getLocalPlayer()->getPos());
-				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-				auto player = g_Data.getLocalPlayer();
-
-				player->setRot(angle);
-				if (dist2 >= radius) {
-					g_Data.getClientInstance()->getMoveTurnInput()->forward = true;
-				} else {
-					g_Data.getClientInstance()->getMoveTurnInput()->forward = false;
-				}
+			player->setRot(angle);
+			if (dist2 >= radius) {
+				g_Data.getClientInstance()->getMoveTurnInput()->forward = true;
 			} else {
-				vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
-				if (mode.getSelectedValue() == 1) { // Support: Speed
-					player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speed, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speed);
-				} else {
-					player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speed, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speed);
-				}
+				g_Data.getClientInstance()->getMoveTurnInput()->forward = false;
+			}
+		} else {
+			vec2_t CalcAngles = vec2_t((CalcRot.x) * -(PI / 180.f), (CalcRot.y + 90.0f) * (PI / 180.f));
+			if (mode.getSelectedValue() == 1) {  // Support: Speed
+				player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speed, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speed);
+			} else {
+				player->velocity = vec3_t(cos(CalcAngles.y) * cos(CalcAngles.x) * speed, player->velocity.y, sin(CalcAngles.y) * cos(CalcAngles.x) * speed);
 			}
 		}
 	}

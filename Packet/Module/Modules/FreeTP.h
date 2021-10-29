@@ -3,7 +3,6 @@
 class FreeTP : public IModule {
 private:
 	bool speedWasEnabled = false;
-	bool scfWasEnabled = false;
 	float speed = 1.f;
 
 public:

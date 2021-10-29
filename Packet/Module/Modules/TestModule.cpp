@@ -195,10 +195,33 @@ void TestModule::onTick(C_GameMode* gm) {
 
 			gm->player->setPos(pos.add(vec3_t(x, 1.f, z)));
 		}*/
-		std::string msg = "AAAAAAAAA fuck";
-			if (!(sliderX >= 400)) sliderX++;
+		//std::string msg = "AAAAAAAAA fuck";
+		//if (!(sliderX >= 400)) sliderX++;
 		//for (float x = sliderX; x++; sliderX++) {
 		//}
+		/*vec3_t* pos = gm->player->getPos();
+		auto player = g_Data.getLocalPlayer();
+		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
+		blockBelow.y == g_Data.getLocalPlayer()->height;
+			if (player->region->getBlock(vec3_t{blockBelow})->toLegacy()->blockId == 30) {
+				clientMessageF("cobweb");
+		}*/
+		vec3_t* pos = gm->player->getPos();
+		bool isOverVoid = false;
+		for (int x = (int)pos->x - 1; x < pos->x + 1; x++) {
+			for (int z = (int)pos->z - 1; z < pos->z + 1; z++) {
+				for (int y = (int)pos->y - 255; y < pos->y + 0; y++) {
+					vec3_ti blockPos = vec3_ti(x, y, z);
+					int id = gm->player->region->getBlock(blockPos)->toLegacy()->blockId;
+
+					if (id != 0) isOverVoid = false;
+					else isOverVoid = true;
+				}
+			}
+		}
+		if (isOverVoid) {
+			clientMessageF("void!!!");
+		}
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();

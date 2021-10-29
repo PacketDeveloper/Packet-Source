@@ -1,10 +1,10 @@
 #include "Nuker.h"
 
-Nuker::Nuker() : IModule(0, Category::MISC, "Break multiple blocks at once") {
+Nuker::Nuker() : IModule(0, Category::MISC, "fucks earth") {
 	registerBoolSetting("AutoDestroy", &autodestroy, autodestroy);
 	registerBoolSetting("VeinMiner", &veinMiner, veinMiner);
-	registerIntSetting("Up", &up, up, 1, 15);
-	registerIntSetting("Down", &down, down, 1, 15);
+	registerIntSetting("Up", &up, up, 0, 15);
+	registerIntSetting("Down", &down, down, 1, 255);
 	registerIntSetting("Radius", &nukerRadius, nukerRadius, 1, 15);
 #ifdef _DEBUG
 	registerBoolSetting("Treeos", &tree, tree);

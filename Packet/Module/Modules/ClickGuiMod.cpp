@@ -6,7 +6,7 @@ ClickGuiMod::ClickGuiMod() : IModule(VK_INSERT, Category::VISUAL, "The clickgui 
 	registerEnumSetting("Theme", &theme, 1);
 	theme.addEntry("Packet", 0);
 	theme.addEntry("Fadeaway", 1);
-	registerFloatSetting("Opacity", &this->opacity, this->opacity, 0.05f, 1.f);
+	registerFloatSetting("Opacity", &opacity, opacity, 0.05f, 1.f);
 }
 
 ClickGuiMod::~ClickGuiMod() {
@@ -21,10 +21,7 @@ void ClickGuiMod::onEnable() {
 }
 
 void ClickGuiMod::onTick(C_GameMode* gm) {
-	// background fade-in thing
-	// ill make soon
-
-	// ????? what is this LMAO
+	// what is this LMAO
 	if (theme.getSelectedValue() == 0) {  // packet
 		backroundR = 0;
 		backroundG = 0;
