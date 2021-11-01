@@ -259,7 +259,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		}
 
 		if (player->fallDistance >= 5 && !preventKick) {
-			player->velocity = vec3_t(0, -1, 0);
+			player->velocity = vec3_t(0, -1, 0);//this kicks now, I have to add the fix soon
 			player->fallDistance = 0;
 			preventKick = true;
 		}
