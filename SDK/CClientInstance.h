@@ -1,10 +1,12 @@
 #pragma once
+#include <string>
 
 #include "CEntity.h"
 #include "CGameSettingsInput.h"
 #include "CLoopbackPacketSender.h"
 #include "CMinecraftUIRenderContext.h"
 #include "TextHolder.h"
+#include "../SDK/Weather.h"
 
 class Minecraft {
 public:

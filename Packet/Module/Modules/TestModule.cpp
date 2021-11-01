@@ -206,7 +206,7 @@ void TestModule::onTick(C_GameMode* gm) {
 			if (player->region->getBlock(vec3_t{blockBelow})->toLegacy()->blockId == 30) {
 				clientMessageF("cobweb");
 		}*/
-		vec3_t* pos = gm->player->getPos();
+		/*vec3_t* pos = gm->player->getPos();
 		bool isOverVoid = false;
 		for (int x = (int)pos->x - 1; x < pos->x + 1; x++) {
 			for (int z = (int)pos->z - 1; z < pos->z + 1; z++) {
@@ -221,7 +221,8 @@ void TestModule::onTick(C_GameMode* gm) {
 		}
 		if (isOverVoid) {
 			clientMessageF("void!!!");
-		}
+		}*/
+		//g_Data.getClientInstance()->dimension->weather->isRaining = true;
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
