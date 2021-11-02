@@ -1,19 +1,19 @@
 #include "CEntity.h"
-#include "../Utils/Utils.h"
+
 #include "../Memory/GameData.h"
+#include "../Utils/Utils.h"
 C_InventoryTransactionManager *C_Entity::getTransactionManager() {
-	static unsigned int offset = 0x12C0;
+	return &this->transac;
+	static unsigned int offset = 0;
 	if (offset == 0) {
 		// EnchantCommand::execute
 		//offset = *reinterpret_cast<int *>(FindSignature("48 8D 8B ?? ?? ?? ?? E8 ?? ?? ?? ?? 90 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8D 8D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B ?? ?? ?? 8B") + 3);
-		offset = *reinterpret_cast<int *>(FindSignature("49 8D 8E ? ? ? ? E8 ? ? ? ? 90 48 8D 8D ? ? ? ? E8 ? ? ? ? 48 8D 8D ? ? ? ? E8 ? ? ? ? 48 8B 4D") + 3);
+		offset = *reinterpret_cast<int *>(FindSignature("48 89 5C 24 18 55 56 57 41 56 41 57 48 83 EC 30 45 0F B6 F8 4C ") + 3);
 	}
 	return reinterpret_cast<C_InventoryTransactionManager *>(reinterpret_cast<__int64>(this) + offset);
 }
 C_PlayerInventoryProxy *C_Player::getSupplies() {
-//	return (class C_PlayerInventoryProxy *)*((__int64 *)this + 401);
-	//static unsigned int offset = 0xBE8;
-	static unsigned int offset = 0xC88;
+	static unsigned int offset = 0xB90;
 	/*if (offset == 0) {
 		offset = *reinterpret_cast<int *>(FindSignature("48 8B 51 ?? 4C 8B 82 ?? ?? ?? ?? 48 8B B2 ?? ?? ?? ?? 41 80 B8") + 7);  // GameMode::startDestroyBlock -> GameMode::_canDestroy -> getSupplies
 	}*/
@@ -45,14 +45,10 @@ C_Entity *PointingStruct::getEntity() {
 	if (rayHitType != 1) return nullptr;
 	C_Entity *retval = nullptr;
 	g_Data.forEachEntity([this, &retval](C_Entity *ent, bool b) {
-		if (ent->entityLocalId == entityLocalId) {
+		if (*(__int64 *)((__int64)ent + 0x10) == GamingEntityFinder) {
 			retval = ent;
 			return;
 		}
 	});
 	return retval;
 }
-
-
-
-

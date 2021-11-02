@@ -12,7 +12,7 @@ Breaker::Breaker() : IModule(0, Category::MISC, "Destroys Beds, Eggs, Treasures 
 	registerBoolSetting("Beds", &beds, beds);
 	registerBoolSetting("Eggs", &eggs, eggs);
 	registerIntSetting("Range", &range, range, 1, 10);
-	registerIntSetting("Delay", &range, range, 0, 10);
+	//registerIntSetting("Delay", &range, range, 0, 10);
 }
 
 Breaker::~Breaker() {

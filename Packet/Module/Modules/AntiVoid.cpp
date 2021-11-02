@@ -4,7 +4,7 @@ AntiVoid::AntiVoid() : IModule(0, Category::MOVEMENT, "Prevents you from falling
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Lagback", 0);
 	mode.addEntry("Freeze", 1);
-	mode.addEntry("Hive", 2);
+	//mode.addEntry("Hive", 2);
 	registerBoolSetting("VoidCheck", &voidCheck, voidCheck);
 	registerIntSetting("Distance", &distance, distance, 3, 10);
 }
@@ -18,7 +18,8 @@ const char* AntiVoid::getModuleName() {
 
 void AntiVoid::onEnable() {
 	auto player = g_Data.getLocalPlayer();
-	savedPos = *player->getPos();
+	if (g_Data.isInGame()) savedPos = *player->getPos();
+	else savedPos = 
 	tick = 0;
 }
 
@@ -46,13 +47,9 @@ void AntiVoid::onTick(C_GameMode* gm) {
 
 		}
 		if (mode.getSelectedValue() == 2) { // Hive
-			player->lerpTo(savedPos, vec2_t(1, 1), (int)fmax((int)dist2 * 0.1, 1));
-			*g_Data.getClientInstance()->minecraft->timer = 5.f;
-			blink = true;
+			//player->setPos(savedPos);
 		}
 	} else {
-		*g_Data.getClientInstance()->minecraft->timer = 20.f;
-		blink = false;
 	}
 }
 

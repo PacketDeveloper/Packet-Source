@@ -72,33 +72,16 @@ void BehindAura::onTick(C_GameMode* gm) {
 
 	if (delay1 >= delay) {
 		if (basicCheck && useTick && !targetListBA.empty()) {
-			if (useLerp) {
-				if (yaw >= -45 && yaw <= 45) {
-					player->lerpTo(vec3_t(pos.x, pos.y + 1.62f, pos.z - behindDist), vec2_t(1, 1), (int)fmax((int)lerpSpeed * 0.1, 2.f));
-				}
-				if (yaw >= -135 && yaw <= -44) {
-					player->lerpTo(vec3_t(pos.x - behindDist, pos.y + 1.62f, pos.z), vec2_t(1, 1), (int)fmax((int)lerpSpeed * 0.1, 2.f));
-				}
-				if (yaw >= 131 && yaw >= -134 && yaw != -135) {
-					player->lerpTo(vec3_t(pos.x, pos.y + 1.62f, pos.z + behindDist), vec2_t(1, 1), (int)fmax((int)lerpSpeed * 0.1, 2.f));
-				}
-				if (yaw >= 45 && yaw <= 130) {
-					player->lerpTo(vec3_t(pos.x + behindDist, pos.y + 1.62f, pos.z), vec2_t(1, 1), (int)fmax((int)lerpSpeed * 0.1, 2.f));
-				}
-			} else if (usePos) {
-				if (yaw >= -45 && yaw <= 45) {
-					player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z - behindDist));
-				}
-				if (yaw >= -135 && yaw <= -44) {
-					player->setPos(vec3_t(pos.x - behindDist, pos.y + 1.62f, pos.z));
-				}
-				if (yaw >= 131 && yaw >= -134 && yaw != -135) {
-					player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z + behindDist));
-				}
-				if (yaw >= 45 && yaw <= 130) {
+
+			if (yaw >= -45 && yaw <= 45) 
+				player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z - behindDist));
+			else if (yaw >= -135 && yaw <= -44) 
+				player->setPos(vec3_t(pos.x - behindDist, pos.y + 1.62f, pos.z));	
+			else if (yaw >= 131 && yaw >= -134 && yaw != -135) 
+				player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z + behindDist));
+			else if (yaw >= 45 && yaw <= 130) 
 					player->setPos(vec3_t(pos.x + behindDist, pos.y + 1.62f, pos.z));
-				}
-			}
+			
 		} else if (calcYawCheck && useTick && !targetListBA.empty()) {
 			float theirYaw = (yaw - 90) * (PI / 180);
 			float length = behindDist;
@@ -121,33 +104,14 @@ void BehindAura::onAttack(C_Entity* attackedEnt) {
 	float yaw = attackedEnt->yaw;
 	float dist2 = player->getPos()->dist(pos);
 	if (basicCheck && useAttack) {
-		if (useLerp) {
-			if (yaw >= -45 && yaw <= 45) {
-				player->lerpTo(vec3_t(pos.x, pos.y + 1.62f, pos.z - behindDist), vec2_t(1, 1), (int)fmax((int)lerpSpeed * 0.1, 2.f));
-			}
-			if (yaw >= -135 && yaw <= -44) {
-				player->lerpTo(vec3_t(pos.x - behindDist, pos.y + 1.62f, pos.z), vec2_t(1, 1), (int)fmax((int)lerpSpeed * 0.1, 2.f));
-			}
-			if (yaw >= 131 && yaw >= -134 && yaw != -135) {
-				player->lerpTo(vec3_t(pos.x, pos.y + 1.62f, pos.z + behindDist), vec2_t(1, 1), (int)fmax((int)lerpSpeed * 0.1, 2.f));
-			}
-			if (yaw >= 45 && yaw <= 130) {
-				player->lerpTo(vec3_t(pos.x + behindDist, pos.y + 1.62f, pos.z), vec2_t(1, 1), (int)fmax((int)lerpSpeed * 0.1, 2.f));
-			}
-		} else if (usePos) {
-			if (yaw >= -45 && yaw <= 45) {
-				player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z - behindDist));
-			}
-			if (yaw >= -135 && yaw <= -44) {
-				player->setPos(vec3_t(pos.x - behindDist, pos.y + 1.62f, pos.z));
-			}
-			if (yaw >= 131 && yaw >= -134 && yaw != -135) {
-				player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z + behindDist));
-			}
-			if (yaw >= 45 && yaw <= 130) {
-				player->setPos(vec3_t(pos.x + behindDist, pos.y + 1.62f, pos.z));
-			}
-		}
+		if (yaw >= -45 && yaw <= 45)
+			player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z - behindDist));
+		else if (yaw >= -135 && yaw <= -44)
+			player->setPos(vec3_t(pos.x - behindDist, pos.y + 1.62f, pos.z));
+		else if (yaw >= 131 && yaw >= -134 && yaw != -135)
+			player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z + behindDist));
+		else if (yaw >= 45 && yaw <= 130)
+			player->setPos(vec3_t(pos.x + behindDist, pos.y + 1.62f, pos.z));
 	} else if (calcYawCheck && useAttack) {
 		float theirYaw = (yaw - 90) * (PI / 180);
 		float length = behindDist;

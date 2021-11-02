@@ -66,9 +66,10 @@ class Hooks {
 private:
 	bool shouldRender = true;
 	//bool shouldRenderAura = true;
-	char currentScreenName[100];
-
 public:
+	char currentScreenName[100];
+	std::vector<C_Entity*> entityList;
+
 	std::vector<std::shared_ptr<FuncHook>> lambdaHooks;
 
 	static void Init();

@@ -44,6 +44,18 @@ EnchantCommand::~EnchantCommand() {
 }
 
 bool EnchantCommand::execute(std::vector<std::string>* args) {
+	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
+	C_Inventory* inv = supplies->inventory;
+	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
+	int selectedSlot = supplies->selectedHotbarSlot;
+	C_ItemStack* item = inv->getItemStack(selectedSlot);
+	C_InventoryAction* firstAction = nullptr;
+	C_InventoryAction* secondAction = nullptr;
+	ItemDescriptor* desc = nullptr;
+	desc = new ItemDescriptor((*item->item)->itemId, 0);
+	auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
+	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr))  // Item in hand?
+		return false;
 	assertTrue(args->size() > 1);
 
 	int enchantId = 0;
@@ -52,6 +64,9 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 
 	if (args->at(1) != "all") {
 		try {
+			auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
+			if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr))  // Item in hand?
+				return false;
 			// convert string to back to lower case
 			std::string data = args->at(1);
 			std::transform(data.begin(), data.end(), data.begin(), ::tolower);
@@ -62,7 +77,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			else
 				enchantId = assertInt(args->at(1));
 		} catch (int) {
-			clientMessageF("[Packet] Exception while trying to get enchant string");
+			clientMessageF("exception while trying to get enchant string");
 			enchantId = assertInt(args->at(1));
 		}
 	}
@@ -72,20 +87,10 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 	if (args->size() > 3)
 		isAuto = static_cast<bool>(assertInt(args->at(3)));
 
-	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
-	C_Inventory* inv = supplies->inventory;
-	C_InventoryTransactionManager* manager = g_Data.getLocalPlayer()->getTransactionManager();
-
-	int selectedSlot = supplies->selectedHotbarSlot;
-	C_ItemStack* item = inv->getItemStack(selectedSlot);
-
-	C_InventoryAction* firstAction = nullptr;
-	C_InventoryAction* secondAction = nullptr;
-
-	ItemDescriptor* desc = nullptr;
-	desc = new ItemDescriptor((*item->item)->itemId, 0);
-
 	if (isAuto) {
+		auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
+		if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr))  // Item in hand?
+			return false;
 		{
 			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, desc, nullptr, item, nullptr, item->count);
 			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
@@ -95,7 +100,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			manager->addInventoryAction(*firstAction);
 			manager->addInventoryAction(*secondAction);
 			delete firstAction;
-			delete secondAction;
+			//delete secondAction;
 		}
 	}
 
@@ -112,6 +117,9 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 	}
 
 	if (strcmp(args->at(1).c_str(), "all") == 0) {
+		auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
+		if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr))  // Item in hand?
+			return false;
 		for (int i = 0; i < 38; i++) {
 			void* EnchantData = malloc(0x60);
 			if (EnchantData != nullptr)
@@ -134,8 +142,11 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			}
 			free(EnchantData);
 		}
-		clientMessageF("[Packet] %sEnchant successful!", GREEN);
+		clientMessageF("%sEnchant successful!", LIGHT_PURPLE);
 	} else {
+		auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
+		if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr))  // Item in hand?
+			return false;
 		void* EnchantData = malloc(0x60);
 		if (EnchantData != nullptr)
 			memset(EnchantData, 0x0, 0x60);
@@ -154,14 +165,17 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 					item);  // Player::selectItem
 
 			//g_Data.getLocalPlayer()->sendInventory();
-			clientMessageF("[Packet] %sEnchant successful!", GREEN);
+			clientMessageF("%sEnchant successful!", GREEN);
 		} else
-			clientMessageF("[Packet] %sEnchantment failed", RED);
+			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
 
 		free(EnchantData);
 	}
 
 	if (isAuto) {
+		auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
+		if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr))  // Item in hand?
+			return false;
 		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
 			firstAction = new C_InventoryAction(0, desc, nullptr, item, nullptr, item->count, 32766, 100);
 		else
@@ -170,8 +184,16 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 		manager->addInventoryAction(*firstAction);
 		manager->addInventoryAction(*secondAction);
 		delete firstAction;
-		delete secondAction;
+		//delete secondAction;
 	}
-
+	//dupe item
+	if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr))  // Item in hand?
+		return false;
+	auto transactionMan = g_Data.getLocalPlayer()->getTransactionManager();
+	int count = item->count;
+	bool isGive = true;
+	firstAction = new C_InventoryAction(0, item, nullptr, 507, 99999);
+	transactionMan->addInventoryAction(*firstAction);
+	inv->addItemToFirstEmptySlot(item);
 	return true;
 }

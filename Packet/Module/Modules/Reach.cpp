@@ -25,7 +25,7 @@ void Reach::onEnable() {
 	static uintptr_t sigOffset = 0x0;
 	if (sigOffset == 0x0) {
 
-		sigOffset = FindSignature("0F 10 05 ?? ?? ?? ?? 48 8B 4B 20 F3 0F 11 44 24");
+		sigOffset = FindSignature("F3 0F 10 05 ?? ?? ?? ?? 41 0F 28 D9");
 
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));  // Get Offset from code

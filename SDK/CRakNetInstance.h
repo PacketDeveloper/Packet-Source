@@ -1,13 +1,12 @@
 #pragma once
 
 class C_RakNetInstance {
-	char pad_0000[888];  //0x0000
+	char pad_0000[1008];  //0x0000
 public:
-	TextHolder numericalIp;  //0x0380
-	TextHolder serverIp;        //0x03A0
-	uint32_t serverPort;   //0x03C0
+	TextHolder serverIp;  //0x0380
+	uint32_t serverPort;  //0x03A0
 
-	private:
+private:
 	virtual ~C_RakNetInstance();
 	virtual __int64 onAppResumed(void);
 	virtual __int64 onAppSuspended(void);
@@ -44,5 +43,4 @@ private:
 public:
 	bool isonaServer() { return !(serverIp.textLength == 0); }
 
-};                         //Size: 0x0848
-
+};  //Size: 0x0848

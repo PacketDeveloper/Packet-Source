@@ -73,29 +73,33 @@ bool NbtCommand::execute(std::vector<std::string>* args) {
 			tag = Utils::getClipboardText();
 		}
 
-		{
-			manager->addInventoryAction(C_InventoryAction(supplies->selectedHotbarSlot, item, nullptr));
-			manager->addInventoryAction(C_InventoryAction(0, nullptr, item, 507, 99999));
-		}
 
 		if (tag.size() > 1 && tag.front() == MojangsonToken::COMPOUND_START.getSymbol() && tag.back() == MojangsonToken::COMPOUND_END.getSymbol()) {
 			if (args->at(1) == "write")
 				item->setUserData(std::move(Mojangson::parseTag(tag)));
 			else if (args->at(1) == "load") {
-				item->fromTag(*Mojangson::parseTag(tag));
-				item->count = 64;
+				std::unique_ptr<Tag> result = std::move(Mojangson::parseTag(tag));
+				item->fromTag(*result.get());
+				item->count = item->item ? item->getItem()->getMaxStackSize(0) : 64;
+				memset(&result, 0, sizeof(std::unique_ptr<Tag>));
 			}
 		} else {
 			clientMessageF("%sInvalid NBT tag!", RED);
 			return true;
 		}
 
-		{
-			manager->addInventoryAction(C_InventoryAction(0, item, nullptr, 507, 99999));
-			manager->addInventoryAction(C_InventoryAction(supplies->selectedHotbarSlot, nullptr, item));
+		if (item->item) {
+			ItemDescriptor desc((*item->item)->itemId, *(short*)(&item->count - 2));
+			C_InventoryAction first(0, &desc, nullptr, item, nullptr, item->count, 507, 99999);
+			C_InventoryAction second(supplies->selectedHotbarSlot, nullptr, &desc, nullptr, item, item->count);
+			manager->addInventoryAction(first);
+			manager->addInventoryAction(second);
+		} else {
+			clientMessageF("%sThere had no items", RED);
+			return true;
 		}
 
-		clientMessageF("%s%s", GREEN, "Successfully loaded!");
+		clientMessageF("%s%s", GREEN, "Successfully loaded mojangson !");
 	} else {
 		clientMessageF("%s%s", RED, "Couldn't execute command correctly");
 	}

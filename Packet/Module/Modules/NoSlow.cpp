@@ -57,9 +57,8 @@ void NoSlow::onEnable() {
 }
 
 void NoSlow::onTick(C_GameMode* gm) {
-	if (noweb) {
-		gm->player->web = 0.f;
-	}
+	if (noweb) 
+		gm->player->slowdownFactor = vec3_t(0.f, 0.f, 0.f);
 }
 
 void NoSlow::onDisable() {

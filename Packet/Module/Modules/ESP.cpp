@@ -71,7 +71,7 @@ void ESP::onLevelRender() {
 		moveVec.y = sin(calcPitch) * 0.5f;
 		moveVec.z = sin(calcYaw) * cos(calcPitch) * 0.5f;
 
-		const vec3_t origin = g_Data.getClientInstance()->levelRenderer->origin.add(moveVec); /*place the start of the line slightly forward so it won't get clipped*/
+		const vec3_t origin = g_Data.getClientInstance()->levelRenderer->getOrigin().add(moveVec); /*place the start of the line slightly forward so it won't get clipped*/
 		g_Data.forEachEntity([&](C_Entity* ent, bool valid) {
 			if (ent != g_Data.getLocalPlayer() && Target::isValidTarget(ent)) {
 				DrawUtils::setColor(255, 255, 255, 1);

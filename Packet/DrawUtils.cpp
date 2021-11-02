@@ -71,15 +71,14 @@ void DrawUtils::setCtx(C_MinecraftUIRenderContext* ctx, C_GuiData* gui) {
 	tesselator = *reinterpret_cast<Tessellator**>(screenContext2d + 0xB0);
 	colorHolder = *reinterpret_cast<float**>(screenContext2d + 0x30);
 
-	//glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
-	glmatrixf* badrefdef = reinterpret_cast<glmatrixf*>((uintptr_t)g_Data.getClientInstance() + 0x2E0);
+	glmatrixf* badrefdef = g_Data.getClientInstance()->getRefDef();
 
 	refdef = std::shared_ptr<glmatrixf>(badrefdef->correct());
 	fov = g_Data.getClientInstance()->getFov();
 	screenSize.x = gui->widthGame;
 	screenSize.y = gui->heightGame;
 	if (g_Data.getClientInstance()->levelRenderer != nullptr)
-		origin = g_Data.getClientInstance()->levelRenderer->origin;
+		origin = g_Data.getClientInstance()->levelRenderer->getOrigin();
 
 	if (uiMaterial == nullptr) {
 		// 2 Sigs, wanted one comes first
@@ -101,7 +100,7 @@ void DrawUtils::setColor(float r, float g, float b, float a) {
 }
 
 C_Font* DrawUtils::getFont(Fonts font) {
-	return (C_Font*)(*(uintptr_t*)((uintptr_t)g_Data.getClientInstance()->minecraftGame + 0x110));
+	return (C_Font*)(*(uintptr_t*)((uintptr_t)g_Data.getClientInstance()->minecraftGame + 0x150));
 }
 
 Tessellator* DrawUtils::get3dTessellator() {
@@ -598,7 +597,7 @@ void DrawUtils::tess__begin(Tessellator* tess, int vertexFormat, int numVertices
 void DrawUtils::setGameRenderContext(__int64 ctx) {
 	game3dContext = ctx;
 	if (g_Data.getClientInstance()->levelRenderer != nullptr)
-		origin = g_Data.getClientInstance()->levelRenderer->origin;
+		origin = g_Data.getClientInstance()->levelRenderer->getOrigin();
 
 	if (ctx) {
 		LARGE_INTEGER EndingTime, ElapsedMicroseconds;

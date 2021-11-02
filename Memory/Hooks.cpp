@@ -39,7 +39,7 @@ void Hooks::Init() {
 
 		// BlockLegacy::vtable
 		{
-			intptr_t sigOffset = FindSignature("48 8D 05 ? ? ? ? 48 89 01 4C 8B 72 ? 48 B9");  // BlockLegacy constructor
+			intptr_t sigOffset = FindSignature("48 8D 05 ?? ?? ?? ?? 48 89 06 EB 03 49 8B F4 4D 89 26");  // BlockLegacy constructor
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			uintptr_t** blockLegacyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
 			if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
@@ -59,9 +59,9 @@ void Hooks::Init() {
 			else {
 				//g_Hooks.Actor_startSwimmingHook = std::make_unique<FuncHook>(localPlayerVtable[182], Hooks::Actor_startSwimming);
 
-				g_Hooks.Actor_lerpMotionHook = std::make_unique<FuncHook>(localPlayerVtable[40], Hooks::Actor_lerpMotion);
+				g_Hooks.Actor_lerpMotionHook = std::make_unique<FuncHook>(localPlayerVtable[46], Hooks::Actor_lerpMotion);
 
-				g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(localPlayerVtable[88], Hooks::Mob__isImmobile);
+				g_Hooks.Mob__isImmobileHook = std::make_unique<FuncHook>(localPlayerVtable[91], Hooks::Mob__isImmobile);
 			}
 		}
 
@@ -102,17 +102,17 @@ void Hooks::Init() {
 
 	// Signatures
 	{
-		void* base_tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 ?? 48 89 6C 24 ?? 56 57 41 54 41 56 41 57 48 83 EC 50 48 8B F9 BE"));
+		void* base_tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 18 56 48 83 EC 50 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 40 8B 81"));
 		g_Hooks.Actor__baseTick = std::make_unique<FuncHook>(base_tick, Hooks::Actor_baseTick);
 
 		void* _renderText = reinterpret_cast<void*>(FindSignature("48 8B C4 48 89 58 ?? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 0F 29 70 ?? 0F 29 78 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 4C 8B FA 48 89 54 24"));
 		g_Hooks.RenderTextHook = std::make_unique<FuncHook>(_renderText, Hooks::RenderText);
 		g_Hooks.RenderTextHook->enableHook();
-
+		
 		void* setupRender = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 33 D2 41 B8"));
 		g_Hooks.UIScene_setupAndRenderHook = std::make_unique<FuncHook>(setupRender, Hooks::UIScene_setupAndRender);
 
-		void* render = reinterpret_cast<void*>(FindSignature("48 89 5C 24 18 56 57 41 56 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B FA 48 8B D9 41"));
+		void* render = reinterpret_cast<void*>(FindSignature("48 89 5C 24 18 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B DA 48 8B F9 B9 10 00 00 00"));
 		g_Hooks.UIScene_renderHook = std::make_unique<FuncHook>(render, Hooks::UIScene_render);
 
 		void* fogColorFunc = reinterpret_cast<void*>(FindSignature("41 0F 10 08 48 8B C2 0F"));
@@ -134,8 +134,8 @@ void Hooks::Init() {
 		void* getFov = reinterpret_cast<void*>(FindSignature("40 53 48 83 EC ?? 0F 29 7C 24 ?? 44"));
 		g_Hooks.LevelRendererPlayer_getFovHook = std::make_unique<FuncHook>(getFov, Hooks::LevelRendererPlayer_getFov);
 
-		void* tick_entityList = reinterpret_cast<void*>(FindSignature("48 89 ?? ?? ?? 57 48 83 EC ?? 48 8B ?? E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B D8 ?? ?? ?? ?? ?? ?? 48 99"));
-		g_Hooks.MultiLevelPlayer_tickHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
+		//void* tick_entityList = reinterpret_cast<void*>(FindSignature("48 89 ?? ?? ?? 57 48 83 EC ?? 48 8B ?? E8 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 48 8B D8 ?? ?? ?? ?? ?? ?? 48 99"));
+		//g_Hooks.MultiLevelPlayer_tickHook = std::make_unique<FuncHook>(tick_entityList, Hooks::MultiLevelPlayer_tick);
 
 		void* keyMouseFunc = reinterpret_cast<void*>(FindSignature("48 8B C4 48 89 58 10 55 56 57 41 54 41 55 41 56 41 57 48 8D 68 A1 48 81 EC 90 00 00 00"));
 		g_Hooks.HIDController_keyMouseHook = std::make_unique<FuncHook>(keyMouseFunc, Hooks::HIDController_keyMouse);
@@ -155,8 +155,8 @@ void Hooks::Init() {
 		//bad
 		//void* onAppSuspended = reinterpret_cast<void*>(FindSignature("48 8B C4 55 48 8B EC 48 83 EC ? 48 C7 45 ? ? ? ? ? 48 89 58 ? 48 89 70 ? 48 89 78 ? 48 8B F1 E8 ? ? ? ? 48 8B D8 48 8B C8"));
 		//g_Hooks.MinecraftGame_onAppSuspendedHook = std::make_unique<FuncHook>(onAppSuspended, Hooks::MinecraftGame_onAppSuspended);
-
-		void* RakNetInstance__tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 48 89 74 24 18 55 57 41 54 41 56 41 57 48 8D ?? 24 ?? ?? ?? ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 85 ?? ?? ?? ?? 48 8B F9 45 33 E4 4C"));
+		
+		void* RakNetInstance__tick = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 48 89 74 24 18 55 57 41 54 41 56 41 57 48 8D AC 24 20 FD FF FF 48 81 EC E0 03 00 00"));
 		g_Hooks.RakNetInstance_tickHook = std::make_unique<FuncHook>(RakNetInstance__tick, Hooks::RakNetInstance_tick);
 
 		void* getRotation = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80"));
@@ -186,7 +186,7 @@ void Hooks::Init() {
 		g_Hooks.InventoryTransactionManager__addActionHook = std::make_unique<FuncHook>(addAction, Hooks::InventoryTransactionManager__addAction);
 #endif
 
-		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature(" 48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80 ?? ?? ?? ?? ?? 00 48 8B FA 48 8B D9"));
+		void* localPlayerUpdateFromCam = reinterpret_cast<void*>(FindSignature("48 89 5C 24 10 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 80"));
 		g_Hooks.LocalPlayer__updateFromCameraHook = std::make_unique<FuncHook>(localPlayerUpdateFromCam, Hooks::LocalPlayer__updateFromCamera);
 		
 		//bad
@@ -207,7 +207,7 @@ void Hooks::Init() {
             float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
             degrees *= 180 / 2.5f;
 
-            auto pos = g_Data.getClientInstance()->levelRenderer->origin;
+            auto pos = g_Data.getClientInstance()->levelRenderer->getOrigin();
 
             glm::mat4 View = matrix;
 
@@ -223,7 +223,7 @@ void Hooks::Init() {
 					float degrees = 13;
 					degrees *= 180 / 4;
 
-					auto pos = g_Data.getClientInstance()->levelRenderer->origin;
+					auto pos = g_Data.getClientInstance()->levelRenderer->getOrigin();
 			
 					glm::mat4 View = matrix;
 			
@@ -253,7 +253,7 @@ void Hooks::Init() {
 				float degrees = fmodf(p->getPosOld()->lerp(p->getPos(), lerpT).x, 5) - 2.5f;
 				degrees *= 180 / 2.5f;
 
-				auto pos = g_Data.getClientInstance()->levelRenderer->origin;
+				auto pos = g_Data.getClientInstance()->levelRenderer->getOrigin();
 			
 				glm::mat4 View = matrix;
 			
@@ -285,17 +285,39 @@ void Hooks::Enable() {
 	MH_EnableHook(MH_ALL_HOOKS);
 }
 
-void Hooks::Actor_baseTick(C_Entity* _this) {
+void Hooks::Actor_baseTick(C_Entity* ent) {
 	static auto oTick = g_Hooks.Actor__baseTick->GetFastcall<void, C_Entity*>();
-	oTick(_this);
-	if (_this != (C_Entity*)g_Data.getLocalPlayer())
-		return;
+	C_LocalPlayer* player = g_Data.getLocalPlayer();
+	if (!player || !player->pointingStruct) return oTick(ent);
 
-	C_GameMode* gm = *(C_GameMode**)((__int64)_this + 0x12E8);
+	static int tickCountThen = 0;
+	int tickCountNow = *(int*)((__int64)player->pointingStruct + 0x5F0);
 
-	GameData::updateGameData(gm);
-	if (gm->player == (C_Entity*)g_Data.getLocalPlayer() && gm->player != nullptr)
+	if (tickCountNow != tickCountThen) {
+		g_Hooks.entityList.clear();
+		tickCountThen = tickCountNow;
+	}
+
+	if (ent->isClientSide()) { //because sometimes you host a world and you would not want from the client to attack an entity on the server or twice the same
+		bool found = false;
+		for (const auto& entity : g_Hooks.entityList)
+			if (entity == ent) {
+				found = true;
+				break;
+			}
+
+		if (!found) g_Hooks.entityList.push_back(ent);
+	}
+
+	if (ent != (C_Entity*)player) return oTick(ent);
+
+	C_GameMode* gm = *(C_GameMode**)((__int64)ent + 0x1250);
+	if (gm->player == (C_Entity*)g_Data.getLocalPlayer() && gm->player != nullptr) {
+		GameData::updateGameData(gm);
 		moduleMgr->onTick(gm);
+	}
+
+	oTick(ent);
 }
 
 void Hooks::Actor_getRotation(C_Entity* _this, vec4_t& newAngle) {
@@ -355,6 +377,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 
 	if (clickGUI->isEnabled() && strcmp(alloc.getText(), "pause_screen") == 0) {
 		clickGUI->setEnabled(false);
+		g_Data.getClientInstance()->grabMouse();
 	}
 
 	if (invManager->autoDisable && strcmp(screenName.c_str(), "start_screen") == 0) {
@@ -380,6 +403,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 	C_GuiData* dat = g_Data.getClientInstance()->getGuiData();
 
 	DrawUtils::setCtx(renderCtx, dat);
+
+	if (!g_Data.getLocalPlayer())
+		g_Hooks.entityList.clear();
 
 	if (GameData::shouldHide() || !g_Hooks.shouldRender || !moduleMgr->isInitialized())
 		return oText(a1, renderCtx);
@@ -1920,7 +1946,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 
 float Hooks::LevelRendererPlayer_getFov(__int64 _this, float a2, bool a3) {
 	static auto oGetFov = g_Hooks.LevelRendererPlayer_getFovHook->GetFastcall<float, __int64, float, bool>();
-	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("F3 0F 59 05 ?? ?? ?? ?? 45 0F 28 C2 F3"));
+	static void* renderItemInHand = reinterpret_cast<void*>(FindSignature("F3 0F 59 05 ?? ?? ?? ?? 45 0F 28 C4 F3 45 0F 5E C1"));
 
 	static void* setupCamera = reinterpret_cast<void*>(FindSignature("0F 28 F8 F3 0F 59 3D ?? ?? ?? ?? F3 0F 11 7C 24 24 F3 0F 10 87"));
 
@@ -2460,11 +2486,18 @@ __int64 Hooks::GameMode_attack(C_GameMode* _this, C_Entity* ent) {
 }
 
 void Hooks::LocalPlayer__updateFromCamera(__int64 a1, C_Camera* camera) {
-	auto func = g_Hooks.LocalPlayer__updateFromCameraHook->GetFastcall<__int64, __int64, C_Camera*>();
+	auto func = g_Hooks.LocalPlayer__updateFromCameraHook->GetFastcall<void, __int64, C_Camera*>();
 	static auto noHurtcamMod = moduleMgr->getModule<CameraMod>();
 	auto freelookMod = moduleMgr->getModule<Freelook>();
 	auto freecamMod = moduleMgr->getModule<Freecam>();
 
+	auto oFunc = g_Hooks.LocalPlayer__updateFromCameraHook->GetFastcall<void, __int64, vec4_t*>();
+	auto killaura = moduleMgr->getModule<Killaura>();
+	auto scaffold = moduleMgr->getModule<Scaffold>();
+	auto breaker = moduleMgr->getModule<Breaker>();
+	auto tpaura = moduleMgr->getModule<TPAura>();
+
+	
 	if (noHurtcamMod->isEnabled() && noHurtcamMod->nohurtMode && g_Data.isInGame() && g_Data.getLocalPlayer()->isAlive()) {
 		vec2_t rot;
 		camera->getPlayerRotation(&rot);

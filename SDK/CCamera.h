@@ -3,6 +3,7 @@
 #include "../Utils/HMath.h"
 
 class C_Camera {
+private:
 	char pad_0000[128];  //0x0000
 public:
 	bool renderPlayerModel;         //0x0080
@@ -17,9 +18,6 @@ private:
 	char pad_00A8[104];  //0x00A8
 public:
 	bool facesPlayerFront;  //0x0110
-private:
-	char pad_0111[1879];  //0x0111
-public:
 
 	void getForwardVector(vec3_t*);
 	void getEulerAngles(vec3_t*);

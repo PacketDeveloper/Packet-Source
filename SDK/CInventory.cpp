@@ -5,7 +5,7 @@
 void C_Inventory::dropSlot(int slot) {
 	// FillingContainer::dropSlot
 	using drop_t = void(__fastcall*)(C_Inventory*, int, char);
-	static drop_t func = reinterpret_cast<drop_t>(FindSignature("85 D2 0F 88 ?? ?? ?? ?? 48 89 5C 24 ?? 55"));
+	static drop_t func = reinterpret_cast<drop_t>(FindSignature("85 D2 0F 88 ?? ?? ?? ?? 48 89 5C 24 ?? 55 56 57 41 54"));
 	if (func != 0)
 		func(this, slot, 0);
 }
@@ -28,7 +28,7 @@ bool C_Inventory::isFull() {
 
 void C_ContainerScreenController::handleAutoPlace(uintptr_t a1, std::string name, int slot) {
 	using ContainerScreenController__autoPlace = __int64(__fastcall*)(C_ContainerScreenController*, uintptr_t, TextHolder, int);
-	static ContainerScreenController__autoPlace autoPlaceFunc = reinterpret_cast<ContainerScreenController__autoPlace>(FindSignature("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ?? 48 81 EC ?? ?? ?? ?? 48 8B 05 30 ?? ?? ?? ?? ?? C4 48 89 45 ?? 45 8B E1 49 8B F0 44 8B EA 89 54 24 30 4C 8B F1"));
+	static ContainerScreenController__autoPlace autoPlaceFunc = reinterpret_cast<ContainerScreenController__autoPlace>(FindSignature("40 55 ?? 56 57 41 54 41 55 41 56 41 57 ?? 8D 6C 24 ?? 48 81 ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 45 ?? 45 ?? E1 49 8B F0 44 8B EA 89 54 24 30 4C 8B F1 ??"));
 	TextHolder txt = TextHolder(name);
 
 	if (autoPlaceFunc != 0x0)

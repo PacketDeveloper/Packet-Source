@@ -75,6 +75,7 @@ public:
 };
 
 //Im not sure exactly where these unknown's go but the funcs we use work.
+
 class C_ContainerScreenController {
 private:
 	virtual __int64 destructor();
@@ -111,12 +112,10 @@ private:
 	virtual __int64 onDictationEvent(std::string const&);
 
 public:
+	virtual __int64 getCallbackInterval(void);
 	virtual void setAssociatedBlockPos(vec3_ti const&);
 	virtual void setAssociatedEntityUniqueID(__int64);
 	virtual void setSuspendInput(bool);
-
-private:
-	virtual __int64 getCallbackInterval(void);
 	virtual __int64 onRender(void);
 	virtual __int64 addStaticScreenVars(__int64&);
 	virtual __int64 getAdditionalScreenInfo(void);
@@ -138,6 +137,12 @@ private:
 	virtual __int64 _getButtonXDescription(void);
 	virtual __int64 _getButtonYDescription(void);
 	virtual __int64 _getButtonKeyboardDescription(void);
+
+private:
+	virtual void pleasePad1();
+	virtual void pleasePad2();
+	virtual void pleasePad3();
+
 
 public:
 	virtual __int64 _handlePlaceAll(std::string const&, int);

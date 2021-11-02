@@ -1,8 +1,9 @@
 #pragma once
+#include <memory>
+#include <sstream>
+
 #include "MojangsonToken.h"
 #include "TextHolder.h"
-#include <sstream>
-#include <memory>
 
 class Tag {
 public:

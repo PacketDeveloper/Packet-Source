@@ -3,23 +3,23 @@
 #include <Windows.h>
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
+#include "Hooks.h"
 
 GameData g_Data;
 
 void GameData::retrieveClientInstance() {
 	static uintptr_t clientInstanceOffset = 0x0;
-	/*uintptr_t sigOffset = 0x0;
+	uintptr_t sigOffset = 0x0;
 	if (clientInstanceOffset == 0x0) {
-		sigOffset = FindSignature("48 8B 05 ? ? ? ? 48 85 C0 74");
+		sigOffset = FindSignature("48 8B 15 ? ? ? ? 4C 8B 02 4C 89 06 40 84 FF 74 ? 48 8B CD E8 ? ? ? ? 48 8B C6 48 8B 4C 24 ? 48 33 CC E8 ? ? ? ? 48 8B 5C 24 ? 48 8B 6C 24 ? 48 8B 74 24 ? 48 83 C4 ? 5F C3 B9 ? ? ? ? E8 ? ? ? ? CC E8 ? ? ? ? CC CC CC CC CC CC CC CC CC CC CC 48 89 5C 24 ? 48 89 6C 24 ? 56");
 		if (sigOffset != 0x0) {
 			int offset = *reinterpret_cast<int*>((sigOffset + 3));                                                 // Get Offset from code
-			clientInstanceOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instructio/ 7;  // Offset is relative
-			logF("clinet: %llX", clientInstanceOffset);
+			clientInstanceOffset = sigOffset - g_Data.gameModule->ptrBase + offset + /*length of instruction*/ 7;  // Offset is relative
+			logF("client: %llX", clientInstanceOffset);
 		}
-	}*/
-	clientInstanceOffset = 0x41215C8;  // pointer scanned, can't find good signatures so it'll stay
+	}
+	// clientInstanceOffset = 0x03CD5058;  // pointer scanned, can't find good signatures so it'll stay
 	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x0, 0x50}));
-
 #ifdef _DEBUG
 	if (g_Data.clientInstance == 0)
 		throw std::exception("Client Instance is 0");
@@ -175,7 +175,7 @@ void GameData::setRakNetInstance(C_RakNetInstance* raknet) {
 }
 
 void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
-
+	/*
 	//Player EntityList
 	uintptr_t start = ((uintptr_t)g_Data.getLocalPlayer()->pointingStruct + 0x70);
 	uintptr_t stop = ((uintptr_t)g_Data.getLocalPlayer()->pointingStruct + 0x78);
@@ -206,6 +206,11 @@ void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 					callback(ent, false);
 			}
 		}
+	}*/ //they decided to switch to bald stuff so now it doesn't have an easy direct replacement
+
+	if (this->localPlayer && this->localPlayer->pointingStruct) {
+		for (const auto& ent : g_Hooks.entityList)
+			callback(ent, false);
 	}
 }
 
