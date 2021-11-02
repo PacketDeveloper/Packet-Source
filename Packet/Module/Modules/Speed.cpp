@@ -240,9 +240,14 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		}
 
 		float calcYaw = (player->yaw + 90) * (PI / 180);
+		float calcYaw2 = (player->yaw - 90) * (PI / 180);
 		vec3_t moveVec;
+
 		float c = cos(calcYaw);
 		float s = sin(calcYaw);
+		float c2 = cos(calcYaw2);
+		float s2 = sin(calcYaw2);
+
 		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
 		moveVec.x = moveVec2d.x * speed;
 		moveVec.y = player->velocity.y;
