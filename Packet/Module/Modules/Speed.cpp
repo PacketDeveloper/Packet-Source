@@ -3,7 +3,7 @@ Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
-	mode.addEntry("KowSpecial", 3);
+	mode.addEntry("KowSpecialV2", 3);
 	//mode.addEntry("Inviscow", 4); // temp removed
 	registerIntSetting("TimerBoost", &timer, timer, 20, 35);
 	registerFloatSetting("Height", &height, height, 0.000001f, 0.40f);
@@ -248,20 +248,20 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		moveVec.y = player->velocity.y;
 		moveVec.z = moveVec2d.y * speed;
 		if (pressed) player->lerpMotion(moveVec);
-		if (input->right || input->left)
-			*g_Data.getClientInstance()->minecraft->timer = 19.f;
 
 		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
-			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 1.3f, 0.f, moveVec.z / 1.3f)));
+			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(c2 * .1f, 0.f, s2 * .1f)));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
 		}
 
-		if (player->fallDistance >= 5 && !preventKick) {
-			player->velocity = vec3_t(0, -1, 0);
+		if (player->fallDistance >= 3 && !preventKick) {
 			player->fallDistance = 0;
 			preventKick = true;
+			moduleMgr->getModule<Speed>()->setEnabled(false);
+			auto boxWarn = g_Data.addInfoBox("Speed: Disabled To Prevent Error");
+			boxWarn->closeTimer = 7;
 		}
 	}
 }
