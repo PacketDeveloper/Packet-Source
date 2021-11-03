@@ -253,6 +253,7 @@
     <ClCompile Include="Packet\Command\Commands\HideCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\ICommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\IDCommand.cpp" />
+    <ClCompile Include="Packet\Command\Commands\KitCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\ModulesCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\WatermarkCommand.cpp" />
     <ClCompile Include="Packet\Command\Commands\NameSpoofCommand.cpp" />
@@ -290,6 +291,7 @@
     <ClCompile Include="Packet\Module\Modules\AntiVoid.cpp" />
     <ClCompile Include="Packet\Module\Modules\AutoArmor.cpp" />
     <ClCompile Include="Packet\Module\Modules\AutoClicker.cpp" />
+    <ClCompile Include="Packet\Module\Modules\AutoTotem.cpp" />
     <ClCompile Include="Packet\Module\Modules\BehindAura.cpp" />
     <ClCompile Include="Packet\Module\Modules\BlockESP.cpp" />
     <ClCompile Include="Packet\Module\Modules\BlockOutline.cpp" />
@@ -438,6 +440,7 @@
     <ClInclude Include="Packet\Command\Commands\HideCommand.h" />
     <ClInclude Include="Packet\Command\Commands\ICommand.h" />
     <ClInclude Include="Packet\Command\Commands\IDCommand.h" />
+    <ClInclude Include="Packet\Command\Commands\KitCommand.h" />
     <ClInclude Include="Packet\Command\Commands\ModulesCommand.h" />
     <ClInclude Include="Packet\Command\Commands\WatermarkCommand.h" />
     <ClInclude Include="Packet\Command\Commands\NameSpoofCommand.h" />
@@ -475,6 +478,7 @@
     <ClInclude Include="Packet\Module\Modules\AntiVoid.h" />
     <ClInclude Include="Packet\Module\Modules\AutoArmor.h" />
     <ClInclude Include="Packet\Module\Modules\AutoClicker.h" />
+    <ClInclude Include="Packet\Module\Modules\AutoTotem.h" />
     <ClInclude Include="Packet\Module\Modules\BehindAura.h" />
     <ClInclude Include="Packet\Module\Modules\BlockESP.h" />
     <ClInclude Include="Packet\Module\Modules\BlockOutline.h" />

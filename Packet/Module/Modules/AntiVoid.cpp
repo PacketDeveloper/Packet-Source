@@ -19,17 +19,17 @@ const char* AntiVoid::getModuleName() {
 void AntiVoid::onEnable() {
 	auto player = g_Data.getLocalPlayer();
 	if (g_Data.isInGame()) savedPos = *player->getPos();
-	else savedPos = 
 	tick = 0;
 }
 
 void AntiVoid::onTick(C_GameMode* gm) {
+	float trueStop = INFINITY - 1 + NULL;
 	auto player = g_Data.getLocalPlayer();
 	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
 	blockBelow.y -= g_Data.getLocalPlayer()->height;
 	blockBelow.y -= 0.5f;
 
-	for (int i = 0; i < 40; i++) {
+	for (int i = 0; i < 44; i++) {
 		if (player->onGround  && player->region->getBlock(blockBelow)->blockLegacy->blockId != 0) {
 			savedPos = *player->getPos();
 		}
@@ -38,7 +38,8 @@ void AntiVoid::onTick(C_GameMode* gm) {
 	if (player->fallDistance >= distance) {
 		tick++;
 		if (!player->onGround && tick >= 5) { // fail safe
-			player->velocity.y += 0.056;
+			player->velocity.y += 0.1;
+			player->velocity.y = 0;
 		}
 
 		float dist2 = gm->player->getPos()->dist(savedPos);

@@ -5,7 +5,7 @@
 #include "../../../Utils/Utils.h"
 
 Reach::Reach() : IModule(0, Category::COMBAT, "Increases your reach") {
-	registerFloatSetting("Amount", &reachValue, reachValue, 3.f, 8.f); // keep it at 8 bruh
+	registerFloatSetting("Amount", &reachValue, reachValue, 3.f, 8.f);
 }
 
 Reach::~Reach() {
@@ -28,8 +28,8 @@ void Reach::onEnable() {
 		sigOffset = FindSignature("F3 0F 10 05 ?? ?? ?? ?? 41 0F 28 D9");
 
 		if (sigOffset != 0x0) {
-			int offset = *reinterpret_cast<int*>((sigOffset + 3));  // Get Offset from code
-			reachPtr = reinterpret_cast<float*>(sigOffset + offset + 7);
+			int offset = *reinterpret_cast<int*>((sigOffset + 4));  // Get Offset from code
+			reachPtr = reinterpret_cast<float*>(sigOffset + offset + 8);
 			originalReach = *reachPtr;
 		}
 	}

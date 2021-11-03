@@ -2,7 +2,7 @@
 
 InstaBreak::InstaBreak() : IModule(0, Category::EXPLOIT, "Break any block instantly") {
 	registerBoolSetting("Hold", &breakBlocks, breakBlocks); 
-	registerBoolSetting("Hive", &hive, hive); 
+	//registerBoolSetting("Hive", &hive, hive); 
 }
 
 InstaBreak::~InstaBreak() {

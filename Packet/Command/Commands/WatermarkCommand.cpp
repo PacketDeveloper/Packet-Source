@@ -14,8 +14,8 @@ bool WatermarkCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getLocalPlayer() != nullptr);
 	std::string option = args->at(1);
 	std::transform(option.begin(), option.end(), option.begin(), ::tolower);
-
 	auto watermark = moduleMgr->getModule<Watermark>();
+
 
 	if (args->at(1) == "name" && args->size() > 2) {
 		std::ostringstream os;

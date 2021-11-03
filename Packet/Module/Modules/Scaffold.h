@@ -4,10 +4,10 @@ class Scaffold : public IModule {
 private:
 	bool foundBlock = false;
 	bool switchMode = true;
-	bool noSprint = false;
 	bool extendOut = true;
 	bool staircase = true;
 	bool airplace = false;
+	bool sprint = true;
 	bool spoof = false;
 	int prevSlot = 0;
 	int expand = 1;

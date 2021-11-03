@@ -298,7 +298,7 @@ void Hooks::Actor_baseTick(C_Entity* ent) {
 		tickCountThen = tickCountNow;
 	}
 
-	if (ent->isClientSide()) { //because sometimes you host a world and you would not want from the client to attack an entity on the server or twice the same
+	if (ent->isClientSide()) {
 		bool found = false;
 		for (const auto& entity : g_Hooks.entityList)
 			if (entity == ent) {
@@ -310,6 +310,20 @@ void Hooks::Actor_baseTick(C_Entity* ent) {
 	}
 
 	if (ent != (C_Entity*)player) return oTick(ent);
+
+	if (!g_Data.getLocalPlayer() || !g_Data.getLocalPlayer()->pointingStruct || !*(&g_Data.getLocalPlayer()->region + 1))
+		g_Hooks.entityList.clear();
+
+	std::vector<C_Entity*> validEntities;
+	for (const auto& ent : g_Hooks.entityList) {
+		MEMORY_BASIC_INFORMATION info;
+		VirtualQuery(ent, &info, sizeof(MEMORY_BASIC_INFORMATION));
+		if (info.State & MEM_FREE) continue;
+		if (info.State & MEM_RESERVE) continue;
+		validEntities.push_back(ent);
+	}
+	g_Hooks.entityList.clear();
+	g_Hooks.entityList = validEntities;
 
 	C_GameMode* gm = *(C_GameMode**)((__int64)ent + 0x1250);
 	if (gm->player == (C_Entity*)g_Data.getLocalPlayer() && gm->player != nullptr) {
@@ -324,20 +338,19 @@ void Hooks::Actor_getRotation(C_Entity* _this, vec4_t& newAngle) {
 	static auto oFunc = g_Hooks.Actor_getRotationHook->GetFastcall<void, C_Entity*, vec4_t&>();
 	static auto killaura = moduleMgr->getModule<Killaura>();
 	static auto scaffold = moduleMgr->getModule<Scaffold>();
-	static auto breaker = moduleMgr->getModule<Breaker>();
 	static auto tpaura = moduleMgr->getModule<TPAura>();
 
 	if (killaura->isEnabled() && !killaura->targetListEmpty && scaffold->useRot) {
 		if (g_Data.getLocalPlayer() != nullptr && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
 			return oFunc(_this, killaura->testRot);
 	}
+	if (tpaura->isEnabled() && !tpaura->targetListEmpty) {
+		if (g_Data.getLocalPlayer() != nullptr && tpaura->mode.getSelectedValue() == 0 || tpaura->mode.getSelectedValue() == 1)
+			return oFunc(_this, tpaura->tpAuraRot);
+	}
 	/*if (scaffold->isEnabled() && scaffold->tower) {
 		if (g_Data.getLocalPlayer() != nullptr && scaffold->isOnHive && scaffold->isHoldingSpace)
 			return oFunc(_this, scaffold->scaffoldRot);
-	}*/
-	/*if (tpaura->isEnabled() && !tpaura->targetListEmpty) {
-		if (g_Data.getLocalPlayer() != nullptr && tpaura->rotations && tpaura->mode.getSelectedValue() == 0 || tpaura->mode.getSelectedValue() == 1)
-			return oFunc(_this, tpaura->tpAuraRot);
 	}*/
 	oFunc(_this, newAngle);
 }
@@ -375,23 +388,9 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	static auto scaffold = moduleMgr->getModule<Scaffold>();
 	std::string screenName(g_Hooks.currentScreenName);
 
-	if (clickGUI->isEnabled() && strcmp(alloc.getText(), "pause_screen") == 0) {
+	if (clickGUI->isEnabled() && strcmp(alloc.getText(), "pause_screen") == 0 || strcmp(alloc.getText(), "respawn_screen") == 0 || strcmp(alloc.getText(), "disconnect_screen") == 0) {
 		clickGUI->setEnabled(false);
 		g_Data.getClientInstance()->grabMouse();
-	}
-
-	if (invManager->autoDisable && strcmp(screenName.c_str(), "start_screen") == 0) {
-		//auto box = g_Data.addInfoBox("InvManager: Disabled");
-		//box->closeTimer = 14;
-		invManager->setEnabled(false);
-	}
-	if (chestStealer->autoDisable && strcmp(screenName.c_str(), "start_screen") == 0) {
-		//auto box = g_Data.addInfoBox("ChestStealer: Disabled");
-		//box->closeTimer = 14;
-		chestStealer->setEnabled(false);
-	}
-	if (scaffold->isEnabled() && strcmp(screenName.c_str(), "start_screen") == 0) {
-		scaffold->setEnabled(false);
 	}
 	alloc.resetWithoutDelete();
 

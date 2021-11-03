@@ -42,7 +42,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new BlockESP()));
 		moduleList.push_back(std::shared_ptr<IModule>(new BlockOutline()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Velocity()));
-		moduleList.push_back(std::shared_ptr<IModule>(new Step()));
+		moduleList.push_back(std::shared_ptr<IModule>(new Step())); //
 		moduleList.push_back(std::shared_ptr<IModule>(new Flight()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Phase()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Freecam()));
@@ -90,6 +90,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new AntiVoid()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Derp()));
 		moduleList.push_back(std::shared_ptr<IModule>(new FastPlace()));
+		moduleList.push_back(std::shared_ptr<IModule>(new AutoTotem()));
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new InPvPFucker()));

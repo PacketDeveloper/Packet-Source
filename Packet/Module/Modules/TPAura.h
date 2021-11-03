@@ -5,28 +5,15 @@
 
 class TPAura : public IModule {
 public:
-	bool hurttime = false;
-	bool attack = true;
-	bool silent = false;
+	bool visualize = true;
+	bool multi = false;
 	float range = 250;
-	float cCounter = 1;
-	bool push = false;
-	bool multi = true;
 	int targethud = 0;
 	int Odelay = 0;
-	bool hive = false;
 	int delay = 0;
-	float rangeSpeed = 1.f;
-	int entDistance = 2;
-	float entHeight = 1.62f;
-	bool rangeSet = false;
-	float teleportY = 2;
-	vec3_t prevPos;
-	int tpBack = 1;
 
 	// Rotations
 	bool targetListEmpty = true;
-	bool rotations = true;
 	vec4_t tpAuraRot;
 
 	TPAura();
@@ -38,6 +25,7 @@ public:
 	// Inherited via IModule
 	virtual void onEnable() override;
 	virtual void onDisable() override;
+	virtual void onLevelRender() override;
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 	//virtual const char* getRawModuleName() override;

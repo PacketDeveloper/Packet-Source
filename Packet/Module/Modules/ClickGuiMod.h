@@ -26,7 +26,7 @@ public:
 
 	bool headerAnimation = false;
 	bool openAnimation = false;
-	bool showTooltips = true;
+	bool showTooltips = false;
 	bool rainbowColor = false;
 	bool animations = true;
 	float opacity = 0.8f;

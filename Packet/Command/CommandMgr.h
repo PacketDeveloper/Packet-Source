@@ -33,6 +33,7 @@
 #include "Commands/SetprefixCommand.h"
 #include "Commands/NbtCommand.h"
 #include "Commands/ExecuteCommand.h"
+#include "Commands/KitCommand.h"
 
 #include "Commands/ScriptCommand.h"
 

@@ -2,7 +2,7 @@
 
 #include "../../../Utils/Utils.h"
 
-PlayerTeleportCommand::PlayerTeleportCommand() : IMCCommand("playertp", "Teleports to players coordinates", "<NameOfThePlayer>") {
+PlayerTeleportCommand::PlayerTeleportCommand() : IMCCommand("playertp", "Teleports to players coordinates", "<name>") {
 }
 
 PlayerTeleportCommand::~PlayerTeleportCommand() {
@@ -10,46 +10,38 @@ PlayerTeleportCommand::~PlayerTeleportCommand() {
 
 bool PlayerTeleportCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getLocalPlayer() != nullptr);
-	assertTrue(args->size() > 1);  // .playertp <player>
+	assertTrue(args->size() > 1);
 	std::string nameOfPlayer = args->at(1);
 	assertTrue(!nameOfPlayer.empty());
 	std::string nameOfPlayerLower = std::string(nameOfPlayer);
 	std::transform(nameOfPlayerLower.begin(), nameOfPlayerLower.end(), nameOfPlayerLower.begin(), ::tolower);
 	nameOfPlayerLower = Utils::sanitize(nameOfPlayerLower);
 
-	C_EntityList* entList = g_Data.getEntityList();
-	size_t listSize = entList->getListSize();
 	vec3_t pos;
-
-	if (listSize > 5000) {
-		return true;
-	}
 	std::string playerName;
+	bool gotEntity = false;
 	//Loop through all our players and retrieve their information
-	for (size_t i = 0; i < listSize; i++) {
-		C_Entity* currentEntity = entList->get(i);
+	g_Data.forEachEntity([&](C_Entity* currentEntity, bool) {
+		if (gotEntity) return;
+		if (currentEntity == 0) return;
+		if (currentEntity->getEntityTypeId() != 319) return;
+		if (currentEntity == g_Data.getLocalPlayer()) return;
 
 		std::string name(currentEntity->getNameTag()->getText());
-
 		std::transform(name.begin(), name.end(), name.begin(), ::tolower);
 
-		if (currentEntity == 0)
-			break;
-
-		if (currentEntity == g_Data.getLocalPlayer())  // Skip Local player
-			continue;
-
-		if (name.find(nameOfPlayerLower) == std::string::npos)
-			continue;
+		if (name.find(nameOfPlayerLower) == std::string::npos) return;
 
 		pos = *currentEntity->getPos();
 		playerName = currentEntity->getNameTag()->getText();
-		break;
-	}
-	if (pos.iszero()) {
+		gotEntity = true;
+	});
+
+	if (!gotEntity) {
 		clientMessageF("[Packet] %sCouldn't find player: %s!", RED, nameOfPlayer.c_str());
 		return true;
 	}
+
 	g_Data.getLocalPlayer()->setPos(pos);
 	clientMessageF("[Packet] %sTeleported to %s", GREEN, playerName.c_str());
 	return true;

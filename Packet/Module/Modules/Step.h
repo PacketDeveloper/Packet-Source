@@ -5,7 +5,7 @@ class Step : public IModule {
 public:
 	bool reverse = false;
 	float height = 1.5f;
-	int time = 0;
+	int timer = 20;
 
 	Step();
 	~Step();

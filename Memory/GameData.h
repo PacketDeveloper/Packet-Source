@@ -52,10 +52,11 @@ struct NetworkedData {
 };
 
 struct InfoBoxData {
-	bool isOpen = false;
+	bool isOpen = true;
 	float fadeTarget = 1;
 	float fadeVal = 0;
 	float closeTimer = -1;
+	std::string title;
 	std::string message;
 
 	InfoBoxData(std::string message) : message(message){};
@@ -154,6 +155,7 @@ public:
 		this->infoBoxQueue.push(box);
 		return box;
 	}
+
 	inline void setCustomGeometryOverride(bool setActive, std::shared_ptr<std::string> customGeoPtr) {
 		this->customGeoActive = setActive;
 		if (setActive)

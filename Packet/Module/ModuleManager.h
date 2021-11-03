@@ -32,7 +32,7 @@
 #include "Modules/BlockESP.h"
 #include "Modules/BlockOutline.h"
 #include "Modules/Velocity.h"
-#include "Modules/Step.h"
+#include "Modules/Step.h" // 
 #include "Modules/Flight.h"
 #include "Modules/Phase.h"
 #include "Modules/Freecam.h"
@@ -80,6 +80,7 @@
 #include "Modules/AntiVoid.h"
 #include "Modules/Derp.h"
 #include "Modules/FastPlace.h"
+#include "Modules/AutoTotem.h"
 #include "Modules/Module.h"
 
 #ifdef _DEBUG

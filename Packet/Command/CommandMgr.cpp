@@ -50,6 +50,7 @@ void CommandMgr::initCommands() {
 	commandList.push_back(new CommandBlockExploitCommand());
 	commandList.push_back(new NameSpoofCommand());
 	commandList.push_back(new ExecuteCommand());
+	commandList.push_back(new KitCommand());
 	//commandList.push_back(new ScriptCommand());
 	//commandList.push_back(new PathCommand());
 
