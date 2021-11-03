@@ -3,9 +3,9 @@ Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
-	mode.addEntry("KowSpecialV2", 3);
+	mode.addEntry("LittleKow", 3);
 	//mode.addEntry("Inviscow", 4); // temp removed
-	registerIntSetting("TimerBoost", &timer, timer, 20, 35);
+	registerIntSetting("Timer", &timer, timer, 20, 35);
 	registerFloatSetting("Height", &height, height, 0.000001f, 0.40f);
 	registerFloatSetting("Speed", &speed, speed, 0.2f, 2.f);
 }
@@ -44,10 +44,10 @@ void Speed::onEnable() {
 }
 
 void Speed::onTick(C_GameMode* gm) {
-	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-	if (g_Data.getLocalPlayer() == nullptr)
+	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
 		return;
 
+	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
 	if (mode.getSelectedValue() == 1) {
 		if (gm->player->onGround) {
@@ -126,14 +126,12 @@ void Speed::onTick(C_GameMode* gm) {
 
 void Speed::onMove(C_MoveInputHandler* input) {
 	auto targetStrafe = moduleMgr->getModule<TargetStrafe>();
+	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
+		return;
+
 	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
 	bool pressed = moveVec2d.magnitude() > 0.f;
 	auto player = g_Data.getLocalPlayer();
-
-	if (g_Data.getLocalPlayer() == nullptr)
-		return;
-	if (!g_Data.canUseMoveKeys())
-		return;
 
 	if (mode.getSelectedValue() == 0) {  // Vanilla
 		static bool velocity = false;
@@ -242,18 +240,16 @@ void Speed::onMove(C_MoveInputHandler* input) {
 		float calcYaw = (player->yaw + 90) * (PI / 180);
 		float calcYaw2 = (player->yaw - 90) * (PI / 180);
 		vec3_t moveVec;
-
 		float c = cos(calcYaw);
 		float s = sin(calcYaw);
 		float c2 = cos(calcYaw2);
 		float s2 = sin(calcYaw2);
-
 		moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
 		moveVec.x = moveVec2d.x * speed;
 		moveVec.y = player->velocity.y;
 		moveVec.z = moveVec2d.y * speed;
-		if (pressed) player->lerpMotion(moveVec);
 
+		if (pressed) player->lerpMotion(moveVec);
 		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
 			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(c2 * .1f, 0.f, s2 * .1f)));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
@@ -265,7 +261,7 @@ void Speed::onMove(C_MoveInputHandler* input) {
 			player->fallDistance = 0;
 			preventKick = true;
 			moduleMgr->getModule<Speed>()->setEnabled(false);
-			auto boxWarn = g_Data.addInfoBox("Speed: Disabled To Prevent Error");
+			auto boxWarn = g_Data.addInfoBox("Speed: Disabled to prevent kick");
 			boxWarn->closeTimer = 7;
 		}
 	}
