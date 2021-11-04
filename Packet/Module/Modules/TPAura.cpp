@@ -6,7 +6,7 @@ TPAura::TPAura() : IModule(0, Category::COMBAT, "fucks players") {
 	mode.addEntry("Old", 1);
 	mode.addEntry("Silent", 2);
 	mode.addEntry("None", 3);
-	registerBoolSetting("Visualize", &render, render);
+	registerBoolSetting("Visualize", &visualize, visualize);
 	registerBoolSetting("Multi", &multi, multi);
 	registerIntSetting("Delay", &delay, delay, 0, 10);
 	registerFloatSetting("Range", &range, range, 5, 250);
@@ -188,7 +188,7 @@ void TPAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 				DrawUtils::flush();
 
-				if (render && (i->getEntityTypeId() == 319)) {
+				if (visualize && (i->getEntityTypeId() == 319)) {
 					static float constexpr opacity = 10;
 					float scale = 3 * 0.26f;
 					float spacing = scale + 15.f + 2;
@@ -221,12 +221,12 @@ void TPAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		return;
 
 	for (auto& i : targetList) {
-		if (rotations && mode.getSelectedValue() == 0 && !targetList.empty()) {
+		if (mode.getSelectedValue() == 0 && !targetList.empty()) {
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 			auto weewee = g_Data.getLocalPlayer();
 			weewee->setRot(angle);
 		}
-		if (rotations && mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
+		if (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
 			vec2_t tpAuraRot = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 			auto rotation = g_Data.getLocalPlayer();
 			float prevyaw = rotation->yawUnused1;
@@ -247,7 +247,7 @@ void TPAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 				rotation->yawUnused2 = prevyaw2;
 			}
 		}
-		if (rotations && mode.getSelectedValue() == 1 && !targetList.empty()) {
+		if (mode.getSelectedValue() == 1 && !targetList.empty()) {
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 			auto rotation = g_Data.getLocalPlayer();
 			float prevyaw = rotation->yawUnused1;
@@ -269,14 +269,14 @@ void TPAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 	}
 }
 
-float tttt = 0;
+float ttttt = 0;
 void TPAura::onLevelRender() {
 	auto targetStrafe = moduleMgr->getModule<TargetStrafe>();
 	if (targetStrafe->isEnabled())
 		return;
 	if (!targetList.empty()) {
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
-		tttt++;
+		ttttt++;
 		DrawUtils::setColor(1, 1, 1, 0.9f);
 
 		vec3_t permutations[56];
@@ -284,7 +284,7 @@ void TPAura::onLevelRender() {
 			permutations[i] = {sinf((i * 10.f) / (180 / PI)), 0.f, cosf((i * 10.f) / (180 / PI))};
 		}
 
-		const float coolAnim = 0.9f + 0.9f * sin((tttt / 60) * PI * 1);
+		const float coolAnim = 0.9f + 0.9f * sin((ttttt / 60) * PI * 1);
 
 		vec3_t* start = targetList[0]->getPosOld();
 		vec3_t* end = targetList[0]->getPos();

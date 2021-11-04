@@ -1430,8 +1430,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 		vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 		auto notifications = moduleMgr->getModule<Notifications>();
 		auto hudMod = moduleMgr->getModule<HudModule>();
-		auto box = g_Data.getFreshInfoBox();
-		if (box) {
+		auto boxes = g_Data.getInfoBoxList();
+		float yPos = windowSize.y;
+		for (auto& box : boxes) {
 			box->fade();
 			if (box->fadeTarget == 1 && box->closeTimer <= 0 && box->closeTimer > -1)
 				box->fadeTarget = 0;
@@ -1470,9 +1471,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			if (box->closeTimer <= 1 && box->closeTimer > -1) {
 				vec4_t rect2 = vec4_t(
 					windowSize.x - box->closeTimer * 100,
-					windowSize.y - margin - textHeight + 4,
+					yPos - margin - textHeight + 4,
 					windowSize.x - box->closeTimer,
-					windowSize.y - margin);
+					yPos - margin);
 				vec2_t textPos = vec2_t(rect2.x + 1.5, rect2.y + 3);
 				DrawUtils::drawText(vec2_t(textPos.x + borderPadding, textPos.y), &substring, MC_Color(255, 255, 255), 1, 1, true);
 				DrawUtils::fillRectangle(rect2, MC_Color(0, 0, 0), notifications->opacity);
@@ -1480,9 +1481,9 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 			vec4_t rect = vec4_t(
 				windowSize.x - margin - fullTextLength - 2 - borderPadding * 2,
-				windowSize.y - margin - textHeight + 4,
+				yPos - margin - textHeight + 4,
 				windowSize.x - margin + borderPadding - 2,
-				windowSize.y - margin);
+				yPos - margin);
 
 			vec2_t textPos = vec2_t(rect.x + 1.5, rect.y + 3);
 			if (box->closeTimer > 1) {
@@ -1491,6 +1492,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				DrawUtils::drawText(vec2_t(textPos.x + borderPadding, textPos.y), &substring, MC_Color(255, 255, 255), 1, 1, true);
 				DrawUtils::fillRectangle(rect, MC_Color(0, 0, 0), notifications->opacity);
 			}
+			yPos -= margin + textHeight;
 		}
 	}
 	DrawUtils::flush();

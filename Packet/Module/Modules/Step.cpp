@@ -186,6 +186,6 @@ void Step::onMove(C_MoveInputHandler* input) {
 }
 
 void Step::onDisable() {
-	if (g_Data.getLocalPlayer() != nullptr)
-		g_Data.getLocalPlayer()->stepHeight = 0.5625f;
+	if (g_Data.getLocalPlayer() != nullptr) g_Data.getLocalPlayer()->stepHeight = 0.5625f;
+	*g_Data.getClientInstance()->minecraft->timer = 20;
 }

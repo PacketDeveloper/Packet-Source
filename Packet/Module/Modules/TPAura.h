@@ -11,6 +11,7 @@ public:
 	int targethud = 0;
 	int Odelay = 0;
 	int delay = 0;
+	int tick = 0;
 
 	// Rotations
 	bool targetListEmpty = true;

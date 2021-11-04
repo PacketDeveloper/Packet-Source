@@ -90,7 +90,7 @@ private:
 	bool customGeoActive = false;
 	std::shared_ptr<std::tuple<std::shared_ptr<unsigned char[]>, size_t>> customTexture;
 	bool customTextureActive = false;
-	std::queue<std::shared_ptr<InfoBoxData>> infoBoxQueue;
+	std::vector<std::shared_ptr<InfoBoxData>> infoBoxQueue;
 
 	bool injectorConnectionActive = false;
 	const SlimUtils::SlimModule* gameModule = 0;
@@ -142,7 +142,7 @@ public:
 		while (!this->infoBoxQueue.empty()) {
 			auto box = this->infoBoxQueue.front();
 			if (!box->isOpen) {
-				this->infoBoxQueue.pop();
+				this->infoBoxQueue.erase(this->infoBoxQueue.begin());
 				continue;
 			}
 			return box;
@@ -150,9 +150,21 @@ public:
 		return std::shared_ptr<InfoBoxData>();
 	}
 
+	inline std::vector<std::shared_ptr<InfoBoxData>>& getInfoBoxList() {
+		while (!this->infoBoxQueue.empty()) {
+			auto box = this->infoBoxQueue.front();
+			if (!box->isOpen) {
+				this->infoBoxQueue.erase(this->infoBoxQueue.begin());
+				continue;
+			}
+			break;
+		}
+		return this->infoBoxQueue;
+	}
+
 	inline std::shared_ptr<InfoBoxData> addInfoBox(std::string message) {
 		auto box = std::make_shared<InfoBoxData>(message);
-		this->infoBoxQueue.push(box);
+		this->infoBoxQueue.push_back(box);
 		return box;
 	}
 

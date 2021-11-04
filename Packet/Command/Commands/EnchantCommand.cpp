@@ -2,7 +2,7 @@
 
 #include "../../../Utils/Utils.h"
 
-EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] <mode: auto / manual : 1/0>") {
+EnchantCommand::EnchantCommand() : IMCCommand("enchant", "Enchants items", "<enchantment> [level] ") {
 	enchantMap["protection"] = 0;
 	enchantMap["fire_protection"] = 1;
 	enchantMap["feather_falling"] = 2;
@@ -77,7 +77,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			else
 				enchantId = assertInt(args->at(1));
 		} catch (int) {
-			clientMessageF("exception while trying to get enchant string");
+			clientMessageF("[Packet] %sException while trying to get enchant string, RED");
 			enchantId = assertInt(args->at(1));
 		}
 	}
@@ -93,10 +93,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			return false;
 		{
 			firstAction = new C_InventoryAction(supplies->selectedHotbarSlot, desc, nullptr, item, nullptr, item->count);
-			if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
-				secondAction = new C_InventoryAction(0, nullptr, desc, nullptr, item, item->count, 32766, 100);
-			else
-				secondAction = new C_InventoryAction(0, nullptr, desc, nullptr, item, item->count, 507, 99999);
+			secondAction = new C_InventoryAction(0, nullptr, desc, nullptr, item, item->count, 507, 99999);
 			manager->addInventoryAction(*firstAction);
 			manager->addInventoryAction(*secondAction);
 			delete firstAction;
@@ -142,7 +139,8 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 			}
 			free(EnchantData);
 		}
-		clientMessageF("%sEnchant successful!", LIGHT_PURPLE);
+		clientMessageF("[Packet] %sEnchant successful!", GREEN);
+		clientMessageF("[Packet] %sSuccessfully duplicated item!", GREEN);
 	} else {
 		auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 		if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr))  // Item in hand?
@@ -165,9 +163,10 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 					item);  // Player::selectItem
 
 			//g_Data.getLocalPlayer()->sendInventory();
-			clientMessageF("%sEnchant successful!", GREEN);
+			clientMessageF("[Packet] %sEnchant successful!", GREEN);
+			clientMessageF("[Packet] %sSuccessfully duplicated item!", GREEN);
 		} else
-			clientMessageF("%sEnchant failed, try using a lower enchant-level", RED);
+			clientMessageF("[Packet] %sEnchant failed", RED);
 
 		free(EnchantData);
 	}
@@ -176,10 +175,7 @@ bool EnchantCommand::execute(std::vector<std::string>* args) {
 		auto selectedItem = g_Data.getLocalPlayer()->getSelectedItem();
 		if ((selectedItem == nullptr || selectedItem->count == 0 || selectedItem->item == nullptr))  // Item in hand?
 			return false;
-		if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.mineplex.com") == 0)
-			firstAction = new C_InventoryAction(0, desc, nullptr, item, nullptr, item->count, 32766, 100);
-		else
-			firstAction = new C_InventoryAction(0, desc, nullptr, item, nullptr, item->count, 507, 99999);
+		firstAction = new C_InventoryAction(0, desc, nullptr, item, nullptr, item->count, 507, 99999);
 		secondAction = new C_InventoryAction(supplies->selectedHotbarSlot, nullptr, desc, nullptr, item, item->count);
 		manager->addInventoryAction(*firstAction);
 		manager->addInventoryAction(*secondAction);
