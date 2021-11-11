@@ -28,11 +28,11 @@ void BlockESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 			for (int z = (int)pos->z - range; z < pos->z + range; z++) {
 				for (int y = (int)pos->y - range; y < pos->y + range; y++) {
 					vec3_t blockPos = vec3_t(x, y, z);
-					vec3_t cock = blockPos;
-					cock = cock.floor();
-					cock.x += 1.f;
-					cock.y += 1.f;
-					cock.z += 1.f;
+					vec3_t angle = blockPos;
+					angle = angle.floor();
+					angle.x += 1.f;
+					angle.y += 1.f;
+					angle.z += 1.f;
 
 					int id = (int)player->region->getBlock(blockPos)->toLegacy()->blockId;
 					bool dRender = false;
@@ -50,19 +50,19 @@ void BlockESP::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
 
 					if (dRender) {
 						DrawUtils::setColor(0.2, 0.9, 1, 1);
-						DrawUtils::drawBox(blockPos, cock, width, 1);
+						DrawUtils::drawBox(blockPos, angle, width, 1);
 					} else if (eRender) {
 						DrawUtils::setColor(0, 0.7, 0, 1);
-						DrawUtils::drawBox(blockPos, cock, width, 1);
+						DrawUtils::drawBox(blockPos, angle, width, 1);
 					} else if (rRender) {
 						DrawUtils::setColor(0.8, 0, 0, 1);
-						DrawUtils::drawBox(blockPos, cock, width, 1);
+						DrawUtils::drawBox(blockPos, angle, width, 1);
 					} else if (gRender) {
 						DrawUtils::setColor(1, 0.7, 0, 1);
-						DrawUtils::drawBox(blockPos, cock, width, 1);
+						DrawUtils::drawBox(blockPos, angle, width, 1);
 					} else if (iRender) {
 						DrawUtils::setColor(1, 0.9, 0.8, 1);
-						DrawUtils::drawBox(blockPos, cock, width, 1);
+						DrawUtils::drawBox(blockPos, angle, width, 1);
 					}
 				}
 			}

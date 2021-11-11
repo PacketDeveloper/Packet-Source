@@ -5,7 +5,7 @@ Step::Step() : IModule(0, Category::MOVEMENT, "Increases your step height") {
 	mode.addEntry("Normal", 0);
 	mode.addEntry("Motion", 1);
 	registerBoolSetting("Reverse", &reverse, reverse);
-	registerIntSetting("Timer", &timer, timer, 5, 50);
+	registerIntSetting("Timer", &timer, timer, 5, 80);
 	registerFloatSetting("Height", &height, height, 1.f, 2.f);
 }
 

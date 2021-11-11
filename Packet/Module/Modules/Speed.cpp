@@ -44,7 +44,7 @@ void Speed::onEnable() {
 }
 
 void Speed::onTick(C_GameMode* gm) {
-	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
+	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
@@ -126,7 +126,7 @@ void Speed::onTick(C_GameMode* gm) {
 
 void Speed::onMove(C_MoveInputHandler* input) {
 	auto targetStrafe = moduleMgr->getModule<TargetStrafe>();
-	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
+	if (g_Data.getLocalPlayer() == nullptr)
 		return;
 
 	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};

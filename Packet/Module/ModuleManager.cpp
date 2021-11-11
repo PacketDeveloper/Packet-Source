@@ -67,7 +67,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new NoSwing()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Zoom()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Teams()));
-		moduleList.push_back(std::shared_ptr<IModule>(new Freelook()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new Freelook()));
 		moduleList.push_back(std::shared_ptr<IModule>(new Sneak()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AntiImmobile()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TimeChanger()));
@@ -91,6 +91,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Derp()));
 		moduleList.push_back(std::shared_ptr<IModule>(new FastPlace()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AutoTotem()));
+		moduleList.push_back(std::shared_ptr<IModule>(new TargetHUD()));
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new InPvPFucker()));
@@ -124,8 +125,10 @@ void ModuleManager::initModules() {
 	getModule<AntiBot>()->setEnabled(true);
 	getModule<Sprint>()->setEnabled(true);
 	getModule<AntiBot>()->setEnabled(true);
-	//auto box = g_Data.addInfoBox("Packet Client is now Injected!");
-	//box->closeTimer = 15;
+	if (!g_Data.canUseMoveKeys()) {
+		auto notification = g_Data.addInfoBox("Packet Client is now Injected!");
+		notification->closeTimer = 20;
+	}
 }
 
 void ModuleManager::disable() {

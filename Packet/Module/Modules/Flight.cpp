@@ -437,8 +437,6 @@ void Flight::onSendPacket(C_Packet* packet) {
 
 
 void Flight::onDisable() {
-	blink = false;
-	fly = false;
 	*g_Data.getClientInstance()->minecraft->timer = 20;
 	auto player = g_Data.getLocalPlayer();
 	auto scaffold = moduleMgr->getModule<Scaffold>();
@@ -447,6 +445,9 @@ void Flight::onDisable() {
 		speed->setEnabled(true);
 		speedWasEnabled = false;
 	}
+	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
+		return;
+
 	if (mode.getSelectedValue() == 5 || mode.getSelectedValue() == 6 || mode.getSelectedValue() == 1) { // Hive and Airwalk
 		hiveC2 = 0;
 		player->onGround = false;
@@ -455,11 +456,11 @@ void Flight::onDisable() {
 		return;
 	g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 	if (mode.getSelectedValue() == 4) {  // BlockFly
-		if (g_Data.getLocalPlayer() == nullptr)
-			return;
 		__int64 id = *g_Data.getLocalPlayer()->getUniqueId();
 		C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 		C_MobEquipmentPacket a(id, *g_Data.getLocalPlayer()->getSelectedItem(), supplies->selectedHotbarSlot, supplies->selectedHotbarSlot);
 		g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
 	}
+	blink = false;
+	fly = false;
 }

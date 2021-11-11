@@ -81,6 +81,7 @@
 #include "Modules/Derp.h"
 #include "Modules/FastPlace.h"
 #include "Modules/AutoTotem.h"
+#include "Modules/TargetHUD.h"
 #include "Modules/Module.h"
 
 #ifdef _DEBUG

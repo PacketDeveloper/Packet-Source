@@ -14,12 +14,15 @@ const char* FastPlace::getModuleName() {
 void FastPlace::onTick(C_GameMode* gm) {
 	auto player = g_Data.getLocalPlayer();
 	PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
+	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(pointing->block);
+	int blockID = (int)block->toLegacy()->blockId;
+
 	if (g_Data.isRightClickDown() && g_Data.canUseMoveKeys()) {
 		Odelay++;
 		if (Odelay >= delay) {
 			PointingStruct* pstruct = g_Data.getClientInstance()->getPointerStruct();
 			g_Data.rightclickCount++;
-			gm->buildBlock(new vec3_ti(pstruct->block), pstruct->blockSide);
+			if (blockID != 0) gm->buildBlock(new vec3_ti(pointing->block), pointing->blockSide);
 		}
 		Odelay = 0;
 	}

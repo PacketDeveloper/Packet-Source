@@ -3,7 +3,7 @@
 #include "../../DrawUtils.h"
 #include "../../Scripting/ScriptManager.h"
 
-HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays Hud") {
+HudModule::HudModule() : IModule(0, Category::VISUAL, "Displays ur mom") {
 	registerEnumSetting("Color", &color, 0);
 	color.addEntry("Rainbow", 0);
 	color.addEntry("Dynamic", 1);
@@ -31,7 +31,7 @@ HudModule::~HudModule() {
 }
 
 const char* HudModule::getModuleName() {
-	return ("Hud");
+	return ("HUD");
 }
 
 void HudModule::onTick(C_GameMode* gm) {

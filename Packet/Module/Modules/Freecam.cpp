@@ -15,7 +15,7 @@ const char* Freecam::getModuleName() {
 
 void Freecam::onEnable() {
 	if (g_Data.getLocalPlayer() != nullptr) {
-		g_Data.getLocalPlayer()->setGameModeType(3);
+		//g_Data.getLocalPlayer()->setGameModeType(3);
 	}
 	oldPos = *g_Data.getLocalPlayer()->getPos();
 }
@@ -78,7 +78,7 @@ void Freecam::onMove(C_MoveInputHandler* input) {
 
 void Freecam::onDisable() {
 	if (g_Data.getLocalPlayer() != nullptr && g_Data.getLocalPlayer()->gamemode != 1) {
-		g_Data.getLocalPlayer()->setGameModeType(0);
+		//g_Data.getLocalPlayer()->setGameModeType(0);
 	}
 	g_Data.getLocalPlayer()->velocity = vec3_t(0, 0, 0);
 	g_Data.getLocalPlayer()->setPos(oldPos);

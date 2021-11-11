@@ -3,12 +3,15 @@
 TPAura::TPAura() : IModule(0, Category::COMBAT, "fucks players") {
 	registerEnumSetting("Rotations", &mode, 0);
 	mode.addEntry("Normal", 0);
-	mode.addEntry("Old", 1);
-	mode.addEntry("Silent", 2);
-	mode.addEntry("None", 3);
+	mode.addEntry("Smooth", 1);
+	mode.addEntry("Old", 2);
+	mode.addEntry("Silent", 3);
+	mode.addEntry("None", 4);
 	registerBoolSetting("Visualize", &visualize, visualize);
-	registerBoolSetting("Multi", &multi, multi);
+	//registerBoolSetting("Multi", &multi, multi);
+	//registerIntSetting("TPDelay", &tpDelay, tpDelay, 5, 100);
 	registerIntSetting("Delay", &delay, delay, 0, 10);
+	registerFloatSetting("Distance", &distance, distance, 0, 10);
 	registerFloatSetting("Range", &range, range, 5, 250);
 }
 
@@ -59,8 +62,6 @@ void findPlayer2(C_Entity* currentEntity, bool isRegularEntity) {
 }
 
 void TPAura::onEnable() {
-	if (g_Data.getLocalPlayer() == nullptr)
-		setEnabled(false);
 }
 
 struct CompareTargetEnArray {
@@ -78,176 +79,78 @@ void TPAura::onTick(C_GameMode* gm) {
 	if (!g_Data.canUseMoveKeys()) targetListEmpty = true;
 	if (clickGUI->isEnabled()) targetListEmpty = true;
 
+	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
+		return;
+
 	//Loop through all our players and retrieve their information
+	auto player = g_Data.getLocalPlayer();
 	targetList.clear();
 
 	g_Data.forEachEntity(findPlayer2);
+
+	float calcYaw = (gm->player->yaw + 90) * (PI / 180);
+	float calcPitch = (gm->player->pitch) * -(PI / 180);
+
+	float teleportX = cos(calcYaw) * cos(calcPitch) * distance;
+	float teleportZ = sin(calcYaw) * cos(calcPitch) * distance;
+	C_MovePlayerPacket teleportPacket;
+
 	Odelay++;
-
 	if (targetList.size() > 0 && Odelay >= delay) {
-		g_Data.getLocalPlayer()->swingArm();
-
-		float calcYaw = (gm->player->yaw + 90) * (PI / 180);
-		float calcPitch = (gm->player->pitch) * -(PI / 180);
-
-		float teleportX = cos(calcYaw) * cos(calcPitch) * 3.5f;
-		float teleportZ = sin(calcYaw) * cos(calcPitch) * 3.5f;
-		C_MovePlayerPacket teleportPacket;
-
-		/*if (strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "mco.cubecraft.net") == 0) {
-			vec3_t pos = *g_Data.getLocalPlayer()->getPos();
-
-			C_MovePlayerPacket movePlayerPacket(g_Data.getLocalPlayer(), pos);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&movePlayerPacket);
-
-			pos.y += 0.35f;
-
-			movePlayerPacket = C_MovePlayerPacket(g_Data.getLocalPlayer(), pos);
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&movePlayerPacket);
-		}*/
-
-		// Attack all entitys in targetList
-		if (multi) {
-			for (int i = 0; i < targetList.size(); i++) {
-				vec3_t pos = *targetList[i]->getPos();
+		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+		tick++;
+		if (tick >= 1 && tick <= 34) {
+			auto notification1 = g_Data.addInfoBox("TPAura: Teleported!");
+			notification1->closeTimer = 15;
+			for (auto& i : targetList) {
+				vec3_t pos = *targetList[0]->getPos();
 				teleportPacket = C_MovePlayerPacket(g_Data.getLocalPlayer(), vec3_t(pos.x - teleportX, pos.y, pos.z - teleportZ));
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&teleportPacket);
-				g_Data.getCGameMode()->attack(targetList[i]);
-
+				if (!moduleMgr->getModule<NoSwing>()->isEnabled()) player->swingArm();
+				gm->attack(targetList[0]);
+			}
+		} else if (tick == 35) {
+			for (auto& i : targetList) {
+				vec3_t pos = *targetList[0]->getPos();
 				teleportPacket = C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
 				g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&teleportPacket);
 			}
-		} else {
-			tick++;
-			vec3_t pos = *targetList[0]->getPos();
-			teleportPacket = C_MovePlayerPacket(g_Data.getLocalPlayer(), vec3_t(pos.x - teleportX, pos.y, pos.z - teleportZ));
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&teleportPacket);
-			g_Data.getCGameMode()->attack(targetList[0]);
-
-			teleportPacket = C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&teleportPacket);
+			tick = 1;
 		}
 		Odelay = 0;
 	}
 }
 
-void TPAura::onPreRender(C_MinecraftUIRenderContext* renderCtx) {
-	auto scaffold = moduleMgr->getModule<Scaffold>();
-	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
-		return;
-	if (targetList.size() == 1 && targethud > 1) {
-		for (auto& i : targetList) {
-			if (visualize && scaffold->useRot && (i->getEntityTypeId() == 319)) {
-				vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
-				static auto hudMod = moduleMgr->getModule<HudModule>();
-				vec3_t* pos = targetList[0]->getPos();
-				std::string namestr = "Name: ";
-				std::string name = namestr + targetList[0]->getNameTag()->getText();
-				std::string position = "Position: " + std::to_string((int)floorf(pos->x)) + " " + std::to_string((int)floorf(pos->y)) + " " + std::to_string((int)floorf(pos->z));
-
-				name = Utils::sanitize(name);
-
-				float margin = windowSize.x / 5;
-				constexpr float borderPadding = 1;
-				constexpr float unused = 5;
-				constexpr float idek = 5;
-
-				float nameLength = DrawUtils::getTextWidth(&name) + 20;
-
-				static const float rectHeight = (idek, unused) * DrawUtils::getFont(Fonts::SMOOTH)->getLineHeight();
-
-				vec4_t rectPos = vec4_t(
-					windowSize.x - margin - nameLength - 15 - borderPadding * 2,
-					windowSize.y - margin - rectHeight + 10,
-					windowSize.x - margin + borderPadding - 2,
-					windowSize.y - margin + 11);
-
-				vec4_t LinePos = vec4_t(
-					windowSize.x - margin - nameLength - 6.5 - borderPadding * 2,
-					windowSize.y - margin - rectHeight + 49,
-					windowSize.x - margin + borderPadding - 10.5,
-					windowSize.y - margin + 7);
-
-				vec2_t TextPos = vec2_t(rectPos.x + 8, rectPos.y + 5);
-				vec2_t armorPos = vec2_t(rectPos.x + 5.5, rectPos.y + 24);
-				vec2_t TextPos2 = vec2_t(rectPos.x + 8, rectPos.y + 15);
-
-				if (targetList[0]->damageTime >= 1) {
-					vec2_t TextPosIdk = vec2_t(LinePos.x + 55, LinePos.y + 2);
-					std::string Health = " ";
-					DrawUtils::drawText(TextPosIdk, &Health, MC_Color(255, 255, 255), 0.67, 1, true);
-				}
-
-				if (targetList[0]->damageTime >= 1) {
-					DrawUtils::fillRectangle(LinePos, MC_Color(255, 0, 0), 0.5);
-					DrawUtils::drawRectangle(LinePos, MC_Color(255, 0, 0), 1);
-				} else {
-					DrawUtils::fillRectangle(LinePos, MC_Color(0, 255, 0), 0.5);
-					DrawUtils::drawRectangle(LinePos, MC_Color(0, 255, 0), 1);
-				}
-
-				DrawUtils::flush();
-
-				if (visualize && (i->getEntityTypeId() == 319)) {
-					static float constexpr opacity = 10;
-					float scale = 3 * 0.26f;
-					float spacing = scale + 15.f + 2;
-
-					auto* player = reinterpret_cast<C_Player*>(targetList[0]);
-
-					for (int t = 0; t < 4; t++) {
-						C_ItemStack* stack = player->getArmor(t);
-						if (stack->isValid()) {
-							DrawUtils::drawItem(stack, vec2_t(armorPos), 1, scale, false);
-							armorPos.x += scale * spacing;
-						}
-					}
-					C_PlayerInventoryProxy* supplies = player->getSupplies();
-					C_ItemStack* item = supplies->inventory->getItemStack(supplies->selectedHotbarSlot);
-					if (item->isValid()) DrawUtils::drawItem(item, vec2_t(armorPos), opacity, scale, item->isEnchanted());
-				}
-
-				DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.3);
-				//DrawUtils::drawRectangle(rectPos, MC_Color(0, 0, 0), 0.35);
-				DrawUtils::drawText(TextPos2, &position, MC_Color(255, 255, 255), 1, 1, true);
-				DrawUtils::drawText(TextPos, &name, MC_Color(255, 255, 255), 1, 1, true);
-			}
-		}
-	}
-}
-
 void TPAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
-	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
-		return;
-
 	for (auto& i : targetList) {
-		if (mode.getSelectedValue() == 0 && !targetList.empty()) {
+		//std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
+		if (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 			auto weewee = g_Data.getLocalPlayer();
 			weewee->setRot(angle);
 		}
 		if (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
-			vec2_t tpAuraRot = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+			vec2_t testRot = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 			auto rotation = g_Data.getLocalPlayer();
 			float prevyaw = rotation->yawUnused1;
 			float prevyaw2 = rotation->yaw;
 			float prevyaw3 = rotation->yaw2;
-			rotation->setRot(tpAuraRot);
+			rotation->setRot(testRot);
 
 			// Head
-			rotation->yawUnused1 = tpAuraRot.y;
-			rotation->pitch = tpAuraRot.x;
-			rotation->yaw2 = tpAuraRot.y;
+			rotation->yawUnused1 = testRot.y;
+			rotation->pitch = testRot.x;
+			rotation->yaw2 = testRot.y;
 			rotation->yaw = prevyaw2;
-			rotation->pitch2 = tpAuraRot.x;
+			rotation->pitch2 = testRot.x;
 
 			// Body
 			if (mode.getSelectedValue() == 0) {
-				rotation->bodyYaw = tpAuraRot.y;
+				rotation->bodyYaw = testRot.y;
 				rotation->yawUnused2 = prevyaw2;
 			}
 		}
-		if (mode.getSelectedValue() == 1 && !targetList.empty()) {
+		if (mode.getSelectedValue() == 2 && !targetList.empty()) {
 			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
 			auto rotation = g_Data.getLocalPlayer();
 			float prevyaw = rotation->yawUnused1;
@@ -271,7 +174,11 @@ void TPAura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 
 float ttttt = 0;
 void TPAura::onLevelRender() {
-	auto targetStrafe = moduleMgr->getModule<TargetStrafe>();
+	//if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
+		//return;
+	//DrawUtils::setColor(1, 1, 1, 1);
+	//DrawUtils::drawLinestrip3d(position);
+	/*auto targetStrafe = moduleMgr->getModule<TargetStrafe>();
 	if (targetStrafe->isEnabled())
 		return;
 	if (!targetList.empty()) {
@@ -304,8 +211,25 @@ void TPAura::onLevelRender() {
 		}
 
 		DrawUtils::drawLinestrip3d(posList);
+	}*/
+}
+
+void TPAura::onSendPacket(C_Packet* packet) {
+	if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3) {
+		if (!targetList.empty()) {
+			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
+			vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());
+			movePacket->pitch = angle.x;
+			movePacket->headYaw = angle.y;
+			movePacket->yaw = angle.y;
+		}
 	}
 }
 
 void TPAura::onDisable() {
+	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
+		return;
+	C_MovePlayerPacket teleportPacket;
+	teleportPacket = C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());
+	g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&teleportPacket);
 }

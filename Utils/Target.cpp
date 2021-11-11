@@ -21,8 +21,8 @@ bool Target::isValidTarget(C_Entity* ent) {
 	if (ent == g_Data.getLocalPlayer())
 		return false;
 
-	if (!ent->isAlive())
-		return false;
+	//if (!ent->isAlive())
+		//return false;
 
 	if (!(*localPlayer)->canAttack(ent, false))
 		return false;

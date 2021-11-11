@@ -4,7 +4,7 @@
 #include "../../DrawUtils.h"
 #include "../../Module/ModuleManager.h"
 
-Scaffold::Scaffold() : IModule(0, Category::MOVEMENT, "BasicallyBly") {
+Scaffold::Scaffold() : IModule(0, Category::PLAYER, "BasicallyBly") {
 	//registerBoolSetting("Downwards", &staircase, staircase);
 	registerBoolSetting("Rotations", &rotations, rotations);
 	registerBoolSetting("AirPlace", &airplace, airplace);
@@ -92,7 +92,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 	if (extendOut) {
 		float cal = (gm->player->yaw + 90) * (PI / 180);
 
-		if (tower && speed == 0) {
+		if (tower && speed <= 0.05) {
 			if (!isHoldingSpace) {
 				blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block(s) ahead the player X
 				blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block(s) ahead the player Z
@@ -157,7 +157,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
 		blockBelow.y -= g_Data.getLocalPlayer()->height;
 		blockBelow.y -= 0.5f;
-		if (speed >= 0.05) {
+		if (speed >= 0.05 || isHoldingSpace) {
 			vec2_t angleBelow = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
 			auto rotation = g_Data.getLocalPlayer();
 			float prevyaw = rotation->yawUnused1;
@@ -191,7 +191,7 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 		return;
 
 	// Tower
-	if (tower && isHoldingSpace && !clickGUI->isEnabled() && speed == 0) {
+	if (tower && isHoldingSpace && !clickGUI->isEnabled() && speed <= 0.05) {
 		float trueStop = 1000 - 1 + NULL;
 		if (foundBlock) {
 			vec2_t movement = {input->forwardMovement, -input->sideMovement};

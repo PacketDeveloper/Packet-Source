@@ -5,10 +5,13 @@
 
 class TPAura : public IModule {
 public:
+	std::vector<vec3_t> position;
+	float distance = 3.5f;
 	bool visualize = true;
 	bool multi = false;
 	float range = 250;
 	int targethud = 0;
+	int tpDelay = 0;
 	int Odelay = 0;
 	int delay = 0;
 	int tick = 0;
@@ -30,6 +33,6 @@ public:
 	virtual const char* getModuleName() override;
 	virtual void onTick(C_GameMode* gm) override;
 	//virtual const char* getRawModuleName() override;
-	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx) override;
+	virtual void onSendPacket(C_Packet* packet) override;
 	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
 };
