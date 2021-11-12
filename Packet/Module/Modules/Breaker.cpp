@@ -1,16 +1,15 @@
 #include "Breaker.h"
 
-Breaker::Breaker() : IModule(0, Category::MISC, "Destroys Beds, Eggs, Treasures Etc.") {
-	registerBoolSetting("Rotations", &rotations, rotations);
+Breaker::Breaker() : IModule(0, Category::MISC, "Destroys shit") {
 	registerBoolSetting("Treasures", &treasures, treasures);
 	registerBoolSetting("Redstone", &rOre, rOre);
-	registerBoolSetting("Diamond", &dOre, dOre);
 	registerBoolSetting("Emerald", &eOre, eOre);
-	//registerBoolSetting("Gold", &gOre, gOre);
+	registerBoolSetting("Diamond", &dOre, dOre);
 	registerBoolSetting("Chests", &chests, chests);
 	registerBoolSetting("Cakes", &cakes, cakes);
 	registerBoolSetting("Beds", &beds, beds);
 	registerBoolSetting("Eggs", &eggs, eggs);
+	registerBoolSetting("Rotations", &rotations, rotations);
 	registerIntSetting("Range", &range, range, 1, 10);
 	//registerIntSetting("Delay", &range, range, 0, 10);
 }
@@ -31,24 +30,23 @@ void Breaker::onTick(C_GameMode* gm) {
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	C_Inventory* inv = supplies->inventory;
 	vec3_t* pos = gm->player->getPos();
+	bool eat = false;
 	for (int x = (int)pos->x - range; x < pos->x + range; x++) {
 		for (int z = (int)pos->z - range; z < pos->z + range; z++) {
 			for (int y = (int)pos->y - range; y < pos->y + range; y++) {
 				vec3_ti iBlockPos = vec3_ti(x, y, z);
 				blockPos = vec3_t(x, y, z);
 				destroy = false;
-				bool eat = false;
+
 				int id = (int)gm->player->region->getBlock(iBlockPos)->toLegacy()->blockId;
 
-				if (id == 26 && beds) destroy = true;      // Beds
-				if (id == 122 && eggs) destroy = true;     // Dragon Eggs
-				if (id == 92 && cakes) eat = true;        // Cakes
-				if (id == 73 && rOre) destroy = true;      // Redstone Ore
-				if (id == 74 && rOre) destroy = true;      // Redstone Ore
-				if (id == 56 && dOre) destroy = true;      // Diamond Ore
+				if (id == 73 || id == 74 && rOre) destroy = true; // Redstone Ore
 				if (id == 129 && eOre) destroy = true;     // Emerald Ore
-				if (id == 14 && gOre) destroy = true;     // Gold Ore
-				if (id == 54 && chests) destroy = true;    // Chests
+				if (id == 56 && dOre) destroy = true;     // Diamond Ore
+				if (id == 54 && chests) destroy = true;  // Chests
+				if (id == 122 && eggs) destroy = true;  // Eggs
+				if (id == 26 && beds) destroy = true;  // Beds
+				if (id == 92 && cakes) eat = true;    // Cakes
 
 				if (destroy && g_Data.canUseMoveKeys()) {
 					gm->destroyBlock(&iBlockPos, 0);

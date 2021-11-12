@@ -3,11 +3,11 @@
 BehindAura::BehindAura() : IModule(0, Category::COMBAT, "A combat aura used for PvP or HvH, you will always stay behind the enemy.") {
 	registerBoolSetting("Mobs", &isMobAura, isMobAura);
 	registerBoolSetting("BasicYawCheck", &basicCheck, basicCheck);
-	registerBoolSetting("CalcYawCheck", &calcYawCheck, calcYawCheck);
+	registerBoolSetting("Calc", &calcYawCheck, calcYawCheck); // 
 	registerBoolSetting("UseLerpTo", &useLerp, useLerp);
 	registerBoolSetting("UseSetPos", &usePos, usePos);
 	registerBoolSetting("OnAttack", &useAttack, useAttack);
-	registerBoolSetting("OnTick", &useTick, useTick);
+	registerBoolSetting("OnTick", &useTick, useTick); //
 	registerFloatSetting("LerpSpeed", &lerpSpeed, lerpSpeed, 1, 50);
 	registerFloatSetting("Distance", &behindDist, behindDist, 0.5f, 5.f);
 	registerFloatSetting("Range", &range, range, 0.5f, 8.f);
@@ -83,13 +83,13 @@ void BehindAura::onTick(C_GameMode* gm) {
 					player->setPos(vec3_t(pos.x + behindDist, pos.y + 1.62f, pos.z));
 			
 		} else if (calcYawCheck && useTick && !targetListBA.empty()) {
-			float theirYaw = (yaw - 90) * (PI / 180);
+			float theirYaw = (yaw - 180) * (PI / 180);
 			float length = behindDist;
 
 			float gotoX = -sin(theirYaw) * length;
 			float gotoZ = cos(theirYaw) * length;
 
-			gm->player->setPos(pos.add(vec3_t(gotoX, 0.5f, gotoZ)));
+			gm->player->setPos(pos.add(vec3_t(gotoX, 0.f, gotoZ)));
 		}
 		delay1 = 0;
 	}

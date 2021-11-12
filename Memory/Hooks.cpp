@@ -344,10 +344,6 @@ void Hooks::Actor_getRotation(C_Entity* _this, vec4_t& newAngle) {
 		if (g_Data.getLocalPlayer() != nullptr && killaura->mode.getSelectedValue() == 0 || killaura->mode.getSelectedValue() == 1)
 			return oFunc(_this, killaura->testRot);
 	}
-	if (tpaura->isEnabled() && !tpaura->targetListEmpty) {
-		if (g_Data.getLocalPlayer() != nullptr && tpaura->mode.getSelectedValue() == 0 || tpaura->mode.getSelectedValue() == 1)
-			return oFunc(_this, tpaura->tpAuraRot);
-	}
 	/*if (scaffold->isEnabled() && scaffold->tower) {
 		if (g_Data.getLocalPlayer() != nullptr && scaffold->isOnHive && scaffold->isHoldingSpace)
 			return oFunc(_this, scaffold->scaffoldRot);

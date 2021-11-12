@@ -103,7 +103,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		//moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		// Broken
-		//moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
+		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
 		moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
 #endif

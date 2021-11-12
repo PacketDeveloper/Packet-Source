@@ -7,9 +7,9 @@ Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entit
 	mode.addEntry("Old", 2);
 	mode.addEntry("Silent", 3);
 	mode.addEntry("None", 4);
-	registerBoolSetting("MultiAura", &multi, multi);
 	registerBoolSetting("Visualize", &render, render);
 	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
+	registerBoolSetting("Multi", &multi, multi);
 	registerBoolSetting("Mobs", &mobAura, mobAura);
 	registerBoolSetting("Click", &click, click);
 	registerBoolSetting("Hold", &hold, hold);

@@ -8,6 +8,7 @@ public:
 	std::vector<vec3_t> position;
 	float distance = 3.5f;
 	bool visualize = true;
+	bool behind = false;
 	bool multi = false;
 	float range = 250;
 	int targethud = 0;
@@ -15,10 +16,6 @@ public:
 	int Odelay = 0;
 	int delay = 0;
 	int tick = 0;
-
-	// Rotations
-	bool targetListEmpty = true;
-	vec4_t tpAuraRot;
 
 	TPAura();
 	~TPAura();
