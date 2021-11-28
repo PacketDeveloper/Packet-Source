@@ -11,7 +11,6 @@ Breaker::Breaker() : IModule(0, Category::MISC, "fuck hive") {
 	registerBoolSetting("Beds", &beds, beds);
 	registerBoolSetting("Eggs", &eggs, eggs);
 	registerBoolSetting("Rotations", &rotations, rotations);
-	registerBoolSetting("NoSwing", &nswing, nswing);
 #ifdef _DEBUG
 	registerBoolSetting("Bypass", &ezHiveBypass, ezHiveBypass);
 #endif
@@ -49,19 +48,21 @@ void Breaker::onTick(C_GameMode* gm) {
 				if (id == 129 && eOre) destroy = true;     // Emerald Ore
 				if (id == 56 && dOre) destroy = true;     // Diamond Ore
 				if (id == 54 && chests) destroy = true;  // Chests
-				if (id == 122 && eggs) destroy = true;  // Eggs
-				if (id == 26 && beds) destroy = true;  // Beds
-				if (id == 92 && cakes) eat = true;    // Cakes
+				if (id == 14 && gold) destroy = true;   // Gold
+				if (id == 122 && eggs) destroy = true; // Eggs
+				if (id == 26 && beds) destroy = true; // Beds
+				if (id == 92 && cakes) eat = true;   // Cakes
+
 
 				if (destroy && g_Data.canUseMoveKeys()) {
 					gm->destroyBlock(&iBlockPos, 0);
-					if (!moduleMgr->getModule<NoSwing>()->isEnabled() || nswing)
+					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 						g_Data.getLocalPlayer()->swingArm();
 					return;
 				}
 				if (eat && g_Data.canUseMoveKeys()) {
 					gm->buildBlock(&iBlockPos, 0);
-					if (!moduleMgr->getModule<NoSwing>()->isEnabled() || nswing)
+					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 						g_Data.getLocalPlayer()->swingArm();
 					return;
 				}
@@ -74,7 +75,7 @@ void Breaker::onTick(C_GameMode* gm) {
 				int id = ent->getEntityTypeId();
 				if (name.find("Treasure") != std::string::npos && g_Data.getLocalPlayer()->getPos()->dist(*ent->getPos()) <= 5) {
 					g_Data.getCGameMode()->attack(ent);
-					if (!moduleMgr->getModule<NoSwing>()->isEnabled() || nswing)
+					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 						g_Data.getLocalPlayer()->swingArm();
 				}
 			});

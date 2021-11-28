@@ -4,7 +4,6 @@
 
 class Breaker : public IModule {
 private:
-	bool nswing = false;
 	bool ezHiveBypass = true;
 	bool switchSlot = false;
 	bool treasures = false;
