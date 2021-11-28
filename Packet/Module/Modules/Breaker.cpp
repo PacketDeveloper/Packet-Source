@@ -5,6 +5,7 @@ Breaker::Breaker() : IModule(0, Category::MISC, "fuck hive") {
 	registerBoolSetting("Redstone", &rOre, rOre);
 	registerBoolSetting("Emerald", &eOre, eOre);
 	registerBoolSetting("Diamond", &dOre, dOre);
+	registerBoolSetting("Gold", &gold, gold);
 	registerBoolSetting("Chests", &chests, chests);
 	registerBoolSetting("Cakes", &cakes, cakes);
 	registerBoolSetting("Beds", &beds, beds);

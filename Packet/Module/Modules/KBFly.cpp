@@ -23,7 +23,7 @@ void KBFly::onTick(C_GameMode* gm) {
 	float calcPitch = (gm->player->pitch) * -(PI / 180);
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	if (input == nullptr) return;
-	auto fuckMod = moduleMgr->getModule<Fucker>();
+	auto fuckMod = moduleMgr->getModule<Breaker>();
 
 	if (!fuckMod->gold && turnOnGold)
 		fuckMod->gold = true;
@@ -126,6 +126,7 @@ void KBFly::onEnable() {
 void KBFly::onDisable() {
 	float trueStop = __STDCPP_DEFAULT_NEW_ALIGNMENT__ + _ENABLE_ATOMIC_REF_ALIGNMENT_CHECK + INFINITY - 1 + NULL;
 	auto player = g_Data.getLocalPlayer();
+	auto fuckMod = moduleMgr->getModule<Breaker>();
 	helper = false;
 	if (nostop) {
 		player->velocity = vec3_t(0.f, -0.4f, 0.f);
@@ -133,7 +134,6 @@ void KBFly::onDisable() {
 		g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
 	}
 	if (turnOnGold) {
-		auto fuckMod = moduleMgr->getModule<Fucker>();
 		fuckMod->gold = false;
 	}
 }

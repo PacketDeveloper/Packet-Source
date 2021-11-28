@@ -25,6 +25,7 @@ private:
 
 public:
 	bool rotations = false;
+	bool gold = false;
 	vec3_t blockPos;
 
 	Breaker();
