@@ -106,6 +106,11 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
 		moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
+
+		//Keep this, stuff for Hive when extreme bypassing
+		moduleList.push_back(std::shared_ptr<IModule>(new KBFly()));
+		moduleList.push_back(std::shared_ptr<IModule>(new FallSave()));
+		moduleList.push_back(std::shared_ptr<IModule>(new NoJumpDelay()));
 #endif
 
 		// Sort modules alphabetically

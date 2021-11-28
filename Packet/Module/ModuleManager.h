@@ -93,6 +93,10 @@
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
 #include "Modules/NoSlow.h"
+
+#include "Modules/FallSave.h"
+#include "Modules/KBFly.h"
+#include "Modules/NoJumpDelay.h"
 // Broken
 #include "Modules/AutoArmor.h"
 #include "Modules/TriggerBot.h"

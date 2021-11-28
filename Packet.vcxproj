@@ -380,6 +380,9 @@
     <ClCompile Include="Packet\Module\Modules\Packet.cpp" />
     <ClCompile Include="Packet\Module\Modules\TargetStrafe.cpp" />
     <ClCompile Include="Packet\Module\Modules\Switcher.cpp" />
+    <ClCompile Include="Packet\Module\Modules\KBFly.cpp" />
+    <ClCompile Include="Packet\Module\Modules\FallSave.cpp" />
+    <ClCompile Include="Packet\Module\Modules\NoJumpDelay.cpp" />
     <ClCompile Include="Packet\Scripting\Functions\CommandManagerFunctions.cpp" />
     <ClCompile Include="Packet\Scripting\Functions\DrawFunctions.cpp" />
     <ClCompile Include="Packet\Scripting\Functions\EntityFunctions.cpp" />
@@ -568,6 +571,9 @@
     <ClInclude Include="Packet\Module\Modules\Packet.h" />
     <ClInclude Include="Packet\Module\Modules\TargetStrafe.h" />
     <ClInclude Include="Packet\Module\Modules\Switcher.h" />
+    <ClInclude Include="Packet\Module\Modules\KBFly.h" />
+    <ClInclude Include="Packet\Module\Modules\FallSave.h" />
+    <ClInclude Include="Packet\Module\Modules\NoJumpDelay.h" />
     <ClInclude Include="Packet\Scripting\Functions\CommandManagerFunctions.h" />
     <ClInclude Include="Packet\Scripting\Functions\DrawFunctions.h" />
     <ClInclude Include="Packet\Scripting\Functions\EntityFunctions.h" />

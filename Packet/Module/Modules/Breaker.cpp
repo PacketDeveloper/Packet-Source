@@ -1,6 +1,6 @@
 #include "Breaker.h"
 
-Breaker::Breaker() : IModule(0, Category::MISC, "Destroys shit") {
+Breaker::Breaker() : IModule(0, Category::MISC, "fuck hive") {
 	registerBoolSetting("Treasures", &treasures, treasures);
 	registerBoolSetting("Redstone", &rOre, rOre);
 	registerBoolSetting("Emerald", &eOre, eOre);
@@ -10,6 +10,10 @@ Breaker::Breaker() : IModule(0, Category::MISC, "Destroys shit") {
 	registerBoolSetting("Beds", &beds, beds);
 	registerBoolSetting("Eggs", &eggs, eggs);
 	registerBoolSetting("Rotations", &rotations, rotations);
+	registerBoolSetting("NoSwing", &nswing, nswing);
+#ifdef _DEBUG
+	registerBoolSetting("Bypass", &ezHiveBypass, ezHiveBypass);
+#endif
 	registerIntSetting("Range", &range, range, 1, 10);
 	//registerIntSetting("Delay", &range, range, 0, 10);
 }
@@ -50,13 +54,13 @@ void Breaker::onTick(C_GameMode* gm) {
 
 				if (destroy && g_Data.canUseMoveKeys()) {
 					gm->destroyBlock(&iBlockPos, 0);
-					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
+					if (!moduleMgr->getModule<NoSwing>()->isEnabled() || nswing)
 						g_Data.getLocalPlayer()->swingArm();
 					return;
 				}
 				if (eat && g_Data.canUseMoveKeys()) {
 					gm->buildBlock(&iBlockPos, 0);
-					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
+					if (!moduleMgr->getModule<NoSwing>()->isEnabled() || nswing)
 						g_Data.getLocalPlayer()->swingArm();
 					return;
 				}
@@ -69,7 +73,7 @@ void Breaker::onTick(C_GameMode* gm) {
 				int id = ent->getEntityTypeId();
 				if (name.find("Treasure") != std::string::npos && g_Data.getLocalPlayer()->getPos()->dist(*ent->getPos()) <= 5) {
 					g_Data.getCGameMode()->attack(ent);
-					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
+					if (!moduleMgr->getModule<NoSwing>()->isEnabled() || nswing)
 						g_Data.getLocalPlayer()->swingArm();
 				}
 			});
