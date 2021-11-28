@@ -55,6 +55,9 @@ void Breaker::onTick(C_GameMode* gm) {
 
 
 				if (destroy && g_Data.canUseMoveKeys()) {
+					bool isDestroyed = false;
+					if (ezHiveBypass)
+						gm->startDestroyBlock(iBlockPos, 1, isDestroyed);
 					gm->destroyBlock(&iBlockPos, 0);
 					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 						g_Data.getLocalPlayer()->swingArm();
