@@ -1929,7 +1929,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 		if (g_Data.canUseMoveKeys() && packetMod->multiply) {
 			if (packetMod->isEnabled()) {
 				for (int fatCock = 0; fatCock < moduleMgr->getModule<Packet>()->multipltBy; fatCock++)
-				oFunc(a, packet);
+				oFunc(a, packet); //Kowz do be using this to exploit servers
 			}
 		} else {
 			oFunc(a, packet);
