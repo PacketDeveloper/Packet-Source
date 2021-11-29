@@ -6,6 +6,7 @@ public:
 	bool fourx = false;
 	bool multiply = false;
 	bool noPacket = false;
+	int multipltBy = 2;
 
 	Packet();
 	~Packet();

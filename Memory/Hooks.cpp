@@ -1928,11 +1928,7 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	} else {
 		if (g_Data.canUseMoveKeys() && packetMod->multiply) {
 			if (packetMod->isEnabled()) {
-				oFunc(a, packet);
-				oFunc(a, packet);
-			}
-			if (packetMod->fourx && packetMod->isEnabled() && packetMod->multiply) {
-				oFunc(a, packet);
+				for (int fatCock = 0; fatCock < moduleMgr->getModule<Packet>()->multipltBy; fatCock++)
 				oFunc(a, packet);
 			}
 		} else {
