@@ -54,7 +54,7 @@ void Breaker::onTick(C_GameMode* gm) {
 				if (id == 92 && cakes) eat = true;   // Cakes
 
 
-				if (destroy && g_Data.canUseMoveKeys()) {
+				if (destroy /* && g_Data.canUseMoveKeys()*/) {
 					bool isDestroyed = false;
 					if (ezHiveBypass)
 						gm->startDestroyBlock(iBlockPos, 1, isDestroyed);
@@ -63,7 +63,7 @@ void Breaker::onTick(C_GameMode* gm) {
 						g_Data.getLocalPlayer()->swingArm();
 					return;
 				}
-				if (eat && g_Data.canUseMoveKeys()) {
+				if (eat /* && g_Data.canUseMoveKeys()*/) {
 					gm->buildBlock(&iBlockPos, 0);
 					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 						g_Data.getLocalPlayer()->swingArm();
