@@ -43,7 +43,7 @@ void Hooks::Init() {
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			uintptr_t** blockLegacyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
 			if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
-				logF("C_BlockLegacy signature not working!!!");
+				logF("C_BlockLegacy signature not working!!!");è
 			else {
 				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[180], Hooks::BlockLegacy_getRenderLayer);
 			}
@@ -320,7 +320,8 @@ void Hooks::Actor_baseTick(C_Entity* ent) {
 		VirtualQuery(ent, &info, sizeof(MEMORY_BASIC_INFORMATION));
 		if (info.State & MEM_FREE) continue;
 		if (info.State & MEM_RESERVE) continue;
-		validEntities.push_back(ent);
+		if (*(__int64*)ent > 0x6FF000000000 && *(__int64*)ent < 0x800000000000 && *((int64_t*)ent + 1) < 0x6FF000000000)
+			validEntities.push_back(ent);
 	}
 	g_Hooks.entityList.clear();
 	g_Hooks.entityList = validEntities;
@@ -363,6 +364,18 @@ __int64 Hooks::UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext)
 __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	static auto oRender = g_Hooks.UIScene_renderHook->GetFastcall<__int64, C_UIScene*, __int64>();
 
+	std::vector<C_Entity*> validEntities;
+	for (const auto& ent : g_Hooks.entityList) {
+		MEMORY_BASIC_INFORMATION info;
+		VirtualQuery(ent, &info, sizeof(MEMORY_BASIC_INFORMATION));
+		if (info.State & MEM_FREE) continue;
+		if (info.State & MEM_RESERVE) continue;
+		if (*(__int64*)ent > 0x6FF000000000 && *(__int64*)ent < 0x800000000000 && *((int64_t*)ent + 1) < 0x6FF000000000)
+			validEntities.push_back(ent);
+	}
+	g_Hooks.entityList.clear();
+	g_Hooks.entityList = validEntities;
+	
 	//g_Hooks.shouldRender = uiscene->isPlayScreen();
 	g_Hooks.shouldRender = false;
 
@@ -2473,6 +2486,7 @@ __int64 Hooks::prepFeaturedServersFirstTime(__int64 a1, __int64 a2) {
 }
 
 __int64 Hooks::GameMode_attack(C_GameMode* _this, C_Entity* ent) {
+	if (!ent) return;
 	auto func = g_Hooks.GameMode_attackHook->GetFastcall<__int64, C_GameMode*, C_Entity*>();
 	moduleMgr->onAttack(ent);
 	return func(_this, ent);
