@@ -3,7 +3,7 @@ Speed::Speed() : IModule(0, Category::MOVEMENT, "sped lol") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Vanilla", 0);
 	mode.addEntry("Hive", 1);
-	mode.addEntry("LittleKow", 3);
+	mode.addEntry("KowSpecialV3", 3);
 	//mode.addEntry("Inviscow", 4); // temp removed
 	registerIntSetting("Timer", &timer, timer, 20, 35);
 	registerFloatSetting("Height", &height, height, 0.000001f, 0.40f);
@@ -27,7 +27,7 @@ const char* Speed::getModuleName() {
 		return name.c_str();
 	}
 	if (mode.getSelectedValue() == 3) {  // Kow
-		name = std::string("Speed ") + std::string(GRAY) + std::string("Kow");
+		name = std::string("Speed ") + std::string(GRAY) + std::string("KSpecialV3");
 		return name.c_str();
 	}
 	if (mode.getSelectedValue() == 4) {  // Inviscow
@@ -251,10 +251,8 @@ void Speed::onMove(C_MoveInputHandler* input) {
 
 		if (pressed) player->lerpMotion(moveVec);
 		if (g_Data.getLocalPlayer()->velocity.squaredxzlen() > 0.01) {
-			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(c2 * .1f, 0.f, s2 * .1f)));
+			C_MovePlayerPacket p = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(moveVec.x / 2.1f, moveVec.y / 2, moveVec.z / 2.1f)));
 			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p);
-			C_MovePlayerPacket p2 = C_MovePlayerPacket(g_Data.getLocalPlayer(), player->getPos()->add(vec3_t(player->velocity.x / 1.3f, 0.f, player->velocity.z / 2.3f)));
-			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&p2);
 		}
 
 		if (player->fallDistance >= 3 && !preventKick) {
