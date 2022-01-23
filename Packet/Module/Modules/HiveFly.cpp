@@ -1,175 +1,127 @@
 #include "HiveFly.h"
 
-#include "../../Module/ModuleManager.h"
-
-HiveFly::HiveFly() : IModule(0, Category::MOVEMENT, "Turkey go falling off cliff wee!1!1!!") {
-	registerBoolSetting("Boost", &boostMode, boostMode);
-	registerFloatSetting("Value", &value, value, -0.5f, 0.5f);
-	registerFloatSetting("Speed", &speedA, speedA, 0.10f, 1.f);
+#include "../ModuleManager.h"
+int counter = 0;
+bool clip = false;
+float clipHeight = 2.f;
+int counter69 = 0;
+HiveFly::HiveFly() : IModule('0', Category::MOVEMENT, "How the fuck does this bypass ?!?!?@!?~!?!@?!#21$?@#?? turkey go falling off cliff yaaye1!!") {
+	registerBoolSetting("Clip Up", &clip, clip);
+	registerFloatSetting("Clip Height", &clipHeight, clipHeight, 0.5f, 5.f);
 }
 
 HiveFly::~HiveFly() {
 }
 
 const char* HiveFly::getModuleName() {
-	return "HiveFly";
+	return ("HiveFly");
 }
+
+float epicHiveFlySpeedArrayThingy[15] = {
+	0.810000,
+	0.615560,
+	0.583347,
+	0.554032,
+	0.527356,
+	0.503081,
+	0.480991,
+	0.460888,
+	0.442595,
+	0.425948,
+	0.410800,
+	0.397015,
+	0.384470,
+	0.373055,
+	0.362666};
+
+int flySpeedIndex = 0;
+
+int stopYThingy = 0;
 
 void HiveFly::onEnable() {
-	auto scaffoldMod = moduleMgr->getModule<Scaffold>();
-	auto speedMod = moduleMgr->getModule<Speed>();
-	auto player = g_Data.getLocalPlayer();
-	scaffoldMod->setEnabled(false);
-	speedMod->setEnabled(false);
-	if (boostMode) {
-		player->animateHurt();
-		boostCounter = 1;
-	}
-
-	auto scaffold = moduleMgr->getModule<Scaffold>();
-	auto speed = moduleMgr->getModule<Speed>();
-	if (speed->isEnabled())
-		speedWasEnabled = true;
-	if (scaffold->isEnabled())
-		scfWasEnabled = true;
-}
-
-void HiveFly::onTick(C_GameMode* gm) {
-	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
-	C_LocalPlayer* localPlayer = g_Data.getLocalPlayer();
-	auto scaffoldMod = moduleMgr->getModule<Scaffold>();
-	auto blinkMod = moduleMgr->getModule<Blink>();
-	auto speedMod = moduleMgr->getModule<Speed>();
-	auto player = g_Data.getLocalPlayer();
-	scaffoldMod->setEnabled(false);
-	speedMod->setEnabled(false);
-	*g_Data.getClientInstance()->minecraft->timer = 20.f;
-	if (boostMode) {
-		if (boostCounter == INFINITY) {
-			boostCounter = 1;
+	static auto BhopMod = moduleMgr->getModule<Speed>();
+	if (BhopMod->isEnabled())
+		BhopMod->setEnabled(false);
+	srand(time(NULL));
+	counter = 0;
+	counter69 = 0;
+	flySpeedIndex = 0;
+	stopYThingy = 0;
+	C_LocalPlayer* player = g_Data.getLocalPlayer();
+	if (player != nullptr) {
+		if (player->onGround == true) {
+			if (clip) {
+				vec3_t myPos = *player->getPos();
+				myPos.y += clipHeight;
+				player->setPos(myPos);
+			} else {
+				counter69++;
+				if (counter69 <= 2) {
+					vec3_t moveVec;
+					moveVec.x = 0;
+					moveVec.y = 0.7f;
+					moveVec.z = 0;
+					g_Data.getLocalPlayer()->lerpMotion(moveVec);
+				}
+			}
 		} else {
-			boostCounter++;
+			counter69 = 8;
 		}
-		if (boostCounter == 2) {
-			*g_Data.getClientInstance()->minecraft->timer = 1.f;
-			value = 0;
-			speedA = 1.f;
-		}
-		if (boostCounter == 4) {
-			*g_Data.getClientInstance()->minecraft->timer = 30.f;
-			speedA = 0.75f;
-		}
-		if (boostCounter == 7) {
-			*g_Data.getClientInstance()->minecraft->timer = 1.f;
-			speedA = 0.60f;
-		}
-		if (boostCounter == 10) {
-			*g_Data.getClientInstance()->minecraft->timer = 5.f;
-			value = -0.00;
-			speedA = 0.55f;
-		}
-		if (boostCounter == 13) {
-			*g_Data.getClientInstance()->minecraft->timer = 20.f;
-			value = 0.2;
-			speedA = 0.50f;
-		}
-		if (boostCounter == 16) {
-			value = -0.04;
-			speedA = 0.48f;
-		}
-		if (boostCounter == 20) {
-			speedA = 0.45f;
-			value = -0.03;
-		}
-		if (boostCounter == 35) {
-			speedA = 0.32f;
-			value = -0.09;
-		}
-		if (boostCounter == 50) {
-			*g_Data.getClientInstance()->minecraft->timer = 1.f;
-		}
-	}
-	if (counter == 10) {
-		counter = 1;
-	} else {
-		counter++;
-	}
-	if (counter >= 0) {
-		gm->player->velocity = vec3_t(0, 0, 0);
-	}
-	if (counter <= 2) {
-		player->velocity.y = value;
 	}
 }
 
 void HiveFly::onMove(C_MoveInputHandler* input) {
-	auto player = g_Data.getLocalPlayer();
-	if (boostMode) {
-		vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
-		bool pressed = moveVec2d.magnitude() > 0.01f;
-		if (player->onGround && pressed)
-			player->jumpFromGround();
-	}
-	float yaw = player->yaw;
+	counter69++;
+	C_LocalPlayer* player = g_Data.getLocalPlayer();
 	if (player == nullptr) return;
-	if (player->isSneaking())
-		return;
+
 	vec2_t moveVec2d = {input->forwardMovement, -input->sideMovement};
 	bool pressed = moveVec2d.magnitude() > 0.01f;
-	if (input->isJumping && counter == 3) {
-		player->velocity.y -= 0.000000000001f;
-		player->fallDistance = -0.1f;
-		vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
-
-		vec3_t pos;
-		pos.x = 0.f + pPos.x;
-		pos.y = 4.f + pPos.y;
-		pos.z = 0.f + pPos.z;
-
-		g_Data.getLocalPlayer()->setPos(pos);
-		*g_Data.getClientInstance()->minecraft->timer = 3.f;
-	}
-	if (input->isSneakDown && counter == 3) {
-		player->velocity.y -= 0.000000000001f;
-		player->fallDistance = -0.1f;
-		vec3_t pPos = g_Data.getLocalPlayer()->eyePos0;
-
-		vec3_t pos;
-		pos.x = 0.f + pPos.x;
-		pos.y = -4.f + pPos.y;
-		pos.z = 0.f + pPos.z;
-
-		g_Data.getLocalPlayer()->setPos(pos);
-		*g_Data.getClientInstance()->minecraft->timer = 3.f;
-	}
 
 	float calcYaw = (player->yaw + 90) * (PI / 180);
 	vec3_t moveVec;
 	float c = cos(calcYaw);
 	float s = sin(calcYaw);
 	moveVec2d = {moveVec2d.x * c - moveVec2d.y * s, moveVec2d.x * s + moveVec2d.y * c};
-	moveVec.x = moveVec2d.x * speedA;
-	moveVec.y = player->velocity.y;
-	moveVec.z = moveVec2d.y * speedA;
-	if (pressed) player->lerpMotion(moveVec);
+	float moveSpeed = epicHiveFlySpeedArrayThingy[flySpeedIndex++ % 15];
+	moveVec.x = moveVec2d.x * moveSpeed;
+
+	if (stopYThingy >= 3) {
+		stopYThingy = 0;
+		moveVec.y = player->velocity.y;
+	} else
+		moveVec.y = 0.f;
+	stopYThingy++;
+
+	moveVec.z = moveVec2d.y * moveSpeed;
+
+	if (counter69 >= 8 && !clip) {
+		if (pressed) player->lerpMotion(moveVec);
+
+	} else if (clip) {
+		if (pressed) player->lerpMotion(moveVec);
+	}
+
+	if (!pressed) {
+		player->velocity.x = 0;
+		player->velocity.z = 0;
+	}
+}
+
+void HiveFly::onSendPacket(C_Packet* packet) {
+}
+
+void HiveFly::onLevelRender() {
 }
 
 void HiveFly::onDisable() {
-	*g_Data.getClientInstance()->minecraft->timer = 20.f;
-	auto player = g_Data.getLocalPlayer();
-	if (!player->onGround) {
+	counter69 = 0;
+	counter = 0;
+	if (g_Data.getLocalPlayer() != nullptr) {
+		C_LocalPlayer* player = g_Data.getLocalPlayer();
 		player->velocity.x = 0.f;
+		player->velocity.y = 0.f;
 		player->velocity.z = 0.f;
-	}
-
-	auto scaffold = moduleMgr->getModule<Scaffold>();
-	auto speed = moduleMgr->getModule<Speed>();
-	if (speedWasEnabled == true) {
-		speed->setEnabled(true);
-		speedWasEnabled = false;
-	}
-	if (scfWasEnabled == true) {
-		scaffold->setEnabled(true);
-		scfWasEnabled = false;
+		*g_Data.getClientInstance()->minecraft->timer = 20.f;
 	}
 }

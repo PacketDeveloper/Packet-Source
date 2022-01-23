@@ -65,33 +65,34 @@ void BehindAura::onTick(C_GameMode* gm) {
 	g_Data.forEachEntity(findEntityBA);
 
 	C_LocalPlayer* player = g_Data.getLocalPlayer();
-	vec3_t pos = *targetListBA[0]->getPos();
-	float yaw = targetListBA[0]->yaw;
+	for (auto& i : targetListBA) {
+		vec3_t pos = *targetListBA[0]->getPos();
+		float yaw = targetListBA[0]->yaw;
 
-	delay1++;
+		delay1++;
 
-	if (delay1 >= delay) {
-		if (basicCheck && useTick && !targetListBA.empty()) {
-
-			if (yaw >= -45 && yaw <= 45) 
-				player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z - behindDist));
-			else if (yaw >= -135 && yaw <= -44) 
-				player->setPos(vec3_t(pos.x - behindDist, pos.y + 1.62f, pos.z));	
-			else if (yaw >= 131 && yaw >= -134 && yaw != -135) 
-				player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z + behindDist));
-			else if (yaw >= 45 && yaw <= 130) 
+		if (delay1 >= delay) {
+			if (basicCheck && useTick && !targetListBA.empty()) {
+				if (yaw >= -45 && yaw <= 45)
+					player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z - behindDist));
+				else if (yaw >= -135 && yaw <= -44)
+					player->setPos(vec3_t(pos.x - behindDist, pos.y + 1.62f, pos.z));
+				else if (yaw >= 131 && yaw >= -134 && yaw != -135)
+					player->setPos(vec3_t(pos.x, pos.y + 1.62f, pos.z + behindDist));
+				else if (yaw >= 45 && yaw <= 130)
 					player->setPos(vec3_t(pos.x + behindDist, pos.y + 1.62f, pos.z));
-			
-		} else if (calcYawCheck && useTick && !targetListBA.empty()) {
-			float theirYaw = (yaw - 180) * (PI / 180);
-			float length = behindDist;
 
-			float gotoX = -sin(theirYaw) * length;
-			float gotoZ = cos(theirYaw) * length;
+			} else if (calcYawCheck && useTick && !targetListBA.empty()) {
+				float theirYaw = (yaw - 180) * (PI / 180);
+				float length = behindDist;
 
-			gm->player->setPos(pos.add(vec3_t(gotoX, 0.f, gotoZ)));
+				float gotoX = -sin(theirYaw) * length;
+				float gotoZ = cos(theirYaw) * length;
+
+				gm->player->setPos(pos.add(vec3_t(gotoX, 0.f, gotoZ)));
+			}
+			delay1 = 0;
 		}
-		delay1 = 0;
 	}
 }
 

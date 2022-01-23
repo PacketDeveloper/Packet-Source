@@ -79,7 +79,7 @@ void InvManager::onTick(C_GameMode* gm) {
 	}
 	auto inGame = g_Data.isInGame();
 	if (autoDisable && !inGame) {
-		auto box = g_Data.addInfoBox("InvManager: Disabled");
+		auto box = g_Data.addInfoBox("InvManager", "Disabled due to world change");
 		box->closeTimer = 10;
 		setEnabled(false);
 	}

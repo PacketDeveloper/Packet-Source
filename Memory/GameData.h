@@ -59,7 +59,7 @@ struct InfoBoxData {
 	std::string title;
 	std::string message;
 
-	InfoBoxData(std::string message) : message(message){};
+	InfoBoxData(std::string title, std::string message) : title(title), message(message){};
 
 	void fade() {
 		fadeVal = fadeTarget - ((fadeTarget - fadeVal) * 0.65f);
@@ -162,8 +162,8 @@ public:
 		return this->infoBoxQueue;
 	}
 
-	inline std::shared_ptr<InfoBoxData> addInfoBox(std::string message) {
-		auto box = std::make_shared<InfoBoxData>(message);
+	inline std::shared_ptr<InfoBoxData> addInfoBox(std::string title, std::string message) {
+		auto box = std::make_shared<InfoBoxData>(title, message);
 		this->infoBoxQueue.push_back(box);
 		return box;
 	}

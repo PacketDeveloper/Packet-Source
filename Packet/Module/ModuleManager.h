@@ -82,6 +82,7 @@
 #include "Modules/FastPlace.h"
 #include "Modules/AutoTotem.h"
 #include "Modules/TargetHUD.h"
+#include "Modules/Safewalk.h"
 #include "Modules/Module.h"
 
 #ifdef _DEBUG
@@ -93,10 +94,6 @@
 #include "Modules/HiveFly.h"
 #include "Modules/Survival.h"
 #include "Modules/NoSlow.h"
-
-#include "Modules/FallSave.h"
-#include "Modules/KBFly.h"
-#include "Modules/NoJumpDelay.h"
 // Broken
 #include "Modules/AutoArmor.h"
 #include "Modules/TriggerBot.h"

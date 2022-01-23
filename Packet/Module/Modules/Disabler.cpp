@@ -2,6 +2,8 @@
 
 #include "../../../Utils/Target.h"
 #include "../ModuleManager.h"
+#include <queue>
+#include <chrono>
 
 Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
 	registerEnumSetting("Mode", &mode, 0);
@@ -9,7 +11,7 @@ Disabler::Disabler() : IModule(0, Category::EXPLOIT, "Disables AntiCheats") {
 	mode.addEntry("Mineville", 1);
 	//mode.addEntry("Hive", 2);
 #ifdef _DEBUG
-	mode.addEntry("Hive2", 3);
+	mode.addEntry("Hive", 3);
 #endif
 }
 
@@ -50,11 +52,17 @@ const char* Disabler::getModuleName() {
 	}
 }
 
+std::queue<std::pair<NetworkLatencyPacket, unsigned __int64>> latencyPacketQueue;
+std::queue<std::pair<NetworkLatencyPacket, unsigned __int64>> emptyPacketQueue;
+
+bool sendingEpicThingy = false;
+
 void Disabler::onEnable() {
 	if (mode.getSelectedValue() == 3) {
 		counter = 1;
 		shouldDisable = false;
 		c2 = 1;
+		latencyPacketQueue = emptyPacketQueue;
 	}
 }
 
@@ -71,7 +79,7 @@ void Disabler::onTick(C_GameMode* gm) {
 	}
 	if (mode.getSelectedValue() == 3) {  // Hive private
 #ifdef _DEBUG
-		auto player = g_Data.getLocalPlayer();
+		/*auto player = g_Data.getLocalPlayer();
 		disableList.clear();
 		g_Data.forEachEntity(disableAC);
 
@@ -93,13 +101,21 @@ void Disabler::onTick(C_GameMode* gm) {
 				speed->setEnabled(false);
 			}
 			if (c2 >= 28 && !disableList.empty()) {
-				player->knockback(player, 0, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f);
+				player->knockback(playerList, 0, 0.1f, 0.1f, 0.1f, 0.1f, 0.1f);
 				//clientMessageF("kb");
 			}
 			shouldDisable = true;
 		} else if (shouldDisable) {
 			speed->setEnabled(false);
 			setEnabled(false);
+		}*/
+		unsigned __int64 now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+		while (!latencyPacketQueue.empty() && now - latencyPacketQueue.front().second >= 1000) {
+			NetworkLatencyPacket packetToSend = latencyPacketQueue.front().first;
+			sendingEpicThingy = true;
+			g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&packetToSend);
+			sendingEpicThingy = false;
+			latencyPacketQueue.pop();
 		}
 #endif
 	}
@@ -120,6 +136,14 @@ void Disabler::onSendPacket(C_Packet* packet) {
 			if (g_Data.canUseMoveKeys()) {
 				movePacket->onGround = true;
 			}
+		}
+	}
+	if (mode.getSelectedValue() == 3) {
+		if (sendingEpicThingy == false) {
+			NetworkLatencyPacket* currentPacket = (NetworkLatencyPacket*)packet;
+			unsigned __int64 now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+			latencyPacketQueue.push({*currentPacket, now});
+			currentPacket->timeStamp = 69420;
 		}
 	}
 	//}

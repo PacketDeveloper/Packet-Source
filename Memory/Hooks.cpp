@@ -43,7 +43,7 @@ void Hooks::Init() {
 			int offset = *reinterpret_cast<int*>(sigOffset + 3);
 			uintptr_t** blockLegacyVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + 7);
 			if (blockLegacyVtable == 0x0 || sigOffset == 0x0)
-				logF("C_BlockLegacy signature not working!!!");è
+				logF("C_BlockLegacy signature not working!!!");
 			else {
 				g_Hooks.BlockLegacy_getRenderLayerHook = std::make_unique<FuncHook>(blockLegacyVtable[180], Hooks::BlockLegacy_getRenderLayer);
 			}
@@ -214,12 +214,12 @@ void Hooks::Init() {
             matrix = View;
 
 			// AutoBlock
-			if (animations->isEnabled() && killaura->isEnabled() && killaura->holdingWeapon && g_Data.isInGame()) {
+			if (animations->isEnabled() && killaura->isEnabled() && g_Data.isInGame()) {
 				if (animations->mode.getSelectedValue() == 1 && !killaura->targetListEmpty) {
 					matrix = glm::translate<float>(matrix, glm::vec3(5.54, 0.85, -2.00));
 					matrix = glm::scale<float>(matrix, glm::vec3(2, 2, 2));
 				}
-				if (animations->mode.getSelectedValue() == 1 && !killaura->targetListEmpty && killaura->holdingWeapon && g_Data.isInGame()) {
+				if (animations->mode.getSelectedValue() == 1 && !killaura->targetListEmpty && g_Data.isInGame()) {
 					float degrees = 13;
 					degrees *= 180 / 4;
 
@@ -375,7 +375,7 @@ __int64 Hooks::UIScene_render(C_UIScene* uiscene, __int64 screencontext) {
 	}
 	g_Hooks.entityList.clear();
 	g_Hooks.entityList = validEntities;
-	
+
 	//g_Hooks.shouldRender = uiscene->isPlayScreen();
 	g_Hooks.shouldRender = false;
 
@@ -490,7 +490,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 				vec2_t windowSize = g_Data.getClientInstance()->getGuiData()->windowSize;
 				if (watermark->mode.getSelectedValue() == 0) {
 					if (watermark->firstLetter) {  // Packet FirstLetter
-						constexpr float nameTextSize = 1.3;
+						constexpr float nameTextSize = 1;
 						std::string textShadow2 = "Packet Client";
 						std::string color2 = "P";
 						std::string white2 = "acket Client";
@@ -793,8 +793,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
 					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 						if (pk->params[0] != 1) {  // Dialog Canceled, reset geo
-							auto box = g_Data.addInfoBox("Scripting: Invalid Folder");
-							box->closeTimer = 1;
 							return;
 						}
 
@@ -803,15 +801,8 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 						json parsed = json::parse(jsonDataStr);
 						if (parsed["path"].is_string()) {
-							auto box = g_Data.addInfoBox("Importing Script, Please wait...");
-							std::thread gamer([parsed, box]() {
+							std::thread gamer([parsed]() {
 								auto result = scriptMgr.importScriptFolder(parsed["path"].get<std::string>());
-								if (result)
-									box->fadeTarget = 0;
-								else {
-									box->message = "Script import error, \ncheck the console";
-									box->closeTimer = 2;
-								}
 							});
 							gamer.detach();
 						}
@@ -829,8 +820,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
 					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 						if (pk->params[0] != 1 && std::get<0>(g_Data.getCustomGeoOverride())) {  // Dialog Canceled, reset geo
-							auto box = g_Data.addInfoBox("Geometry override removed");
-							box->closeTimer = 1;
 							return;
 						}
 
@@ -839,7 +828,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 						json parsed = json::parse(jsonDataStr);
 						if (parsed["path"].is_string()) {
-							auto box = g_Data.addInfoBox("Importing Skin, Please wait...");
+							auto box = g_Data.addInfoBox("Importing Skin", "Please wait...");
 							std::thread gamer([parsed, box]() {
 								SkinUtil::importGeo(Utils::stringToWstring(parsed["path"].get<std::string>()));
 								box->fadeTarget = 0;
@@ -860,8 +849,6 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 					packet.dataArraySize = (int)strlen((char*)packet.data.get());
 					packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 						if (pk->params[0] != 1 && std::get<0>(g_Data.getCustomTextureOverride())) {  // Dialog Canceled, reset texture
-							auto box = g_Data.addInfoBox("Texture override removed");
-							box->closeTimer = 1;
 							return;
 						}
 
@@ -870,7 +857,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 
 						json parsed = json::parse(jsonDataStr);
 						if (parsed["path"].is_string()) {
-							auto box = g_Data.addInfoBox("Importing texture...");
+							auto box = g_Data.addInfoBox("Notification", "Importing texture...");
 							std::thread gamer([parsed, box]() {
 								auto contents = Utils::readFileContents(Utils::stringToWstring(parsed["path"].get<std::string>()));
 								if (contents.size() > 0) {
@@ -1454,6 +1441,7 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			vec2_t* pos;
 			int lines = 1;
 
+			std::string titleString = box->title;
 			std::string substring = box->message;
 
 			while (lines < 5) {
@@ -1480,26 +1468,44 @@ __int64 Hooks::RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx) {
 			if (box->closeTimer <= 1 && box->closeTimer > -1) {
 				vec4_t rect2 = vec4_t(
 					windowSize.x - box->closeTimer * 100,
-					yPos - margin - textHeight + 4,
+					yPos - margin - textHeight + 2,
 					windowSize.x - box->closeTimer,
 					yPos - margin);
-				vec2_t textPos = vec2_t(rect2.x + 1.5, rect2.y + 3);
+				vec2_t textPos = vec2_t(rect2.x + 7, rect2.y + 3);
+				vec2_t titlePos = vec2_t(rect2.x + 7, rect2.y - 6);
 				DrawUtils::drawText(vec2_t(textPos.x + borderPadding, textPos.y), &substring, MC_Color(255, 255, 255), 1, 1, true);
+				DrawUtils::drawText(vec2_t(textPos.x + borderPadding, titlePos.y), &titleString, MC_Color(255, 255, 255), 1, 1, true);
 				DrawUtils::fillRectangle(rect2, MC_Color(0, 0, 0), notifications->opacity);
 			}
 
 			vec4_t rect = vec4_t(
 				windowSize.x - margin - fullTextLength - 2 - borderPadding * 2,
-				yPos - margin - textHeight + 4,
-				windowSize.x - margin + borderPadding - 2,
+				yPos - margin - textHeight + 2,
+				windowSize.x - margin + borderPadding + 17,
 				yPos - margin);
 
-			vec2_t textPos = vec2_t(rect.x + 1.5, rect.y + 3);
+			// dsuatgj
+			/*vec4_t corner1 = vec4_t(
+				windowSize.x - margin - fullTextLength - 2 - borderPadding * 2,
+				yPos - margin - textHeight + 4,
+				windowSize.x + margin + borderPadding + 5,
+				yPos - margin);
+			vec4_t corner2 = vec4_t(
+				windowSize.x - margin - fullTextLength - 2 - borderPadding * 2,
+				yPos - margin - textHeight - 15, // + 2
+				windowSize.x + margin + borderPadding + 5,
+				yPos - margin);*/
+
+			vec2_t textPos = vec2_t(rect.x + 7, rect.y + 3);
+			vec2_t titlePos = vec2_t(rect.x + 7, rect.y - 6);
 			if (box->closeTimer > 1) {
-				DrawUtils::setColor(1, 1, 1, 1);
-				DrawUtils::drawLine(vec2_t(rect.x + fullTextLength - box->closeTimer * 7, rect.y + 14), vec2_t(rect.x + fullTextLength + 3, rect.y + 14), 1), vec2_t(rect.x - box->closeTimer, rect.y + 14);
-				DrawUtils::drawText(vec2_t(textPos.x + borderPadding, textPos.y), &substring, MC_Color(255, 255, 255), 1, 1, true);
+				//DrawUtils::fillRectangle(corner1, MC_Color(0, 0, 0), notifications->opacity); // lolll
+				//DrawUtils::fillRectangle(corner1, MC_Color(0, 0, 0), notifications->opacity); // lolll12
 				DrawUtils::fillRectangle(rect, MC_Color(0, 0, 0), notifications->opacity);
+				DrawUtils::setColor(1, 1, 1, 1);
+				DrawUtils::drawLine(vec2_t(rect.x + fullTextLength - box->closeTimer * 7, rect.y + 14), vec2_t(rect.x + fullTextLength + 9, rect.y + 14), 1), vec2_t(rect.x - box->closeTimer, rect.y + 14);
+				DrawUtils::drawText(vec2_t(textPos.x + borderPadding, titlePos.y), &titleString, MC_Color(255, 255, 255), 1, 1, true);
+				DrawUtils::drawText(vec2_t(textPos.x + borderPadding, textPos.y), &substring, MC_Color(255, 255, 255), 1, 1, true);
 			}
 			yPos -= margin + textHeight;
 		}
@@ -1935,14 +1941,24 @@ void Hooks::LoopbackPacketSender_sendToServer(C_LoopbackPacketSender* a, C_Packe
 	}
 
 	moduleMgr->onSendPacket(packet);
+	if (disabler->isEnabled() && disabler->mode.getSelectedValue() == 3 && packet->isInstanceOf<NetworkLatencyPacket>()) {
+		NetworkLatencyPacket* pkt = (NetworkLatencyPacket*)packet;
+		if (pkt->timeStamp == 69420) {
+			return;
+		}
+	}
 
 	if (!packetMod->isEnabled()) {
 		oFunc(a, packet);
 	} else {
 		if (g_Data.canUseMoveKeys() && packetMod->multiply) {
 			if (packetMod->isEnabled()) {
-				for (int fatCock = 0; fatCock < moduleMgr->getModule<Packet>()->multipltBy; fatCock++)
-				oFunc(a, packet); //Kowz do be using this to exploit servers
+				oFunc(a, packet);
+				oFunc(a, packet);
+			}
+			if (packetMod->fourx && packetMod->isEnabled() && packetMod->multiply) {
+				oFunc(a, packet);
+				oFunc(a, packet);
 			}
 		} else {
 			oFunc(a, packet);
@@ -2486,7 +2502,7 @@ __int64 Hooks::prepFeaturedServersFirstTime(__int64 a1, __int64 a2) {
 }
 
 __int64 Hooks::GameMode_attack(C_GameMode* _this, C_Entity* ent) {
-	if (!ent) return;
+	if (!ent) return 0;
 	auto func = g_Hooks.GameMode_attackHook->GetFastcall<__int64, C_GameMode*, C_Entity*>();
 	moduleMgr->onAttack(ent);
 	return func(_this, ent);

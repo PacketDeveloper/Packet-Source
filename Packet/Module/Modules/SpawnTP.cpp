@@ -8,18 +8,17 @@ const char* SpawnTP::getModuleName() {
 }
 
 void SpawnTP::onEnable() {
+	if (g_Data.getLocalPlayer() == nullptr)
+		return;
 	auto player = g_Data.getLocalPlayer();
-	player->setSleeping(true); // lol
-	//setEnabled(false);
-}
-
-void SpawnTP::onTick(C_GameMode* gm) {
+	player->setSleeping(true);
+	auto notification = g_Data.addInfoBox("SpawnTP:", "Teleported!");
+	notification->closeTimer = 9;
 	setEnabled(false);
 }
 
+void SpawnTP::onTick(C_GameMode* gm) {
+}
+
 void SpawnTP::onDisable() {
-	auto player = g_Data.getLocalPlayer();
-	player->setSleeping(false);  // lol2
-	auto box = g_Data.addInfoBox("Teleported!");
-	box->closeTimer = 15;
 }

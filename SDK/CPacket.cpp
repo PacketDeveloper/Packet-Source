@@ -93,6 +93,22 @@ C_MobEquipmentPacket::C_MobEquipmentPacket(__int64 entityRuntimeId, C_ItemStack&
 	if (MobEquimentPacketConstructor != 0)
 		MobEquimentPacketConstructor(this, entityRuntimeId, item, hotbarSlot, inventorySlot, 0);
 }
+
+NetworkLatencyPacket::NetworkLatencyPacket() {
+	static uintptr_t** networkLatencyPacketVtable = 0x0;
+	if (networkLatencyPacketVtable == 0x0) {
+		uintptr_t sigOffset = FindSignature("89 41 28 48 8D 05 ? ? ? ? 48 89 01 C7 41 ? ? ? ? ?") + 3;
+		int offset = *reinterpret_cast<int*>(sigOffset + 3);
+		networkLatencyPacketVtable = reinterpret_cast<uintptr_t**>(sigOffset + offset + /*length of instruction*/ 7);
+#ifdef _DEBUG
+		if (networkLatencyPacketVtable == 0x0 || sigOffset == 0x0)
+			__debugbreak();
+#endif
+	}
+	memset(this, 0, sizeof(NetworkLatencyPacket));  // Avoid overwriting vtable
+	vTable = networkLatencyPacketVtable;
+}
+
 C_InventoryTransactionPacket::C_InventoryTransactionPacket() {
 	static uintptr_t** InventoryTransactionPacketVtable = 0x0;
 	if (InventoryTransactionPacketVtable == 0x0) {

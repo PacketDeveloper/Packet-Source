@@ -12,6 +12,9 @@ private:
 	int prevSlot = 0;
 	int expand = 1;
 
+	int Odelay = 0;
+	float delay = 0;
+
 	bool tryScaffold(vec3_t blockBelow);
 	bool selectBlock();
 	vec3_t initialPos;
@@ -25,6 +28,7 @@ public:
 	bool isSneaking = false;
 	bool isOnHive = false;
 	bool rotations = true;
+	int towerTimer = 20;
 	bool tower = false;
 	bool lockY = false;
 	bool useRot = true;

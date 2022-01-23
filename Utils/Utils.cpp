@@ -8,6 +8,27 @@
 #include <Windows.h>
 #include <Psapi.h>
 
+void Utils::patchBytes(unsigned char* dst, unsigned char* src, unsigned int size) {
+	DWORD oldprotect;
+	VirtualProtect(dst, size, PAGE_EXECUTE_READWRITE, &oldprotect);
+	memcpy(dst, src, size);
+	VirtualProtect(dst, size, oldprotect, &oldprotect);
+}
+
+void Utils::nopBytes(unsigned char* dst, unsigned int size) {
+	DWORD oldprotect;
+	VirtualProtect(dst, size, PAGE_EXECUTE_READWRITE, &oldprotect);
+	memset(dst, 0x90, size);
+	VirtualProtect(dst, size, oldprotect, &oldprotect);
+}
+
+uintptr_t cachedBase = 0;
+
+uintptr_t Utils::getBase() {
+	if (cachedBase == 0) cachedBase = (uintptr_t)GetModuleHandleA("Minecraft.Windows.exe");
+	return cachedBase;
+}
+
 void Utils::ApplySystemTime(std::stringstream* ss) {
 	using namespace std::chrono;
 #ifdef _DEBUG

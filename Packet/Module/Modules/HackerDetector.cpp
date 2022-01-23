@@ -72,9 +72,9 @@ void HackerDetector::onTick(C_GameMode* gm) {
 				speed /= 1.5f;
 
 			if (playerList[0]->onGround) {
-				if (speed >= 43) failedSpeedA = true;
+				if (speed >= 40) failedSpeedA = true;
 			} else {  // off ground
-				if (speed >= 45) failedSpeedB = true;
+				if (speed >= 43) failedSpeedB = true;
 			}
 			if (speed <= 30) { // reset to prevent bug
 				failedSpeedA = false;
@@ -107,7 +107,7 @@ void HackerDetector::onTick(C_GameMode* gm) {
 
 		Odelay++;
 		if (Odelay > 1 * 10) {
-			for (auto& i : playerList) {
+			//for (auto& i : playerList) {
 				if (failedSpeed && speed <= 40)
 					return;
 				std::string speedAmount = std::string(std::to_string((int)speed));
@@ -132,7 +132,7 @@ void HackerDetector::onTick(C_GameMode* gm) {
 						g_Data.getClientInstance()->loopbackPacketSender->sendToServer(&textPacket);
 					}
 				}
-			}
+			//}
 			Odelay = 0;
 		}
 	}

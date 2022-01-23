@@ -90,7 +90,7 @@ void TPAura::onTick(C_GameMode* gm) {
 	if (targetList.size() > 0 && !targetList.empty() && Odelay >= delay) {
 		std::sort(targetList.begin(), targetList.end(), CompareTargetEnArray());
 		tick++;
-		if (tick >= 3 && tick <= 24) {
+		if (tick >= 3 && tick <= 34) {
 			if (!moduleMgr->getModule<NoSwing>()->isEnabled()) player->swingArm();
 			vec3_t pos = *targetList[0]->getPos();
 			for (auto& tl : targetList) {
@@ -114,7 +114,7 @@ void TPAura::onTick(C_GameMode* gm) {
 					gm->attack(targetList[0]);
 				}
 			}
-		} else if (tick == 25) {
+		} else if (tick == 35) {
 			for (auto& i : targetList) {
 				vec3_t pos = *targetList[0]->getPos();
 				teleportPacket = C_MovePlayerPacket(g_Data.getLocalPlayer(), *g_Data.getLocalPlayer()->getPos());

@@ -8,6 +8,9 @@ private:
 	bool damage = false;
 	bool boost = false;
 	bool speedWasEnabled = false;
+	float height = 0.f;
+	float jumpHeight = 0.f;
+	int tick = 0;
 
 public:
 	int counter = 1;
@@ -21,19 +24,12 @@ public:
 	int placeCounter = 1;
 	int placeDelay = 8;
 	bool selectBlock();
-	int prevSlot = 0;
 
 	// Hive
-	bool lg = false;
-	bool fly = false;
-	int testTimer = 0;
-	bool blink2 = true;
+	bool throwPearl = false;
 	bool blink = false;
-	int hiveC2 = 0;
-	int hiveC = 0;
-	int timing = 1;
-	bool fly2 = false;
-	vec3_t curPos;
+	int prevSlot = 0;
+	int Odelay = 0;
 
 		std::string name = "Flight";
 		C_MovePlayerPacket* jetpack = nullptr;

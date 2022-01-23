@@ -16,6 +16,8 @@ void FastPlace::onTick(C_GameMode* gm) {
 	PointingStruct* pointing = g_Data.getClientInstance()->getPointerStruct();
 	C_Block* block = g_Data.getLocalPlayer()->region->getBlock(pointing->block);
 	int blockID = (int)block->toLegacy()->blockId;
+	if (blockID == 0)
+		return;
 
 	if (g_Data.isRightClickDown() && g_Data.canUseMoveKeys()) {
 		Odelay++;

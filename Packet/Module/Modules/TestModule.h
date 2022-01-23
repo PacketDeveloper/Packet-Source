@@ -22,6 +22,10 @@ private:
 	bool randomThing = false;
 	int testTimer = 0;
 	int hasJumped = 0;
+	float height = 0.f;
+	float enabledHeight = 0.f;
+	bool onEdge = false;
+	int tick = 0;
 
 	float speedDetector = 0;
 	bool detectedSpeed = false;
@@ -31,6 +35,8 @@ private:
 	int kowInt2 = 0;
 	float glideMod = -0.0f;
 	float kowFloat = 2;
+	bool shouldRender = false;
+	float alpha = 0.f;
 
 public:
 	// testing

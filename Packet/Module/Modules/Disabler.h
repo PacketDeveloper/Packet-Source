@@ -19,4 +19,9 @@ public:
 	virtual void onTick(C_GameMode* gm) override;
 	virtual const char* getRawModuleName() override;
 	virtual void onSendPacket(C_Packet* packet) override;
+
+	inline std::vector<C_MovePlayerPacket*>* getMovePlayerPacketHolder() { return &MovePlayerPacketHolder; };
+	inline std::vector<PlayerAuthInputPacket*>* getPlayerAuthInputPacketHolder() { return &PlayerAuthInputPacketHolder; };
+	std::vector<C_MovePlayerPacket*> MovePlayerPacketHolder;
+	std::vector<PlayerAuthInputPacket*> PlayerAuthInputPacketHolder;
 };

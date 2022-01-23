@@ -1,6 +1,6 @@
 #pragma once
-#include "Module.h"
 #include "../ModuleManager.h"
+#include "Module.h"
 
 class Breaker : public IModule {
 private:

@@ -19,8 +19,6 @@ bool ScriptCommand::execute(std::vector<std::string>* args) {
 		packet.dataArraySize = (int)strlen((char*)packet.data.get());
 		packet.params[0] = g_Data.addInjectorResponseCallback([](std::shared_ptr<HorionDataPacket> pk) {
 			if (pk->params[0] != 1) {  // Dialog Canceled, reset geo
-				auto box = g_Data.addInfoBox("Scripting: Invalid Folder");
-				box->closeTimer = 1;
 				return;
 			}
 
@@ -29,13 +27,13 @@ bool ScriptCommand::execute(std::vector<std::string>* args) {
 
 			json parsed = json::parse(jsonDataStr);
 			if (parsed["path"].is_string()) {
-				auto box = g_Data.addInfoBox("Importing Script, Please wait...");
+				auto box = g_Data.addInfoBox("Importing Script", "Please wait...");
 				std::thread gamer([parsed, box]() {
 					auto result = scriptMgr.importScriptFolder(parsed["path"].get<std::string>());
 					if (result)
 						box->fadeTarget = 0;
 					else {
-						box->message = "Script import error, \ncheck the console";
+						box->message = "Script import error, check the console";
 						box->closeTimer = 2;
 					}
 				});

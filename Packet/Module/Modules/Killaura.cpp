@@ -4,9 +4,10 @@ Killaura::Killaura() : IModule(0, Category::COMBAT, "Automatically attacks entit
 	registerEnumSetting("Rotations", &mode, 0);
 	mode.addEntry("Normal", 0);
 	mode.addEntry("Smooth", 1);
-	mode.addEntry("Old", 2);
-	mode.addEntry("Silent", 3);
-	mode.addEntry("None", 4);
+	mode.addEntry("LockView", 2);
+	mode.addEntry("Old", 3);
+	mode.addEntry("Silent", 4);
+	mode.addEntry("None", 5);
 	registerBoolSetting("Visualize", &render, render);
 	registerBoolSetting("Distance", &distanceCheck, distanceCheck);
 	registerBoolSetting("Multi", &multi, multi);
@@ -181,50 +182,58 @@ void Killaura::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 			for (auto& i : targetList) {
 				if (g_Data.getLocalPlayer() == nullptr)
 					return;
-				if (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
-					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-					auto weewee = g_Data.getLocalPlayer();
-					weewee->setRot(angle);
-				}
-				if (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1 && !targetList.empty()) {
-					vec2_t testRot = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-					auto rotation = g_Data.getLocalPlayer();
-					float prevyaw = rotation->yawUnused1;
-					float prevyaw2 = rotation->yaw;
-					float prevyaw3 = rotation->yaw2;
-					rotation->setRot(testRot);
+				if (!targetList.empty()) {
+					if (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1) {
+						vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+						auto weewee = g_Data.getLocalPlayer();
+						weewee->setRot(angle);
+					}
+					if (mode.getSelectedValue() == 0 || mode.getSelectedValue() == 1) {
+						vec2_t testRot = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+						auto rotation = g_Data.getLocalPlayer();
+						float prevyaw = rotation->yawUnused1;
+						float prevyaw2 = rotation->yaw;
+						float prevyaw3 = rotation->yaw2;
+						rotation->setRot(testRot);
 
-					// Head
-					rotation->yawUnused1 = testRot.y;
-					rotation->pitch = testRot.x;
-					rotation->yaw2 = testRot.y;
-					rotation->yaw = prevyaw2;
-					rotation->pitch2 = testRot.x;
+						// Head
+						rotation->yawUnused1 = testRot.y;
+						rotation->pitch = testRot.x;
+						rotation->yaw2 = testRot.y;
+						rotation->yaw = prevyaw2;
+						rotation->pitch2 = testRot.x;
 
-					// Body
-					if (mode.getSelectedValue() == 0) {
-						rotation->bodyYaw = testRot.y;
+						// Body
+						if (mode.getSelectedValue() == 0) {
+							rotation->bodyYaw = testRot.y;
+							rotation->yawUnused2 = prevyaw2;
+						}
+					}
+					if (mode.getSelectedValue() == 3) {
+						vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+						auto rotation = g_Data.getLocalPlayer();
+						float prevyaw = rotation->yawUnused1;
+						float prevyaw2 = rotation->yaw;
+						float prevyaw3 = rotation->yaw2;
+						rotation->setRot(angle);
+
+						// Head
+						rotation->yawUnused1 = angle.y;
+						rotation->pitch = angle.x;
+						rotation->yaw2 = angle.y;
+						rotation->yaw = prevyaw2;
+						rotation->pitch2 = angle.x;
+
+						// Body
+						rotation->bodyYaw = angle.y;
 						rotation->yawUnused2 = prevyaw2;
 					}
-				}
-				if (mode.getSelectedValue() == 2 && !targetList.empty()) {
-					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
-					auto rotation = g_Data.getLocalPlayer();
-					float prevyaw = rotation->yawUnused1;
-					float prevyaw2 = rotation->yaw;
-					float prevyaw3 = rotation->yaw2;
-					rotation->setRot(angle);
-
-					// Head
-					rotation->yawUnused1 = angle.y;
-					rotation->pitch = angle.x;
-					rotation->yaw2 = angle.y;
-					rotation->yaw = prevyaw2;
-					rotation->pitch2 = angle.x;
-
-					// Body
-					rotation->bodyYaw = angle.y;
-					rotation->yawUnused2 = prevyaw2;
+					if (mode.getSelectedValue() == 2) {
+						vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*i->getPos());
+						auto weewee = g_Data.getLocalPlayer();
+						weewee->setRot(angle);
+						player->resetRot();
+					}
 				}
 			}
 		}
@@ -235,7 +244,7 @@ void Killaura::onSendPacket(C_Packet* packet) {
 	if (GameData::canUseMoveKeys()) {
 		auto scaffold = moduleMgr->getModule<Scaffold>();
 		if (scaffold->useRot) {
-			if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 3) {
+			if (packet->isInstanceOf<C_MovePlayerPacket>() && g_Data.getLocalPlayer() != nullptr && mode.getSelectedValue() == 4) {
 				if (!targetList.empty()) {
 					auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
 					vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(*targetList[0]->getPos());

@@ -10,8 +10,8 @@ Notifications::~Notifications() {
 }
 
 void Notifications::onEnable() {
-	auto box = g_Data.addInfoBox("Example Notification");
-	box->closeTimer = 13;
+	auto box = g_Data.addInfoBox("Module:", "Example Notification");
+	box->closeTimer = 13; // 13
 	setEnabled(false);
 }
 

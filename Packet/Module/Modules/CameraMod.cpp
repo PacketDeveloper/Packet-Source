@@ -3,7 +3,7 @@
 CameraMod::CameraMod() : IModule(0, Category::VISUAL, "DeiDeeDeiDerrtDord") {
 	this->registerBoolSetting("NoHurtcam", &this->nohurtMode, this->nohurtMode);
 	this->registerBoolSetting("Fullbright", &this->fullbright, this->fullbright);
-	this->registerIntSetting("FBAmount", &this->fbAmount, this->fbAmount, -25, 25);
+	this->registerIntSetting("Gamma", &this->fbAmount, this->fbAmount, -25, 25);
 }
 
 const char* CameraMod::getModuleName() {

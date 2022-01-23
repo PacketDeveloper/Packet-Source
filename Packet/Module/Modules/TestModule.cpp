@@ -14,7 +14,7 @@ TestModule::TestModule() : IModule(0, Category::MISC, "Description") {
 	registerFloatSetting("SliderY", &sliderY, sliderY, -400, 400);
 	registerFloatSetting("SliderZ", &sliderZ, sliderZ,  -400, 400);
 	registerBoolSetting("Kow", &kowBool, kowBool);
-	registerFloatSetting("KowFloat", &kowFloat, kowFloat, 0.2f, 10.f);
+	registerFloatSetting("KowFloat", &kowFloat, kowFloat, 0.1f, 10.f);
 }
 
 const char* TestModule::getModuleName() {
@@ -22,6 +22,7 @@ const char* TestModule::getModuleName() {
 }
 
 void TestModule::onEnable() {
+	tick = 0;
 	auto blinkMod = moduleMgr->getModule<Blink>();
 	auto speed = moduleMgr->getModule<Speed>();
 	auto player = g_Data.getLocalPlayer();
@@ -45,10 +46,14 @@ void TestModule::onEnable() {
 			}
 		}
 	}
+	if (test) {
+		shouldRender = true;
+		tick = 0;
+	}
 
 	if (alertBox) {
-		auto box = g_Data.addInfoBox("Notification");
-		box->closeTimer = 7;
+		auto box = g_Data.addInfoBox("Test", "Notification");
+		box->closeTimer = 50;
 	}
 	if (dmgMode) {
 		auto speedMod = moduleMgr->getModule<Speed>();
@@ -223,6 +228,30 @@ void TestModule::onTick(C_GameMode* gm) {
 			clientMessageF("void!!!");
 		}*/
 		//g_Data.getClientInstance()->dimension->weather->isRaining = true;
+		/*vec3_t* pos = gm->player->getPos();
+		auto player = g_Data.getLocalPlayer();
+		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;  // Block 1 block below the player
+		blockBelow.y -= g_Data.getLocalPlayer()->height;
+		blockBelow.y -= 0.5;
+		//for (int x = (int)pos->x - 1; x < pos->x + 1; x++) {
+			//for (int z = (int)pos->z - 1; z < pos->z + 1; z++) {
+				//for (int y = (int)pos->y - 1; y < pos->y + 1; y++) {
+					if (player->onGround && player->region->getBlock(blockBelow)->toLegacy()->blockId == 0) {
+						onEdge = true;
+					} else {
+						onEdge = false;
+					}
+				//}
+			//}
+		//}
+
+		if (onEdge) {
+			g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = true;
+			clientMessageF("edge");
+			clientMessageF("----");
+		} else if (!GameData::isKeyDown(*input->sneakKey)) {
+			g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
+		}*/
 	}
 			if (istpMode) {
 				auto player = g_Data.getLocalPlayer();
@@ -288,6 +317,8 @@ void TestModule::onMove(C_MoveInputHandler* input) {
 		moveVec.y = player->velocity.y;
 		moveVec.z = moveVec2d.y * tpSpeed;
 		if (pressed) player->lerpMotion(moveVec);
+	}
+	if (test) {
 	}
 
 	if (kowBool) {
@@ -383,19 +414,15 @@ void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		float y4 = windowSize.y - sliderY;
 
 		auto hudMod = moduleMgr->getModule<HudModule>();
+		if (shouldRender) {
+			DrawUtils::fillRectangle(vec4_t(0, 0, g_Data.getClientInstance()->getGuiData()->widthGame, g_Data.getClientInstance()->getGuiData()->heightGame), MC_Color(0, 0, 0), alpha);
+		}
 
-		std::string textStr = "Animation test";
-		float startY = hudMod->tabgui ? 10 * 15 : 145;
-		float l = DrawUtils::getTextWidth(&textStr, 1.064) + 10.f;
-		vec4_t rectPos = vec4_t(sliderX, startY + 4.f * 1, l, startY + 20.f * 1);
-		vec2_t textPos = vec2_t(rectPos.x + 15, rectPos.y + 10.f);
-		vec2_t pPos = vec2_t(rectPos.x + 6, rectPos.y + 4.f);
-
-		float animationPos = -5;
-		animationPos++;
-		float xpos = windowSize.x / animationPos + 1;
-		DrawUtils::drawText(vec2_t(pPos), &textStr, MC_Color(255, 255, 255), 1, 1, true);
-		DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.5);
+		//float animationPos = -5;
+	//	animationPos++;
+		//float xpos = windowSize.x / animationPos + 1;
+		//DrawUtils::drawText(vec2_t(pPos), &textStr, MC_Color(255, 255, 255), 1, 1, true);
+		//DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.5);
 
 
 		//std::string fpsText = "Player Pitch: " + std::to_string(player->pitch);
@@ -403,9 +430,6 @@ void TestModule::onPostRender(C_MinecraftUIRenderContext* renderCtx) {
 		//std::string fpsText3 = "Body Yaw: " + std::to_string(player->bodyYaw);
 		//DrawUtils::drawText(vec2_t(x, y), &fpsText, MC_Color(255, 255, 255), 1, 1, true);
 		//DrawUtils::drawText(vec2_t(x, y2), &fpsText2, MC_Color(255, 255, 255), 1, 1, true);
-
-		DrawUtils::drawText(vec2_t(x2, y4), &textStr, MC_Color(255, 255, 255), 1, 1, true);
-		DrawUtils::fillRectangle(rectPos, MC_Color(0, 0, 0), 0.5);
 
 		//std::string filePath = "../../../assets/images/logo.png";
 		//DrawUtils::drawImage(filePath, vec2_t(x2, y4), vec2_t(755, 175), vec2_t(0, 0));

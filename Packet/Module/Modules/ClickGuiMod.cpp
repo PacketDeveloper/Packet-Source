@@ -18,6 +18,8 @@ const char* ClickGuiMod::getModuleName() {
 
 void ClickGuiMod::onEnable() {
 	g_Data.getClientInstance()->releaseMouse();
+	auto frc = moduleMgr->getModule<Freecam>();
+	frc->setEnabled(true);
 }
 
 void ClickGuiMod::onTick(C_GameMode* gm) {
@@ -83,6 +85,8 @@ bool ClickGuiMod::allowAutoStart() {
 void ClickGuiMod::onDisable() {
 	g_Data.getClientInstance()->grabMouse();
 	openAnimation = false;
+	auto frc = moduleMgr->getModule<Freecam>();
+	frc->setEnabled(false);
 }
 
 void ClickGuiMod::onPostRender(C_MinecraftUIRenderContext* renderCtx) {

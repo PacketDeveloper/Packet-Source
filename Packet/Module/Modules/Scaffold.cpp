@@ -3,6 +3,9 @@
 #include "../../../Utils/Logger.h"
 #include "../../DrawUtils.h"
 #include "../../Module/ModuleManager.h"
+										 //0x8f3895
+uintptr_t HiveBypass1 = Utils::getBase() + 0x96CCE5;  // Second one of 89 41 18 0F B6 42 ?? 88 41 ?? F2 0F 10 42 ?? F2 0F 11 41 ?? 8B 42 ?? 89 41 ?? 8B 42 ?? 89 41 ??
+uintptr_t HiveBypass2 = Utils::getBase() + 0x971C17;  // C7 40 18 03 00 00 00 48 8B 8D
 
 Scaffold::Scaffold() : IModule(0, Category::PLAYER, "BasicallyBly") {
 	//registerBoolSetting("Downwards", &staircase, staircase);
@@ -13,6 +16,8 @@ Scaffold::Scaffold() : IModule(0, Category::PLAYER, "BasicallyBly") {
 	registerBoolSetting("LockY", &lockY, lockY);
 	registerBoolSetting("Spoof", &spoof, spoof);
 	registerIntSetting("Timer", &timer, timer, 20, 80);
+	registerIntSetting("TowerTimer", &towerTimer, towerTimer, 20, 80);
+	registerFloatSetting("delay", &delay, delay, 0, 10);
 	registerIntSetting("Extend", &expand, expand, 0, 7);
 }
 
@@ -36,8 +41,12 @@ void Scaffold::onEnable() {
 
 void Scaffold::onTick(C_GameMode* gm) {
 	isOnHive = strcmp(g_Data.getRakNetInstance()->serverIp.getText(), "geo.hivebedrock.network") == 0;
-	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
-		return;
+	//if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
+		//return;
+
+	g_Data.getLocalPlayer()->pointingStruct->rayHitType = 0;
+	Utils::nopBytes((unsigned char*)HiveBypass1, 3);
+	Utils::patchBytes((unsigned char*)HiveBypass2, (unsigned char*)"\xC7\x40\x18\x00\x00\x00\x00", 7);
 
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(timer);
@@ -50,7 +59,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 			restored = true;
 			g_Data.getLocalPlayer()->getSupplies()->selectedHotbarSlot = prevSlot;
 			if (restored == true) {
-				auto warning = g_Data.addInfoBox("Scaffold: No blocks found");
+				auto warning = g_Data.addInfoBox("Scaffold:", "No blocks found");
 				warning->closeTimer = 17;
 				setEnabled(false);
 			}
@@ -72,6 +81,9 @@ void Scaffold::onTick(C_GameMode* gm) {
 		sprint->useSprint = false;
 	}
 
+	//g_Data.getLocalPlayer()->pitch = 90;
+	//g_Data.getLocalPlayer()->pitch2 = 90;
+
 	// Adjustment by velocity
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
 	vec3_t vel = g_Data.getLocalPlayer()->velocity;
@@ -90,33 +102,43 @@ void Scaffold::onTick(C_GameMode* gm) {
 	blockBelow2.y -= 2.0f;
 
 	if (extendOut) {
-		float cal = (gm->player->yaw + 90) * (PI / 180);
+		Odelay++;
+		if (Odelay >= delay) {
+			float cal = (gm->player->yaw + 90) * (PI / 180);
+			//blockBelow.y -= g_Data.getLocalPlayer()->height - 1;
+			//blockBelow.x += cos(cal);
+			//blockBelow.z += cos(cal) * 0.1;
+			//if (gm->player->onGround) gm->player->velocity.y = 0;
+			//gm->player->onGround = true;
 
-		if (tower && speed <= 0.05) {
-			if (!isHoldingSpace) {
+			if (tower && speed <= 0.05) {
+				if (!isHoldingSpace) {
+					blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block(s) ahead the player X
+					blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block(s) ahead the player Z
+				}
+			} else {
 				blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block(s) ahead the player X
 				blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block(s) ahead the player Z
 			}
-		} else {
-			blockBelow.x = blockBelow.x += cos(cal) * expand;  // Block(s) ahead the player X
-			blockBelow.z = blockBelow.z += sin(cal) * expand;  // Block(s) ahead the player Z
-		}
-		if (!tryScaffold(blockBelow)) {
-			if (speed > 0.05f) {  // Are we actually walking?
-				blockBelow.z -= vel.z;
-				if (!tryScaffold(blockBelow)) {
-					blockBelow.x -= vel.x;
+			if (!tryScaffold(blockBelow)) {
+				if (speed > 0.05f) {  // Are we actually walking?
+					blockBelow.z -= vel.z;
+					if (!tryScaffold(blockBelow)) {
+						blockBelow.x -= vel.x;
 
-					if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
-						blockBelow.z += vel.z;
-						blockBelow.x += vel.x;
-						tryScaffold(blockBelow);
+						if (!tryScaffold(blockBelow) && g_Data.getLocalPlayer()->isSprinting()) {
+							blockBelow.z += vel.z;
+							blockBelow.x += vel.x;
+							tryScaffold(blockBelow);
+						}
 					}
 				}
 			}
+			Odelay = 0;
 		}
 	}
-	if (!tryScaffold(blockBelow)) {
+
+	/*if (!tryScaffold(blockBelow)) {
 		blockBelow.z -= vel.z * 0.4f;
 		if (!tryScaffold(blockBelow)) {
 			blockBelow.x -= vel.x * 0.4f;
@@ -126,7 +148,7 @@ void Scaffold::onTick(C_GameMode* gm) {
 				tryScaffold(blockBelow);
 			}
 		}
-	}
+	}*/
 
 	/*if (staircase && isSneaking) {
 		g_Data.getClientInstance()->getMoveTurnInput()->isSneakDown = false;
@@ -151,29 +173,6 @@ void Scaffold::onTick(C_GameMode* gm) {
 	}*/
 
 	if (spoof) gm->player->getSupplies()->selectedHotbarSlot = prevSlot;
-
-	if (rotations) {
-		auto player = g_Data.getLocalPlayer();
-		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
-		blockBelow.y -= g_Data.getLocalPlayer()->height;
-		blockBelow.y -= 0.5f;
-		if (speed >= 0.05 || isHoldingSpace) {
-			vec2_t angleBelow = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
-			auto rotation = g_Data.getLocalPlayer();
-			float prevyaw = rotation->yawUnused1;
-			float prevyaw2 = rotation->yaw;
-			float prevyaw3 = rotation->yaw2;
-			rotation->setRot(angleBelow);
-			rotation->yawUnused1 = angleBelow.y;
-			rotation->pitch = angleBelow.x;
-			rotation->yaw2 = angleBelow.y;
-			rotation->yaw = prevyaw2;
-			rotation->pitch2 = angleBelow.x;
-			useRot = false;
-		} else {
-			useRot = true;
-		}
-	}
 }
 
 void Scaffold::onMove(C_MoveInputHandler* input) {
@@ -194,6 +193,7 @@ void Scaffold::onMove(C_MoveInputHandler* input) {
 	if (tower && isHoldingSpace && !clickGUI->isEnabled() && speed <= 0.05) {
 		float trueStop = 1000 - 1 + NULL;
 		if (foundBlock) {
+			*g_Data.getClientInstance()->minecraft->timer = static_cast<float>(towerTimer);
 			vec2_t movement = {input->forwardMovement, -input->sideMovement};
 			bool pressed = movement.magnitude() > 0.f;
 			float calcYaw = (player->yaw + 90) * (PI / 180);
@@ -317,20 +317,47 @@ void Scaffold::onSendPacket(C_Packet* packet) {
 	C_GameSettingsInput* input = g_Data.getClientInstance()->getGameSettingsInput();
 	auto player = g_Data.getLocalPlayer();
 	vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
-	blockBelow.y -= g_Data.getLocalPlayer()->height;
-	blockBelow.y -= 0.5f;
+	blockBelow.y += g_Data.getLocalPlayer()->height;
+	blockBelow.y += 0.5f;
 
 	float speed = g_Data.getLocalPlayer()->velocity.magnitudexz();
+	auto t = moduleMgr->getModule<TestModule>();
 	if (packet->isInstanceOf<C_MovePlayerPacket>() || packet->isInstanceOf<PlayerAuthInputPacket>()) {
 		if (g_Data.getLocalPlayer() != nullptr && g_Data.canUseMoveKeys()) {
 			auto* movePacket = reinterpret_cast<C_MovePlayerPacket*>(packet);
-			if (rotations && speed >= 0.05 || GameData::isKeyDown(*input->spaceBarKey)) {
+			if (speed >= 0.05 || GameData::isKeyDown(*input->spaceBarKey)) {
 				vec2_t angle = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
+				angle.x += t->sliderY;
 				movePacket->pitch = angle.x;
 				movePacket->headYaw = angle.y;
 				movePacket->yaw = angle.y;
 			}
 		}
+	}
+	if (rotations) {
+		auto player = g_Data.getLocalPlayer();
+		vec3_t blockBelow = g_Data.getLocalPlayer()->eyePos0;
+		blockBelow.y += g_Data.getLocalPlayer()->height;
+		blockBelow.y += 0.5f;
+		//if (speed >= 0.05 || isHoldingSpace) {
+		vec2_t angleBelow = g_Data.getLocalPlayer()->getPos()->CalcAngle(blockBelow);
+		auto t = moduleMgr->getModule<TestModule>();
+		angleBelow.x += t->sliderY;
+		auto rotation = g_Data.getLocalPlayer();
+		float prevyaw = rotation->yawUnused1;
+		float prevyaw2 = rotation->yaw;
+		float prevyaw3 = rotation->yaw2;
+		rotation->setRot(angleBelow);
+		//player->resetRot();
+		rotation->yawUnused1 = angleBelow.y;
+		rotation->pitch = angleBelow.y;
+		rotation->yaw2 = angleBelow.y;
+		rotation->yaw = prevyaw2;
+		rotation->pitch2 = angleBelow.x;
+		useRot = false;
+		//} else {
+		//useRot = true;
+		//}
 	}
 }
 
@@ -340,6 +367,9 @@ void Scaffold::onDisable() {
 	useRot = true;
 	if (g_Data.getLocalPlayer() == nullptr || !g_Data.canUseMoveKeys())
 		return;
+
+	Utils::patchBytes((unsigned char*)HiveBypass1, (unsigned char*)"\x89\x41\x18", 3);
+	Utils::patchBytes((unsigned char*)HiveBypass2, (unsigned char*)"\xC7\x40\x18\x03\x00\x00\x00", 7);
 
 	C_PlayerInventoryProxy* supplies = g_Data.getLocalPlayer()->getSupplies();
 	__int64 id = *g_Data.getLocalPlayer()->getUniqueId();

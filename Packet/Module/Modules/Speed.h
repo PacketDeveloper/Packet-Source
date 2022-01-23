@@ -19,6 +19,32 @@ public:
 	bool isOnGround = false;
 	float hSpeed = 0.315;
 	int hiveC = 1;
+	int hiveC2 = 1;
+	int speedIndexThingyForHive = 20;
+	float epicHiveSpeedArrayThingy[21] = {
+		0.450888,
+		0.432595,
+		0.420948,
+		0.410800,
+		0.397015,
+		0.384470,
+		0.373055,
+		0.362666,
+		0.353213,
+		0.344611,
+		0.336783,
+		0.329659,
+		0.323177,
+		0.317277,
+		0.311909,
+		0.307024,
+		0.302579,
+		0.298534,
+		0.294852,
+		0.291502,
+		0.265267};
+	C_MoveInputHandler* yes;
+	C_MoveInputHandler cachedInput;
 
 	Speed();
 	~Speed();

@@ -92,6 +92,7 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new FastPlace()));
 		moduleList.push_back(std::shared_ptr<IModule>(new AutoTotem()));
 		moduleList.push_back(std::shared_ptr<IModule>(new TargetHUD()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new Safewalk()));
 
 #ifdef _DEBUG
 		moduleList.push_back(std::shared_ptr<IModule>(new InPvPFucker()));
@@ -103,14 +104,9 @@ void ModuleManager::initModules() {
 		moduleList.push_back(std::shared_ptr<IModule>(new Survival()));
 		//moduleList.push_back(std::shared_ptr<IModule>(new TriggerBot()));
 		// Broken
-		moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
-		moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
-		moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
-
-		//Keep this, stuff for Hive when extreme bypassing
-		moduleList.push_back(std::shared_ptr<IModule>(new KBFly()));
-		moduleList.push_back(std::shared_ptr<IModule>(new FallSave()));
-		moduleList.push_back(std::shared_ptr<IModule>(new NoJumpDelay()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new BehindAura()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new AutoArmor()));
+		//moduleList.push_back(std::shared_ptr<IModule>(new NoSlow()));
 #endif
 
 		// Sort modules alphabetically
@@ -131,7 +127,7 @@ void ModuleManager::initModules() {
 	getModule<Sprint>()->setEnabled(true);
 	getModule<AntiBot>()->setEnabled(true);
 	if (!g_Data.canUseMoveKeys()) {
-		auto notification = g_Data.addInfoBox("Packet Client is now Injected!");
+		auto notification = g_Data.addInfoBox("Notification", "Packet Client is now Injected!");
 		notification->closeTimer = 20;
 	}
 }

@@ -223,7 +223,6 @@ static inline void ImSwap(T& a, T& b) {
 
 #define FindSignature(szSignature) Utils::FindSignatureModule(XorString("Minecraft.Windows.exe"), XorString(szSignature))
 
-
 class Utils {
 public:
 	static inline unsigned int getCrcHash(const char* str, int seed = 0) {
@@ -248,6 +247,7 @@ public:
 				// Because this syntax is rarely used we are optimizing for the common case.
 				// - If we reach ### in the string we discard the hash so far and reset to the seed.
 				// - We don't do 'current += 2; continue;' after handling ### to keep the code smaller.
+
 				if (c == '#' && current[0] == '#' && current[1] == '#')
 					crc = seed;
 				crc = (crc >> 8) ^ crc32_lut[(crc & 0xFF) ^ c];
@@ -425,6 +425,12 @@ public:
 	static void GetCurrentSystemTime(tm& timeInfo);
 
 	static void ApplySystemTime(std::stringstream* ss);
+
+	static uintptr_t getBase();
+
+	static void patchBytes(unsigned char* dst, unsigned char* src, unsigned int size);
+
+	static void nopBytes(unsigned char* dst, unsigned int size);
 
 	static std::string sanitize(std::string text);
 

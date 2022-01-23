@@ -3,8 +3,15 @@
 #include "Module.h"
 
 class Safewalk : public IModule {
-public: 
-	Safewalk();
-	virtual const char* getModuleName();
+private:
+	bool onEdge = false;
 
+public: 
+
+	Safewalk();
+		SettingEnum mode = this;
+
+	virtual void onDisable() override;
+	virtual const char* getModuleName();
+	virtual void onTick(C_GameMode* gm) override;
 };

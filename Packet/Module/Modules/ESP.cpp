@@ -7,7 +7,7 @@
 ESP::ESP() : IModule(0, Category::VISUAL, "Outlines a players hitbox") {
 	registerEnumSetting("Mode", &mode, 0);
 	mode.addEntry("Normal", 0);
-	mode.addEntry("HitBox", 1);
+	mode.addEntry("Hitbox", 1);
 	registerBoolSetting("Tracers", &tracerMode, tracerMode);
 }
 

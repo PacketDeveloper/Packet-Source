@@ -11,9 +11,6 @@ Breaker::Breaker() : IModule(0, Category::MISC, "fuck hive") {
 	registerBoolSetting("Beds", &beds, beds);
 	registerBoolSetting("Eggs", &eggs, eggs);
 	registerBoolSetting("Rotations", &rotations, rotations);
-#ifdef _DEBUG
-	registerBoolSetting("Bypass", &ezHiveBypass, ezHiveBypass);
-#endif
 	registerIntSetting("Range", &range, range, 1, 10);
 	//registerIntSetting("Delay", &range, range, 0, 10);
 }
@@ -44,26 +41,24 @@ void Breaker::onTick(C_GameMode* gm) {
 
 				int id = (int)gm->player->region->getBlock(iBlockPos)->toLegacy()->blockId;
 
-				if (id == 73 || id == 74 && rOre) destroy = true; // Redstone Ore
-				if (id == 129 && eOre) destroy = true;     // Emerald Ore
-				if (id == 56 && dOre) destroy = true;     // Diamond Ore
-				if (id == 54 && chests) destroy = true;  // Chests
-				if (id == 14 && gold) destroy = true;   // Gold
-				if (id == 122 && eggs) destroy = true; // Eggs
-				if (id == 26 && beds) destroy = true; // Beds
-				if (id == 92 && cakes) eat = true;   // Cakes
+				if (id == 73 || id == 74 && rOre) destroy = true;  // Redstone Ore
+				if (id == 129 && eOre) destroy = true;             // Emerald Ore
+				if (id == 56 && dOre) destroy = true;              // Diamond Ore
+				if (id == 54 && chests) destroy = true;            // Chests
+				if (id == 14 && gold) destroy = true;              // Gold
+				if (id == 122 && eggs) destroy = true;             // Eggs
+				if (id == 26 && beds) destroy = true;              // Beds
+				if (id == 92 && cakes) eat = true;                 // Cakes
 
-
-				if (destroy /* && g_Data.canUseMoveKeys()*/) {
+				if (destroy && g_Data.canUseMoveKeys()) {
 					bool isDestroyed = false;
-					if (ezHiveBypass)
-						gm->startDestroyBlock(iBlockPos, 1, isDestroyed);
+					gm->startDestroyBlock(iBlockPos, 1, isDestroyed);
 					gm->destroyBlock(&iBlockPos, 0);
 					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 						g_Data.getLocalPlayer()->swingArm();
 					return;
 				}
-				if (eat /* && g_Data.canUseMoveKeys()*/) {
+				if (eat && g_Data.canUseMoveKeys()) {
 					gm->buildBlock(&iBlockPos, 0);
 					if (!moduleMgr->getModule<NoSwing>()->isEnabled())
 						g_Data.getLocalPlayer()->swingArm();

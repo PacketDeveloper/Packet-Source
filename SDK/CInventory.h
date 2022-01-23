@@ -13,7 +13,7 @@ public:
 	bool isFull();
 	void dropSlot(int slot);
 
-	// DROPS WHOLE INVENTORY doesnt work tho
+	// DROPS WHOLE INVENTORY doesnt work tho F
 	void dropAll(int slot);
 
 	virtual __int64 init();

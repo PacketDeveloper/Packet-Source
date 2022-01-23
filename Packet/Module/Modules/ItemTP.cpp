@@ -51,7 +51,7 @@ void ItemTP::onTick(C_GameMode* gm) {
 		Odelay = 0;
 	}
 	if (targetListz69.empty()) {
-		auto box = g_Data.addInfoBox("ItemTP: No items in range");
+		auto box = g_Data.addInfoBox("ItemTP", "No items in range");
 		box->closeTimer = 15;
 		player->setPos(prevPos);
 		setEnabled(false);
