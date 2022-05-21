@@ -1,9 +1,10 @@
 <p align="center">
-	<img width="755" height="175" src="assets/images/logo.png">
+	<img width="755" height="175" src="assets/images/Text.png">
 </p>
 
 # Info
-Packet Client is an MCBE Utility mod made by: Packet and Deq
+Packet Client is an MCBE Utility mod made by: Packet, Deq and Founder
+
 Packet Client is a fork of the Horion Client
 
 
@@ -11,8 +12,6 @@ Packet Client is a fork of the Horion Client
 
 The original Horion developers
 
-Turakan - Original TargetHUD & LowHop
+Steve's Noob#2585
 
-12brendon34 - Injector
-
-Founder - Very cool dood
+NRG#4200
