@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Utils/HMath.h"
+
 class C_Entity;
 
 class C_EntityList {

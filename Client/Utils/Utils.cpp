@@ -69,6 +69,10 @@ void Utils::nopBytes(unsigned char* dst, unsigned int size) {
 	VirtualProtect(dst, size, oldprotect, &oldprotect);
 }
 
+bool Utils::getShouldLocalPlayerBeImmobile() {
+	return g_Hooks.shouldLocalPlayerBeImmobile;
+}
+
 void Utils::GetCurrentSystemTime(tm& timeInfo) {
 	const std::chrono::system_clock::time_point systemNow = std::chrono::system_clock::now();
 	std::time_t now_c = std::chrono::system_clock::to_time_t(systemNow);
@@ -80,7 +84,7 @@ bool invalidChar(char c) {
 }
 
 void Utils::systemPlay(std::string name) {
-	std::string path = getenv("APPDATA") + std::string("\\..\\Local\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\RoamingState\\PacketClient\\Assets\\Sounds\\") + std::string(name);
+	std::string path = getenv("APPDATA") + std::string("\\..\\Local\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\RoamingState\\PacketClient\\Assets\\") + std::string(name);
 	PlaySoundA((LPCSTR)path.c_str(), NULL, SND_FILENAME | SND_ASYNC);
 }
 

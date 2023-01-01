@@ -1,10 +1,8 @@
 #include "CoordsCommand.h"
+#include "pch.h"
 
 CoordsCommand::CoordsCommand() : IMCCommand("coords", "Prints your coordinates", "") {
 	registerAlias("pos");
-}
-
-CoordsCommand::~CoordsCommand() {
 }
 
 bool CoordsCommand::execute(std::vector<std::string>* args) {

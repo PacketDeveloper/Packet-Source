@@ -7,6 +7,7 @@
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 #include "Hooks.h"
+#include "pch.h"
 
 GameData g_Data;
 
@@ -21,7 +22,6 @@ void GameData::retrieveClientInstance() {
 			logF("client: %llX", clientInstanceOffset);
 		}
 	}
-	// clientInstanceOffset = 0x03CD5058;  // pointer scanned, can't find good signatures so it'll stay
 	g_Data.clientInstance = reinterpret_cast<C_ClientInstance*>(g_Data.slimMem->ReadPtr<uintptr_t*>(g_Data.gameModule->ptrBase + clientInstanceOffset, {0x0, 0x0, 0x58}));
 #ifdef _DEBUG
 	if (g_Data.clientInstance == 0)
@@ -31,7 +31,8 @@ void GameData::retrieveClientInstance() {
 
 bool GameData::canUseMoveKeys() {
 	MinecraftGame* mc = g_Data.clientInstance->minecraftGame;
-	if (mc == nullptr) {
+	if (moduleMgr->getModule<ClickGUIMod>()->isEnabled()) return true;
+	else if (mc == nullptr) {
 		return false;
 	}
 
@@ -52,6 +53,7 @@ bool GameData::isKeyDown(int key) {
 	// key0 00 00 00 key1 00 00 00 key2 00 00 00 ...
 	return *reinterpret_cast<bool*>(g_Data.gameModule->ptrBase + keyMapOffset + ((uintptr_t)key * 0x4));
 }
+
 bool GameData::isKeyPressed(int key) {
 	if (isKeyDown(key)) {
 		while (isKeyDown(key))
@@ -161,12 +163,14 @@ void GameData::setRakNetInstance(C_RakNetInstance* raknet) {
 
 void GameData::forEachEntity(std::function<void(C_Entity*, bool)> callback) {
 	if (this->localPlayer && this->localPlayer->pointingStruct) {
-		for (const auto& ent : g_Hooks.entityList)
-			if (ent.ent != nullptr) 
-				callback(ent.ent, false);
-		for (const auto& ent : g_Data.getLocalPlayer()->pointingStruct->getMiscEntityList())
-			if (ent != nullptr && (__int64)ent != 0xFFFFFFFFFFFFFCD7 && ent->isAlive() && *(__int64*)ent != 0xFFFFFFFFFFFFFCD7 && *(__int64*)ent > 0x6FF000000000 && *(__int64*)ent < 0x800000000000 && *((int64_t*)ent + 1) < 0x6FF000000000 && *(__int64*)ent <= Utils::getBase() + 0x10000000 && ent->getEntityTypeId() >= 1 && ent->getEntityTypeId() <= 9999999) 
+		for (const auto& ent : g_Hooks.entityList) {
+			if (ent.ent != nullptr) callback(ent.ent, false);
+		}
+
+		for (const auto& ent : g_Data.getLocalPlayer()->pointingStruct->getMiscEntityList()) {
+			if (ent != nullptr && (__int64)ent != 0xFFFFFFFFFFFFFCD7 && ent->isAlive() && *(__int64*)ent != 0xFFFFFFFFFFFFFCD7 && *(__int64*)ent > 0x6FF000000000 && *(__int64*)ent < 0x800000000000 && *((int64_t*)ent + 1) < 0x6FF000000000 && *(__int64*)ent <= Utils::getBase() + 0x10000000 && ent->getEntityTypeId() >= 1 && ent->getEntityTypeId() <= 9999999)
 				callback(ent, false);
+		}
 	}
 }
 
@@ -199,24 +203,6 @@ void GameData::initGameData(const SlimUtils::SlimModule* gameModule, SlimUtils::
 	}
 
 #endif
-}
-void GameData::sendPacketToInjector(HorionDataPacket horionDataPack) {
-	if (!isInjectorConnectionActive())
-		throw std::exception("Horion injector connection not active");
-	if (horionDataPack.dataArraySize >= 3000) {
-		logF("Tried to send data packet with array size: %i %llX", horionDataPack.dataArraySize, horionDataPack.data.get());
-		throw std::exception("Data packet data too big");
-	}
-
-	horionToInjectorQueue.push(horionDataPack);
-}
-void GameData::callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPacket> packet) {
-	if (injectorToHorionResponseCallbacks.find(id) == injectorToHorionResponseCallbacks.end()) {
-		logF("No response callback for request with id=%i!", id);
-		return;
-	}
-	injectorToHorionResponseCallbacks[id](packet);
-	injectorToHorionResponseCallbacks.erase(id);
 }
 void GameData::log(const char* fmt, ...) {
 	auto lock = std::lock_guard<std::mutex>(g_Data.textPrintLock);

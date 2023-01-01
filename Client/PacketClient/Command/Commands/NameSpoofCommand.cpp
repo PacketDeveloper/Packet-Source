@@ -1,11 +1,9 @@
 #include "NameSpoofCommand.h"
+#include "pch.h"
 
 NameSpoofCommand::NameSpoofCommand() : IMCCommand("namespoof", "Spoof your name on realms/bds", "<name/reset> <name>") {
 	registerAlias("ns");
 	registerAlias("fakename");
-}
-
-NameSpoofCommand::~NameSpoofCommand() {
 }
 
 bool NameSpoofCommand::execute(std::vector<std::string>* args) {

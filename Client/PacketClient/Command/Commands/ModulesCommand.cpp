@@ -1,13 +1,10 @@
 #include "ModulesCommand.h"
-
 #include <algorithm>
 #include "../../Module/ModuleManager.h"
+#include "pch.h"
 
 ModulesCommand::ModulesCommand() : IMCCommand("modules", "Lists all modules", "") {
 	registerAlias("mods");
-}
-
-ModulesCommand::~ModulesCommand() {
 }
 
 bool ModulesCommand::execute(std::vector<std::string>* args) {

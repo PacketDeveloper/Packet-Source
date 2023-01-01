@@ -1,13 +1,9 @@
 #pragma once
-#include <sstream>
-
 #include "ICommand.h"
+#include <sstream>
 
 class ClientNameCommand : public IMCCommand {
 public:
-	ClientNameCommand();
-	~ClientNameCommand();
-
-	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
+	ClientNameCommand();
 };

@@ -2,6 +2,7 @@
 #include <windows.h>
 #include <tlhelp32.h>
 #include <Psapi.h>
+#include "pch.h"
 
 inline bool IsProcessHandleValid(HANDLE h) { return h > (void*)0 && h != INVALID_HANDLE_VALUE; };
 inline bool IsHandleValid(HANDLE h) { return h != INVALID_HANDLE_VALUE; }
@@ -112,7 +113,6 @@ bool SlimMem::HasProcessHandle() const { return IsProcessHandleValid(m_hProc); }
 
 	/*
 	Caches basic information of modules loaded by the opened-process
-
 	*/
 	bool SlimMem::ParseModules()
 	{

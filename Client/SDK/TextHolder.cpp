@@ -1,5 +1,4 @@
 #include "TextHolder.h"
-
 #include <Windows.h>
 
 void GamerTextHolder::copyFrom(TextHolder *copy) {

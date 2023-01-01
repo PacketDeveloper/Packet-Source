@@ -1,46 +1,46 @@
 #pragma once
+#include "../../Menu/HudEditor.h"
+#include "../../Menu/ClickGui.h"
 #include "Module.h"
 
-class ClickGuiMod : public IModule {
+class ClickGUIMod : public IModule {
 public:
-	static float textR;
-	static float textG;
-	static float textB;
+	bool showHudEditor = true;
+	bool hasOpenedGUI = false; // start with hudeditor
 
-	static float dtextR;
-	static float dtextG;
-	static float dtextB;
-
-	static float sliderR;
-	static float sliderG;
-	static float sliderB;
-
-	static float backroundR;
-	static float backroundG;
-	static float backroundB;
-
-	ClickGuiMod();
-	~ClickGuiMod();
-
-	SettingEnum theme = this;
-
+	float r1 = 255.f;
+	float g1 = 255.f;
+	float b1 = 255.f;
+	float r2 = 0.f;
+	float g2 = 0.f;
+	float b2 = 0.f;
 	bool headerAnimation = false;
+	bool categoryColors = true;
 	bool openAnimation = false;
 	bool showTooltips = false;
 	bool rainbowColor = false;
 	bool animations = true;
-	float opacity = 0.8f;
-	int bgCounter = 1;
-	float bgOpacity = 0.f;
 	bool enabled = true;
+	bool sounds = true;
+	bool cFont = false;
 
-	// Inherited via IModule
-	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx) override;
-	virtual const char* getModuleName() override;
-	virtual void onDisable() override;
-	virtual void onEnable() override;
-	virtual bool allowAutoStart() override;
-	virtual void onTick(C_GameMode* gm) override;
-	virtual void onLoadConfig(void* conf) override;
-	virtual void onSaveConfig(void* conf) override;
+	float animation = 1.f;
+	float openAnim = 1.f;
+	int opacity = 175;
+	int t = 0;
+
+	SettingEnum theme = this;
+	SettingEnum color = this;
+
+	virtual void onPostRender(C_MinecraftUIRenderContext* renderCtx);
+	virtual void onPreRender(C_MinecraftUIRenderContext* renderCtx);
+	virtual void onPlayerTick(C_Player* plr);
+	virtual void onLoadConfig(void* conf);
+	virtual void onSaveConfig(void* conf);
+	virtual const char* getModuleName();
+	virtual void onTick(C_GameMode* gm);
+	virtual bool allowAutoStart();
+	virtual void onDisable();
+	virtual void onEnable();
+	ClickGUIMod();
 };

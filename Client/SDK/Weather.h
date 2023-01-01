@@ -1,3 +1,5 @@
+#pragma once
+
 class Weather {
 private:
 	char pad_0000[56];  //0x0000

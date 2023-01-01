@@ -6,8 +6,10 @@
 
 #include "../PacketClient/Command/CommandMgr.h"
 #include "../PacketClient/Config/ConfigManager.h"
-#include "../PacketClient/DrawUtils.h"
-#include "../PacketClient/ImmediateGui.h"
+#include "../Utils/DrawUtils.h"
+#include "../Utils/ImmediateGui.h"
+#include "../PacketClient/Menu/ConfigManagerMenu.h"
+#include "../PacketClient/Menu/HudEditor.h"
 #include "../PacketClient/Menu/ClickGui.h"
 #include "../PacketClient/Menu/TabGui.h"
 #include "../PacketClient/Module/ModuleManager.h"
@@ -73,17 +75,22 @@ public:
 		C_Entity* ent;
 		int addedTick;
 	};
+	bool isThirdPerson = false;
 	std::vector<EntityListPointerHolder> entityList;
+	bool shouldLocalPlayerBeImmobile = false;
 
 	static void Init();
 	static void Restore();
 	static void Enable();
 
 private:
+	static void setPos(C_Entity* ent, vec3_t& pos);
 	static void Actor_baseTick(C_Entity* _this);
 	static __int64 UIScene_setupAndRender(C_UIScene* uiscene, __int64 screencontext);
 	static __int64 UIScene_render(C_UIScene* uiscene, __int64 screencontext);
 	static void* Player_tickWorld(C_Player* _this, __int64);
+	static float getDestroySpeed(C_Player* _this, C_Block& block);
+	static void chatLogHookFunc(__int64 a1, TextHolder* msg, uint32_t a2);
 	static bool playerCallBack(C_Player* lp, __int64 a2, __int64 a3);
 	static __int64 RenderText(__int64 a1, C_MinecraftUIRenderContext* renderCtx);
 	static float* Dimension_getFogColor(__int64, float* color, __int64 brightness, float a4);
@@ -104,7 +111,7 @@ private:
 	static __int64 ChestScreenController_tick(C_ChestScreenController* _this);
 	static float GetGamma(uintptr_t* a1);
 	static __int64 MinecraftGame_onAppSuspended(__int64 _this);
-	// static void Actor_startSwimming(C_Entity* _this);
+	static void Actor_swing(C_Entity* _this);
 	static void RakNetInstance_tick(C_RakNetInstance* _this, __int64 a2, __int64 a3);
 	static float GameMode_getPickRange(C_GameMode* _this, __int64 a2, char a3);
 	static __int64 GameMode_attack(C_GameMode* _this, C_Entity*);
@@ -125,6 +132,7 @@ private:
 	static void Actor_rotation(C_Entity* _this, vec2_t& angle);
 	static int ForceThirdPersonLol(__int64 a1);
 
+	std::unique_ptr<FuncHook> setPosHook;
 	std::unique_ptr<FuncHook> Actor__baseTick; 
 	std::unique_ptr<FuncHook> Actor_rotationHook;
 	std::unique_ptr<FuncHook> UIScene_setupAndRenderHook;
@@ -144,16 +152,18 @@ private:
 	std::unique_ptr<FuncHook> MultiLevelPlayer_tickHook;
 	std::unique_ptr<FuncHook> GameMode_startDestroyBlockHook;
 	std::unique_ptr<FuncHook> Player_tickWorldHook;
+	std::unique_ptr<FuncHook> getDestroySpeedHook;
 	std::unique_ptr<FuncHook> ClientInstanceScreenModel_sendChatMessageHook;
 	std::unique_ptr<FuncHook> HIDController_keyMouseHook;
 	std::unique_ptr<FuncHook> BlockLegacy_getRenderLayerHook;
 	std::unique_ptr<FuncHook> LevelRenderer_renderLevelHook;
 	std::unique_ptr<FuncHook> ClickFuncHook;
+	std::unique_ptr<FuncHook> ChatLogHook;
 	std::unique_ptr<FuncHook> MoveInputHandler_tickHook;
 	std::unique_ptr<FuncHook> ChestScreenController_tickHook;
 	std::unique_ptr<FuncHook> GetGammaHook;
 	std::unique_ptr<FuncHook> MinecraftGame_onAppSuspendedHook;
-	// std::unique_ptr<FuncHook> Actor_startSwimmingHook;
+	std::unique_ptr<FuncHook> Actor_swingHook;
 	std::unique_ptr<FuncHook> RakNetInstance_tickHook;
 	std::unique_ptr<FuncHook> GameMode_getPickRangeHook;
 	std::unique_ptr<FuncHook> GameMode_attackHook;

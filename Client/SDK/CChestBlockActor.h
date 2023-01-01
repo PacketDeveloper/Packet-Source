@@ -32,8 +32,8 @@ public:
 	AABB getFullAABB() {
 		if (!isPaired()) {
 			if (isBarrelBlock() || isShulkerBlock())
-				return AABB(this->posI.toVec3t(), this->posI.toVec3t().add(1));
-			return AABB(this->posI.toVec3t().add(0.0625, 0, 0.0625), this->posI.toVec3t().add(1 - 0.0625, 1 - 1.f / 8, 1 - 0.0625));
+				return AABB(this->posI.toVector3(), this->posI.toVector3().add(1));
+			return AABB(this->posI.toVector3().add(0.0625, 0, 0.0625), this->posI.toVector3().add(1 - 0.0625, 1 - 1.f / 8, 1 - 0.0625));
 		}
 		vec3_ti first = this->posI;
 		vec3_ti second = *getPairedPos();
@@ -41,7 +41,7 @@ public:
 		if (first.x > second.x || first.z > second.z)
 			std::swap(first, second);
 
-		return AABB(first.toVec3t().add(0.0625, 0, 0.0625), second.toVec3t().add(1 - 0.0625, 1 - 1.f / 8, 1 - 0.0625));
+		return AABB(first.toVector3().add(0.0625, 0, 0.0625), second.toVector3().add(1 - 0.0625, 1 - 1.f / 8, 1 - 0.0625));
 	}
 
 	bool isBarrelBlock();

@@ -1,12 +1,10 @@
 #include "SpammerCommand.h"
 
 #include "../../Module/ModuleManager.h"
+#include "pch.h"
 
 SpammerCommand::SpammerCommand() : IMCCommand("spammer", "Edit spammer delay/text", "<text/delay/bypass/manual> <string/int/bool>") {
 	registerAlias("spam");
-}
-
-SpammerCommand::~SpammerCommand() {
 }
 
 bool SpammerCommand::execute(std::vector<std::string>* args) {

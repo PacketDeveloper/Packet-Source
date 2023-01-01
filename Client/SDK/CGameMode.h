@@ -44,4 +44,5 @@ public:
 	C_Player *player;
 
 	void survivalDestroyBlockHack(vec3_ti const &block, int face, bool &isDestroyedOut, bool isFirst);
+	void useItem(C_ItemStack& stack);
 };

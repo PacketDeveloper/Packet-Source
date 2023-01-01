@@ -1,11 +1,9 @@
 #include "FriendListCommand.h"
+#include "pch.h"
 
 FriendListCommand::FriendListCommand() : IMCCommand("friend", "Add/Remove friendly players", "<add/remove>") {
 	registerAlias("friendlist");
 	registerAlias("f");
-}
-
-FriendListCommand::~FriendListCommand() {
 }
 
 bool FriendListCommand::execute(std::vector<std::string>* args) {

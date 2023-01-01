@@ -1,10 +1,8 @@
 #include "GameModeCommand.h"
+#include "pch.h"
 
 GameModeCommand::GameModeCommand() : IMCCommand("gamemode", "Changes the local player's gamemode", "<number>") {
 	registerAlias("gm");
-}
-
-GameModeCommand::~GameModeCommand() {
 }
 
 bool GameModeCommand::execute(std::vector<std::string>* args) {

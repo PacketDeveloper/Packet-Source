@@ -60,7 +60,7 @@ void TabGui::renderLevel() {
 	auto hudModule = moduleMgr->getModule<ArrayList>();
 
 	// Parameters
-	float textSize = hudModule->scale;
+	float textSize = 1.f;
 	float textHeight = 9.f * textSize;
 	float alphaVal = 5.0f;
 
@@ -103,13 +103,13 @@ void TabGui::renderLevel() {
 				static bool lastVal = toggleCurrentSelection;
 
 				if (toggleCurrentSelection) {
-					if (label.mod->isFlashMode()) {
+					if (label.mod->isHoldMode()) {
 						label.mod->setEnabled(true);
 					} else {
 						toggleCurrentSelection = false;
 						label.mod->toggle();
 					}
-				} else if (toggleCurrentSelection != lastVal && label.mod->isFlashMode())
+				} else if (toggleCurrentSelection != lastVal && label.mod->isHoldMode())
 					label.mod->setEnabled(false);
 				lastVal = toggleCurrentSelection;
 			} else {  // selected, but not what the user is interacting with
@@ -121,7 +121,7 @@ void TabGui::renderLevel() {
 		}
 
 		std::string tempLabel(label.text);
-		DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset + 0.5f), &tempLabel, label.enabled ? MC_Color() : color, textSize);
+		//DrawUtils::drawText(vec2_t(xOffset + 1.5f, yOffset + 0.5f), &tempLabel, label.enabled ? MC_Color() : color, textSize);
 
 		yOffset += textHeight;
 	}

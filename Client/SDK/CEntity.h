@@ -773,7 +773,7 @@ public:
 	virtual __int64 getCommandPermissionLevel(void);                                        // 204
 	virtual bool isClientSide(void);                                                        // 205
 	virtual class AttributeInstance* getMutableAttribute(class Attribute* Attribute);
-	virtual class AttributeInstance* getAttribute(class Attribute* Attribute);      // 207
+	virtual __int64 getAttribute(int*) const;                                      // 207
 	virtual __int64 getDeathTime(void);                                             // 208
 	virtual __int64 heal(int);                                                      // 209
 	virtual bool isInvertedHealAndHarm(void);                                       // 210
@@ -954,16 +954,18 @@ public:
 	}
 
 	float getTicksPerSecond() {
-		vec3_t targetPos = *this->getPos();
-		vec3_t targetPosOld = *this->getPosOld();
-		float hVel = sqrtf(((targetPos.x - targetPosOld.x) * (targetPos.x - targetPosOld.x)) + ((targetPos.z - targetPosOld.z) * (targetPos.z - targetPosOld.z)));
-		return hVel;
+		if (this != nullptr) {
+			vec3_t targetPos = *this->getPos();
+			vec3_t targetPosOld = *this->getPosOld();
+			float hVel = sqrtf(((targetPos.x - targetPosOld.x) * (targetPos.x - targetPosOld.x)) + ((targetPos.z - targetPosOld.z) * (targetPos.z - targetPosOld.z)));
+			return hVel;
+		}
 	}
 
 	float getBlocksPerSecond();
 
 	int getTicksUsingItem() {
-		return this->ticksUsingItem;
+		return *reinterpret_cast<int*>(reinterpret_cast<__int64>(this) + 0xFF8);
 	}
 
 	bool isSneaking() {
@@ -997,11 +999,9 @@ public:
 	}
 
 	void cancelHurtAnimation() {
-		//*(int *)((uintptr_t)(this) + 0x738) = 10; To make your animatehurt
-		//*(int *)((uintptr_t)(this) + 0x73C) = 10;
-		//*(int *)((uintptr_t)(this) + 0x740) = 0;
-		*(int *)((uintptr_t)(this) + 0x738) = 0;  // To prevent you from hurt animation + red hand
-		*(int *)((uintptr_t)(this) + 0x73C) = 10;
+		*(int *)((uintptr_t)(this) + 0x738) = 0; // To make your animatehurt
+		*(int *)((uintptr_t)(this) + 0x740) = 0;
+		*(int *)((uintptr_t)(this) + 0x73C) = 0;
 		*(int *)((uintptr_t)(this) + 0x740) = 0;
 	}
 
@@ -1009,6 +1009,17 @@ public:
 		using spawnDustParticles = void(__fastcall *)(C_Entity *, int);
 		static spawnDustParticles spawnParticle = reinterpret_cast<spawnDustParticles>(Utils::FindSignature("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 8B EA 48 8B F1"));
 		spawnParticle(this, intensity);
+	}
+
+	float getHealth() {
+		static int* healthAttribute = 0x0;
+
+		if (healthAttribute == 0x0) {
+			uintptr_t sigOffset = FindSignature("48 8D 15 ?? ?? ?? ?? FF 90 ?? ?? ?? ?? F3 ?? ?? 88 ?? ?? ?? ?? 85 C9 7E ??");
+			healthAttribute = (int*)(sigOffset + (*(int*)(sigOffset + 3)) + 7);
+		}
+
+		return *(float*)(getAttribute(healthAttribute) + 0x84);
 	}
 };
 #pragma pack(pop)
@@ -1148,12 +1159,10 @@ public:
 		static getEnchantsFromUserData_t getEnchantsFromUserData = reinterpret_cast<getEnchantsFromUserData_t>(FindSignature("48 89 5C 24 ? 55 56 57 48 81 EC ? ? ? ? 48 8B F2 48 8B D9 48 89 54 24 ? 33 FF 89 7C 24 ? E8 ? ? ? ? 84 C0"));
 		static addEnchant_t addEnchant = reinterpret_cast<addEnchant_t>(FindSignature("48 89 5C 24 ?? 48 89 54 24 ?? 57 48 83 EC ?? 45 0F"));
 		static saveEnchantsToUserData_t saveEnchantsToUserData = 0x0;
-		if (!saveEnchantsToUserData) {
-			saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(FindSignature("48 89 5C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 0F 29 B4 24 ? ? ? ? 48 8B FA 4C 8B C1 48 8B 41 08 48 85 C0"));
-		}
+
+		if (!saveEnchantsToUserData) saveEnchantsToUserData = reinterpret_cast<saveEnchantsToUserData_t>(FindSignature("48 89 5C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 0F 29 B4 24 ? ? ? ? 48 8B FA 4C 8B C1 48 8B 41 08 48 85 C0"));
 		void *EnchantData = malloc(0x60);
-		if (EnchantData != nullptr)
-			memset(EnchantData, 0x0, 0x60);
+		if (EnchantData != nullptr) memset(EnchantData, 0x0, 0x60);
 		getEnchantsFromUserData(item, EnchantData);
 		__int64 enchantPair = ((__int64)level << 32) | id;
 		if (addEnchant(EnchantData, enchantPair))  // Upper 4 bytes = level, lower 4 bytes = enchant type
@@ -1170,16 +1179,20 @@ public:
 	void unlockAchievements();
 
 	void swingArm() {
-		// using SwingArm = void(__thiscall*)(void*);
-		// static SwingArm swingFunc = reinterpret_cast<SwingArm>(FindSignature("40 57 48 83 EC ?? 48 C7 44 24 ?? FE FF FF FF 48 89 5C 24 ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 48 8B D9 80 B9"));
-		// swingFunc(this);
 		this->swing();
 	}
+
 	void localPlayerTurn(vec2_t *viewAngles) {
 		using Turn = void(__thiscall *)(void *, vec2_t *);
 		static Turn TurnFunc = reinterpret_cast<Turn>(FindSignature("48 8B 58 68 48 ?? ?? ?? ?? ?? ?? ?? 48 ?? ?? ?? ?? ?? ?? 89 ?? ?? ?? ?? ?? ?? ?? 48 8B 03 48 8B CB FF 50 08 90 48 85 DB ?? 09 48 8B ?? 48 8B CB ?? ?? ?? ?? ?? ?? ?? 48 8B D3 48 8B CE E8 0D BB 1D FF 90 48 85 DB 74 09 48 8B 03 48 8B ?? ?? ?? ?? 48 83 C7 10"));
 		TurnFunc(this, viewAngles);
 	}
+
 	void applyTurnDelta(vec2_t *viewAngleDelta);
 	void setGameModeType(int gma);
+
+	auto getSwingState() {
+		static unsigned int offset = *reinterpret_cast<int*>(FindSignature("80 BB ? ? ? ? 00 74 1A FF 83") + 2);
+		return reinterpret_cast<float*>((uintptr_t)(this) + offset);
+	};
 };

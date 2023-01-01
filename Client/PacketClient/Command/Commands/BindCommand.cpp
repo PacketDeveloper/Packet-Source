@@ -1,12 +1,10 @@
 #include "BindCommand.h"
+#include "pch.h"
 
 #include "../../Module/ModuleManager.h"
 
 BindCommand::BindCommand() : IMCCommand("bind", "Binds modules to specific keys", "<module> <key>") {
 	registerAlias("b");
-}
-
-BindCommand::~BindCommand() {
 }
 
 bool BindCommand::execute(std::vector<std::string>* args) {
@@ -16,7 +14,8 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 
 	auto modOpt = moduleMgr->getModuleByName(moduleName);
 	if (!modOpt.has_value()) {
-		clientMessageF("[Packet] %sCould not find module with name: %s", RED, moduleName.c_str());
+		std::string textStr = "Could not find module with name: " + moduleName;
+		//auto notification = g_Data.addNotification("Commands:", textStr);
 		return true;
 	}
 	auto mod = modOpt.value();
@@ -32,7 +31,8 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 
 			if (key == "none") {
 				mod->setKeybind(0x0);
-				clientMessageF("[Packet] %sSuccessfully unbound %s!", GREEN, mod->getRawModuleName());
+				std::string textStr = "Successfully unbound " + std::string(mod->getRawModuleName());
+				//auto notification = g_Data.addNotification("Commands:", textStr);
 				return true;
 			}
 
@@ -45,13 +45,14 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 
 				if (strcmp(needle, haystackLowercase) == 0) {
 					mod->setKeybind(i);
-					clientMessageF("[Packet] %sThe keybind of %s is now '%s'", GREEN, mod->getRawModuleName(), haystack);
+					std::string textStr = std::string(mod->getRawModuleName()) + std::string(" is now bound to " + std::string(haystack));
+					//auto notification = g_Data.addNotification("Commands:", textStr);
 					delete[] haystackLowercase;
 					return true;
 				}
 				delete[] haystackLowercase;
 			}
-			clientMessageF("[Packet] %sInvalid key!", RED);
+			clientMessageF("%sInvalid key!", RED);
 			return true;
 		}
 
@@ -62,17 +63,18 @@ bool BindCommand::execute(std::vector<std::string>* args) {
 		if (keyCode >= 0x30 && keyCode <= 0x5A) {
 			auto modOpt = moduleMgr->getModuleByName(moduleName);
 			if (!modOpt.has_value()) {
-				clientMessageF("[Packet] %sCould not find module with name: %s", RED, moduleName.c_str());
+				std::string textStr = "Could not find module with name: " + moduleName;
+				//auto notification = g_Data.addNotification("Commands:", textStr);
 			} else {
 				modOpt.value()->setKeybind(keyCode);
-				clientMessageF("[Packet] %sThe Keybind of %s is now '%c'", GREEN, mod->getRawModuleName(), keyCode);
+				std::string textStr = std::string(mod->getRawModuleName()) + std::string(" is now bound to ") + std::to_string(keyCode);
+				//auto notification = g_Data.addNotification("Commands:", textStr);
 			}
-		} else {
-			clientMessageF("[Packet] %sInvalid Key! Outside of ascii range: %X", RED, keyCode);
-		}
+		} else clientMessageF("%sInvalid Key! Outside of ASCII range: %X", RED, keyCode);
 		return true;
 	} else {
-		clientMessageF("[Packet] %s%s is currently bound to %s", RED, mod->getRawModuleName(), Utils::getKeybindName(mod->getKeybind()));
+		std::string textStr = std::string(mod->getRawModuleName()) + std::string(" is currently bound to ") + Utils::getKeybindName(mod->getKeybind());
+		//auto notification = g_Data.addNotification("Commands:", textStr);
 		return true;
 	}
 	

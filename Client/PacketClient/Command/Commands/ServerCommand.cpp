@@ -1,10 +1,8 @@
 #include "ServerCommand.h"
+#include "pch.h"
 
 ServerCommand::ServerCommand() : IMCCommand("server", "Show information about the server you're playing on", "") {
 	registerAlias("ip");
-}
-
-ServerCommand::~ServerCommand() {
 }
 
 bool ServerCommand::execute(std::vector<std::string>* args) {

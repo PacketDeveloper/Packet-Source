@@ -1,5 +1,4 @@
 #include "CChestBlockActor.h"
-
 #include "../Utils/Utils.h"
 
 bool C_ChestBlockActor::isBarrelBlock() {

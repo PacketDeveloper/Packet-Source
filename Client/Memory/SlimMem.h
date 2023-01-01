@@ -52,9 +52,8 @@ struct SlimModule {
 	}
 };
 
-/*
-	Holds information about a signature-scan
-	*/
+
+	//Holds information about a signature-scan
 struct SigScanResult {
 	bool m_Success;
 	unsigned char* m_Data = 0;
@@ -177,65 +176,11 @@ private:
 	*/
 template <typename T>
 inline T SlimMem::Read(std::uintptr_t ptrAddress) const {
-	//static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
-
-	//T val = T();
-	//if (!this->HasProcessHandle())
-	//return val;
-
 	return *reinterpret_cast<T*>(ptrAddress);
-	//ReadProcessMemory(this->m_hProc, (LPCVOID)ptrAddress, &val, sizeof(T), NULL);
-	//return val;
 }
 
-/*
-	Reads data from memory
-	Returns whether the operation was successful or not!
-	*/
-/*template<typename T>
-	inline bool SlimUtils::SlimMem::Read(std::uintptr_t ptrAddress, T & value) const
-	{
-		static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
-
-		SIZE_T unsigned charsRead;
-
-		if (!this->HasProcessHandle())
-			return false;
-
-		return ReadProcessMemory(m_hProc, (LPCVOID)ptrAddress, &value, sizeof(T), &bytesRead) && bytesRead == sizeof(T);
-	}
-
-
-
-	inline unsigned char * SlimMem::ReadRaw(std::uintptr_t ptrAddress, int size) const
-	{
-		//static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
-
-		unsigned char* arr = new unsigned char[size];
-		if (!this->HasProcessHandle())
-			return arr;
-
-
-		ReadProcessMemory(this->m_hProc, (LPCVOID)ptrAddress, (LPVOID)arr, size, NULL);
-		return arr;
-	}
-
-	inline wchar_t* SlimMem::ReadRawWide(std::uintptr_t ptrAddress, int size) const
-	{
-		//static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
-
-		wchar_t* arr = new wchar_t[size];
-		if (!this->HasProcessHandle())
-			return arr;
-
-		ReadProcessMemory(this->m_hProc, (LPCVOID)ptrAddress, (LPVOID)arr, size * sizeof(wchar_t), NULL);
-		return arr;
-	}*/
-
-/*
-	Reads data from memory
-	Returns the value read from memory; Returns default-value in case an error occured
-	*/
+	/* Reads data from memory
+	Returns the value read from memory; Returns default-value in case an error occured */
 template <typename T>
 inline T SlimMem::ReadPtr(std::uintptr_t ptrAddress, std::initializer_list<std::uintptr_t> ilOffsets) const {
 	static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
@@ -256,37 +201,12 @@ inline T SlimMem::ReadPtr(std::uintptr_t ptrAddress, std::initializer_list<std::
 	return T();
 }
 
-/*
-	Writes data to memory
-	Returns whether the operation was successful or not!
-	*/
+	/* Writes data to memory
+	Returns whether the operation was successful or not! */
 template <typename T>
 inline bool SlimMem::Write(std::uintptr_t ptrAddress, T value) const {
-	//static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
-
-	//if (!this->HasProcessHandle())
-	//return false;
 	*reinterpret_cast<T*>(ptrAddress) = value;
 	return true;
-	//return WriteProcessMemory(this->m_hProc, (LPVOID)ptrAddress, &value, sizeof(T), NULL);
 }
-
-/*inline bool SlimMem::WriteRaw(std::uintptr_t ptrAddress, uint8_t value[], size_t size) const
-	{
-		//static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
-
-		if (!this->HasProcessHandle())
-			return false;
-		return WriteProcessMemory(this->m_hProc, (LPVOID)ptrAddress, value, size, NULL);
-	}
-
-	inline bool SlimMem::WriteRawChar(std::uintptr_t ptrAddress, char value[], size_t size) const
-	{
-		//static_assert(std::is_trivially_copyable<T>::value, "Invalid RPM/WPM type");
-
-		if (!this->HasProcessHandle())
-			return false;
-		return WriteProcessMemory(this->m_hProc, (LPVOID)ptrAddress, value, size, NULL);
-	}*/
 #pragma endregion
 }  // namespace SlimUtils

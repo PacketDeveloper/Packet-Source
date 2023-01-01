@@ -3,6 +3,7 @@
 #include "../Memory/GameData.h"
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
+
 C_Block* C_BlockSource::getBlock(const vec3_ti& block) {
 	using getBlock_t = C_Block*(__fastcall*)(C_BlockSource*, const vec3_ti&);
 	static getBlock_t getBlock = reinterpret_cast<getBlock_t>(FindSignature("48 89 5C 24 ? 57 48 83 EC ? 48 8B F9 48 8B DA 8B 4A"));
@@ -15,7 +16,7 @@ C_BlockActor* C_BlockSource::getBlockEntity(const vec3_ti& block) {
 }
 C_Block* C_BlockSource::getLiquidBlock(const vec3_ti& block) {
 	using getLiquidBlock_t = C_Block*(__fastcall*)(C_BlockSource*, const vec3_ti&);
-	static getLiquidBlock_t getLiquidBlock = Utils::FuncFromSigOffset<getLiquidBlock_t>(FindSignature("E8 ? ? ? ? 48 8B C8 48 8B 47 ?"), 1);
+	static getLiquidBlock_t getLiquidBlock = Utils::FuncFromSigOffset<getLiquidBlock_t>(FindSignature("E8 ?? ?? ?? ?? 65 48 8B 0C 25 ?? ?? ?? ??"), 1);
 	return getLiquidBlock(this, block);
 }
 bool C_BlockLegacy::getCollisionShape(AABB* collShapeOut, C_Block* block, C_BlockSource* blockSource, const vec3_ti* pos, C_Entity* actor) {

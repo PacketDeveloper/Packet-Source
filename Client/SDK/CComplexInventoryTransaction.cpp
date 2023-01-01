@@ -1,5 +1,6 @@
 #include "CComplexInventoryTransaction.h"
 #include "../Utils/Utils.h"
+
 C_ComplexInventoryTransaction::C_ComplexInventoryTransaction(C_InventoryTransaction& transac) {
 	static uintptr_t** ComplexInventoryTransactionVtable = 0x0;
 	if (ComplexInventoryTransactionVtable == 0x0) {

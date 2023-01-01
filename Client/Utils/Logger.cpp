@@ -19,7 +19,7 @@ char logPath[200];
 bool initializedLogger = false;
 
 #ifndef _NDEBUG
-bool loggerActive = false; // enable whenever you need to test stuff
+bool loggerActive = false;
 #else
 bool loggerActive = false;
 #endif

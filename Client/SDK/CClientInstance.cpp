@@ -1,7 +1,5 @@
 #include "CClientInstance.h"
-
 #include <cstdarg>
-
 #include "../Utils/Logger.h"
 #include "../Utils/Utils.h"
 

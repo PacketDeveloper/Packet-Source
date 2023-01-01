@@ -29,37 +29,10 @@ enum DATAPACKET_CMD : int {
 	CMD_LOG
 };
 
-struct HorionDataPacket {
-	DATAPACKET_CMD cmd;
-	int params[5] = {0};
-	int dataArraySize = 0;
-	std::shared_ptr<unsigned char[]> data;
-
-	HorionDataPacket() {
-	}
-};
-
 struct NetworkedData {
 	unsigned int xorKey = 0;
 	unsigned int localPlayerOffset = 0x94;  // Scrambled data
 	bool dataSet = false;
-};
-
-struct InfoBoxData {
-	bool isOpen = true;
-	float fadeTarget = 1;
-	float fadeVal = 0;
-	float duration = -1;
-	std::string title;
-	std::string message;
-
-	InfoBoxData(std::string title, std::string message) : title(title), message(message) {};
-
-	void fade() {
-		fadeVal = fadeTarget - ((fadeTarget - fadeVal) * 0.65f);
-		if (fadeTarget == 0 && fadeVal < 0.001f)
-			isOpen = false;
-	}
 };
 
 struct SkinData;
@@ -70,21 +43,17 @@ private:
 	C_LocalPlayer* localPlayer = nullptr;
 	C_GameMode* gameMode = nullptr;
 	C_EntityList* entityList = nullptr;
-	C_HIDController* hidController = nullptr;
 	C_RakNetInstance* raknetInstance = nullptr;
 	void* hDllInst = 0;
 	std::vector<std::shared_ptr<AABB>> chestList;
 	std::vector<std::string> textPrintList;
 	std::mutex textPrintLock;
 	std::mutex chestListMutex;
-	std::queue<HorionDataPacket> horionToInjectorQueue;
-	std::map<int, std::function<void(std::shared_ptr<HorionDataPacket>)>> injectorToHorionResponseCallbacks;
 	int lastRequestId = 0;
 	std::shared_ptr<std::string> customGeometry;
 	bool customGeoActive = false;
 	std::shared_ptr<std::tuple<std::shared_ptr<unsigned char[]>, size_t>> customTexture;
 	bool customTextureActive = false;
-	std::vector<std::shared_ptr<InfoBoxData>> infoBoxQueue;
 
 	bool injectorConnectionActive = false;
 	const SlimUtils::SlimModule* gameModule = 0;
@@ -93,12 +62,12 @@ private:
 	bool shouldHideB = false;
 	bool isAllowingWIPFeatures = false;
 	__int64 lastUpdate;
-	AccountInformation accountInformation = AccountInformation::asGuest();
 	static void retrieveClientInstance();
 	TextHolder* fakeName;
 
 public:
 	NetworkedData networkedData;
+	C_HIDController* hidController = nullptr;
 
 	static bool canUseMoveKeys();
 	static bool isKeyDown(int key);
@@ -130,36 +99,6 @@ public:
 		this->chestList.clear();
 	}
 
-	inline std::shared_ptr<InfoBoxData> getFreshInfoBox() {
-		while (!this->infoBoxQueue.empty()) {
-			auto box = this->infoBoxQueue.front();
-			if (!box->isOpen) {
-				this->infoBoxQueue.erase(this->infoBoxQueue.begin());
-				continue;
-			}
-			return box;
-		}
-		return std::shared_ptr<InfoBoxData>();
-	}
-
-	inline std::vector<std::shared_ptr<InfoBoxData>>& getInfoBoxList() {
-		while (!this->infoBoxQueue.empty()) {
-			auto box = this->infoBoxQueue.front();
-			if (!box->isOpen) {
-				this->infoBoxQueue.erase(this->infoBoxQueue.begin());
-				continue;
-			}
-			break;
-		}
-		return this->infoBoxQueue;
-	}
-
-	inline std::shared_ptr<InfoBoxData> addNotification(std::string title, std::string message) { // success, warning, error
-		auto box = std::make_shared<InfoBoxData>(title, message);
-		this->infoBoxQueue.push_back(box);
-		return box;
-	}
-
 	inline void setCustomGeometryOverride(bool setActive, std::shared_ptr<std::string> customGeoPtr) {
 		this->customGeoActive = setActive;
 		if (setActive)
@@ -180,48 +119,9 @@ public:
 	inline auto getCustomTextureOverride() {
 		return std::make_tuple(this->customTextureActive, this->customTexture);
 	}
-	inline AccountInformation getAccountInformation() { return this->accountInformation; };
-	inline void setAccountInformation(AccountInformation newAcc) {
-		if (newAcc.verify())
-			this->accountInformation = newAcc;
-		else {
-#ifdef _BETA
-			this->terminate();
-			*reinterpret_cast<int*>(0) = 1;
-#endif
-		}
-	}
-	void sendPacketToInjector(HorionDataPacket horionDataPack);
-	inline int addInjectorResponseCallback(std::function<void(std::shared_ptr<HorionDataPacket>)> callback) {
-		lastRequestId++;
-		this->injectorToHorionResponseCallbacks[lastRequestId] = callback;
-		return lastRequestId;
-	}
-	void callInjectorResponseCallback(int id, std::shared_ptr<HorionDataPacket> packet);
-	inline bool allowWIPFeatures() {
-#ifdef _DEBUG
-		return true;
-#else
-		return isAllowingWIPFeatures;
-#endif
-	}
+	
 	inline void setAllowWIPFeatures(bool enable = false) { isAllowingWIPFeatures = enable; };
 	inline bool isInjectorConnectionActive() { return injectorConnectionActive; };
-	inline void setInjectorConnectionActive(bool isActive) {
-		if (injectorConnectionActive && !isActive) {
-			std::queue<HorionDataPacket> empty;
-			horionToInjectorQueue.swap(empty);
-		}
-		injectorConnectionActive = isActive;
-	};
-	inline bool isPacketToInjectorQueueEmpty() { return horionToInjectorQueue.empty(); };
-	inline HorionDataPacket getPacketToInjector() {
-		if (isPacketToInjectorQueueEmpty())
-			throw std::exception("Packet send queue is empty");
-		HorionDataPacket pk = horionToInjectorQueue.front();
-		horionToInjectorQueue.pop();
-		return pk;
-	};
 	inline void* getDllModule() { return hDllInst; };
 	inline C_ClientInstance* getClientInstance() { return clientInstance; };
 	inline C_GuiData* getGuiData() { return clientInstance->getGuiData(); };

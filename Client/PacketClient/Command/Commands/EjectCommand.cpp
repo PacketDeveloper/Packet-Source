@@ -1,10 +1,8 @@
 #include "EjectCommand.h"
+#include "pch.h"
 
 EjectCommand::EjectCommand() : IMCCommand("eject", "Removes the cheat from the game.", "") {
 	registerAlias("uninject");
-}
-
-EjectCommand::~EjectCommand() {
 }
 
 bool EjectCommand::execute(std::vector<std::string>* args) {

@@ -128,22 +128,10 @@ public:
 class NetworkLatencyPacket : public C_Packet {
 public:
 	NetworkLatencyPacket();
+	NetworkLatencyPacket(long timestamp, bool sendback);
 	unsigned long timeStamp;  // Test
 	bool sendBack;            // Test
 	int pad[0x100];           // 0x0
-};
-
-class CommandRequestPacket : public C_Packet {
-public:
-	uint64_t VTable;  // 0x0000
-	int two;
-	int one;
-	uint64_t zeroes[4];
-	TextHolder payload;
-	uint64_t thingy[6];
-
-	CommandRequestPacket();
-	CommandRequestPacket(std::string cmd);
 };
 
 class C_InteractPacket : public C_Packet {
@@ -178,21 +166,20 @@ public:
 	C_MobEquipmentPacket(__int64 entityRuntimeId, C_ItemStack& item, int hotbarSlot, int inventorySlot);
 
 private:
-	char pad_0x8[0x28];  // 0x0
+	char pad_0x8[0x28];  //0x0
 public:
-	__int64 entityRuntimeId;  // 0x28
-	C_ItemStack item;         // 0x30
+	__int64 entityRuntimeId;  //0x28
+	C_ItemStack item;         //0x30
 	int inventorySlot;        // 0xB8 DONT USE FOR PACKET SENDING
 	int hotbarSlot;           // 0xBC DONT USE FOR PACKET SENDING
-	char windowId;            // 0xC0  DONT USE FOR PACKET SENDING
-	char windowId1;           // 0xC1  DONT USE FOR PACKET SENDING
-	char inventorySlot1;      // 0xC2
-	char hotbarSlot1;         // 0xC3
-	char windowId2;           // 0xC4 ALL OF THIS IS PROBABLY BROKEN, DONT USE
+	char windowId;            //0xC0  DONT USE FOR PACKET SENDING
+	char windowId1;           //0xC1  DONT USE FOR PACKET SENDING
+	char inventorySlot1;      //0xC2
+	char hotbarSlot1;         //0xC3
+	char windowId2;           //0xC4 ALL OF THIS IS PROBABLY BROKEN, DONT USE
 private:
 	char unknown1;
 };
-
 class C_InventoryTransactionPacket : public C_Packet {
 public:
 	C_InventoryTransactionPacket();
@@ -209,6 +196,18 @@ public:
 	__int64 filler = 0;                                 // 0x40
 	C_ComplexInventoryTransaction* complexTransaction;  // 0x48
 	unsigned char numTransactions;                      // 0x50
+};
+
+class CommandRequestPacket : public C_Packet {
+public:
+	CommandRequestPacket();
+
+	uint64_t VTable;  // 0x0000
+	int two;
+	int one;
+	uint64_t zeroes[4];
+	TextHolder payload;
+	uint64_t thingy[6];
 };
 
 class C_TextPacket : public C_Packet {
@@ -236,6 +235,7 @@ __declspec(align(8)) class C_MovePlayerPacket : public C_Packet {
 public:
 	C_MovePlayerPacket();
 	C_MovePlayerPacket(C_LocalPlayer* player, vec3_t pos);
+	C_MovePlayerPacket(C_LocalPlayer* player, vec3_t pos, bool onground);
 
 	// uintptr_t** vTable;		// 0x0
 private:

@@ -1,7 +1,7 @@
 #include "CEntity.h"
-
 #include "../Memory/GameData.h"
 #include "../Utils/Utils.h"
+
 C_InventoryTransactionManager* C_Entity::getTransactionManager() {
 	static unsigned int offset = 0x1210;
 	return reinterpret_cast<C_InventoryTransactionManager*>(reinterpret_cast<__int64>(this) + offset);

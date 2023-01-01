@@ -1,14 +1,11 @@
 #include "NbtCommand.h"
-
 #include "../../../SDK/Tag.h"
 #include "../../../Utils/Logger.h"
 #include "../../../Utils/Utils.h"
+#include "pch.h"
 
-NbtCommand::NbtCommand() : IMCCommand("nbt", "read and write NBT tags to/from your clipboard (You have to point at an entity/block entity)", "<read/write>") {
+NbtCommand::NbtCommand() : IMCCommand("nbt", "read and write NBT tags to/from your clipboard (You have to point at an entity/block entity)", "<load/save/read/write>") {
 	registerAlias("nbtraw");
-}
-
-NbtCommand::~NbtCommand() {
 }
 
 bool NbtCommand::execute(std::vector<std::string>* args) {

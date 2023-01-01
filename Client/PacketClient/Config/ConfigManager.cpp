@@ -60,8 +60,8 @@ void ConfigManager::loadConfig(std::string name, bool create) {
 	} else {
 		//if (g_Data.getLocalPlayer() != nullptr) 
 			//g_Data.getGuiData()->displayClientMessageF("[Packet] %sCould not load config %s%s%s!", RED, GRAY, name.c_str(), RED);
-		auto notification = g_Data.addNotification("", "Couldn't load config!");
-		notification->duration = 10;
+		//auto notification = g_Data.addNotification("", "Couldn't load config!");
+		//notification->duration = 10;
 	}
 
 	delete[] fullPath;
@@ -69,7 +69,7 @@ void ConfigManager::loadConfig(std::string name, bool create) {
 
 void ConfigManager::saveConfig() {
 	logF("Saving config %s", currentConfig.c_str());
-	size_t allocSize = currentConfig.size() + roamingFolder.size() + 20;  // std::wstring::size() can be wierd so lets make sure this actually fits
+	size_t allocSize = currentConfig.size() + roamingFolder.size() + 20;
 	char* fullPath = new char[allocSize];
 	sprintf_s(fullPath, allocSize, "%S\\%s.txt", roamingFolder.c_str(), currentConfig.c_str());
 

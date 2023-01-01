@@ -32,7 +32,8 @@ void Int64Tag::read(std::string& string)  //throws MojangsonParseException
 
 	try {
 		value = std::stoull(string);
-	} catch (...) {
+	}
+	catch (...) {
 		logF(" Unhandled exception for Int64Tag : %s", string.c_str());
 	}
 }
@@ -54,7 +55,8 @@ void IntTag::read(std::string& string)  //throws MojangsonParseException
 {
 	try {
 		value = static_cast<int>(std::stoi(string));
-	} catch (...) {
+	}
+	catch (...) {
 		logF(" Unhandled exception for IntTag : %s", string.c_str());
 	}
 }
@@ -96,7 +98,8 @@ void ShortTag::read(std::string& string)  //throws MojangsonParseException
 
 	try {
 		value = static_cast<short>(std::stoi(string));
-	} catch (...) {
+	}
+	catch (...) {
 		logF(" Unhandled exception for ShortTag : %s", string.c_str());
 	}
 }
@@ -124,7 +127,8 @@ void FloatTag::read(std::string& string)  // MojangsonParseException
 
 	try {
 		value = static_cast<float>(std::stof(string));
-	} catch (...) {
+	}
+	catch (...) {
 		logF(" Unhandled exception for FloatTag : %s", string.c_str());
 	}
 }
@@ -151,7 +155,8 @@ void DoubleTag::read(std::string& string)  //throws MojangsonParseException
 
 	try {
 		value = static_cast<double>(std::stod(string));
-	} catch (...) {
+	}
+	catch (...) {
 		logF(" Unhandled exception for DoubleTag : %s", string.c_str());
 	}
 }
@@ -179,7 +184,8 @@ void ByteTag::read(std::string& string)  //throws MojangsonParseException
 
 	try {
 		value = static_cast<char>(std::stoi(string));
-	} catch (...) {
+	}
+	catch (...) {
 		logF(" Unhandled exception for ByteTag : %s", string.c_str());
 	}
 }
@@ -221,7 +227,8 @@ void CompoundTag::write(std::stringstream& builder) {
 		do {
 			if (start) {
 				start = false;
-			} else {
+			}
+			else {
 				builder << MojangsonToken::ELEMENT_SEPERATOR.getSymbol();
 			}
 			CompoundTagVariant* variant = reinterpret_cast<CompoundTagVariant*>(v11);
@@ -239,7 +246,8 @@ void CompoundTag::write(std::stringstream& builder) {
 					v11 = (__int64*)i;
 				}
 				v11 = (__int64*)i;
-			} else {
+			}
+			else {
 				v11 = (__int64*)v11[2];
 				for (__int64* j = *v17; !*((BYTE*)j + 25); j = (__int64*)*j)
 					v11 = j;
@@ -254,7 +262,6 @@ void CompoundTag::write(std::stringstream& builder) {
 		} else {
 			builder << MojangsonToken::ELEMENT_SEPERATOR.getSymbol();
 		}
-
 		builder << it->first << MojangsonToken::ELEMENT_PAIR_SEPERATOR.getSymbol();
 		yeet::handleWrite(&it->second, builder);
 	}*/

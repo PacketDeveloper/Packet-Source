@@ -1,5 +1,4 @@
 #include "Tessellator.h"
-
 #include "../Utils/Utils.h"
 #include "CBlockLegacy.h"
 #include "CClientInstance.h"

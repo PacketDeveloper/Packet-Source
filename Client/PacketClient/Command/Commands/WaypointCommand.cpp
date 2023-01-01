@@ -4,9 +4,6 @@ WaypointCommand::WaypointCommand() : IMCCommand("waypoint", "Manage Waypoints", 
 	registerAlias("wp");
 }
 
-WaypointCommand::~WaypointCommand() {
-}
-
 bool WaypointCommand::execute(std::vector<std::string>* args) {
 	C_LocalPlayer* player = g_Data.getLocalPlayer();
 	assertTrue(player != nullptr);

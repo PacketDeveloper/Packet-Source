@@ -10,23 +10,16 @@ static constexpr float DEG_RAD2 = PI / 360.0f;
 static constexpr float DEG_RAD = 180.0f / PI;
 static constexpr float RAD_DEG = PI / 180.f;
 
-/*static const char *Merge(const char *a1, ...) {
-	va_list a2;
-	va_start(a2, a1);
+inline float lerp(float a, float b, float c) {
+	return a + c * (b - a);
+}
 
-	auto length = _vscprintf(a1, a2) + 1;
-	if (length >= 500) return "";
+inline float animateTest(float start, float end, float speed) {
+	return start += (end - start) * speed;
+}
 
-	char message[300];
-	vsprintf_s(message, 300, a1, a2);
-	std::string msg(message);
-
-	va_end(a2);
-	return msg.c_str();
-};*/
-
-inline float lerp(float a, float b, float t) {
-	return a + t * (b - a);
+inline float animate(float start, float end, float start2, float speed) {
+	return start += (end - start2) * speed;
 }
 
 struct vec2_t {
@@ -307,7 +300,7 @@ struct vec3_ti {
 
 	vec3_ti(int *v) : x(v[0]), y(v[1]), z(v[2]) {}
 	
-	vec3_t toVec3t() const {
+	vec3_t toVector3() const {
 		return vec3_t(x, y, z);
 	}
 
@@ -595,7 +588,6 @@ struct AABB {
 	}
 };
 
-/*
 inline int random(int start, int end) {
 	return rand() % (end - start + 1) + start;
 }
@@ -603,4 +595,19 @@ inline int random(int start, int end) {
 inline float randomf(int start, int end) {
 	return (float)random(start, end);
 }
-*/
+
+inline float randomFloat(float a, float b) {
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = b - a;
+	float r = random * diff;
+	return a + r;
+}
+
+inline int randomInt(int a, int b) {
+	int random = ((int)rand()) / (int)RAND_MAX;
+	int diff = b - a;
+	int r = random * diff;
+	return a + r;
+}
+
+// y u lookin around down here

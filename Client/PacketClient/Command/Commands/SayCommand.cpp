@@ -1,9 +1,7 @@
 #include "SayCommand.h"
+#include "pch.h"
 
 SayCommand::SayCommand() : IMCCommand("say", "Sends a chat message", "<message>") {
-}
-
-SayCommand::~SayCommand() {
 }
 
 std::string string_replace(const std::string& s, const std::string& findS, const std::string& replaceS) {

@@ -10,8 +10,6 @@
 class FriendList {
 private:
 	//GameData* gameData;
-	std::vector<std::string> List;
-
 public:
 	FriendList();
 	~FriendList();
@@ -20,6 +18,7 @@ public:
 	static bool findPlayer(std::string Name);
 	static void addPlayerToList(std::string name);
 	static bool removePlayer(std::string& g);
+	std::vector<std::string> List;
 };
 
 extern FriendList g_friend;

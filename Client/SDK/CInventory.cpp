@@ -1,6 +1,7 @@
 #include "CInventory.h"
 #include "../Utils/Utils.h"
 #include "../Memory/GameData.h"
+
 void C_Inventory::dropSlot(int slot) {
 	// FillingContainer::dropSlot
 	using drop_t = void(__fastcall*)(C_Inventory*, int, char);

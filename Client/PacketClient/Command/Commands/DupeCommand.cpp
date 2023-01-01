@@ -1,10 +1,8 @@
 #include "DupeCommand.h"
+#include "pch.h"
 
 DupeCommand::DupeCommand() : IMCCommand("dupe", "Duplicates the item in hand", "<count> <mode: give / offhand : 1/0>") {
 	registerAlias("d");
-}
-
-DupeCommand::~DupeCommand() {
 }
 
 bool DupeCommand::execute(std::vector<std::string>* args) {

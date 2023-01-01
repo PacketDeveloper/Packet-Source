@@ -4,20 +4,21 @@
 
 class C_Camera {
 private:
-	char pad_0000[128];  //0x0000
+	char padding[0x78]; // 0x0
 public:
-	bool renderPlayerModel;         //0x0080
-	bool renderFirstPersonObjects;  //0x0081
+	bool renderPlayerModel; // 0x078
+	bool renderFirstPersonObjects; // 0x079 probably hand and item
 private:
-	char pad_0082[26];  //0x0082
+	char autoAlignPadding[2]; // 0x07A
+	char padding7C[0x18]; // 0x07C
 public:
-	float fov;                //0x009C
-	float nearClippingPlane;  //0x00A0
-	float farClippingPlane;   //0x00A4
+	float fieldOfView; // 0x094
+	float nearClippingPlane; // 0x098 usually 0.025
+	float farClippingPlane; // 0x09C usually 2500
 private:
-	char pad_00A8[104];  //0x00A8
+	char paddingA0[0x68]; // 0x0A0
 public:
-	bool facesPlayerFront;  //0x0110
+	bool facesPlayerFront; // 0x108
 
 	void getForwardVector(vec3_t*);
 	void getEulerAngles(vec3_t*);

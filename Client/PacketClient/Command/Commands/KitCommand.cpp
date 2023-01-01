@@ -1,14 +1,10 @@
 #include "KitCommand.h"
-
 #include <thread>
-
 #include "../../../SDK/Tag.h"
 #include "../../Module/ModuleManager.h"
+#include "pch.h"
 
 KitCommand::KitCommand() : IMCCommand("kit", "Gives You Kits", "<32k/32k-2, griefing, exploits, legit, food, fireworks>") {
-}
-
-KitCommand::~KitCommand() {
 }
 
 bool KitCommand::execute(std::vector<std::string>* args) {

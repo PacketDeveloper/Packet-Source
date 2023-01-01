@@ -146,7 +146,8 @@ public:
 
 		if (firstChar == MojangsonToken::STRING_QUOTES.getSymbol() && lastChar == MojangsonToken::STRING_QUOTES.getSymbol()) {
 			value.setText(string.substr(1, string.length() - 2));
-		} else {
+		}
+		else {
 			value.setText(string);
 		}
 	}
@@ -289,7 +290,8 @@ public:
 		for (size_t i = 0; i < this->getListSize(); i++) {
 			if (start) {
 				start = false;
-			} else {
+			}
+			else {
 				builder << MojangsonToken::ELEMENT_SEPERATOR.getSymbol();
 			}
 			Tag* value = this->get(i);
@@ -367,7 +369,6 @@ public:
 		static putCompound_t func = reinterpret_cast<putCompound_t>(FindSignature("40 53 56 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 44 24 ?? 49 8B D8 48 8B FA 48 89 54 24 ?? 48 89 5C ?? 40 49 83 38 ?? 74 4A"));
 		func(this, text, std::move(tag));
 	}
-
 	std::unique_ptr<CompoundTag> clone(CompoundTag** tag) {
 		using clone_t = std::unique_ptr<CompoundTag>(__fastcall*)(CompoundTag*, CompoundTag**);
 		static clone_t func = reinterpret_cast<clone_t>(FindSignature("48 89 54 24 ?? 57 48 83 EC ?? 48 ?? ?? ?? ?? ?? ?? ?? ?? 48 89 5C 24 ?? 48 8B FA 48 8B D9 C7 44 ?? ?? ?? ?? ?? ?? 33 C0 48 89 02 48 8B CA"));

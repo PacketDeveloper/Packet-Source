@@ -2,12 +2,10 @@
 #include "../../../Utils/Utils.h"
 #include <string>
 #include <vector>
+#include "pch.h"
 
 setoffhandCommand::setoffhandCommand() : IMCCommand("setoffhand", "Puts any item into offhand", "<ItemName> <count> <itemData>") {
 	registerAlias("soh");
-}
-
-setoffhandCommand::~setoffhandCommand() {
 }
 
 bool setoffhandCommand::execute(std::vector<std::string>* args) {

@@ -28,7 +28,6 @@ public:
 
 #ifdef _DEBUG
 	std::string currentConfig = "PCBeta";
-
 #else
 	std::string currentConfig = "PCPublic";
 #endif

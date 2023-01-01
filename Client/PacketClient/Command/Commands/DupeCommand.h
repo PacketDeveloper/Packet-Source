@@ -3,9 +3,6 @@
 
 class DupeCommand : public IMCCommand {
 public:
-	DupeCommand();
-	~DupeCommand();
-
-	// Inherited via IMCCommand
 	virtual bool execute(std::vector<std::string>* args) override;
+	DupeCommand();
 };

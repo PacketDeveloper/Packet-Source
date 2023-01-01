@@ -1,20 +1,18 @@
 #include "ClientNameCommand.h"
 
 #include "../../Module/ModuleManager.h"
+#include "pch.h"
 
 ClientNameCommand::ClientNameCommand() : IMCCommand("clientname", "Edit Clients Name", "<set/reset> <name>") {
 	registerAlias("watermark");
 	registerAlias("name");
 }
 
-ClientNameCommand::~ClientNameCommand() {
-}
-
 bool ClientNameCommand::execute(std::vector<std::string>* args) {
 	assertTrue(g_Data.getLocalPlayer() != nullptr);
 	std::string option = args->at(1);
 	std::transform(option.begin(), option.end(), option.begin(), ::tolower);
-	auto watermark = moduleMgr->getModule<Watermark>();
+	auto interfaceMod = moduleMgr->getModule<Interface>();
 
 	if (args->at(1) == "set" && args->size() > 2) {
 		std::ostringstream os;
@@ -24,15 +22,13 @@ bool ClientNameCommand::execute(std::vector<std::string>* args) {
 			os << args->at(i);
 		}
 		std::string text = os.str().substr(1);
-		if (watermark->firstLetter) clientMessageF("[Packet] %sFailed to set the name! (Turn off FirstLetter)", RED);
-		else {
-			watermark->getMessage() = text;
-			clientMessageF("[Packet] %sName set to %s%s%s!", GREEN, GRAY, text.c_str(), GREEN);
-		}
+		std::string setStr = "Set the clients name to " + args->at(2) + "!";
+		//auto notification = g_Data.addNotification("Success", setStr); notification->duration = 10;
+		interfaceMod->getClientName() = text;
 		return true;
 	} else if (args->at(1) == "reset") {
-		watermark->getMessage() = "Packet Client";
-		clientMessageF("[Packet] %sReset!", GREEN);
+		interfaceMod->getClientName() = "Packet Client";
+		//auto notification = g_Data.addNotification("Success:", "Reset the client's name!"); notification->duration = 10;
 		return true;
 	}
 	return false;

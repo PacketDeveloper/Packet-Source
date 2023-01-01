@@ -1,5 +1,4 @@
 #include "CCamera.h"
-
 #include "../Utils/Utils.h"
 
 void C_Camera::getEulerAngles(vec3_t* vec) {
@@ -22,8 +21,8 @@ void C_Camera::getPlayerRotation(vec2_t* angOut) {
 	else
 		v4 = 1.0;
 
-	angOut->y = (float)(angles.y * 57.295776) + *(float*)(reinterpret_cast<__int64>(this) + 280);
-	angOut->x = (float)((float)(angles.x * 57.295776) + *(float*)(reinterpret_cast<__int64>(this) + 276)) * v4;
+	angOut->y = (float)(angles.y * 57.295776) + *(float*)(reinterpret_cast<__int64>(this) + 272);
+	angOut->x = (float)((float)(angles.x * 57.295776) + *(float*)(reinterpret_cast<__int64>(this) + 268)) * v4;
 	angOut->normAngles();
 }
 void C_Camera::getForwardVector(vec3_t* forward) {

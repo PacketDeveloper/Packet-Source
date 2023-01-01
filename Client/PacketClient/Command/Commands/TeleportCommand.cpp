@@ -1,11 +1,9 @@
 #include "TeleportCommand.h"
+#include "pch.h"
 
 TeleportCommand::TeleportCommand() : IMCCommand("tp", "Teleports to coordinates", "<X> <Y> <Z>") {
 	registerAlias("teleport");
 	registerAlias("setpos");
-}
-
-TeleportCommand::~TeleportCommand() {
 }
 
 bool TeleportCommand::execute(std::vector<std::string>* args) {

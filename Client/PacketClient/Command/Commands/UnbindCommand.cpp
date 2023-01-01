@@ -1,11 +1,9 @@
 #include "UnbindCommand.h"
 
 #include "../../Module/ModuleManager.h"
+#include "pch.h"
 
 UnbindCommand::UnbindCommand() : IMCCommand("unbind", "unbind modules", "<module | all>") {
-}
-
-UnbindCommand::~UnbindCommand() {
 }
 
 bool UnbindCommand::execute(std::vector<std::string>* args) {

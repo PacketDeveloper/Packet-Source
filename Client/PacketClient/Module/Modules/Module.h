@@ -1,6 +1,9 @@
 #pragma once
 #include "../../../Memory/GameData.h"
+#include "../../Notifications/NotificationManager.h"
 #include "../../FriendList/FriendList.h"
+#include "../../../Utils/TimerUtil.h"
+#include "../../../Utils/MoveUtil.h"
 #include "../../../Utils/keys.h"
 //#include "../../DrawUtils.h"
 
@@ -12,18 +15,32 @@ enum class Category {
 	MOVEMENT = 2,
 	PLAYER = 3,
 	EXPLOIT = 4,
-	MISC = 5,
-	CONFIG = 6,
+	OTHER = 5,
+	UNUSED = 6,
 	CUSTOM = 7
+};
+
+enum class HudEditorCategory {
+	// HudModule
+	POSITION = 0,
+	SPEED = 1,
+	FPS = 2,
+	ARMORHUD = 3,
+	// Other Modules
+	WATERMARK = 4,
+	ARRAYLIST = 5,
+	RELEASE = 6,
+	TARGETHUD = 7,
+	// Scaffold
+	BLOCKCOUNT = 8
 };
 
 struct EnumEntry {
 private:
-	/*const */ std::string name;
-	/*const */ unsigned char val;
+	std::string name;
+	unsigned char val;
 
 public:
-	/// <summary>Use this however you want</summary>
 	void* ptr = nullptr;
 	EnumEntry(const std::string _name, const unsigned char value);
 	EnumEntry(const char* _name, const unsigned char value);
@@ -58,6 +75,7 @@ enum class ValueType {
 	DOUBLE_T,
 	INT64_T,
 	INT_T,
+	KEYBIND_T,
 	BOOL_T,
 	TEXT_T,
 	ENUM_T
@@ -69,6 +87,7 @@ struct SettingValue {
 		double _double;
 		__int64 int64;
 		int _int;
+		int _keybind;
 		bool _bool;
 		std::string* text;
 		SettingEnum* Enum;
@@ -88,13 +107,16 @@ struct SettingEntry {
 	bool isDragging = false;  // This is incredibly hacky and i wanted to avoid this as much as possible but i want to get this clickgui done
 
 	void makeSureTheValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
+	void makeSureTheKeyValueIsAGoodBoiAndTheUserHasntScrewedWithIt();
 };
 
 class IModule {
-private:
+public:
+	bool shouldHide = false;
 	bool enabled = false;
 	int keybind = 0x0;
 	bool extended = false;
+	float length = 0;
 	vec2_t ModulePos;
 private:
 	Category category;
@@ -107,6 +129,8 @@ protected:
 
 	void registerFloatSetting(std::string name, float* floatPtr, float defaultValue, float minValue, float maxValue);
 	void registerIntSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
+	void registerMinMaxSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
+	void registerKeybindSetting(std::string name, int* intpTr, int defaultValue, int minValue, int maxValue);
 	void registerEnumSetting(std::string name, SettingEnum* intPtr, int defaultValue);
 	void registerEnumSetting(const char* name, SettingEnum* intPtr, int defaultValue);
 	void registerBoolSetting(std::string name, bool* boolPtr, bool defaultValue);
@@ -127,7 +151,6 @@ public:
 	virtual int getKeybind();
 	virtual void setKeybind(int key);
 	virtual bool allowAutoStart();
-
 	virtual void onPlayerTick(C_Player*);
 	virtual void onWorldTick(C_GameMode*);
 	virtual void onTick(C_GameMode*);
@@ -141,7 +164,9 @@ public:
 	virtual void onMove(C_MoveInputHandler*);
 	virtual void onLoadConfig(void* conf);
 	virtual void onSaveConfig(void* conf);
-	virtual bool isFlashMode();
+	virtual void onLoadSettings(void* conf);
+	virtual void onSaveSettings(void* conf);
+	virtual bool isHoldMode();
 	virtual void setEnabled(bool enabled);
 	virtual void toggle();
 	virtual bool isEnabled();

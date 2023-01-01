@@ -1,11 +1,8 @@
 #include "PanicCommand.h"
-
 #include "../../Module/ModuleManager.h"
+#include "pch.h"
 
 PanicCommand::PanicCommand() : IMCCommand("panic", "Disables all Modules", "") {
-}
-
-PanicCommand::~PanicCommand() {
 }
 
 bool PanicCommand::execute(std::vector<std::string>* args) {

@@ -195,7 +195,6 @@ public:
 
 public:
 	bool isTool(void) {
-		if (getAttackDamage() > 0) return true;  // Does Attack Damage
 		if (((std::string)name.getText()).find("flint_and_steel") != std::string::npos) return true;
 		if (((std::string)name.getText()).find("compass") != std::string::npos) return true;
 		if (((std::string)name.getText()).find("pearl") != std::string::npos) return true;
@@ -213,7 +212,7 @@ public:
 	}
 	bool isWeapon(void) {
 		if (((std::string)name.getText()).find("sword") != std::string::npos) return true;
-		if (((std::string)name.getText()).find("axe") != std::string::npos) return true;
+		if (((std::string)name.getText()).find("_axe") != std::string::npos) return true;
 		return false;
 	}
 	bool isShooter(void) {
@@ -225,8 +224,23 @@ public:
 		if (((std::string)name.getText()).find("pickaxe") != std::string::npos) return true;
 		return false;
 	}
+
+	bool isAxe(void) {
+		if (((std::string)name.getText()).find("_axe") != std::string::npos) return true;
+		return false;
+	}
+
+	bool isSword(void) {
+		if (((std::string)name.getText()).find("sword") != std::string::npos) return true;
+		return false;
+	}
 	bool isShovel(void) {
 		if (((std::string)name.getText()).find("shovel") != std::string::npos) return true;
+		return false;
+	}
+
+	bool isSpellbook(void) {
+		if (((std::string)name.getText()).find("_spell") != std::string::npos) return true;
 		return false;
 	}
 

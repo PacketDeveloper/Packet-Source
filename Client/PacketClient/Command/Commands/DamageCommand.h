@@ -3,6 +3,4 @@
 class DamageCommand : public IMCCommand {
 public:
 	DamageCommand();
-	~DamageCommand();
-
 };

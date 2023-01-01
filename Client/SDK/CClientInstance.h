@@ -8,9 +8,23 @@
 
 class Minecraft {
 private:
-	char pad_0x0000[0xD8];  //0x0000
+	char pad_0x8[0xD0];  //0x8
 public:
-	float* timer;  //0x00B0
+	float* timer;       //0xD8
+	float* renderTimer;  //0xE0
+
+	virtual void Destructor();
+	virtual int getEntityRegistry(void);
+	virtual int getEntityRegistry2(void);
+	virtual void setSimTimePause(bool);
+	virtual void setSimTimeScale(float);
+	virtual bool getSimPaused(void);
+	virtual bool isOnlineClient(void);
+
+	void setTimerSpeed(float tps) {
+		*this->timer = tps;
+		*this->renderTimer = tps;
+	};
 };
 
 class Tessellator;
@@ -26,14 +40,19 @@ private:
 
 class HashedString {
 private:
-	unsigned __int64 hash;
+	uint64_t hash;
 	TextHolder text;  // 0x0008
 
 public:
 	HashedString(const std::string& text) {
 		this->text.setText(text);
-
 		this->computeHash();
+	}
+
+	HashedString(uint64_t inputhash, std::string text) {
+		memset(this, 0x0, sizeof(HashedString));
+		this->hash = inputhash;
+		this->text.setText(text);
 	}
 
 	void computeHash() {
@@ -181,6 +200,10 @@ public:
 		return fontRepository->fontList->fontEntries[3].font;
 	}
 
+	C_Font* cFont() {
+		return fontRepository->fontList->fontEntries[4].font;
+	}
+
 	C_Font* getMCFont() {
 		return mcFont;
 	}
@@ -247,47 +270,42 @@ class C_CameraManager;
 
 class C_ClientInstance {
 private:
-	char pad_0x8[0xA0];  // 0x8
+	char pad_0x8[0xA0]; //0x8
 public:
-	class MinecraftGame* minecraftGame;  // 0xA8
+	class MinecraftGame* minecraftGame; //0xA8
+	class MinecraftGame* N00000A0C; //0xB0
+	class MinecraftGame* N00000A0D; //0xB8
+	class Minecraft* minecraft; //0xC0
 private:
-	class MinecraftGame* N00000A0C;  // 0xB0
-	class MinecraftGame* N00000A0D;  // 0xB8
+	char pad_0xC8[0x8]; //0xC8
 public:
-	class Minecraft* minecraft;  // 0xC0
+	class LevelRenderer* levelRenderer; //0xD0
 private:
-	char pad_0xC8[0x8];  // 0xC8
+	char pad_0xD8[0x8]; //0xD8
 public:
-	class LevelRenderer* levelRenderer;  // 0xD0
+	C_LoopbackPacketSender* loopbackPacketSender; //0xE0
 private:
-	char pad_0xD8[0x8];  // 0xD8
+	char pad_0xE8[0x18]; //0xE8
 public:
-	C_LoopbackPacketSender* loopbackPacketSender;  // 0xE0
+	PtrToGameSettings1* ptr; //0x100
 private:
-	char pad_0xE8[0x18];  // 0xE8
+	char pad_0x108[0x8]; //0x108
 public:
-	PtrToGameSettings1* ptr;  // 0x100
+	class HitDetectSystem* hitDetectSystem; //0x110
 private:
-	char pad_0x108[0x8];  // 0x108
+	char pad_0118[0x340]; //0x0118 + 0x3A0
 public:
-	class HitDetectSystem* hitDetectSystem;  // 0x110
+	vec2_t mousePos; // 0x458
+private:
+	char pad_0460[0x78];
+public:
 	struct {
-		char pad[0x238];
+		char pad[0x238]; 
 		struct {
 			__int64 materialPtr;
 			size_t refCount;
 		} entityLineMaterial;
-	} * itemInHandRenderer;  // 0x04D8
-private:
-	char pad_04C8[0x1B0];  // 0x04D0
-public:
-	float fovX;  // 0x0680
-private:
-	char pad_068C[0x10];  // 0x0684
-public:
-	float fovY;  // 0x0694
-private:
-	char pad_0670[0x1B8];  // 0x0678z
+	} *itemInHandRenderer;  //0x04D8
 
 	virtual __int64 destructorClientInstance();
 	// Duplicate destructor

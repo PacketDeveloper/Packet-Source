@@ -1,12 +1,10 @@
 #include "ToggleCommand.h"
+#include "pch.h"
 
 #include "../../Module/ModuleManager.h"
 
 ToggleCommand::ToggleCommand() : IMCCommand("toggle", "Toggles a module", "<module>") {
 	registerAlias("t");
-}
-
-ToggleCommand::~ToggleCommand() {
 }
 
 bool ToggleCommand::execute(std::vector<std::string>* args) {
@@ -22,7 +20,7 @@ bool ToggleCommand::execute(std::vector<std::string>* args) {
 	} 
 
 	auto mod = modOpt.value();
-	if (mod->isFlashMode()) 
+	if (mod->isHoldMode()) 
 		clientMessageF("[Packet] %sModule cannot be toggled!", RED);
 	else {
 		mod->toggle();

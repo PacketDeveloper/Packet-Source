@@ -2,6 +2,7 @@
 #include <cstdarg>
 #include <string>
 #include <vector>
+#include "pch.h"
 
 IMCCommand::IMCCommand(const char* command, const char* description, const char* usage) {
 	this->_command = command;
@@ -12,6 +13,7 @@ IMCCommand::IMCCommand(const char* command, const char* description, const char*
 
 IMCCommand::~IMCCommand() {
 }
+
 void IMCCommand::clientMessageF(const char* fmt, ...) {
 	va_list arg;
 	va_start(arg, fmt);

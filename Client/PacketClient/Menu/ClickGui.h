@@ -4,8 +4,8 @@
 #include <vector>
 
 #include "../../Memory/GameData.h"
-#include "../DrawUtils.h"
-#include "../GuiUtils.h"
+#include "../../Utils/DrawUtils.h"
+#include "../../Utils/GuiUtils.h"
 #include "../Module/ModuleManager.h"
 
 struct ClickModule {
@@ -16,7 +16,6 @@ struct ClickWindow {
 	ClickWindow() {
 		pos.x = 0;
 		pos.y = 0;
-
 		size.x = 30;
 		size.y = 30;
 	}
@@ -24,7 +23,7 @@ struct ClickWindow {
 	vec2_t size;
 	bool isExtended = true;
 	bool isInAnimation = true;
-	float animation = 1;
+	int animation = 0;
 	const char* name;
 	std::map<unsigned int, std::shared_ptr<ClickModule>> moduleMap;
 
@@ -33,13 +32,17 @@ struct ClickWindow {
 
 class ClickGui {
 private:
+	char categoryNameTest;
 	inline static std::shared_ptr<ClickWindow> getWindow(const char* id);
 	inline static std::shared_ptr<ClickModule> getClickModule(std::shared_ptr<ClickWindow> window, const char* id);
 
 	static void renderLabel(const char* text);
 	static void renderTooltip(std::string* text);
 
-	static void renderCategory(Category category, bool Rainbow, float backgroundAlpha);
+	static void renderPacketCategory(Category category, MC_Color categoryColor);
+	static void renderVapeCategory(Category category);
+	static void renderAstolfoCategory(Category category, MC_Color categoryColor, MC_Color categoryColor2);
+
 	inline static void getModuleListByCategory(Category category, std::vector<std::shared_ptr<IModule>>* modList);
 
 	inline static const char* catToName(Category cat) {
@@ -63,11 +66,11 @@ private:
 			case Category::EXPLOIT:
 				categoryName = "Exploit";
 				break;
-			case Category::MISC:
-				categoryName = "Misc";
+			case Category::OTHER:
+				categoryName = "Other";
 				break;
-			case Category::CONFIG:
-				categoryName = "Configs";
+			case Category::UNUSED:
+				categoryName = "";
 				break;
 			case Category::CUSTOM:
 				categoryName = "Scripts";
